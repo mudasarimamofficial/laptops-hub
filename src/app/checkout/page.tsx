@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cartSubtotalPaisa, useCart } from "@/lib/commerce/cart-store";
@@ -9,23 +9,85 @@ import { PendingBlock } from "@/components/ui/pending-block";
 
 const checkoutEnabled = process.env.NEXT_PUBLIC_COD_CHECKOUT_ENABLED === "true";
 
+type ShipOption = {
+  id: string;
+  name: string;
+  flatFeePaisa: number;
+  codFeePaisa: number;
+  notes: string;
+};
+
 export default function CheckoutPage() {
   const router = useRouter();
   const lines = useCart((s) => s.lines);
   const clear = useCart((s) => s.clear);
-  const subtotal = cartSubtotalPaisa(lines);
+  const localSubtotal = cartSubtotalPaisa(lines);
   const [pending, setPending] = useState(false);
+  const [quoting, setQuoting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [city, setCity] = useState("");
+  const [province, setProvince] = useState("");
+  const [options, setOptions] = useState<ShipOption[]>([]);
+  const [zoneId, setZoneId] = useState<string>("");
+  const [serverQuote, setServerQuote] = useState<{
+    subtotalPaisa: number;
+    shippingPaisa: number;
+    codFeePaisa: number;
+    totalDuePaisa: number;
+  } | null>(null);
+
   const idempotencyKey = useMemo(
     () => (typeof crypto !== "undefined" ? crypto.randomUUID() : `k-${Date.now()}`),
     [],
   );
+
+  useEffect(() => {
+    if (city.trim().length < 2 || province.trim().length < 2 || lines.length === 0) {
+      setOptions([]);
+      setServerQuote(null);
+      return;
+    }
+    const t = setTimeout(async () => {
+      setQuoting(true);
+      setError(null);
+      try {
+        const res = await fetch("/api/checkout/quote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            address: { city, province },
+            shippingZoneId: zoneId || undefined,
+            lines: lines.map((l) => ({ variantId: l.variantId, quantity: l.quantity })),
+          }),
+        });
+        const json = await res.json();
+        if (!res.ok || json.ok === false) {
+          setOptions(json.options || []);
+          setServerQuote(null);
+          setError(json.message || json.error || "Delivery not available for this address");
+          return;
+        }
+        setOptions(json.options || []);
+        if (!zoneId && json.options?.[0]?.id) setZoneId(json.options[0].id);
+        setServerQuote(json.quote);
+      } catch {
+        setError("Could not calculate delivery");
+      } finally {
+        setQuoting(false);
+      }
+    }, 400);
+    return () => clearTimeout(t);
+  }, [city, province, zoneId, lines]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     if (!checkoutEnabled) {
       setError("COD checkout is disabled until shipping zones and policies are configured.");
+      return;
+    }
+    if (!zoneId) {
+      setError("Choose a delivery option for your city.");
       return;
     }
     const fd = new FormData(e.currentTarget);
@@ -40,13 +102,13 @@ export default function CheckoutPage() {
           customerPhone: fd.get("phone"),
           customerEmail: fd.get("email") || "",
           customerNote: fd.get("note") || "",
-          shippingZoneId: fd.get("shippingZoneId"),
+          shippingZoneId: zoneId,
           confirmCod: true,
           address: {
             line1: fd.get("line1"),
             line2: fd.get("line2") || "",
-            city: fd.get("city"),
-            province: fd.get("province"),
+            city,
+            province,
             postcode: fd.get("postcode") || "",
             landmark: fd.get("landmark") || "",
           },
@@ -61,7 +123,7 @@ export default function CheckoutPage() {
       clear();
       router.push(`/order/success/${json.accessToken}`);
     } catch {
-      setError("Network error — your order may not have been placed. Do not resubmit without checking Track order.");
+      setError("Network error — do not resubmit without checking Track order.");
     } finally {
       setPending(false);
     }
@@ -86,15 +148,16 @@ export default function CheckoutPage() {
         Place COD order
       </h1>
       <p className="mt-2 text-[var(--lh-ink-2)]">
-        Pay <strong className="text-[var(--lh-ink)]">{formatPkr(subtotal)}+</strong> in cash on delivery. Exact shipping
-        is calculated server-side when zones are configured. No online payments.
+        Cash on Delivery only. Delivery options appear after you enter a city we serve. Totals are calculated on the
+        server — browser estimates are not trusted.
       </p>
 
       {!checkoutEnabled ? (
         <div className="mt-6">
           <PendingBlock title="Live COD acceptance is off">
-            Configure active shipping zones and set <code>cod_checkout.enabled</code> in store settings (and env flags)
-            before accepting real orders. Form UI is ready for when the gate opens.
+            Configure active shipping zones (cities/provinces + fees) in admin, then enable{" "}
+            <code>cod_checkout</code> after owner approval. Quote UX works for staff testing once zones exist; public
+            placement stays blocked.
           </PendingBlock>
         </div>
       ) : null}
@@ -118,11 +181,23 @@ export default function CheckoutPage() {
         </label>
         <label className="block text-sm">
           City
-          <input name="city" required className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2" />
+          <input
+            name="city"
+            required
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
+          />
         </label>
         <label className="block text-sm">
           Province
-          <input name="province" required className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2" />
+          <input
+            name="province"
+            required
+            value={province}
+            onChange={(e) => setProvince(e.target.value)}
+            className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
+          />
         </label>
         <label className="block text-sm">
           Postcode
@@ -132,25 +207,69 @@ export default function CheckoutPage() {
           Landmark
           <input name="landmark" className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2" />
         </label>
-        <label className="block text-sm md:col-span-2">
-          Shipping zone ID (from admin — required when checkout enabled)
-          <input
-            name="shippingZoneId"
-            placeholder="UUID of active shipping zone"
-            className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
-            disabled={!checkoutEnabled}
-          />
-        </label>
+
+        <fieldset className="md:col-span-2">
+          <legend className="text-sm font-semibold">Delivery option</legend>
+          {quoting ? <p className="mt-2 text-sm text-[var(--lh-ink-2)]">Checking coverage…</p> : null}
+          {options.length === 0 && city.length >= 2 && province.length >= 2 && !quoting ? (
+            <p className="mt-2 text-sm text-[var(--lh-error)]">No COD delivery options for this city/province yet.</p>
+          ) : null}
+          <div className="mt-3 space-y-2">
+            {options.map((o) => (
+              <label
+                key={o.id}
+                className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--lh-border)] bg-white p-3"
+              >
+                <input
+                  type="radio"
+                  name="shippingOption"
+                  checked={zoneId === o.id}
+                  onChange={() => setZoneId(o.id)}
+                  className="mt-1"
+                />
+                <span>
+                  <span className="font-semibold">{o.name}</span>
+                  <span className="mt-1 block text-sm text-[var(--lh-ink-2)]">
+                    Delivery {formatPkr(o.flatFeePaisa)}
+                    {o.codFeePaisa > 0 ? ` · COD fee ${formatPkr(o.codFeePaisa)}` : ""}
+                    {o.notes ? ` · ${o.notes}` : ""}
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
         <label className="block text-sm md:col-span-2">
           Note
           <textarea name="note" rows={3} className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2" />
         </label>
+
+        <div className="rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-4 md:col-span-2">
+          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-wider text-[var(--lh-ink-2)]">
+            Order summary (server quote)
+          </p>
+          <ul className="mt-3 space-y-1 text-sm">
+            <li>Items (browser estimate): {formatPkr(localSubtotal)}</li>
+            <li>Items (server): {serverQuote ? formatPkr(serverQuote.subtotalPaisa) : "—"}</li>
+            <li>Delivery: {serverQuote ? formatPkr(serverQuote.shippingPaisa) : "—"}</li>
+            <li>COD fee: {serverQuote ? formatPkr(serverQuote.codFeePaisa) : "—"}</li>
+            <li className="pt-2 font-[family-name:var(--font-display)] text-lg font-bold">
+              Cash due: {serverQuote ? formatPkr(serverQuote.totalDuePaisa) : "—"}
+            </li>
+          </ul>
+        </div>
+
         <label className="flex items-start gap-2 text-sm md:col-span-2">
           <input type="checkbox" name="confirm" required className="mt-1" />
-          I will pay the final cash-due amount to the courier / merchant on delivery (COD).
+          I will pay the final cash-due amount on delivery (COD).
         </label>
         {error ? <p className="text-sm text-[var(--lh-error)] md:col-span-2">{error}</p> : null}
-        <button type="submit" className="lh-btn lh-btn-primary md:col-span-2" disabled={pending || !checkoutEnabled}>
+        <button
+          type="submit"
+          className="lh-btn lh-btn-primary md:col-span-2"
+          disabled={pending || !checkoutEnabled || !zoneId || !serverQuote}
+        >
           {pending ? "Placing order…" : "Place COD order"}
         </button>
       </form>

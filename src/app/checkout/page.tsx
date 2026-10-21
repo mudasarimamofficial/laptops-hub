@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cartSubtotalPaisa, useCart } from "@/lib/commerce/cart-store";
@@ -36,14 +36,7 @@ export default function CheckoutPage() {
     totalDuePaisa: number;
   } | null>(null);
 
-  const idempotencyKeyRef = useRef<string>("");
-  if (!idempotencyKeyRef.current) {
-    idempotencyKeyRef.current =
-      typeof crypto !== "undefined" && "randomUUID" in crypto
-        ? crypto.randomUUID()
-        : `k-${Math.random().toString(36).slice(2)}`;
-  }
-  const idempotencyKey = idempotencyKeyRef.current;
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
 
   useEffect(() => {
     if (city.trim().length < 2 || province.trim().length < 2 || lines.length === 0) {

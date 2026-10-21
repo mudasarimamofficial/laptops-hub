@@ -87,7 +87,7 @@ export function CinematicHero({
         }}
       />
 
-      {!reduced && intro ? (
+      {showIntro ? (
         <button
           type="button"
           className="absolute right-4 top-4 z-20 rounded-full border border-[var(--lh-border)] bg-white/90 px-4 py-2 text-sm font-semibold"

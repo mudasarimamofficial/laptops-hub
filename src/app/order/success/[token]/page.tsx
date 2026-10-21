@@ -2,6 +2,8 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { formatPkr } from "@/lib/money";
 import { PendingBlock } from "@/components/ui/pending-block";
 
+export const dynamic = "force-dynamic";
+
 type Props = { params: Promise<{ token: string }> };
 
 export default async function OrderSuccessPage({ params }: Props) {

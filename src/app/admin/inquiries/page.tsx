@@ -1,5 +1,6 @@
 import { createServiceClient } from "@/lib/supabase/server";
 
+export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
 
 export default async function AdminInquiriesPage() {

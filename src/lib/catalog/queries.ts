@@ -109,6 +109,9 @@ export async function searchPublicProducts(q: string, limit = 24): Promise<Publi
 
 /** Staff / import path */
 export async function adminProductCounts() {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return { total: 0, active: 0, draft: 0, media: 0 };
+  }
   const supabase = createServiceClient();
   const { count: total } = await supabase
     .from("products")

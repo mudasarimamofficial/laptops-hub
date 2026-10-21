@@ -1,9 +1,11 @@
 ﻿# Resume here
 
-State: **RC hardening on `feat/v5-storefront-admin`** (2026-10-21).
+State: **RC hardening on `feat/v5-storefront-admin` @ `765b084`** (2026-10-21).
+
+Draft PR (do not merge): https://github.com/mudasarimamofficial/laptops-hub/pull/1
 
 ## Baseline
-- Prior: `28e2450` V5 + admin mutations
+- Prior: `28e2450` V5 + admin mutations → now `765b084`
 - Migrations through `20261021160000_atomic_ops_catalog_cms`
 - Catalog: **232 / 226 / 6 / 964** (pagination view confirms 226 public)
 - **COD off** · **no `--prod`**

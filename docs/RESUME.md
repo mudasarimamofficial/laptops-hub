@@ -21,10 +21,10 @@ Draft PR (do not merge): https://github.com/mudasarimamofficial/laptops-hub/pull
 - P0 still **9/9**; catalog pagination **5/5**; unit + sanitize pass; build pass
 
 ## Still open / owner
-- Playwright visual evidence (Chromium install in progress / network flaky) — see `docs/VISUAL_QA_NOTES.md`
+- Manual pixel comparison vs `reference/v5` (Playwright **8/8** evidence captured; not claimed pixel-perfect)
 - Controlled owner bootstrap of real `admin_memberships` (ephemeral fixtures deleted after role tests)
 - Shipping fees, policy legal approval, media rights, launch approval
-- Draft PR into `main` (do not merge / do not enable COD)
+- Vercel preview review of this branch — **do not merge / do not enable COD / no `--prod`**
 
 ## Do not
 - Enable public COD / `vercel --prod`

@@ -13,9 +13,13 @@ import { randomUUID } from "crypto";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 function loadEnv() {
   const p = path.join(root, ".env.local");
+  if (!fs.existsSync(p)) throw new Error(".env.local missing");
   for (const line of fs.readFileSync(p, "utf8").split(/\r?\n/)) {
     const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
-    if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
+    if (!m || process.env[m[1]]) continue;
+    let v = m[2].trim();
+    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
+    process.env[m[1]] = v;
   }
 }
 loadEnv();

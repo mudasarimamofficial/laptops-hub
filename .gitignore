@@ -56,3 +56,9 @@ supabase/.temp/
 # Unverified cutouts / local-only media (not for public GitHub)
 private/
 public/approved-assets/
+
+# Local Claude Design V5 export (do not publish)
+Laptops Hub storefront/
+Laptops Hub Vercel Development.zip
+
+.env*

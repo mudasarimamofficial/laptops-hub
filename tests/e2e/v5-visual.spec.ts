@@ -21,6 +21,10 @@ for (const vp of viewports) {
     await page.setViewportSize({ width: vp.width, height: vp.height });
     await page.goto(base + "/", { waitUntil: "networkidle" });
     await expect(page.getByRole("link", { name: /HUB|Laptops/i }).first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: /smarter laptop/i })).toBeVisible();
+    const skip = page.getByRole("button", { name: /skip intro/i });
+    if (await skip.count()) await skip.click().catch(() => {});
+    await page.waitForTimeout(400);
     // No developer placeholder copy on customer surface
     const body = await page.locator("body").innerText();
     expect(body.toLowerCase()).not.toContain("port next");

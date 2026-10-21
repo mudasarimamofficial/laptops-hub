@@ -1,33 +1,26 @@
 ﻿# Resume here
 
-State: **Preview access restored** on `feat/v5-storefront-admin` @ `9b24eae` (2026-10-21).
+State: **V5 parity sprint in progress** on `feat/v5-storefront-admin` (2026-10-21).
 
-Draft PR (do not merge): https://github.com/mudasarimamofficial/laptops-hub/pull/1
+## Verified infrastructure
+- GitHub: `mudasarimamofficial/laptops-hub` · branch `feat/v5-storefront-admin`
+- Vercel: `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` (`laptops-hub`) · linked locally
+- Supabase: `xvmmjkrkgznnakcobmww` · catalog baseline 232 / 226 public / 6 drafts
+- COD: **off** · no Production promote
 
-## Working Preview (use this — not the Production alias)
-- Unique: https://laptops-qi1nix9ah-mudasarimamofficial-gmailcoms-projects.vercel.app
-- Branch alias: https://laptops-hub-git-f-129910-mudasarimamofficial-gmailcoms-projects.vercel.app
-- Deployment: `dpl_1oui2NALZxJF6vXi2fpjZHurWJP8` · commit `9b24eae` · **Preview**
-- Homepage: **HTTP 200** Next.js · V5 HTML confirmed
-- See `docs/DEPLOYMENT_404_ROOT_CAUSE.md`
+## This session
+- Restored wiped working tree from git.
+- V5 freeze: `reference/v5/` (gitignored).
+- Rebuilt layered hero, search overlay, mobile drawer, V5 product card, cart drawer.
+- P0 security **9/9**; unit tests pass; `npm run build` pass; Playwright visual **8/8**.
+- Matrix: `docs/V5_VISUAL_PARITY_MATRIX.md`
 
-## 404 root cause (fixed for Preview)
-- Project Framework was **Other** with Output Directory **`public`** → platform `NOT_FOUND` (no Next.js document).
-- Fixed: Framework **Next.js**, Output Directory auto, `vercel.json`, Tailwind `postcss.config.mjs`.
-- `https://laptops-hub.vercel.app/` is the **Production** alias — still may 404 until an approved Production promote. **Do not promote to clear the 404.**
+## Next safe engineering action
+1. Capture reference HTTP baselines (`npx serve reference/v5 -l 4173`) vs Next and fill `docs/V5_PIXEL_DIFF_REPORT.md`.
+2. Continue PDP / collections chrome parity; keep COD disabled.
+3. Preview deploy of this branch; verify hosted screenshots.
+4. Owner: media rights for cutouts, shipping, legal, staff bootstrap, then COD enable / Production.
 
-## Smoke (Preview via `vercel curl`)
-- `/` collections search compare cart checkout product admin/login → **200**
-- `/admin` → **307** → `/admin/login`
-- `POST /api/checkout/cod` → `checkout_disabled`
-- CSS utilities + V5 tokens present in compiled CSS; build compiled successfully
-- P0 security probes **9/9**
-
-## Baseline still true
-- Catalog **232 / 226 / 6 / 964**
-- COD **off** · **no `--prod`** · atomic COD/status RPCs · DOMPurify CMS · role matrix
-
-## Owner still required
-- Sign in via Vercel SSO to open Preview in browser (team protection on `*.vercel.app`)
-- Media rights, shipping fees, legal approval, staff bootstrap
-- Explicit approval before Production promote / COD enable / merge
+## Working Preview (prior — may be superseded after new deploy)
+- See `docs/DEPLOYMENT_404_ROOT_CAUSE.md` for earlier Preview URLs.
+- Do **not** promote Production until release gates pass.

@@ -10,15 +10,31 @@ import {
 import { PendingBlock } from "@/components/ui/pending-block";
 import { listAllPublicProducts, countPublicProducts, getPublicProductByHandle } from "@/lib/catalog/queries";
 import { COLLECTION_DEFS } from "@/lib/collections/definitions";
+import type { PublicProduct } from "@/types/catalog";
 
 export const revalidate = 60;
+
+const STORY_HANDLE = "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage";
+
+function modelLabel(p: PublicProduct) {
+  return String(p.specs.model || p.title.split(" - ")[0] || p.title);
+}
+
+function heroChips(p: PublicProduct): string[] {
+  return [p.specs.cpu || p.specs.processor, p.specs.ram, p.specs.storage || p.specs.sto, p.specs.size || p.specs.screen]
+    .map((v) => (v == null ? "" : String(v).trim()))
+    .filter(Boolean)
+    .slice(0, 4);
+}
+
+function findByTitle(products: PublicProduct[], re: RegExp) {
+  return products.find((p) => re.test(p.title) || re.test(String(p.specs.model || "")));
+}
 
 export default async function HomePage() {
   let products: Awaited<ReturnType<typeof listAllPublicProducts>> = [];
   let count = 0;
-  let story = await getPublicProductByHandle(
-    "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
-  ).catch(() => null);
+  let story = await getPublicProductByHandle(STORY_HANDLE).catch(() => null);
   const chromebook = await getPublicProductByHandle("hp-chromebook-14-g5-4-32").catch(() => null);
   let catalogError: string | null = null;
 
@@ -29,6 +45,15 @@ export default async function HomePage() {
   }
 
   if (!story && products[0]) story = products[0];
+
+  const sideLeft =
+    findByTitle(products, /probook\s*640\s*g2/i) ||
+    findByTitle(products, /hp.*640/i) ||
+    products.find((p) => /hp/i.test(p.manufacturer || "") && /laptop/i.test(p.category || p.productType || "laptop"));
+  const sideRight =
+    findByTitle(products, /thinkpad\s*t580/i) ||
+    findByTitle(products, /t580/i) ||
+    products.find((p) => /lenovo/i.test(p.manufacturer || "") && /laptop/i.test(p.category || p.productType || "laptop"));
 
   const laptopCount = products.filter((p) => COLLECTION_DEFS.find((c) => c.slug === "laptops")?.match(p)).length;
   const accessoryCount = products.filter((p) => COLLECTION_DEFS.find((c) => c.slug === "accessories")?.match(p)).length;
@@ -43,13 +68,10 @@ export default async function HomePage() {
 
   const featured = [
     ...products.filter((p) => p.featured),
-    ...products.filter(
-      (p) => !p.featured && COLLECTION_DEFS.find((c) => c.slug === "laptops")?.match(p),
-    ),
+    ...products.filter((p) => !p.featured && COLLECTION_DEFS.find((c) => c.slug === "laptops")?.match(p)),
   ]
     .filter((p, i, arr) => arr.findIndex((x) => x.id === p.id) === i)
     .slice(0, 8);
-  const heroImg = story?.images[0];
 
   const storySpecs = story
     ? [
@@ -60,14 +82,46 @@ export default async function HomePage() {
       ]
     : [];
 
+  const featuredForHero = story || products[0];
+  const mainHero = featuredForHero
+    ? {
+        handle: featuredForHero.handle,
+        label: modelLabel(featuredForHero),
+        imageUrl: featuredForHero.images[0]?.url,
+        pricePaisa: featuredForHero.pricePaisa,
+        chips: heroChips(featuredForHero),
+        stockText: "In catalog",
+      }
+    : {
+        handle: "all",
+        label: "Featured laptop",
+      };
+
   return (
     <>
       <CinematicHero
         totalCount={count || products.length}
         laptopCount={laptopCount}
         accessoryCount={accessoryCount}
-        heroImageUrl={heroImg?.url}
-        heroAlt={heroImg?.alt || story?.title}
+        main={mainHero}
+        sideLeft={
+          sideLeft
+            ? {
+                handle: sideLeft.handle,
+                label: modelLabel(sideLeft),
+                imageUrl: sideLeft.images[0]?.url,
+              }
+            : undefined
+        }
+        sideRight={
+          sideRight
+            ? {
+                handle: sideRight.handle,
+                label: modelLabel(sideRight),
+                imageUrl: sideRight.images[0]?.url,
+              }
+            : undefined
+        }
       />
 
       {story ? (
@@ -75,7 +129,9 @@ export default async function HomePage() {
           handle={story.handle}
           title={story.title}
           model={String(story.specs.model || story.title.split(" - ")[0] || "Latitude 7420")}
-          config={String(story.specs.config || `${story.specs.ram || ""} · ${story.specs.storage || story.specs.sto || ""}`.trim())}
+          config={String(
+            story.specs.config || `${story.specs.ram || ""} · ${story.specs.storage || story.specs.sto || ""}`.trim(),
+          )}
           pricePaisa={story.pricePaisa}
           variantId={story.variantId}
           specs={storySpecs}

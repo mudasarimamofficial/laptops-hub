@@ -1,5 +1,30 @@
 # Progress log
 
+## 2026-10-21 — V5 parity sprint (header / hero / card / search / cart)
+
+### Recovered
+- Working tree had deleted the entire Next.js app; restored from `feat/v5-storefront-admin` @ `0a12238`.
+- Frozen V5 export under gitignored `reference/v5/`.
+- Relinked Vercel project `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2`; pulled `.env.local` (quotes stripped).
+- Supabase project `xvmmjkrkgznnakcobmww` confirmed ACTIVE.
+
+### Implemented
+- Layered cinematic hero (V5 geometry, parallax, scroll `--hp`, three catalog product layers, price tag, chips).
+- Search overlay + `/api/catalog/search`; header opens overlay (not bare `/search` link).
+- Mobile drawer (V5-style) + desktop nav breakpoint ~1180px; header 72px + saturate blur.
+- Product card fidelity to `ProductCard v5.dc.html` (stage, chips, compare, ATC).
+- Cart slide-out drawer matching V5 chrome.
+- Env loaders strip quoted Vercel env values; P0 probes **9/9**.
+- Playwright visual smoke **8/8**; evidence in `docs/visual-evidence/`.
+- Parity matrix: `docs/V5_VISUAL_PARITY_MATRIX.md`.
+
+### Still partial / blocked
+- Cutout PNGs + `stage.png` not published (media rights) — catalog CDN stand-ins.
+- Full pixel-diff vs reference HTTP server not yet automated end-to-end.
+- COD still disabled; Production promote blocked on owner gates.
+
+---
+
 ## 2026-10-21 — Vercel 404 recovery (Preview restored)
 
 ### Root cause

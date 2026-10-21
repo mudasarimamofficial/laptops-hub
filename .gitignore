@@ -52,3 +52,7 @@ docs/_tmp_*
 
 supabase/.temp/
 
+
+# Unverified cutouts / local-only media (not for public GitHub)
+private/
+public/approved-assets/

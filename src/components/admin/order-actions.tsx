@@ -50,7 +50,13 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
       const res = await fetch(`/api/admin/orders/${encodeURIComponent(orderNumber)}/status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ toStatus, note, carrier: carrier || undefined, trackingNumber: trackingNumber || undefined }),
+        body: JSON.stringify({
+          toStatus,
+          note,
+          carrier: carrier || undefined,
+          trackingNumber: trackingNumber || undefined,
+          expectedFromStatus: status,
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -60,7 +66,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
       setMsg(`Status → ${toStatus}`);
       router.refresh();
     } catch {
-      setErr("Network error");
+      setErr("Network error — try again.");
     } finally {
       setBusy(false);
     }
@@ -71,6 +77,10 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
     setBusy(true);
     setMsg(null);
     setErr(null);
+    const idempotencyKey =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `cod-${orderNumber}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     try {
       const res = await fetch("/api/admin/cod-collections", {
         method: "POST",
@@ -80,6 +90,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
           amountPkr: Number(collectPkr),
           collectorRef,
           note,
+          idempotencyKey,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -87,10 +98,14 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
         setErr(data.message || data.error || `Collection failed (${res.status})`);
         return;
       }
-      setMsg(`COD recorded · ${data.paymentStatus}`);
+      setMsg(
+        data.idempotentReplay
+          ? `Already recorded (idempotent) · ${data.paymentStatus}`
+          : `COD recorded · ${data.paymentStatus}`,
+      );
       router.refresh();
     } catch {
-      setErr("Network error");
+      setErr("Network error — try again.");
     } finally {
       setBusy(false);
     }

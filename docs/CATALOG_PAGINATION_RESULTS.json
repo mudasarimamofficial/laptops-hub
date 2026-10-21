@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-21T09:45:07.928Z",
+  "count": 226,
+  "lastOffset": 192,
+  "results": [
+    {
+      "name": "catalog_count_available",
+      "ok": true,
+      "detail": "count=226"
+    },
+    {
+      "name": "last_page_fetchable",
+      "ok": true,
+      "detail": "n=34"
+    },
+    {
+      "name": "last_page_matches_tail_of_full_sort",
+      "ok": true,
+      "detail": "expected=34 got=34"
+    },
+    {
+      "name": "drafts_hidden_from_anon_listing",
+      "ok": true,
+      "detail": "drafts=0"
+    },
+    {
+      "name": "view_count_eq_public_active",
+      "ok": true,
+      "detail": "count=226"
+    }
+  ]
+}

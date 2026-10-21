@@ -1,5 +1,6 @@
 import { PendingBlock } from "@/components/ui/pending-block";
 import { createClient } from "@/lib/supabase/server";
+import { LEGAL_CONTENT_SLUGS } from "@/lib/security/sanitize-html";
 
 const FALLBACK_TITLES: Record<string, string> = {
   about: "About Laptops HUB",
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: Props) {
     const supabase = await createClient();
     const { data } = await supabase
       .from("content_pages")
-      .select("title, status")
+      .select("title")
       .eq("slug", slug)
       .eq("status", "published")
       .maybeSingle();
@@ -40,12 +41,14 @@ export default async function ContentPage({ params }: Props) {
   const { slug } = await params;
   let title = FALLBACK_TITLES[slug] || slug;
   let bodyHtml: string | null = null;
+  const isLegal = LEGAL_CONTENT_SLUGS.has(slug);
 
   try {
     const supabase = await createClient();
+    // RLS already hides legal pages until legal_approved; select published only.
     const { data } = await supabase
       .from("content_pages")
-      .select("title, body_html, status")
+      .select("title, body_html, status, legal_approved")
       .eq("slug", slug)
       .eq("status", "published")
       .maybeSingle();
@@ -63,11 +66,15 @@ export default async function ContentPage({ params }: Props) {
       <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold tracking-[-0.04em]">{title}</h1>
       <div className="mt-8">
         {bodyHtml ? (
-          <div className="prose prose-neutral max-w-none text-[var(--lh-ink-2)]" dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+          <div
+            className="prose prose-neutral max-w-none text-[var(--lh-ink-2)]"
+            dangerouslySetInnerHTML={{ __html: bodyHtml }}
+          />
         ) : (
           <PendingBlock title={`${title} — awaiting owner approval`}>
-            Published CMS content will appear here. Until the owner publishes approved copy, we show this honest pending
-            state instead of inventing policies or contact details.
+            {isLegal
+              ? "This policy page requires both editorial publish and separate legal/business approval before it appears publicly."
+              : "Published CMS content will appear here after owner approval. We do not invent policies or contact details."}
           </PendingBlock>
         )}
       </div>

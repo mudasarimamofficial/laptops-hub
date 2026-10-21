@@ -1,5 +1,33 @@
 # Progress log
 
+## 2026-10-21 — RC hardening (financial, CMS, catalog, roles)
+
+### Financial integrity
+- `record_cod_collection(jsonb)` — FOR UPDATE, over-collection reject, idempotency key, events+audit atomic
+- `transition_order_status(jsonb)` — locked transitions + stale `expected_from_status`
+- Concurrency script: **6/6** (`docs/COD_CONCURRENCY_RESULTS.json`)
+
+### CMS security
+- `isomorphic-dompurify` allowlist sanitizer + XSS unit tests
+- `legal_approved` separated from editorial `status`; editors cannot publish legal pages
+
+### Catalog
+- `public_catalog_listing` view; full paginated filter/sort; collections page through entire catalog
+- Pagination proof: **5/5** (226 public; last page of price sort discoverable)
+
+### Variants / media
+- Product PATCH requires `variantId` for price; ownership check
+- Unverified Dell cutouts removed from public tree (`docs/MEDIA_RIGHTS_CUTOUTS.md`)
+
+### Auth
+- Role matrix with ephemeral users: **15/15** (`docs/SECURITY_ROLE_MATRIX_RESULTS.json`)
+- Anonymous auth matrix + P0 still green
+
+### Visual
+- Playwright specs + evidence dir prepared; Chromium download flaky on network — screenshots pending completion
+
+---
+
 ## 2026-10-21 — V5 storefront + merchant mutations (`feat/v5-storefront-admin`)
 
 ### Storefront

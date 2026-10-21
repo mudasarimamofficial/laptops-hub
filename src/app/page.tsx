@@ -8,22 +8,22 @@ import {
   FeaturedSection,
 } from "@/components/storefront/home/home-sections";
 import { PendingBlock } from "@/components/ui/pending-block";
-import { listPublicProducts, countPublicProducts, getPublicProductByHandle } from "@/lib/catalog/queries";
+import { listAllPublicProducts, countPublicProducts, getPublicProductByHandle } from "@/lib/catalog/queries";
 import { COLLECTION_DEFS } from "@/lib/collections/definitions";
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  let products: Awaited<ReturnType<typeof listPublicProducts>> = [];
+  let products: Awaited<ReturnType<typeof listAllPublicProducts>> = [];
   let count = 0;
   let story = await getPublicProductByHandle(
     "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
   ).catch(() => null);
-  let chromebook = await getPublicProductByHandle("hp-chromebook-14-g5-4-32").catch(() => null);
+  const chromebook = await getPublicProductByHandle("hp-chromebook-14-g5-4-32").catch(() => null);
   let catalogError: string | null = null;
 
   try {
-    [products, count] = await Promise.all([listPublicProducts(226), countPublicProducts()]);
+    [products, count] = await Promise.all([listAllPublicProducts(), countPublicProducts()]);
   } catch (e) {
     catalogError = e instanceof Error ? e.message : "Catalog unavailable";
   }
@@ -41,7 +41,14 @@ export default async function HomePage() {
     })
     .filter((b) => b.count > 0);
 
-  const featured = products.slice(0, 8);
+  const featured = [
+    ...products.filter((p) => p.featured),
+    ...products.filter(
+      (p) => !p.featured && COLLECTION_DEFS.find((c) => c.slug === "laptops")?.match(p),
+    ),
+  ]
+    .filter((p, i, arr) => arr.findIndex((x) => x.id === p.id) === i)
+    .slice(0, 8);
   const heroImg = story?.images[0];
 
   const storySpecs = story
@@ -72,6 +79,7 @@ export default async function HomePage() {
           pricePaisa={story.pricePaisa}
           variantId={story.variantId}
           specs={storySpecs}
+          images={story.images.map((img) => ({ src: img.url, alt: img.alt || story!.title }))}
         />
       ) : null}
 

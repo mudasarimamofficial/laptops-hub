@@ -8,6 +8,9 @@ type Props = {
   title: string;
   status: "pending" | "draft" | "published";
   bodyHtml: string;
+  legalApproved: boolean;
+  isLegalPage: boolean;
+  canApproveLegal: boolean;
 };
 
 export function ContentEditForm(props: Props) {
@@ -15,6 +18,7 @@ export function ContentEditForm(props: Props) {
   const [title, setTitle] = useState(props.title);
   const [status, setStatus] = useState(props.status);
   const [bodyHtml, setBodyHtml] = useState(props.bodyHtml);
+  const [legalApproved, setLegalApproved] = useState(props.legalApproved);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -25,10 +29,12 @@ export function ContentEditForm(props: Props) {
     setMsg(null);
     setErr(null);
     try {
+      const body: Record<string, unknown> = { title, status, bodyHtml };
+      if (props.isLegalPage && props.canApproveLegal) body.legalApproved = legalApproved;
       const res = await fetch(`/api/admin/content/${encodeURIComponent(props.slug)}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, status, bodyHtml }),
+        body: JSON.stringify(body),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -38,7 +44,7 @@ export function ContentEditForm(props: Props) {
       setMsg("Saved.");
       router.refresh();
     } catch {
-      setErr("Network error");
+      setErr("Network error — try again.");
     } finally {
       setBusy(false);
     }
@@ -48,8 +54,17 @@ export function ContentEditForm(props: Props) {
     <form onSubmit={onSubmit} className="rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-[family-name:var(--font-mono)] text-sm font-semibold uppercase tracking-wider">{props.slug}</h2>
-        <span className="text-xs text-[var(--lh-ink-2)]">{props.status}</span>
+        <span className="text-xs text-[var(--lh-ink-2)]">
+          {props.status}
+          {props.isLegalPage ? (props.legalApproved ? " · legally approved" : " · needs legal approval") : ""}
+        </span>
       </div>
+      {props.isLegalPage ? (
+        <p className="mt-2 text-xs text-[var(--lh-ink-2)]">
+          Saving or publishing editorial copy is not the same as approving warranty, shipping, privacy or returns
+          commitments. Legal approval is a separate owner/manager action.
+        </p>
+      ) : null}
       <label className="mt-4 block text-sm">
         <span className="font-medium">Title</span>
         <input
@@ -60,7 +75,7 @@ export function ContentEditForm(props: Props) {
         />
       </label>
       <label className="mt-3 block text-sm">
-        <span className="font-medium">Status</span>
+        <span className="font-medium">Editorial status</span>
         <select
           className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
           value={status}
@@ -71,8 +86,14 @@ export function ContentEditForm(props: Props) {
           <option value="published">Published</option>
         </select>
       </label>
+      {props.isLegalPage && props.canApproveLegal ? (
+        <label className="mt-3 flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={legalApproved} onChange={(e) => setLegalApproved(e.target.checked)} />
+          Legal / business approval (required before public policy pages)
+        </label>
+      ) : null}
       <label className="mt-3 block text-sm">
-        <span className="font-medium">Body (HTML — keep simple; no scripts)</span>
+        <span className="font-medium">Body (safe HTML — headings, lists, links)</span>
         <textarea
           className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2 font-[family-name:var(--font-mono)] text-xs"
           rows={8}

@@ -16,14 +16,23 @@ export default async function AdminProductEditPage({ params }: Props) {
   const { data } = await supabase
     .from("products")
     .select(
-      "handle, title, description_safe, status, featured, manufacturer, product_type, category, product_variants(price_paisa)",
+      "handle, title, description_safe, status, featured, manufacturer, product_type, category, product_variants(id, title, sku, price_paisa)",
     )
     .eq("handle", handle)
     .maybeSingle();
 
   if (!data) notFound();
 
-  const price = (data.product_variants as { price_paisa: number }[] | null)?.[0]?.price_paisa ?? 0;
+  const variants = ((data.product_variants as { id: string; title: string; sku: string | null; price_paisa: number }[]) || []).map(
+    (v) => ({
+      id: v.id,
+      title: v.title || "Default",
+      sku: v.sku,
+      pricePaisa: v.price_paisa,
+    }),
+  );
+
+  if (!variants.length) notFound();
 
   return (
     <div className="lh-container py-10">
@@ -47,7 +56,7 @@ export default async function AdminProductEditPage({ params }: Props) {
         manufacturer={data.manufacturer}
         productType={data.product_type}
         category={data.category}
-        pricePaisa={price}
+        variants={variants}
       />
     </div>
   );

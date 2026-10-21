@@ -23,6 +23,7 @@ export default function ComparePage() {
 
   useEffect(() => {
     if (handles.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reset when compare tray emptied
       setRows([]);
       return;
     }

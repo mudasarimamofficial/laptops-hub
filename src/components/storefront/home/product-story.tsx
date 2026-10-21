@@ -1,17 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { formatPkr } from "@/lib/money";
 import { useCart } from "@/lib/commerce/cart-store";
 
-const ANGLES = [
-  { src: "/approved-assets/cut/dell7420-0.png", label: "Front", alt: "Dell Latitude 7420, front view" },
-  { src: "/approved-assets/cut/dell7420-1.png", label: "Left", alt: "Dell Latitude 7420, left angle" },
-  { src: "/approved-assets/cut/dell7420-2.png", label: "Right", alt: "Dell Latitude 7420, right angle" },
-  { src: "/approved-assets/cut/dell7420-3.png", label: "Rear", alt: "Dell Latitude 7420, rear view" },
-];
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      if (typeof window === "undefined") return () => {};
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      mq.addEventListener("change", onStoreChange);
+      return () => mq.removeEventListener("change", onStoreChange);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false,
+  );
+}
+
+const ANGLE_LABELS = ["Front", "Left", "Right", "Rear"];
 
 const STEPS = [
   { n: "01", label: "Look" },
@@ -28,19 +36,26 @@ type Props = {
   pricePaisa: number;
   variantId: string;
   specs: { k: string; v: string }[];
+  /** Catalog / CDN images only — never unverified cutout assets from the public repo. */
+  images: { src: string; alt: string }[];
 };
 
-export function ProductStory({ handle, title, model, config, pricePaisa, variantId, specs }: Props) {
+export function ProductStory({ handle, title, model, config, pricePaisa, variantId, specs, images }: Props) {
+  const angles = (images.length ? images : [{ src: "", alt: title }])
+    .slice(0, 4)
+    .map((img, i) => ({
+      src: img.src,
+      alt: img.alt || `${title}, ${ANGLE_LABELS[i] || "view"}`,
+      label: ANGLE_LABELS[i] || `View ${i + 1}`,
+    }));
+  while (angles.length < 4 && angles[0]?.src) {
+    angles.push({ ...angles[angles.length % Math.max(images.length, 1)], label: ANGLE_LABELS[angles.length] || "View" });
+  }
   const root = useRef<HTMLElement>(null);
   const [sp, setSp] = useState(0);
-  const [reduced, setReduced] = useState(false);
+  const reduced = usePrefersReducedMotion();
   const add = useCart((s) => s.add);
   const chapter = Math.min(3, Math.floor(sp * 4));
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-  }, []);
 
   useEffect(() => {
     if (reduced) return;
@@ -111,35 +126,40 @@ export function ProductStory({ handle, title, model, config, pricePaisa, variant
                   <span className="h-0.5 w-3 bg-[var(--lh-signal)]" />
                   02 — PRODUCT STORY
                 </span>
-                <span className="font-[family-name:var(--font-mono)] text-xs text-white/70">{ANGLES[chapter]?.label} view</span>
+                <span className="font-[family-name:var(--font-mono)] text-xs text-white/70">{angles[chapter]?.label} view</span>
               </div>
               <div className="relative min-h-[220px] flex-1 perspective-[1400px]">
                 <div className="absolute inset-0">
-                  {ANGLES.map((a, i) => (
-                    <Image
-                      key={a.src}
-                      src={a.src}
-                      alt={a.alt}
-                      fill
-                      className="object-contain p-[4%] transition-opacity duration-300"
-                      style={{ opacity: opacities[i] }}
-                      sizes="(max-width:1024px) 90vw, 45vw"
-                      priority={i === 0}
-                    />
-                  ))}
+                  {angles.map((a, i) =>
+                    a.src ? (
+                      <Image
+                        key={`${a.src}-${i}`}
+                        src={a.src}
+                        alt={a.alt}
+                        fill
+                        className="object-contain p-[4%] transition-opacity duration-300"
+                        style={{ opacity: opacities[i] }}
+                        sizes="(max-width:1024px) 90vw, 45vw"
+                        priority={i === 0}
+                        unoptimized
+                      />
+                    ) : null,
+                  )}
                 </div>
               </div>
               {reduced ? (
                 <div className="grid grid-cols-4 gap-2">
-                  {ANGLES.map((a, i) => (
+                  {angles.map((a, i) => (
                     <button
-                      key={a.src}
+                      key={`${a.label}-${i}`}
                       type="button"
                       onClick={() => goChapter(i)}
                       className="rounded-xl border border-white/15 bg-white/5 p-2"
                       aria-pressed={chapter === i}
                     >
-                      <Image src={a.src} alt="" width={120} height={75} className="mx-auto h-auto w-full object-contain" />
+                      {a.src ? (
+                        <Image src={a.src} alt="" width={120} height={75} className="mx-auto h-auto w-full object-contain" unoptimized />
+                      ) : null}
                       <span className="mt-1 block text-center font-[family-name:var(--font-mono)] text-[11px] text-white/70">
                         {a.label}
                       </span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -12,6 +12,19 @@ type Props = {
   heroAlt?: string;
 };
 
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      if (typeof window === "undefined") return () => {};
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      mq.addEventListener("change", onStoreChange);
+      return () => mq.removeEventListener("change", onStoreChange);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false,
+  );
+}
+
 export function CinematicHero({
   totalCount,
   laptopCount,
@@ -19,20 +32,19 @@ export function CinematicHero({
   heroImageUrl,
   heroAlt,
 }: Props) {
-  const [intro, setIntro] = useState(true);
-  const [reduced, setReduced] = useState(false);
+  const reduced = usePrefersReducedMotion();
+  const [intro, setIntro] = useState(!reduced);
   const [mx, setMx] = useState(0);
   const [my, setMy] = useState(0);
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    if (mq.matches) setIntro(false);
+    if (reduced) return;
     const t = window.setTimeout(() => setIntro(false), 2200);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [reduced]);
 
-  const inO = reduced || !intro ? 1 : 0;
+  const showIntro = reduced ? false : intro;
+  const inO = showIntro ? 0 : 1;
   const dd = reduced ? 0 : 1;
 
   return (
@@ -185,14 +197,9 @@ export function CinematicHero({
                 unoptimized
               />
             ) : (
-              <Image
-                src="/approved-assets/cut/dell7420-0.png"
-                alt="Dell Latitude 7420"
-                fill
-                className="object-contain p-2"
-                sizes="(max-width:1024px) 90vw, 45vw"
-                priority
-              />
+              <div className="flex h-full items-center justify-center bg-[var(--lh-titanium)] text-sm text-[var(--lh-ink-2)]">
+                Featured product image
+              </div>
             )}
           </div>
         </div>

@@ -2,17 +2,20 @@ import Link from "next/link";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 import { ContentEditForm } from "@/components/admin/content-edit-form";
+import { LEGAL_CONTENT_SLUGS } from "@/lib/security/sanitize-html";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
 
 export default async function AdminContentPage() {
-  await requireStaffPage(["owner", "admin", "manager", "editor"]);
+  const staff = await requireStaffPage(["owner", "admin", "manager", "editor"]);
   const supabase = createServiceClient();
   const { data: pages } = await supabase
     .from("content_pages")
-    .select("slug, title, status, body_html, updated_at")
+    .select("slug, title, status, body_html, legal_approved, updated_at")
     .order("slug");
+
+  const canApproveLegal = ["owner", "admin", "manager"].includes(staff.role);
 
   return (
     <div className="lh-container py-10">
@@ -20,7 +23,7 @@ export default async function AdminContentPage() {
         <div>
           <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold">Content</h1>
           <p className="mt-2 text-sm text-[var(--lh-ink-2)]">
-            Unapproved legal/business copy stays pending — never auto-published.
+            Editorial publish and legal approval are separate. Policy pages stay private until both are set.
           </p>
         </div>
         <Link href="/admin" className="text-sm text-[var(--lh-action)]">
@@ -30,7 +33,7 @@ export default async function AdminContentPage() {
 
       <div className="mt-8 space-y-8">
         {(pages || []).length === 0 ? (
-          <p className="text-[var(--lh-ink-2)]">No content pages yet. Seed pending pages from store settings.</p>
+          <p className="text-[var(--lh-ink-2)]">No content pages yet.</p>
         ) : (
           (pages || []).map((p) => (
             <ContentEditForm
@@ -39,6 +42,9 @@ export default async function AdminContentPage() {
               title={p.title}
               status={p.status as "pending" | "draft" | "published"}
               bodyHtml={p.body_html || ""}
+              legalApproved={!!p.legal_approved}
+              isLegalPage={LEGAL_CONTENT_SLUGS.has(p.slug)}
+              canApproveLegal={canApproveLegal}
             />
           ))
         )}

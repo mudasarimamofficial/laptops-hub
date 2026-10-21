@@ -35,12 +35,14 @@ type Props = {
   config: string;
   pricePaisa: number;
   variantId: string;
+  /** Variant max_per_order, carried into the cart line so the cart enforces the same limit as the server. */
+  maxPerOrder?: number;
   specs: { k: string; v: string }[];
   /** Catalog / CDN images only — never unverified cutout assets from the public repo. */
   images: { src: string; alt: string }[];
 };
 
-export function ProductStory({ handle, title, model, config, pricePaisa, variantId, specs, images }: Props) {
+export function ProductStory({ handle, title, model, config, pricePaisa, variantId, maxPerOrder, specs, images }: Props) {
   const angles = (images.length ? images : [{ src: "", alt: title }])
     .slice(0, 4)
     .map((img, i) => ({
@@ -243,6 +245,7 @@ export function ProductStory({ handle, title, model, config, pricePaisa, variant
                         title,
                         unitPricePaisa: pricePaisa,
                         quantity: 1,
+                        maxPerOrder,
                       })
                     }
                   >

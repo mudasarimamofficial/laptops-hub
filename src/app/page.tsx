@@ -134,6 +134,7 @@ export default async function HomePage() {
           )}
           pricePaisa={story.pricePaisa}
           variantId={story.variantId}
+          maxPerOrder={story.maxPerOrder}
           specs={storySpecs}
           images={story.images.map((img) => ({ src: img.url, alt: img.alt || story!.title }))}
         />

@@ -1,26 +1,20 @@
-﻿# Resume here
+# Resume here
 
-State: **V5 parity sprint in progress** on `feat/v5-storefront-admin` (2026-10-21).
+State: **Phase 1 correctness fixes on `fix/v5-correctness-parity`** (branched from `feat/v5-storefront-admin` @ `ea652f2`), 2026-10-21. Fill in the commit SHA and Preview URL once pushed.
 
 ## Verified infrastructure
-- GitHub: `mudasarimamofficial/laptops-hub` · branch `feat/v5-storefront-admin`
-- Vercel: `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` (`laptops-hub`) · linked locally
-- Supabase: `xvmmjkrkgznnakcobmww` · catalog baseline 232 / 226 public / 6 drafts
+- GitHub: `mudasarimamofficial/laptops-hub` · working branch `fix/v5-correctness-parity`
+- Vercel: `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` (`laptops-hub`, team `mudasarimamofficial-gmailcoms-projects`)
+- Supabase: `xvmmjkrkgznnakcobmww` · documented baseline 232 / 226 public / 6 drafts (re-verify live)
 - COD: **off** · no Production promote
 
-## This session
-- Restored wiped working tree from git.
-- V5 freeze: `reference/v5/` (gitignored).
-- Rebuilt layered hero, search overlay, mobile drawer, V5 product card, cart drawer.
-- P0 security **9/9**; unit tests pass; `npm run build` pass; Playwright visual **8/8**.
-- Matrix: `docs/V5_VISUAL_PARITY_MATRIX.md`
+## This phase
+- Related-product media, availability guard + inquiry dialog, V5 compare tray, curated specs, public-field boundary, cart `max_per_order`, importer syntax fix.
+- Checklist: `docs/NEXTJS_PARITY_AUDIT.md` (statuses per finding).
 
 ## Next safe engineering action
-1. Capture reference HTTP baselines (`npx serve reference/v5 -l 4173`) vs Next and fill `docs/V5_PIXEL_DIFF_REPORT.md`.
-2. Continue PDP / collections chrome parity; keep COD disabled.
-3. Preview deploy of this branch; verify hosted screenshots.
-4. Owner: media rights for cutouts, shipping, legal, staff bootstrap, then COD enable / Production.
+1. Run all checks in APPLY.md; fix real failures; push; verify the Preview's branch and SHA.
+2. Owner decisions: `docs/proposals/AVAILABILITY_INQUIRY_ONLY.md`, `docs/proposals/DESCRIPTION_CLEANUP.md`, media approval.
+3. Phase 2 (after acceptance): collection filters/sort, homepage V5 section order, new-generation carousel, PDP chrome, unapproved copy, full visual regression.
 
-## Working Preview (prior — may be superseded after new deploy)
-- See `docs/DEPLOYMENT_404_ROOT_CAUSE.md` for earlier Preview URLs.
-- Do **not** promote Production until release gates pass.
+Do **not** promote Production, enable COD, run the importer against production, or apply proposal SQL without approval.

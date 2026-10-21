@@ -8,6 +8,8 @@ import type { PublicProduct } from "@/types/catalog";
 import { useCart } from "@/lib/commerce/cart-store";
 import { openCartDrawer } from "@/lib/commerce/cart-ui";
 import { useCompare, COMPARE_MAX } from "@/lib/commerce/compare-store";
+import { canPurchase } from "@/lib/catalog/availability";
+import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
 
 function chipList(product: PublicProduct): string[] {
   const s = product.specs;
@@ -31,6 +33,8 @@ export function ProductCard({ product }: { product: PublicProduct }) {
   const count = useCompare((s) => s.handles.length);
   const add = useCart((s) => s.add);
   const [added, setAdded] = useState(false);
+  const [inquiring, setInquiring] = useState(false);
+  const purchasable = canPurchase(product);
 
   const manufacturer =
     product.manufacturer && !/laptops hub/i.test(product.manufacturer) ? product.manufacturer : null;
@@ -179,26 +183,46 @@ export function ProductCard({ product }: { product: PublicProduct }) {
           </button>
         </div>
 
-        <button
-          type="button"
-          className="h-[46px] rounded-xl bg-[var(--lh-action)] text-sm font-bold text-white shadow-[inset_0_1px_0_rgba(255,255,255,.18)] transition hover:bg-[var(--lh-action-hover)] active:scale-[0.98]"
-          onClick={() => {
-            add({
-              variantId: product.variantId,
-              handle: product.handle,
-              title: product.title,
-              unitPricePaisa: product.pricePaisa,
-              quantity: 1,
-              imageUrl: img?.url,
-            });
-            setAdded(true);
-            openCartDrawer();
-            window.setTimeout(() => setAdded(false), 1400);
-          }}
-        >
-          {added ? "Added" : "Add to cart"}
-        </button>
+        {purchasable ? (
+          <button
+            type="button"
+            className="h-[46px] rounded-xl bg-[var(--lh-action)] text-sm font-bold text-white shadow-[inset_0_1px_0_rgba(255,255,255,.18)] transition hover:bg-[var(--lh-action-hover)] active:scale-[0.98]"
+            onClick={() => {
+              if (!canPurchase(product)) return;
+              add({
+                variantId: product.variantId,
+                handle: product.handle,
+                title: product.title,
+                unitPricePaisa: product.pricePaisa,
+                quantity: 1,
+                imageUrl: img?.url,
+                maxPerOrder: product.maxPerOrder,
+              });
+              setAdded(true);
+              openCartDrawer();
+              window.setTimeout(() => setAdded(false), 1400);
+            }}
+          >
+            {added ? "Added" : "Add to cart"}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="h-[46px] rounded-xl border border-[var(--lh-border)] bg-white text-sm font-bold text-[var(--lh-ink)] transition hover:border-[var(--lh-action)]"
+            onClick={() => setInquiring(true)}
+          >
+            Ask about this product
+          </button>
+        )}
       </div>
+      {!purchasable ? (
+        <InquiryDialog
+          open={inquiring}
+          onClose={() => setInquiring(false)}
+          productTitle={product.title}
+          productHandle={product.handle}
+        />
+      ) : null}
     </article>
   );
 }

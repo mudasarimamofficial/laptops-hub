@@ -6,6 +6,7 @@ import Link from "next/link";
 import { formatPkr } from "@/lib/money";
 import { useCart, cartSubtotalPaisa } from "@/lib/commerce/cart-store";
 import { closeCartDrawer, useCartUi } from "@/lib/commerce/cart-ui";
+import { lineMax } from "@/lib/commerce/cart-limits";
 
 export function CartDrawer() {
   const open = useCartUi((s) => s.open);
@@ -113,8 +114,9 @@ export function CartDrawer() {
                         <button
                           type="button"
                           aria-label="Increase quantity"
-                          className="h-full w-11 text-[17px]"
-                          onClick={() => update(l.variantId, Math.min(20, l.quantity + 1))}
+                          className="h-full w-11 text-[17px] disabled:opacity-40"
+                          disabled={l.quantity >= lineMax(l.maxPerOrder)}
+                          onClick={() => update(l.variantId, l.quantity + 1)}
                         >
                           +
                         </button>

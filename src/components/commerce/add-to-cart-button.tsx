@@ -4,10 +4,21 @@ import { useState } from "react";
 import type { CartLine } from "@/types/catalog";
 import { useCart } from "@/lib/commerce/cart-store";
 
-export function AddToCartButton({ line, max }: { line: Omit<CartLine, "quantity"> & { quantity?: number }; max: number }) {
+export function AddToCartButton({
+  line,
+  max,
+  available = true,
+}: {
+  line: Omit<CartLine, "quantity"> & { quantity?: number };
+  max: number;
+  /** When false nothing renders and no line can be added. */
+  available?: boolean;
+}) {
   const add = useCart((s) => s.add);
   const [qty, setQty] = useState(1);
   const [done, setDone] = useState(false);
+
+  if (!available) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -26,6 +37,7 @@ export function AddToCartButton({ line, max }: { line: Omit<CartLine, "quantity"
         type="button"
         className="lh-btn lh-btn-primary"
         onClick={() => {
+          if (!available) return;
           add({ ...line, quantity: qty });
           setDone(true);
           setTimeout(() => setDone(false), 1600);

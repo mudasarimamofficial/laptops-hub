@@ -62,16 +62,14 @@ export function CinematicHero({
   const reduced = usePrefersReducedMotion();
   const isMobile = useIsMobile();
   /** Entrance phase: boot → play (animating) → done. Content stays readable (no long opacity-0 blank). */
-  const [phase, setPhase] = useState<"boot" | "play" | "done">("boot");
+  const [entrance, setPhase] = useState<"boot" | "play" | "done">("boot");
+  const phase = reduced ? "done" : entrance;
   const [hp, setHp] = useState(0);
   const [mx, setMx] = useState(0);
   const [my, setMy] = useState(0);
 
   useEffect(() => {
-    if (reduced) {
-      setPhase("done");
-      return;
-    }
+    if (reduced) return;
     let cancelled = false;
     let doneTimer = 0;
     // Double-rAF so first paint includes SSR content, then entrance CSS runs once.

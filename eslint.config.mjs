@@ -16,6 +16,7 @@ const eslintConfig = defineConfig([
     "reference/**",
     "support.js",
     "data/**",
+    "Laptops Hub storefront/**",
   ]),
 ]);
 

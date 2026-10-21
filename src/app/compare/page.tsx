@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCompare } from "@/lib/commerce/compare-store";
 import { formatPkr } from "@/lib/money";
+import { curateSpecs, type SpecRow } from "@/lib/catalog/specs";
 import { PendingBlock } from "@/components/ui/pending-block";
 
 type Row = {
@@ -11,6 +12,7 @@ type Row = {
   title: string;
   pricePaisa: number;
   manufacturer: string | null;
+  sku: string | null;
   specs: Record<string, unknown>;
 };
 
@@ -48,9 +50,9 @@ export default function ComparePage() {
     };
   }, [handles]);
 
-  const keys = Array.from(
-    new Set(rows.flatMap((r) => Object.keys(r.specs || {}).filter((k) => r.specs[k] != null && String(r.specs[k]).trim() !== ""))),
-  ).slice(0, 12);
+  const curated: SpecRow[][] = rows.map((r) => curateSpecs({ manufacturer: r.manufacturer, specs: r.specs || {}, sku: r.sku ?? null }));
+  const labels = Array.from(new Set(curated.flatMap((list) => list.map((x) => x.label))));
+  const valueOf = (i: number, label: string) => curated[i]?.find((x) => x.label === label)?.value ?? "—";
 
   if (handles.length === 0) {
     return (
@@ -107,20 +109,12 @@ export default function ComparePage() {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-[var(--lh-divider)]">
-              <th className="p-4 font-medium">Brand</th>
-              {rows.map((r) => (
-                <td key={r.handle} className="p-4 text-[var(--lh-ink-2)]">
-                  {r.manufacturer && !/laptops hub/i.test(r.manufacturer) ? r.manufacturer : "—"}
-                </td>
-              ))}
-            </tr>
-            {keys.map((k) => (
-              <tr key={k} className="border-b border-[var(--lh-divider)]">
-                <th className="p-4 font-medium capitalize">{k}</th>
-                {rows.map((r) => (
+            {labels.map((label) => (
+              <tr key={label} className="border-b border-[var(--lh-divider)]">
+                <th className="p-4 font-medium">{label}</th>
+                {rows.map((r, i) => (
                   <td key={r.handle} className="p-4 text-[var(--lh-ink-2)]">
-                    {r.specs[k] != null ? String(r.specs[k]) : "—"}
+                    {valueOf(i, label)}
                   </td>
                 ))}
               </tr>

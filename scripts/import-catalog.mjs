@@ -19,7 +19,10 @@ function loadEnvLocal() {
   if (!fs.existsSync(p)) return;
   for (const line of fs.readFileSync(p, "utf8").split(/\r?\n/)) {
     const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
-    if (m && !process.env[m[1]]) let v = m[2].trim(); if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1); if (!process.env[m[1]]) process.env[m[1]] = v;
+    if (!m || process.env[m[1]]) continue;
+    let v = m[2].trim();
+    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
+    process.env[m[1]] = v;
   }
 }
 
@@ -59,17 +62,11 @@ function majorToPaisa(major) {
 }
 
 function safeDescription(p) {
-  // Never use Body HTML / CRM notes. Prefer curated intro if present.
-  const bits = [];
-  if (p.intro && typeof p.intro === "string") bits.push(String(p.intro).trim());
-  if (p.specs && typeof p.specs === "object") {
-    const entries = Object.entries(p.specs)
-      .filter(([, v]) => v != null && String(v).trim() !== "")
-      .slice(0, 12)
-      .map(([k, v]) => `${k}: ${v}`);
-    if (entries.length) bits.push(entries.join(" · "));
-  }
-  return bits.join("\n\n").slice(0, 4000);
+  // Never use Body HTML / CRM notes. Use the curated intro only.
+  // Specs are rendered from `specs` by the storefront's curated table; writing them here as
+  // "key: value" text published internal source labels (e.g. "Memory (CRM config)").
+  const intro = p.intro && typeof p.intro === "string" ? String(p.intro).trim() : "";
+  return intro.slice(0, 4000);
 }
 
 const catalog = loadCatalog();

@@ -1,5 +1,26 @@
 # Progress log
 
+## 2026-10-21 — Phase 1 correctness patch (`fix/v5-correctness-parity`, from `ea652f2`)
+
+Prepared in Claude Design as a patch set; must be applied, checked and pushed from a machine with the repo (see `APPLY.md` in the patch). Not yet committed, built or deployed.
+
+### Implemented
+- Related products load ordered media (one batched media query; no N+1).
+- `PublicProduct.available` + `canPurchase()`; cards / PDP / AddToCart only offer cart controls when purchasable; V5 "Ask about this product" dialog posts to `/api/contact` otherwise.
+- V5 compare tray (thumbnails, names, per-item remove, Clear all, Compare); new `/api/catalog/compare-summary`; stale/private handles pruned; hidden on cart/compare/checkout/pages/guides/admin, when drawer open, and over `#story`.
+- Curated PDP + compare specs (`curateSpecs`); generated spec paragraph hidden from descriptions.
+- Public boundary: internal spec key labels renamed/dropped (`toPublicSpecs`), import QA flags removed from `tags` (`publicTags`), descriptions filtered, before data reaches client components or API JSON.
+- Cart honours `max_per_order` (store, drawer, cart page, card, PDP, story); legacy lines fall back to the DB hard cap 20.
+- `scripts/import-catalog.mjs`: syntax error in `loadEnvLocal` fixed; importer no longer writes the internal-label spec paragraph. **Not run.**
+- Unit tests: `specs`, `availability-handles`, `cart-limits`. E2E: `tests/e2e/v5-correctness.spec.ts`.
+
+### Awaiting owner
+- `docs/proposals/AVAILABILITY_INQUIRY_ONLY.md` (RLS/view change; not applied).
+- `docs/proposals/DESCRIPTION_CLEANUP.md` (3 intro texts with CRM wording + 171 stored generated paragraphs; reversible SQL; not applied).
+- Media approval (all `pending`; not changed).
+
+---
+
 ## 2026-10-21 — V5 parity sprint (header / hero / card / search / cart)
 
 ### Recovered

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { cartSubtotalPaisa, useCart } from "@/lib/commerce/cart-store";
 import { formatPkr } from "@/lib/money";
+import { lineMax } from "@/lib/commerce/cart-limits";
 
 export default function CartPage() {
   const lines = useCart((s) => s.lines);
@@ -40,7 +41,7 @@ export default function CartPage() {
                 <input
                   type="number"
                   min={1}
-                  max={20}
+                  max={lineMax(l.maxPerOrder)}
                   value={l.quantity}
                   onChange={(e) => update(l.variantId, Number(e.target.value) || 1)}
                   className="w-16 rounded-lg border border-[var(--lh-border)] px-2 py-1"

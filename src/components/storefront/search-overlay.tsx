@@ -27,8 +27,12 @@ export function SearchOverlay({ open, onClose }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const titleId = useId();
   const [q, setQ] = useState("");
-  const [results, setResults] = useState<Result[]>([]);
-  const [total, setTotal] = useState(0);
+  const [rawResults, setResults] = useState<Result[]>([]);
+  const [rawTotal, setTotal] = useState(0);
+  // Empty query shows no suggestions; derived so the fetch effect never resets state synchronously.
+  const hasTerm = q.trim().length > 0;
+  const results = hasTerm ? rawResults : [];
+  const total = hasTerm ? rawTotal : 0;
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -54,14 +58,10 @@ export function SearchOverlay({ open, onClose }: Props) {
   useEffect(() => {
     if (!open) return;
     const term = q.trim();
-    if (!term) {
-      setResults([]);
-      setTotal(0);
-      return;
-    }
+    if (!term) return;
     let cancelled = false;
-    setLoading(true);
     const handle = window.setTimeout(async () => {
+      setLoading(true);
       try {
         const res = await fetch(`/api/catalog/search?q=${encodeURIComponent(term)}&limit=8`);
         const data = (await res.json()) as { products?: Result[]; total?: number };

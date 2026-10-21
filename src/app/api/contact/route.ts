@@ -15,7 +15,7 @@ const schema = z.object({
 
 export async function POST(request: Request) {
   const ip = clientIp(request);
-  const limited = rateLimit(`contact:${ip}`, { limit: 5, windowMs: 15 * 60 * 1000 });
+  const limited = await rateLimit(`contact:${ip}`, { limit: 5, windowMs: 15 * 60 * 1000 });
   if (!limited.ok) {
     return NextResponse.json(
       { error: "rate_limited", message: "Too many requests. Try again later." },

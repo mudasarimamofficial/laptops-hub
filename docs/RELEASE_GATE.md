@@ -35,5 +35,8 @@ Five separate gates. A later gate cannot pass before the earlier ones. No combin
 6. Real-device responsive pass, screen-reader pass, performance measurement
 7. Legal review of Returns, Warranty, Privacy, Terms
 
-## Status
-Engineering handoff: **ready**. Production launch: **blocked** (items 1–7).
+## Status (2026-10-21 — Next.js COD platform)
+- Stack: Next.js + Supabase + Vercel preview (not Shopify). Gate **D** above is legacy; treat as “platform integration” = Supabase catalog + COD APIs.
+- Branch `feat/v5-storefront-admin`: V5 homepage port, compare, collections, search filters, admin product/order/COD/content mutations.
+- Security: P0 **9/9**, auth matrix **24/24** (anonymous). Staff-role browser E2E still needs owner membership bootstrap.
+- **COD live ordering: OFF.** **No `vercel --prod`.** Production launch: **blocked** until owner checklist + explicit approval.

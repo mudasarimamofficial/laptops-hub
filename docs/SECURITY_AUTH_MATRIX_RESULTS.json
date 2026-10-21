@@ -1,0 +1,126 @@
+{
+  "base": "http://127.0.0.1:3000",
+  "at": "2026-10-21T08:43:41.337Z",
+  "results": [
+    {
+      "name": "anon_patch__api_admin_products_dell_latitude_7420_core_i5_1",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon_no_leak__api_admin_products_dell_latitude_7420_c",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_post__api_admin_orders_LH_TEST_status",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon_no_leak__api_admin_orders_LH_TEST_status",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_post__api_admin_cod_collections",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon_no_leak__api_admin_cod_collections",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_post__api_admin_shipping_zones",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon_no_leak__api_admin_shipping_zones",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_redirect__admin",
+      "ok": true,
+      "detail": "status=307 loc=/admin/login"
+    },
+    {
+      "name": "anon_page_no_leak__admin",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_redirect__admin_products",
+      "ok": true,
+      "detail": "status=307 loc=/admin/login"
+    },
+    {
+      "name": "anon_page_no_leak__admin_products",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_redirect__admin_orders",
+      "ok": true,
+      "detail": "status=307 loc=/admin/login"
+    },
+    {
+      "name": "anon_page_no_leak__admin_orders",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_redirect__admin_settings",
+      "ok": true,
+      "detail": "status=307 loc=/admin/login"
+    },
+    {
+      "name": "anon_page_no_leak__admin_settings",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_redirect__admin_inquiries",
+      "ok": true,
+      "detail": "status=307 loc=/admin/login"
+    },
+    {
+      "name": "anon_page_no_leak__admin_inquiries",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "nonstaff_rls_orders",
+      "ok": true,
+      "detail": "rows=0"
+    },
+    {
+      "name": "nonstaff_rls_memberships",
+      "ok": true,
+      "detail": "rows=0"
+    },
+    {
+      "name": "nonstaff_rls_inquiries",
+      "ok": true,
+      "detail": "rows=0"
+    },
+    {
+      "name": "nonstaff_rls_drafts",
+      "ok": true,
+      "detail": "drafts=0"
+    },
+    {
+      "name": "nonstaff_rls_inventory",
+      "ok": true,
+      "detail": "permission denied for table product_variants"
+    },
+    {
+      "name": "public_catalog_readable",
+      "ok": true,
+      "detail": "n=3"
+    }
+  ]
+}

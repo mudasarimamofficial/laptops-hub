@@ -1,10 +1,19 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { formatPkr } from "@/lib/money";
 import type { PublicProduct } from "@/types/catalog";
+import { useCompare, COMPARE_MAX } from "@/lib/commerce/compare-store";
 
 export function ProductCard({ product }: { product: PublicProduct }) {
   const img = product.images[0];
+  const toggle = useCompare((s) => s.toggle);
+  const has = useCompare((s) => s.has(product.handle));
+  const count = useCompare((s) => s.handles.length);
+  const manufacturer =
+    product.manufacturer && !/laptops hub/i.test(product.manufacturer) ? product.manufacturer : null;
+
   return (
     <article className="group flex flex-col overflow-hidden rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white transition hover:border-[var(--lh-action)]/30 hover:shadow-[0_12px_40px_-20px_rgba(33,89,212,0.45)]">
       <Link href={`/products/${product.handle}`} className="relative block aspect-[4/3] bg-[var(--lh-titanium)]">
@@ -28,18 +37,34 @@ export function ProductCard({ product }: { product: PublicProduct }) {
             {product.category}
           </span>
         ) : null}
+        {manufacturer ? (
+          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-wider text-[var(--lh-ink-2)]">
+            {manufacturer}
+          </p>
+        ) : null}
         <h3 className="font-[family-name:var(--font-display)] text-[0.95rem] font-semibold leading-snug tracking-[-0.03em] text-[var(--lh-ink)]">
           <Link href={`/products/${product.handle}`}>{product.title}</Link>
         </h3>
         <p className="mt-auto font-[family-name:var(--font-display)] text-lg font-bold tracking-[-0.04em] text-[var(--lh-ink)]">
           {formatPkr(product.pricePaisa)}
         </p>
-        <Link
-          href={`/products/${product.handle}`}
-          className="mt-1 inline-flex items-center justify-center rounded-[var(--lh-radius-pill)] bg-[linear-gradient(180deg,var(--lh-grad-action-from),var(--lh-grad-action-to))] px-4 py-2 text-sm font-semibold text-white"
-        >
-          View details
-        </Link>
+        <div className="mt-1 flex gap-2">
+          <Link
+            href={`/products/${product.handle}`}
+            className="inline-flex flex-1 items-center justify-center rounded-[var(--lh-radius-pill)] bg-[linear-gradient(180deg,var(--lh-grad-action-from),var(--lh-grad-action-to))] px-3 py-2 text-sm font-semibold text-white"
+          >
+            View
+          </Link>
+          <button
+            type="button"
+            className="rounded-[var(--lh-radius-pill)] border border-[var(--lh-border)] px-3 py-2 text-sm font-semibold"
+            onClick={() => toggle(product.handle)}
+            disabled={!has && count >= COMPARE_MAX}
+            aria-pressed={has}
+          >
+            {has ? "Added" : "Compare"}
+          </button>
+        </div>
       </div>
     </article>
   );

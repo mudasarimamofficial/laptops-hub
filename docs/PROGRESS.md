@@ -1,5 +1,34 @@
 # Progress log
 
+## 2026-10-21 — V5 storefront + merchant mutations (`feat/v5-storefront-admin`)
+
+### Storefront
+- Cinematic hero (intro / skip / reduced-motion), pinned product story, brand/featured/budget/Chromebook/compare sections
+- Mega-menu + mobile nav; floating compare tray (max 4); `/compare`
+- Collections resolve from DB seed + matchers; search with brand/category/price/sort
+- PDP gallery, compare toggle, related products
+
+### Admin / COD ops
+- Product list (search/paginate) + edit form → `PATCH /api/admin/products/[handle]`
+- Order detail + status transitions + COD cash collection (explicit, audited)
+- Content CMS for pending pages (`/admin/content`) — no auto-publish
+- Shipping zone create (prior) retained
+
+### Security / infra
+- Migration `20261021150000` collections seed + `consume_rate_limit`
+- Migration `20261021151000` pending content page seeds
+- Auth matrix: **24/24** (`docs/SECURITY_AUTH_MATRIX_RESULTS.json`)
+- P0 probes still **9/9**; build + unit tests pass
+- COD checkout remains disabled
+
+### Next
+1. Owner staff bootstrap → browser role E2E
+2. Playwright visual vs V5 reference viewports
+3. Wire approved `lh-content.js` into CMS publish flow
+4. Preview RC deploy of this branch; still no `--prod`
+
+---
+
 ## 2026-10-21 — P0 security (admin authorization)
 
 ### Fixed

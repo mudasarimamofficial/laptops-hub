@@ -73,9 +73,13 @@ Anon nested select of products + variants + media still returns active products 
 ### Build
 `npm run build` succeeds with admin routes force-dynamic.
 
+### Auth matrix (anonymous HTTP + RLS) — executed
+`npm run test:security:auth-matrix` → **24/24** (`docs/SECURITY_AUTH_MATRIX_RESULTS.json`).
+Admin mutation APIs return 401 without session; admin pages redirect to `/admin/login`; no sensitive payload leak in responses; anon RLS still blocks orders/inquiries/drafts/inventory.
+
 ### Not yet automated (documented follow-up)
-- Full browser E2E: create a non-staff Auth user, hit `/admin/orders`, assert redirect to `/admin/forbidden` and HTML contains no customer names.
-- Owner happy-path login after real `admin_memberships` bootstrap (owner action required — no self-service).
+- Full browser E2E per staff role (owner/admin/manager/editor/fulfillment/inactive) — requires owner `admin_memberships` bootstrap.
+- Signed-in non-staff Auth user → `/admin/forbidden` with no customer PII in HTML.
 
 ---
 
@@ -86,7 +90,7 @@ Anon nested select of products + variants + media still returns active products 
    insert into public.admin_memberships (user_id, role, is_active)
    values ('<auth.users.id>', 'owner', true);
    ```
-2. In-memory contact rate limit is soft (per-instance); upgrade to durable limiter before public launch.
+2. Rate limit uses Postgres `consume_rate_limit` with in-memory fallback; keep edge WAF in mind for launch traffic.
 3. Keep `COD_CHECKOUT_ENABLED=false` until shipping/policy gates clear.
 4. Do not promote production without explicit approval.
 
@@ -94,4 +98,4 @@ Anon nested select of products + variants + media still returns active products 
 
 ## 5. Conclusion
 
-P0 authorization hole is closed in code and verified against the live Supabase project with negative Data API tests. Feature expansion may resume under the continuation prompt (V5 parity, COD UX, full admin mutations) while COD remains gated.
+P0 authorization hole is closed and re-verified (9/9 Data API + 24/24 auth matrix). Storefront/admin feature work continues on `feat/v5-storefront-admin` while COD remains gated.

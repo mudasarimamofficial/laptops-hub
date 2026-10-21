@@ -3,11 +3,13 @@
 | Capability | owner | admin | manager | editor | fulfillment |
 |------------|:-----:|:-----:|:-------:|:------:|:-----------:|
 | Overview dashboard | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Products list/edit (planned) | ✓ | ✓ | ✓ | ✓ | — |
-| Orders list / fulfillment | ✓ | ✓ | ✓ | — | ✓ |
-| COD cash collection (planned) | ✓ | ✓ | ✓ | — | ✓ |
+| Products list/edit | ✓ | ✓ | ✓ | ✓ | — |
+| Orders list / status / COD collect | ✓ | ✓ | ✓ | — | ✓ |
+| Content pages CMS | ✓ | ✓ | ✓ | ✓ | — |
 | Settings / shipping | ✓ | ✓ | ✓ | — | — |
 | Inquiries | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Staff invite / deactivate (planned) | ✓ | ✓ | — | — | — |
 
-Enforcement: `requireStaffPage([...roles])` on each route. Inactive membership → forbidden. No public self-elevation.
+Enforcement: `requireStaff` / `requireStaffPage([...roles])` on each route and API. Inactive membership → forbidden. No public self-elevation.
+
+Anonymous API denial: `npm run test:security:auth-matrix` (requires local/preview base URL).

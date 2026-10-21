@@ -1,6 +1,7 @@
 import { PendingBlock } from "@/components/ui/pending-block";
+import { createClient } from "@/lib/supabase/server";
 
-const TITLES: Record<string, string> = {
+const FALLBACK_TITLES: Record<string, string> = {
   about: "About Laptops HUB",
   "why-laptops-hub": "Why Laptops HUB",
   contact: "Contact",
@@ -20,22 +21,55 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  return { title: TITLES[slug] || "Page" };
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("content_pages")
+      .select("title, status")
+      .eq("slug", slug)
+      .eq("status", "published")
+      .maybeSingle();
+    if (data?.title) return { title: data.title };
+  } catch {
+    /* fall through */
+  }
+  return { title: FALLBACK_TITLES[slug] || "Page" };
 }
 
 export default async function ContentPage({ params }: Props) {
   const { slug } = await params;
-  const title = TITLES[slug] || slug;
+  let title = FALLBACK_TITLES[slug] || slug;
+  let bodyHtml: string | null = null;
+
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("content_pages")
+      .select("title, body_html, status")
+      .eq("slug", slug)
+      .eq("status", "published")
+      .maybeSingle();
+    if (data) {
+      title = data.title;
+      bodyHtml = data.body_html || "";
+    }
+  } catch {
+    /* pending fallback */
+  }
 
   return (
     <div className="lh-content py-12">
       <p className="lh-kicker">Information</p>
       <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold tracking-[-0.04em]">{title}</h1>
       <div className="mt-8">
-        <PendingBlock title={`${title} — awaiting owner approval`}>
-          Verified content from <code>data/lh-content.js</code> will be wired through the CMS. Until then we show this
-          honest pending state instead of inventing policies or contact details.
-        </PendingBlock>
+        {bodyHtml ? (
+          <div className="prose prose-neutral max-w-none text-[var(--lh-ink-2)]" dangerouslySetInnerHTML={{ __html: bodyHtml }} />
+        ) : (
+          <PendingBlock title={`${title} — awaiting owner approval`}>
+            Published CMS content will appear here. Until the owner publishes approved copy, we show this honest pending
+            state instead of inventing policies or contact details.
+          </PendingBlock>
+        )}
       </div>
     </div>
   );

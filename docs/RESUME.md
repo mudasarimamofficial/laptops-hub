@@ -1,29 +1,35 @@
-# Resume here
+﻿# Resume here
 
-State: **P0 admin authorization FIXED & verified** (2026-10-21). COD still gated. V5 cinematic parity and full admin mutations remain next.
+State: **Phases 3–7 in progress on branch `feat/v5-storefront-admin`** (2026-10-21).
 
-## HEAD / cloud
-- GitHub `main` — push P0 security commit after this session checkpoint
-- Supabase `xvmmjkrkgznnakcobmww` — migrations through `20261021130000_p0_security_hardening`
-- Catalog DB: **232 / 226 / 6 / 964** preserved
-- Vercel `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` — preview only; **no prod promote without owner approval**
-- Flags: `COD_CHECKOUT_ENABLED=false`
+## Confirmed baseline
+- `d6f7e03` — P0 requireStaff + column grants (security probes 9/9)
+- `18804fa` — COD shipping quote + city/province zone match
+- Migrations through `20261021151000_content_pages_pending_seed`
+- Catalog: **232 / 226 / 6 / 964**
+- Vercel preview only; **COD off**; **no `--prod`**
 
-## P0 evidence
-- `docs/SECURITY_P0_REVIEW.md`
-- `npm run test:security:p0` → **9/9 PASS**
-- `npm run test:unit` → pass (incl. staff role allow-list)
+## Done this continuation
+- V5 homepage stack: cinematic hero, pinned product story, brands/featured/budget/Chromebook/compare teaser, mega + mobile nav, compare tray
+- Collections: DB-seeded + matcher resolve; search filters (brand/category/price/sort)
+- PDP: gallery, compare, related products; product-card compare
+- Admin: product edit (PATCH), order detail + status transitions, COD collection API/UI, content CMS (pending pages seeded)
+- Durable rate limit RPC + memory fallback
+- Auth matrix script: **24/24** anon denial + RLS (`npm run test:security:auth-matrix`)
+- P0 still **9/9**; unit tests pass; `npm run build` pass
 
-## Owner action required
-Bootstrap first staff row (no self-service):
-```sql
-insert into public.admin_memberships (user_id, role, is_active)
-values ('<auth.users.id>', 'owner', true);
-```
+## Still open
+- Browser E2E with real staff roles (needs owner `admin_memberships` bootstrap)
+- Playwright visual parity vs original V5 screenshots (measurable diffs)
+- Full CMS from `data/lh-content.js` into published pages (owner approval)
+- Media reorder / variant create / staff invite UI
+- Enable COD only after owner shipping + policy approval
 
-## Next (authorized)
-1. COD checkout UX: remove zone UUID; server quote + city/province match
-2. V5 cinematic hero/story + visual parity doc
-3. Data-driven collections, full cards, compare tray
-4. Admin CRUD / order transitions / COD collection / CMS
-5. Playwright + RLS E2E; preview verify; launch docs — still no `--prod`
+## Owner still required
+- Bootstrap `admin_memberships` owner row
+- Real shipping zones/fees; approve policies & media
+- Explicit launch before public COD / `vercel --prod`
+
+## Do not
+- Enable public COD / `vercel --prod` without explicit approval
+- Invent policies or specs

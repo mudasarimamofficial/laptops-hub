@@ -60,6 +60,9 @@ export default async function AdminHomePage() {
           <Link href="/admin/products">Catalog</Link>
         </li>
         <li>
+          <Link href="/admin/content">Content pages</Link>
+        </li>
+        <li>
           <Link href="/admin/settings">Store settings / shipping</Link>
         </li>
         <li>

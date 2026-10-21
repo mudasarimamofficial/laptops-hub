@@ -107,4 +107,76 @@ export async function searchPublicProducts(q: string, limit = 24): Promise<Publi
   return (data as ProductRow[] | null)?.map(mapProduct).filter(Boolean) as PublicProduct[];
 }
 
+export type CatalogFilter = {
+  q?: string;
+  brand?: string;
+  category?: string;
+  minPaisa?: number;
+  maxPaisa?: number;
+  sort?: "price_asc" | "price_desc" | "title" | "featured";
+  limit?: number;
+};
+
+/** Client-side filter/sort over a public product set (server query + local refine). */
+export async function filterPublicProducts(filter: CatalogFilter): Promise<PublicProduct[]> {
+  const limit = filter.limit ?? 96;
+  let products =
+    filter.q && filter.q.trim()
+      ? await searchPublicProducts(filter.q, 200)
+      : await listPublicProducts(200);
+
+  if (filter.brand) {
+    const b = filter.brand.toLowerCase();
+    products = products.filter((p) => {
+      const m = (p.manufacturer || "").toLowerCase();
+      if (m.includes("laptops hub")) return false;
+      return m.includes(b) || p.title.toLowerCase().includes(b);
+    });
+  }
+  if (filter.category) {
+    const c = filter.category.toLowerCase();
+    products = products.filter(
+      (p) =>
+        (p.category || "").toLowerCase().includes(c) ||
+        (p.productType || "").toLowerCase().includes(c),
+    );
+  }
+  if (filter.minPaisa != null) products = products.filter((p) => p.pricePaisa >= filter.minPaisa!);
+  if (filter.maxPaisa != null) products = products.filter((p) => p.pricePaisa <= filter.maxPaisa!);
+
+  switch (filter.sort) {
+    case "price_asc":
+      products.sort((a, b) => a.pricePaisa - b.pricePaisa);
+      break;
+    case "price_desc":
+      products.sort((a, b) => b.pricePaisa - a.pricePaisa);
+      break;
+    case "featured":
+      products.sort((a, b) => Number(b.featured) - Number(a.featured) || a.title.localeCompare(b.title));
+      break;
+    default:
+      products.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  return products.slice(0, limit);
+}
+
+export async function listRelatedProducts(product: PublicProduct, limit = 4): Promise<PublicProduct[]> {
+  const pool = await listPublicProducts(80);
+  const brand = (product.manufacturer || "").toLowerCase();
+  const scored = pool
+    .filter((p) => p.handle !== product.handle)
+    .map((p) => {
+      let score = 0;
+      if (brand && (p.manufacturer || "").toLowerCase() === brand && !brand.includes("laptops hub")) score += 3;
+      if (product.category && p.category === product.category) score += 2;
+      if (product.productType && p.productType === product.productType) score += 1;
+      return { p, score };
+    })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score || Math.abs(a.p.pricePaisa - product.pricePaisa) - Math.abs(b.p.pricePaisa - product.pricePaisa));
+
+  return (scored.length ? scored.map((x) => x.p) : pool.filter((p) => p.handle !== product.handle)).slice(0, limit);
+}
+
 /** Removed: privileged counts must only run after requireStaff() inside /admin pages. */

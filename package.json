@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test:unit": "tsx tests/unit/money.test.ts && tsx tests/unit/phone.test.ts && tsx tests/unit/staff-auth.test.ts",
     "test:security:p0": "node scripts/security-p0-probe.mjs",
+    "test:security:auth-matrix": "node scripts/security-auth-matrix.mjs",
     "import:catalog": "node scripts/import-catalog.mjs",
     "import:catalog:dry": "node scripts/import-catalog.mjs --dry-run",
     "db:push": "npx supabase db push --linked"

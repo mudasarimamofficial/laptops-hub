@@ -1,4 +1,4 @@
-import { createClient, createServiceClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import type { PublicProduct } from "@/types/catalog";
 
 type ProductRow = {
@@ -107,25 +107,4 @@ export async function searchPublicProducts(q: string, limit = 24): Promise<Publi
   return (data as ProductRow[] | null)?.map(mapProduct).filter(Boolean) as PublicProduct[];
 }
 
-/** Staff / import path */
-export async function adminProductCounts() {
-  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    return { total: 0, active: 0, draft: 0, media: 0 };
-  }
-  const supabase = createServiceClient();
-  const { count: total } = await supabase
-    .from("products")
-    .select("id", { count: "exact", head: true });
-  const { count: active } = await supabase
-    .from("products")
-    .select("id", { count: "exact", head: true })
-    .eq("status", "active");
-  const { count: draft } = await supabase
-    .from("products")
-    .select("id", { count: "exact", head: true })
-    .eq("status", "draft");
-  const { count: media } = await supabase
-    .from("product_media")
-    .select("id", { count: "exact", head: true });
-  return { total: total ?? 0, active: active ?? 0, draft: draft ?? 0, media: media ?? 0 };
-}
+/** Removed: privileged counts must only run after requireStaff() inside /admin pages. */

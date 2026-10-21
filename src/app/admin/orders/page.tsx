@@ -1,3 +1,4 @@
+import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 import { formatPkr } from "@/lib/money";
 import { PendingBlock } from "@/components/ui/pending-block";
@@ -6,6 +7,8 @@ export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
 
 export default async function AdminOrdersPage() {
+  await requireStaffPage(["owner", "admin", "manager", "fulfillment"]);
+
   let orders: {
     order_number: string;
     status: string;

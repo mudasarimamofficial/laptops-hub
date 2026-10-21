@@ -1,13 +1,25 @@
-import { createServiceClient } from "@/lib/supabase/server";
+import { headers } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
 import { formatPkr } from "@/lib/money";
 import { PendingBlock } from "@/components/ui/pending-block";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  robots: { index: false, follow: false, nocache: true },
+  referrer: "no-referrer" as const,
+};
+
 type Props = { params: Promise<{ token: string }> };
+
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export default async function OrderSuccessPage({ params }: Props) {
   const { token } = await params;
+  // Ensure intermediaries do not cache confirmation pages with opaque tokens
+  await headers();
+
   let order: {
     order_number: string;
     total_due_paisa: number;
@@ -15,16 +27,18 @@ export default async function OrderSuccessPage({ params }: Props) {
     status: string;
   } | null = null;
 
-  try {
-    const supabase = createServiceClient();
-    const { data } = await supabase
-      .from("orders")
-      .select("order_number, total_due_paisa, payment_status, status")
-      .eq("access_token", token)
-      .maybeSingle();
-    order = data;
-  } catch {
-    order = null;
+  if (UUID_RE.test(token)) {
+    try {
+      const supabase = await createClient();
+      const { data, error } = await supabase.rpc("get_order_confirmation_by_token", {
+        p_token: token,
+      });
+      if (!error && Array.isArray(data) && data[0]) {
+        order = data[0];
+      }
+    } catch {
+      order = null;
+    }
   }
 
   if (!order) {
@@ -51,11 +65,12 @@ export default async function OrderSuccessPage({ params }: Props) {
           {formatPkr(order.total_due_paisa)}
         </p>
         <p className="mt-4 text-sm text-[var(--lh-ink-2)]">
-          Payment status: <strong>{order.payment_status}</strong> (not marked paid until COD is collected) · Fulfillment:{" "}
-          <strong>{order.status}</strong>
+          Payment status: <strong>{order.payment_status}</strong> (not marked paid until COD is collected) ·
+          Fulfillment: <strong>{order.status}</strong>
         </p>
         <p className="mt-4 text-sm text-[var(--lh-ink-2)]">
-          We do not claim SMS/email was sent unless a verified provider is configured.
+          We do not claim SMS/email was sent unless a verified provider is configured. Customer name, phone and address
+          are not shown on this page.
         </p>
       </div>
     </div>

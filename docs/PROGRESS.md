@@ -1,5 +1,27 @@
 # Progress log
 
+## 2026-10-21 — P0 security (admin authorization)
+
+### Fixed
+- `requireStaff` / `requireStaffPage` on all privileged admin routes before service-role reads
+- Middleware staff membership check (defense in depth)
+- Column grants: anon/authenticated cannot select inventory or internal product ops columns
+- Order confirmation via narrow RPC; contact rate limit + honeypot
+- Docs: `SECURITY_P0_REVIEW.md`, `ADMIN_ROLE_MATRIX.md`
+
+### Verified
+- `npm run test:security:p0` → **9/9**
+- `npm run test:unit` → pass
+- `npm run build` → pass
+- Public nested catalog select still works
+
+### Not done (next)
+- Browser E2E non-staff vs staff against `/admin/*`
+- Owner bootstrap of `admin_memberships`
+- V5 parity, COD UX, full admin mutations
+
+---
+
 ## 2026-10-21 — Phases 0–2 (foundation)
 
 ### Phase 0

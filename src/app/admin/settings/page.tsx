@@ -1,3 +1,4 @@
+import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 import { PendingBlock } from "@/components/ui/pending-block";
 
@@ -5,6 +6,8 @@ export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
 
 export default async function AdminSettingsPage() {
+  await requireStaffPage(["owner", "admin", "manager"]);
+
   const supabase = createServiceClient();
   const { data: settings } = await supabase.from("store_settings").select("key, value");
   const { data: zones } = await supabase.from("shipping_zones").select("*").order("name");

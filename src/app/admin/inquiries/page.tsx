@@ -1,9 +1,12 @@
+import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
 
 export default async function AdminInquiriesPage() {
+  await requireStaffPage(["owner", "admin", "manager", "editor", "fulfillment"]);
+
   const supabase = createServiceClient();
   const { data } = await supabase
     .from("contact_inquiries")

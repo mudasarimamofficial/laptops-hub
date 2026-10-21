@@ -1,38 +1,29 @@
 # Resume here
 
-State: **Phases 0–2 + preview deploy** (2026-10-21). Foundation live on verified cloud IDs. **Not production-ready** (COD gated; V5 cinematic parity incomplete; owner gates open).
+State: **P0 admin authorization FIXED & verified** (2026-10-21). COD still gated. V5 cinematic parity and full admin mutations remain next.
 
-## Verified cloud
-- GitHub: `mudasarimamofficial/laptops-hub` · commits `bb17fec` → `971fda2` on `main`
-- Supabase: `xvmmjkrkgznnakcobmww` — migration applied; DB counts **232 / 226 / 6 / 964**
-- Vercel: `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` · preview READY  
-  `https://laptops-drtmlkjt9-mudasarimamofficial-gmailcoms-projects.vercel.app`  
-  (Deployment Protection may require dashboard / `vercel curl`)
+## HEAD / cloud
+- GitHub `main` — push P0 security commit after this session checkpoint
+- Supabase `xvmmjkrkgznnakcobmww` — migrations through `20261021130000_p0_security_hardening`
+- Catalog DB: **232 / 226 / 6 / 964** preserved
+- Vercel `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` — preview only; **no prod promote without owner approval**
+- Flags: `COD_CHECKOUT_ENABLED=false`
 
-## Done
-- Forensic audit: `docs/00_FORENSIC_AUDIT.md`
-- Next.js 16 App Router + V5 tokens + storefront routes
-- Atomic `create_cod_order` RPC + RLS (checkout env-gated OFF)
-- Admin shell (login, overview, orders, products, settings, inquiries)
-- Unit tests: money + PK phone
+## P0 evidence
+- `docs/SECURITY_P0_REVIEW.md`
+- `npm run test:security:p0` → **9/9 PASS**
+- `npm run test:unit` → pass (incl. staff role allow-list)
 
-## Not done / gated
-- Pixel-faithful cinematic hero + pinned scroll story (media from `reference/`)
-- Full compare tray, predictive search overlay, CMS content pages
-- Owner shipping zones → enable COD
-- Staff bootstrap (`admin_memberships` insert)
-- Media rights, policies, production launch
-- Visual Playwright suite vs V5 reference
-
-## Commands
-```bash
-npm run dev
-npm run test:unit
-npm run import:catalog
-vercel          # preview only — confirm project ID first
+## Owner action required
+Bootstrap first staff row (no self-service):
+```sql
+insert into public.admin_memberships (user_id, role, is_active)
+values ('<auth.users.id>', 'owner', true);
 ```
 
-## Do not
-- Invent policies/fees
-- Enable public COD until owner gates clear
-- Commit CSV / `.env` / `lh-catalog.js`
+## Next (authorized)
+1. COD checkout UX: remove zone UUID; server quote + city/province match
+2. V5 cinematic hero/story + visual parity doc
+3. Data-driven collections, full cards, compare tray
+4. Admin CRUD / order transitions / COD collection / CMS
+5. Playwright + RLS E2E; preview verify; launch docs — still no `--prod`

@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-21T08:19:51.183Z",
+  "results": [
+    {
+      "name": "anon_cannot_read_orders",
+      "ok": true,
+      "detail": "rows=0"
+    },
+    {
+      "name": "anon_cannot_read_inquiries",
+      "ok": true,
+      "detail": "rows=0"
+    },
+    {
+      "name": "anon_cannot_select_inventory_columns",
+      "ok": true,
+      "detail": "permission denied for table product_variants"
+    },
+    {
+      "name": "anon_cannot_select_internal_product_columns",
+      "ok": true,
+      "detail": "permission denied for table products"
+    },
+    {
+      "name": "anon_cannot_list_drafts",
+      "ok": true,
+      "detail": "draft_rows=0"
+    },
+    {
+      "name": "anon_cannot_insert_admin_membership",
+      "ok": true,
+      "detail": "new row violates row-level security policy for table \"admin_memberships\""
+    },
+    {
+      "name": "anon_can_read_public_prices",
+      "ok": true,
+      "detail": "rows=3"
+    },
+    {
+      "name": "service_role_can_read_inventory_for_staff_ops",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "order_token_rpc_returns_empty_for_unknown",
+      "ok": true,
+      "detail": "rows=0"
+    }
+  ]
+}

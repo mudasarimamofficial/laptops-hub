@@ -1,5 +1,23 @@
 # Progress log
 
+## 2026-10-21 — Vercel 404 recovery (Preview restored)
+
+### Root cause
+- Vercel project Framework preset was **Other** with Output Directory **`public`**, so READY deployments served no Next.js app root → platform `NOT_FOUND` on aliases/URLs.
+- GitHub bot linked “Preview” to Production hostname `laptops-hub.vercel.app` (misleading).
+
+### Fix
+- `vercel project update --framework nextjs` + clear output directory
+- `vercel.json` framework nextjs; Tailwind v4 `postcss.config.mjs` + `@tailwindcss/postcss`
+- `.vercelignore` so CLI deploys do not upload local archives (100MB+ failure)
+
+### Verified Preview
+- URL: https://laptops-qi1nix9ah-mudasarimamofficial-gmailcoms-projects.vercel.app (`dpl_1oui2NALZxJF6vXi2fpjZHurWJP8`, `9b24eae`)
+- Routes smoke: `/` + collections + product + search/compare/cart/checkout/admin/login = 200; `/admin` = 307 login; COD API disabled
+- Production alias left untouched (no `--prod`)
+
+---
+
 ## 2026-10-21 — RC hardening (financial, CMS, catalog, roles)
 
 ### Financial integrity

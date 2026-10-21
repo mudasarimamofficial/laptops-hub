@@ -1,32 +1,33 @@
 ﻿# Resume here
 
-State: **RC hardening on `feat/v5-storefront-admin` @ `765b084`** (2026-10-21).
+State: **Preview access restored** on `feat/v5-storefront-admin` @ `9b24eae` (2026-10-21).
 
 Draft PR (do not merge): https://github.com/mudasarimamofficial/laptops-hub/pull/1
 
-## Baseline
-- Prior: `28e2450` V5 + admin mutations → now `765b084`
-- Migrations through `20261021160000_atomic_ops_catalog_cms`
-- Catalog: **232 / 226 / 6 / 964** (pagination view confirms 226 public)
-- **COD off** · **no `--prod`**
+## Working Preview (use this — not the Production alias)
+- Unique: https://laptops-qi1nix9ah-mudasarimamofficial-gmailcoms-projects.vercel.app
+- Branch alias: https://laptops-hub-git-f-129910-mudasarimamofficial-gmailcoms-projects.vercel.app
+- Deployment: `dpl_1oui2NALZxJF6vXi2fpjZHurWJP8` · commit `9b24eae` · **Preview**
+- Homepage: **HTTP 200** Next.js · V5 HTML confirmed
+- See `docs/DEPLOYMENT_404_ROOT_CAUSE.md`
 
-## Hardening completed this session
-- Atomic `record_cod_collection` + concurrent same-key / over-collection proofs (**6/6**)
-- Atomic `transition_order_status` with stale-status guard
-- DOMPurify allowlist CMS sanitizer + legal approval ≠ editorial publish
-- Variant-scoped product price PATCH
-- DB `public_catalog_listing` + paginated search/collections (no 200/226 hard truncate)
-- Role matrix fixtures (**15/15**) — non-staff, inactive, editor deny COD, fulfillment/owner allowed RPC path
-- Cutouts removed from `public/` (rights uncleared); story uses catalog CDN images
-- P0 still **9/9**; catalog pagination **5/5**; unit + sanitize pass; build pass
+## 404 root cause (fixed for Preview)
+- Project Framework was **Other** with Output Directory **`public`** → platform `NOT_FOUND` (no Next.js document).
+- Fixed: Framework **Next.js**, Output Directory auto, `vercel.json`, Tailwind `postcss.config.mjs`.
+- `https://laptops-hub.vercel.app/` is the **Production** alias — still may 404 until an approved Production promote. **Do not promote to clear the 404.**
 
-## Still open / owner
-- Manual pixel comparison vs `reference/v5` (Playwright **8/8** evidence captured; not claimed pixel-perfect)
-- Controlled owner bootstrap of real `admin_memberships` (ephemeral fixtures deleted after role tests)
-- Shipping fees, policy legal approval, media rights, launch approval
-- Vercel preview review of this branch — **do not merge / do not enable COD / no `--prod`**
+## Smoke (Preview via `vercel curl`)
+- `/` collections search compare cart checkout product admin/login → **200**
+- `/admin` → **307** → `/admin/login`
+- `POST /api/checkout/cod` → `checkout_disabled`
+- CSS utilities + V5 tokens present in compiled CSS; build compiled successfully
+- P0 security probes **9/9**
 
-## Do not
-- Enable public COD / `vercel --prod`
-- Invent policies, fees, or specs
-- Treat `approved-assets` folder names as license proof
+## Baseline still true
+- Catalog **232 / 226 / 6 / 964**
+- COD **off** · **no `--prod`** · atomic COD/status RPCs · DOMPurify CMS · role matrix
+
+## Owner still required
+- Sign in via Vercel SSO to open Preview in browser (team protection on `*.vercel.app`)
+- Media rights, shipping fees, legal approval, staff bootstrap
+- Explicit approval before Production promote / COD enable / merge

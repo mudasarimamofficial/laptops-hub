@@ -1,0 +1,54 @@
+﻿# secrets & env
+.env
+.env.*
+!.env.example
+
+# Vercel / Supabase local
+.vercel
+supabase/.temp
+supabase/.branches
+
+# dependencies & build
+node_modules
+.next
+out
+dist
+coverage
+playwright-report
+test-results
+*.tsbuildinfo
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+
+# Sensitive catalog & archives (public repo)
+data/source/
+data/lh-catalog.js
+data/lh-content.js
+*.zip
+Laptops Hub storefront.zip
+
+# Prototype & media stay local / reference — not for public serve
+reference/
+assets/
+uploads/
+checkpoints/
+screenshots/
+qa/
+Laptops_Hub_V5_Handoff/
+*.dc.html
+support.js
+QA *.html
+QA Catalog.html
+QA Functional.html
+QA Viewports.html
+.thumbnail
+
+# Temp dumps
+docs/_tmp_*
+
+supabase/.temp/
+

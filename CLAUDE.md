@@ -1,0 +1,1 @@
+Laptops HUB: V5 design system is frozen (no redesigns). At the start of each session read docs/RESUME.md and docs/FINAL_COMPLETION_REPORT.md before changing anything. Never invent products, specs, policies, warranty, delivery or company facts — use pending blocks in data/lh-content.js.

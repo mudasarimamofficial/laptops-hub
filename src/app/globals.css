@@ -1,0 +1,100 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+@theme inline {
+  --color-lh-canvas: var(--lh-canvas);
+  --color-lh-ink: var(--lh-ink);
+  --color-lh-action: var(--lh-action);
+  --font-sans: var(--font-body);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--lh-canvas);
+  color: var(--lh-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.lh-container {
+  width: min(100% - (var(--lh-gutter) * 2), var(--lh-container));
+  margin-inline: auto;
+}
+
+.lh-content {
+  width: min(100% - (var(--lh-gutter) * 2), var(--lh-content));
+  margin-inline: auto;
+}
+
+.lh-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lh-ink-2);
+}
+
+.lh-kicker::before {
+  content: "";
+  width: 12px;
+  height: 2px;
+  background: var(--lh-signal);
+}
+
+.lh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--lh-radius-pill);
+  padding: 0.75rem 1.35rem;
+  font-weight: 650;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+}
+
+.lh-btn-primary {
+  color: white;
+  background: linear-gradient(180deg, var(--lh-grad-action-from), var(--lh-grad-action-to));
+}
+
+.lh-btn-primary:hover {
+  background: var(--lh-action-hover);
+}
+
+.lh-btn-ghost {
+  background: transparent;
+  color: white;
+  border: 1px solid color-mix(in srgb, white 35%, transparent);
+}

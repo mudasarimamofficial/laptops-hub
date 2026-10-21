@@ -1,0 +1,39 @@
+/* Laptops HUB V5 design tokens — frozen. Do not redesign. */
+:root {
+  --lh-signal: #e52434;
+  --lh-action: #2159d4;
+  --lh-action-hover: #1748b5;
+  --lh-grad-action-from: #2c64e2;
+  --lh-grad-action-to: #2159d4;
+  --lh-electric: #1cb9e8;
+  --lh-iris: #6574d5;
+  --lh-canvas: #f6f9fe;
+  --lh-titanium: #dfeaf7;
+  --lh-ice: #eaf3fe;
+  --lh-navy: #0a1730;
+  --lh-ink: #102039;
+  --lh-ink-2: #52637b;
+  --lh-border: #dae5f2;
+  --lh-divider: #e8eff7;
+  --lh-success: #166044;
+  --lh-success-bg: #e8f6ef;
+  --lh-warning: #865111;
+  --lh-warning-bg: #fff4e0;
+  --lh-error: #b42318;
+  --lh-white: #ffffff;
+
+  --lh-radius-badge: 6px;
+  --lh-radius-control: 12px;
+  --lh-radius-card: 20px;
+  --lh-radius-frame: 28px;
+  --lh-radius-pill: 999px;
+
+  --lh-container: 1360px;
+  --lh-content: 1200px;
+  --lh-gutter: clamp(16px, 3vw, 32px);
+  --lh-section: clamp(56px, 7vw, 96px);
+
+  --font-display: var(--font-sora), system-ui, sans-serif;
+  --font-body: var(--font-hanken), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}

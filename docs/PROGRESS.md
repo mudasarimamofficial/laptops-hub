@@ -27,11 +27,19 @@
 - `npm run test:unit` pass (money, phone).
 - `npm run build` pass.
 
-### Next
-1. Git baseline commit + push to existing empty public repo (sanitized).
-2. Vercel preview deploy + env vars.
-3. Continue V5 visual parity + admin mutations + E2E.
-4. Owner: shipping zones, staff UID, policies, media rights before enabling COD.
+### Deploy
+- Pushed sanitized `main` to GitHub (no CSV/secrets/catalog JS).
+- Vercel env configured (Supabase URL/anon/service + COD flags=false).
+- Preview READY: `https://laptops-drtmlkjt9-mudasarimamofficial-gmailcoms-projects.vercel.app` (project ID verified).
+- **No production promote** performed.
+
+### Next engineering
+1. Port cinematic hero + pinned scroll story from `reference/v5`.
+2. Compare tray, search overlay, CMS content from `lh-content.js`.
+3. Admin mutations (status transitions, COD collection action, shipping zone editor).
+4. Playwright E2E + visual diffs; RLS negative tests.
+5. Owner: shipping zones, staff UID, policies, media rights → then enable COD carefully.
 
 ### Blockers (owner)
 - Shipping/COD fees, contact, legal pages, media rights, draft reviews, first admin user.
+- Explicit go-live before `vercel --prod`.

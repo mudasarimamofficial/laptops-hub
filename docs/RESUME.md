@@ -1,11 +1,13 @@
 # Resume here
 
-State: **Phase 1–2 foundation live** (2026-10-21). Independent Next.js + Supabase COD platform scaffolded on verified cloud IDs. Catalog imported. Preview deploy next.
+State: **Phases 0–2 + preview deploy** (2026-10-21). Foundation live on verified cloud IDs. **Not production-ready** (COD gated; V5 cinematic parity incomplete; owner gates open).
 
 ## Verified cloud
-- GitHub: `mudasarimamofficial/laptops-hub` (was empty; first push pending)
-- Supabase: `xvmmjkrkgznnakcobmww` — migration `20261021120000_init_laptops_hub` applied; **232 / 226 / 6 / 964** imported
-- Vercel: `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` (`laptops-hub`) linked
+- GitHub: `mudasarimamofficial/laptops-hub` · commits `bb17fec` → `971fda2` on `main`
+- Supabase: `xvmmjkrkgznnakcobmww` — migration applied; DB counts **232 / 226 / 6 / 964**
+- Vercel: `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` · preview READY  
+  `https://laptops-drtmlkjt9-mudasarimamofficial-gmailcoms-projects.vercel.app`  
+  (Deployment Protection may require dashboard / `vercel curl`)
 
 ## Done
 - Forensic audit: `docs/00_FORENSIC_AUDIT.md`

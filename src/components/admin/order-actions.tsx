@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatPkr, paisaToMajor } from "@/lib/money";
 
@@ -37,6 +37,9 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
   const [collectPkr, setCollectPkr] = useState(String(paisaToMajor(outstanding) || ""));
   const [collectorRef, setCollectorRef] = useState("");
   const [busy, setBusy] = useState(false);
+  // One key per logical collection: kept across retries (a lost response must replay, not record twice),
+  // cleared only after the server confirms.
+  const collectKey = useRef<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
@@ -77,10 +80,10 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
     setBusy(true);
     setMsg(null);
     setErr(null);
-    const idempotencyKey =
+    const idempotencyKey = (collectKey.current ??=
       typeof crypto !== "undefined" && crypto.randomUUID
         ? crypto.randomUUID()
-        : `cod-${orderNumber}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        : `cod-${orderNumber}-${Date.now()}-${Math.random().toString(36).slice(2)}`);
     try {
       const res = await fetch("/api/admin/cod-collections", {
         method: "POST",
@@ -98,6 +101,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
         setErr(data.message || data.error || `Collection failed (${res.status})`);
         return;
       }
+      collectKey.current = null;
       setMsg(
         data.idempotentReplay
           ? `Already recorded (idempotent) · ${data.paymentStatus}`

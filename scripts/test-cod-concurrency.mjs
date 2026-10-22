@@ -193,32 +193,98 @@ const { count: colCount } = await sb
   .eq("order_id", order.id);
 assert("exactly_two_collection_rows", colCount === 2, `rows=${colCount}`);
 
-// Stress: bursts of same-key calls on one order, and one key raced across two orders.
+const extraOrders = [];
+// Stress + idempotency contract (docs/COD_IDEMPOTENCY_CONTRACT.md). Assertions use persisted rows, not flags.
 const o2 = await sandboxOrder("-B");
 const o3 = await sandboxOrder("-C");
-const burst = { rounds: 10, size: 8, errors: [], badSplit: 0 };
-for (let r = 0; r < burst.rounds; r++) {
-  const key = `idem-burst-${randomUUID()}`;
-  const rs = await Promise.all(Array.from({ length: burst.size }, () => collect(o2.order_number, key, 100)));
-  burst.errors.push(...rs.filter((x) => x.error).map((x) => x.error.message));
-  if (rs.filter((x) => x.data && !x.data.idempotent_replay).length !== 1) burst.badSplit++;
+const rowsFor = async (table, col, val) =>
+  (await sb.from(table).select("id", { count: "exact", head: true }).eq(col, val)).count;
+const isConflict = (r) => (r.error?.message || "").includes("idempotency_conflict");
+
+// Same key, same order, same amount, N concurrent: exactly one fresh, the rest replay, one row of everything.
+const burst = { errors: [], badSplit: 0, calls: 0, keys: 0 };
+for (const size of [2, 8, 16, 32]) {
+  for (let r = 0; r < 3; r++) {
+    const key = `idem-burst-${randomUUID()}`;
+    const rs = await Promise.all(Array.from({ length: size }, () => collect(o2.order_number, key, 100)));
+    burst.calls += size;
+    burst.keys++;
+    burst.errors.push(...rs.filter((x) => x.error).map((x) => x.error.message));
+    const fresh = rs.filter((x) => x.data && !x.data.idempotent_replay);
+    const ids = new Set(rs.map((x) => x.data?.collection_id));
+    if (fresh.length !== 1 || ids.size !== 1) burst.badSplit++;
+  }
 }
 const { data: o2After } = await sb.from("orders").select("amount_collected_paisa").eq("id", o2.id).single();
-assert("burst_same_key_no_errors", burst.errors.length === 0, `${burst.rounds}x${burst.size} calls, errors=${JSON.stringify([...new Set(burst.errors)])}`);
-assert("burst_same_key_one_fresh_per_key", burst.badSplit === 0, `rounds with != 1 fresh: ${burst.badSplit}`);
-assert("burst_collected_once_per_key", o2After?.amount_collected_paisa === burst.rounds * 100, `collected=${o2After?.amount_collected_paisa}`);
+const o2Rows = await rowsFor("cod_collections", "order_id", o2.id);
+const { count: o2Events } = await sb.from("order_events").select("id", { count: "exact", head: true }).eq("order_id", o2.id).eq("event_type", "cod_collected");
+const { count: o2Audit } = await sb.from("audit_logs").select("id", { count: "exact", head: true }).eq("entity_id", o2.id).eq("action", "cod.collect");
+assert("burst_same_key_no_errors", burst.errors.length === 0, `${burst.calls} calls over ${burst.keys} keys (2/8/16/32), errors=${JSON.stringify([...new Set(burst.errors)])}`);
+assert("burst_one_fresh_one_collection_id_per_key", burst.badSplit === 0, `keys with != 1 fresh or mixed ids: ${burst.badSplit}`);
+assert("burst_collected_once_per_key", o2After?.amount_collected_paisa === burst.keys * 100, `collected=${o2After?.amount_collected_paisa} expected=${burst.keys * 100}`);
+assert("burst_rows_events_audit_once_per_key", o2Rows === burst.keys && o2Events === burst.keys && o2Audit === burst.keys, `rows=${o2Rows} events=${o2Events} audit=${o2Audit}`);
 
-const crossKey = `idem-cross-${randomUUID()}`;
-const cross = await Promise.all([collect(o2.order_number, crossKey, 100), collect(o3.order_number, crossKey, 100)]);
-const { count: crossRows } = await sb.from("cod_collections").select("id", { count: "exact", head: true }).eq("idempotency_key", crossKey);
-assert(
-  "cross_order_same_key_one_collection",
-  cross.every((x) => !x.error) && crossRows === 1 && cross.filter((x) => x.data?.idempotent_replay).length === 1,
-  `rows=${crossRows} ${cross.map((x) => x.error?.message || (x.data?.idempotent_replay ? "replay" : "fresh")).join("|")}`,
-);
+// Replay after completion: same key, same order, same amount -> same collection id, nothing new written.
+{
+  const key = `idem-replay-${randomUUID()}`;
+  const first = await collect(o2.order_number, key, 100);
+  const again = await collect(o2.order_number, key, 100);
+  const rows = await rowsFor("cod_collections", "idempotency_key", key);
+  assert("replay_after_completion", !first.error && again.data?.idempotent_replay === true && again.data?.collection_id === first.data?.collection_id && rows === 1, JSON.stringify({ first: first.error?.message || "ok", again: again.data || again.error?.message, rows }));
+  // Same key, different amount, after completion -> conflict, nothing written.
+  const before = (await sb.from("orders").select("amount_collected_paisa").eq("id", o2.id).single()).data?.amount_collected_paisa;
+  const diff = await collect(o2.order_number, key, 200);
+  const after = (await sb.from("orders").select("amount_collected_paisa").eq("id", o2.id).single()).data?.amount_collected_paisa;
+  assert("same_key_different_amount_conflict", isConflict(diff) && before === after && (await rowsFor("cod_collections", "idempotency_key", key)) === 1, `${diff.error?.message || "ok"} before=${before} after=${after}`);
+  // Same key, other order, after completion -> conflict, other order untouched.
+  const other = await collect(o3.order_number, key, 100);
+  const o3c = (await sb.from("orders").select("amount_collected_paisa").eq("id", o3.id).single()).data?.amount_collected_paisa;
+  assert("same_key_other_order_conflict", isConflict(other) && o3c === 0, `${other.error?.message || "ok"} o3_collected=${o3c}`);
+}
 
-// Cleanup sandbox orders (cascade collections/events)
-await sb.from("orders").delete().in("id", [order.id, o2.id, o3.id]);
+// Same key raced across two orders (both arrival orders, several rounds): one collection, one conflict.
+{
+  let bad = 0;
+  const seen = new Set();
+  for (let r = 0; r < 10; r++) {
+    const key = `idem-cross-${randomUUID()}`;
+    const pair = r % 2 ? [o3.order_number, o2.order_number] : [o2.order_number, o3.order_number];
+    const rs = await Promise.all(pair.map((n) => collect(n, key, 100)));
+    const ok = rs.filter((x) => !x.error && !x.data?.idempotent_replay).length;
+    const conflicts = rs.filter(isConflict).length;
+    rs.forEach((x) => seen.add(x.error?.message || (x.data?.idempotent_replay ? "replay" : "fresh")));
+    if (ok !== 1 || conflicts !== 1 || (await rowsFor("cod_collections", "idempotency_key", key)) !== 1) bad++;
+  }
+  assert("cross_order_same_key_one_collection_one_conflict", bad === 0, `bad rounds=${bad}/10 outcomes=${[...seen].join("|")}`);
+}
+
+// Same key, same order, different amounts concurrently: one recorded, the other conflicts (never both).
+{
+  let bad = 0;
+  for (let r = 0; r < 10; r++) {
+    const key = `idem-amt-${randomUUID()}`;
+    const rs = await Promise.all([collect(o3.order_number, key, 100), collect(o3.order_number, key, 300)]);
+    const ok = rs.filter((x) => !x.error).length;
+    if (ok !== 1 || rs.filter(isConflict).length !== 1 || (await rowsFor("cod_collections", "idempotency_key", key)) !== 1) bad++;
+  }
+  assert("same_order_different_amount_race_one_conflict", bad === 0, `bad rounds=${bad}/10`);
+}
+
+// Different keys, same order, 16 concurrent for more than is due: never over-collected.
+{
+  const o4 = await sandboxOrder("-D");
+  const rs = await Promise.all(Array.from({ length: 16 }, () => collect(o4.order_number, `idem-over-${randomUUID()}`, 2_000_00)));
+  const ok = rs.filter((x) => !x.error).length;
+  const overs = rs.filter((x) => (x.error?.message || "").includes("over_collection")).length;
+  const c = (await sb.from("orders").select("amount_collected_paisa, payment_status").eq("id", o4.id).single()).data;
+  assert("distinct_keys_no_over_collection", ok === 5 && overs === 11 && c?.amount_collected_paisa === totalDue && c?.payment_status === "collected", `ok=${ok} over=${overs} ${JSON.stringify(c)}`);
+  extraOrders.push(o4.id);
+}
+
+// Cleanup sandbox orders (cascade collections/events) and their audit rows (local only).
+const sandboxIds = [order.id, o2.id, o3.id, ...extraOrders];
+await sb.from("audit_logs").delete().in("entity_id", sandboxIds);
+await sb.from("orders").delete().in("id", sandboxIds);
 
 const out = path.join(root, "docs", "COD_CONCURRENCY_RESULTS.json");
 fs.writeFileSync(out, JSON.stringify({ at: new Date().toISOString(), orderNumber, results }, null, 2));

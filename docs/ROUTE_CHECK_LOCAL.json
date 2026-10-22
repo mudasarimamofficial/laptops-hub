@@ -1,0 +1,8 @@
+{
+  "base": "http://127.0.0.1:3000",
+  "at": "2026-10-22T10:13:03.136Z",
+  "active": 226,
+  "hidden": 6,
+  "failures": [],
+  "summary": "226/226 public PDPs 200 · 6/6 hidden 404 · 39/39 collections 200 · 9/9 pages 200"
+}

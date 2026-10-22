@@ -1,5 +1,23 @@
 # Progress log
 
+## 2026-10-22 — V5 reconstruction (`fix/v5-correctness-parity`)
+
+### Done
+- Phase 1 correctness patch applied and verified; fixed two pre-existing `useSyncExternalStore` render loops (compare + cart stores broke as soon as anything was added).
+- Fonts: tokens resolved invalid (mono/display never applied). Self-hosted V5 weights, literal family names, V5 fallback chains.
+- V5 data adapter + taxonomy map; data parity 226/226, 0 mismatches, identical catalog order.
+- Ported 1:1 from the V5 source: header (mega, search overlay, mobile menu), footer, toast, product card, all 10 homepage sections (hero, pinned four-angle story, Chromebooks, brands, featured, promo, spec, newer generations, budget, compare demo), collection/search view with server-side facets, PDP, cart page, cart drawer, compare page, 404.
+- Parity harness (`scripts/visual/capture.mjs`): reference vs Next at 11 viewports incl. interaction states; report `docs/V5_PIXEL_DIFF_REPORT.md`. Home hero/story 0% at all 11 viewports; every ported template ≤0.4%.
+- SEO: sitemap (268 URLs), robots (sitemap, private paths disallowed), canonical URLs, product JSON-LD from verified fields, filtered/search pages noindex, admin noindex, approved meta description.
+- Route check: 226/226 PDP 200, 6/6 drafts 404, 39/39 collections 200.
+
+### Found
+- `laptops-hub.vercel.app` (Production) is public and serves the pre-parity `ea652f2` build (owner dashboard redeploy). COD there returns 403.
+
+### Remaining
+- Port content/FAQ/contact/guides templates.
+- Owner: media rights (cutouts + catalog photos), shipping, legal, contact facts, staff bootstrap, production-domain decision.
+
 ## 2026-10-21 — Phase 1 correctness patch (`fix/v5-correctness-parity`, from `ea652f2`)
 
 Prepared in Claude Design as a patch set; must be applied, checked and pushed from a machine with the repo (see `APPLY.md` in the patch). Not yet committed, built or deployed.

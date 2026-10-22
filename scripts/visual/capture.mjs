@@ -15,9 +15,10 @@ import { chromium } from "@playwright/test";
 import { PNG } from "pngjs";
 import pixelmatch from "pixelmatch";
 
-const arg = (k, d) => (process.argv.find((a) => a.startsWith(`--${k}=`)) || "").split("=")[1] || d;
+const arg = (k, d) => (process.argv.find((a) => a.startsWith(`--${k}=`)) || "").split("=").slice(1).join("=") || d;
 const REF = arg("ref", "http://127.0.0.1:4173");
 const NEXT = arg("next", "http://127.0.0.1:3000");
+const SHARE = arg("share", ""); // Vercel share link for SSO-protected previews (sets an auth cookie)
 const OUT = path.resolve(arg("out", "docs/visual-evidence/parity"));
 const REF_PAGE = `${REF}/Laptops%20Hub%20Storefront%20v5.dc.html`;
 
@@ -54,7 +55,7 @@ export const SCENES = [
   { id: "compare-two", ref: "#/compare", next: "/compare", storage: COMPARE, full: true },
   { id: "not-found", ref: "#/no-such-page", next: "/no-such-page" },
   // Interaction states (same user actions in both apps).
-  { id: "mega-open", ref: "#/", next: "/", minW: 760, act: async (page) => { await page.getByRole("button", { name: "Laptops", exact: true }).click(); await page.getByText(/^View all \d+ products/).waitFor(); } },
+  { id: "mega-open", ref: "#/", next: "/", minW: 760, act: async (page) => { await page.getByRole("button", { name: "Laptops", exact: true }).hover(); await page.getByText(/^View all \d+ products/).waitFor(); } },
   { id: "search-open", ref: "#/", next: "/", act: async (page) => {
       await page.getByRole("button", { name: /^(Search model, processor, RAM|Search)$/ }).filter({ visible: true }).first().click();
       await page.getByRole("textbox", { name: "Search laptops" }).fill("thinkpad");
@@ -79,6 +80,7 @@ async function settle(page) {
 async function shoot(browser, url, vp, scene, file, side) {
   const ctx = await browser.newContext({ viewport: { width: vp[0], height: vp[1] }, deviceScaleFactor: 1, reducedMotion: "reduce", colorScheme: "light" });
   const page = await ctx.newPage();
+  if (SHARE && side === "next") await page.goto(SHARE, { waitUntil: "load", timeout: 60000 });
   await page.addInitScript((seed) => {
     try {
       if (sessionStorage.getItem("lh-seeded")) return;

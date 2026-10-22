@@ -11,6 +11,14 @@ import { createClient } from "@supabase/supabase-js";
 const arg = (k, d) => (process.argv.find((a) => a.startsWith(`--${k}=`)) || "").split("=").slice(1).join("=") || d;
 const BASE = arg("base", "http://127.0.0.1:3000").replace(/\/$/, "");
 const BYPASS = arg("bypass", "");
+// Temporary Vercel share link for SSO-protected previews: exchange it for the auth cookie once.
+const SHARE = arg("share", "");
+let cookie = "";
+if (SHARE) {
+  const r = await fetch(SHARE, { redirect: "manual" });
+  cookie = (r.headers.getSetCookie?.() || []).map((c) => c.split(";")[0]).join("; ");
+  if (!cookie) throw new Error("share link did not return an auth cookie");
+}
 for (const l of fs.readFileSync(".env.local", "utf8").split(/\r?\n/)) {
   const m = l.match(/^([A-Z0-9_]+)="?(.*?)"?$/);
   if (m && !process.env[m[1]]) process.env[m[1]] = m[2];
@@ -24,7 +32,7 @@ const hidden = data.filter((p) => p.status !== "active").map((p) => p.handle);
 const COLLECTIONS = ["all", "laptops", "gaming-laptops", "macbooks", "tablets", "accessories", "chargers", "workstations", "2-in-1", "apple", "microsoft", "asus", "acer", "toshiba", "business", "gen-6-7", "gen-8", "sto-128", "sto-256", "sto-512-plus", "core-i9", "dell", "hp", "lenovo", "core-i3", "core-i5", "core-i7", "gen-10-plus", "ram-4gb", "ram-8gb", "ram-16gb", "screen-13", "screen-14", "screen-15", "under-40k", "40k-60k", "over-60k", "touchscreen", "chromebooks"];
 const PAGES = ["/", "/cart", "/compare", "/search?q=thinkpad", "/guides", "/checkout", "/track-order", "/robots.txt", "/sitemap.xml"];
 
-const headers = BYPASS ? { "x-vercel-protection-bypass": BYPASS, "x-vercel-set-bypass-cookie": "false" } : {};
+const headers = { ...(BYPASS ? { "x-vercel-protection-bypass": BYPASS, "x-vercel-set-bypass-cookie": "false" } : {}), ...(cookie ? { cookie } : {}) };
 async function status(path) {
   for (let attempt = 0; attempt < 3; attempt++) {
     try {

@@ -108,6 +108,8 @@ export function CinematicHero({ totalCount, laptopCount, accCount, main, side1, 
   const showSkip = !introDone && !skip && !rm;
   const tr = (props: [string, number, number, boolean?][]) =>
     props.map(([p, d, delay, eased]) => `${p} calc(var(--dd) * ${d}s) ${eased ? ease : "ease"} calc(var(--dd) * ${delay}s)`).join(",");
+  // Catalog photos have white backgrounds: multiply them into the stage. The blend must sit on the transformed link,
+  // because its transform creates the stacking context the image would otherwise blend inside.
   const blend = (s: HeroShot) => (s.cutout ? undefined : ("multiply" as const));
 
   return (
@@ -192,25 +194,25 @@ export function CinematicHero({ totalCount, laptopCount, accCount, main, side1, 
           {/* eslint-disable-next-line @next/next/no-img-element -- V5 layered stage, positioned by percentage */}
           <img src="/v5/stage.webp" alt="" aria-hidden="true" width={1800} height={520} style={{ position: "absolute", left: "5%", width: "90%", height: "auto", bottom: "1%", transform: "translate3d(calc(var(--mx) * 8px),calc(var(--hp) * 30px),0)", opacity: 1, transition: tr([["opacity", 1, 0.15]]) }} />
           {side1 ? (
-            <Link href={side1.href} aria-label={side1.label} style={{ position: "absolute", left: "1%", bottom: "28%", width: "39%", display: "block", transform: "translate3d(calc(var(--mx) * 10px + var(--hp) * -70px),calc(var(--hp) * 30px + var(--my) * 4px),0)", zIndex: 1 }}>
+            <Link href={side1.href} aria-label={side1.label} style={{ position: "absolute", left: "1%", bottom: "28%", width: "39%", display: "block", mixBlendMode: blend(side1), transform: "translate3d(calc(var(--mx) * 10px + var(--hp) * -70px),calc(var(--hp) * 30px + var(--my) * 4px),0)", zIndex: 1 }}>
               {side1.src ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={side1.src} alt={side1.label} fetchPriority="high" style={{ display: "block", width: "100%", mixBlendMode: blend(side1), opacity: 1, transform: lapInL, transition: tr([["opacity", 0.9, 0.3], ["transform", 1.1, 0.3, true]]) }} />
+                <img src={side1.src} alt={side1.label} fetchPriority="high" style={{ display: "block", width: "100%", opacity: 1, transform: lapInL, transition: tr([["opacity", 0.9, 0.3], ["transform", 1.1, 0.3, true]]) }} />
               ) : null}
             </Link>
           ) : null}
           {side2 ? (
-            <Link href={side2.href} aria-label={side2.label} style={{ position: "absolute", right: "-1%", bottom: "29%", width: "43%", display: "block", transform: "translate3d(calc(var(--mx) * 12px + var(--hp) * 70px),calc(var(--hp) * 26px + var(--my) * 4px),0)", zIndex: 1 }}>
+            <Link href={side2.href} aria-label={side2.label} style={{ position: "absolute", right: "-1%", bottom: "29%", width: "43%", display: "block", mixBlendMode: blend(side2), transform: "translate3d(calc(var(--mx) * 12px + var(--hp) * 70px),calc(var(--hp) * 26px + var(--my) * 4px),0)", zIndex: 1 }}>
               {side2.src ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={side2.src} alt={side2.label} fetchPriority="high" style={{ display: "block", width: "100%", mixBlendMode: blend(side2), opacity: 1, transform: lapInR, transition: tr([["opacity", 0.9, 0.38], ["transform", 1.1, 0.38, true]]) }} />
+                <img src={side2.src} alt={side2.label} fetchPriority="high" style={{ display: "block", width: "100%", opacity: 1, transform: lapInR, transition: tr([["opacity", 0.9, 0.38], ["transform", 1.1, 0.38, true]]) }} />
               ) : null}
             </Link>
           ) : null}
-          <Link href={main.href} aria-label={main.label} style={{ position: "absolute", left: "18%", bottom: "16%", width: "64%", display: "block", transform: "translate3d(calc(var(--mx) * 22px),calc(var(--hp) * -50px + var(--my) * 8px),0) scale(calc(1 + var(--hp) * .1))", zIndex: 2 }}>
+          <Link href={main.href} aria-label={main.label} style={{ position: "absolute", left: "18%", bottom: "16%", width: "64%", display: "block", mixBlendMode: blend(main), transform: "translate3d(calc(var(--mx) * 22px),calc(var(--hp) * -50px + var(--my) * 8px),0) scale(calc(1 + var(--hp) * .1))", zIndex: 2 }}>
             {main.src ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={main.src} alt={main.label} fetchPriority="high" style={{ display: "block", width: "100%", filter: main.cutout ? "drop-shadow(0 30px 30px rgba(var(--lh-navy-rgb),.45))" : undefined, mixBlendMode: blend(main), opacity: 1, transform: lapInC, transition: tr([["opacity", 0.9, 0.2], ["transform", 1.2, 0.2, true]]) }} />
+              <img src={main.src} alt={main.label} fetchPriority="high" style={{ display: "block", width: "100%", filter: main.cutout ? "drop-shadow(0 30px 30px rgba(var(--lh-navy-rgb),.45))" : undefined, opacity: 1, transform: lapInC, transition: tr([["opacity", 0.9, 0.2], ["transform", 1.2, 0.2, true]]) }} />
             ) : null}
           </Link>
           <div className="v5-hero-chips" style={{ position: "absolute", zIndex: 3, display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: 8, alignItems: "flex-end", transform: "translate3d(calc(var(--mx) * 30px),calc(var(--hp) * -90px + var(--my) * 12px),0)" }}>

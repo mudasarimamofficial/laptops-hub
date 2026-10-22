@@ -66,3 +66,5 @@ Laptops Hub Vercel Development.zip
 # Local parity evidence: rendered with locally served V5 cutouts (rights pending) — never publish.
 docs/visual-evidence/parity/**/*.png
 docs/visual-evidence/parity/*.log
+docs/visual-evidence/parity-preview/**/*.png
+docs/visual-evidence/parity-preview/*.log

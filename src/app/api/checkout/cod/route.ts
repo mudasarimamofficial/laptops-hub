@@ -81,9 +81,14 @@ export async function POST(request: Request) {
     })),
   };
 
-  const { data: result, error } = await supabase.rpc("create_cod_order", {
+  let { data: result, error } = await supabase.rpc("create_cod_order", {
     payload: rpcPayload,
   });
+  // A concurrent submit with the same idempotency key can lose the insert race (unique violation 23505).
+  // The winner's order exists by then, so a second call returns it as a duplicate instead of an error.
+  if (error?.code === "23505") {
+    ({ data: result, error } = await supabase.rpc("create_cod_order", { payload: rpcPayload }));
+  }
 
   if (error) {
     const msg = error.message || "order_failed";

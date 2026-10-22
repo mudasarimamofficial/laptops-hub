@@ -28,8 +28,11 @@ State (2026-10-22): **All V5 templates ported (storefront + content) on `fix/v5-
 - `node scripts/gen-v5-content.mjs` regenerates `src/lib/content/v5-content.ts` + `docs/OWNER_CONTENT_NEEDS.md`
 - Screenshots are gitignored (they may contain locally served, unapproved cutouts).
 
+## Isolated tests
+Done on a local Supabase (`docs/ISOLATED_TESTS.md`): role matrix 15/15 · COD concurrency 6/6 · checkout isolated 18/18 (incl. 8×6 concurrent HTTP submits) · staff role × admin API/page over HTTP 86/86 (incl. legal-approval separation) — all on a local Supabase built from `supabase/migrations`, never production (`docs/ISOLATED_TESTS.md`).
+
 ## Safest next step
-Run the role matrix and COD concurrency tests against an isolated database (local Supabase in Docker from `supabase/migrations`, or a Supabase branch) — both scripts create Auth users and orders and must not run against production.
+Review `docs/proposals/EXPLICIT_GRANTS.md` and add an explicit-GRANT migration before 2026-10-30 (verify with `supabase db reset --local` without `auto_expose_new_tables`, then the isolated suite). Then the owner decisions below.
 
 ## Owner decisions
 Content approval per page (`docs/OWNER_CONTENT_NEEDS.md`; publish in /admin/content, legal pages also need legal approval) · media rights (catalog photos + cutouts) · shipping zones/fees · contact facts · staff bootstrap · availability/inquiry and description-cleanup proposals · production alias · COD go-live · PR review.

@@ -24,6 +24,12 @@ function loadEnv() {
 }
 loadEnv();
 
+// Writes fixtures (Auth users, memberships, orders): refuse hosted databases unless explicitly allowed.
+if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(process.env.NEXT_PUBLIC_SUPABASE_URL || "") && process.env.ALLOW_REMOTE_FIXTURES !== "1") {
+  console.error("Refusing to run: NEXT_PUBLIC_SUPABASE_URL is not a local Supabase. Start `supabase start` and pass the local URL/keys (see docs/ISOLATED_TESTS.md).");
+  process.exit(2);
+}
+
 const base = (process.argv[2] || "http://127.0.0.1:3000").replace(/\/$/, "");
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

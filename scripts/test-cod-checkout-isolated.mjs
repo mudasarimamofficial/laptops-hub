@@ -1,0 +1,152 @@
+/**
+ * COD checkout integrity against a LOCAL Supabase only (refuses hosted URLs).
+ * Seeds its own product, variant and shipping zone, enables checkout in the local store_settings,
+ * then checks forged prices, double submits, oversell races, limits, drafts, zones and anon access.
+ *
+ *   NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321 NEXT_PUBLIC_SUPABASE_ANON_KEY=… SUPABASE_SERVICE_ROLE_KEY=… \
+ *     node scripts/test-cod-checkout-isolated.mjs [appBaseUrl]
+ *
+ * With appBaseUrl, the same checks also go through POST /api/checkout/cod of an app built against the local stack
+ * with COD_CHECKOUT_ENABLED=true.
+ */
+import fs from "fs";
+import path from "path";
+import { randomUUID } from "crypto";
+import { fileURLToPath } from "url";
+import { createClient } from "@supabase/supabase-js";
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(url)) {
+  console.error("Refusing to run: NEXT_PUBLIC_SUPABASE_URL must be a local Supabase (this test enables checkout and writes orders).");
+  process.exit(2);
+}
+const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const app = (process.argv[2] || "").replace(/\/$/, "");
+const sb = createClient(url, serviceKey, { auth: { persistSession: false } });
+const anon = createClient(url, anonKey, { auth: { persistSession: false } });
+
+const results = [];
+const assert = (name, ok, detail = "") => {
+  results.push({ name, ok, detail });
+  console.log(`${ok ? "PASS" : "FAIL"}  ${name}${detail ? " — " + detail : ""}`);
+};
+const must = ({ data, error }, what) => {
+  if (error) throw new Error(`${what}: ${error.message}`);
+  return data;
+};
+
+// ── Fixtures ────────────────────────────────────────────────────────────────
+const tag = Date.now().toString(36);
+const product = must(await sb.from("products").insert({ handle: `iso-test-${tag}`, title: `ISO TEST ${tag}`, status: "active", category: "Laptop" }).select("id").single(), "product");
+const draft = must(await sb.from("products").insert({ handle: `iso-draft-${tag}`, title: `ISO DRAFT ${tag}`, status: "draft" }).select("id").single(), "draft");
+const PRICE = 4_500_000; // Rs 45,000
+const variant = must(await sb.from("product_variants").insert({ product_id: product.id, sku: `ISO-${tag}`, price_paisa: PRICE, max_per_order: 2 }).select("id").single(), "variant");
+const tracked = must(await sb.from("product_variants").insert({ product_id: product.id, sku: `ISO-T-${tag}`, price_paisa: PRICE, max_per_order: 2, inventory_mode: "tracked", quantity_on_hand: 1 }).select("id").single(), "tracked");
+const draftVar = must(await sb.from("product_variants").insert({ product_id: draft.id, sku: `ISO-D-${tag}`, price_paisa: PRICE }).select("id").single(), "draftVar");
+const zone = must(await sb.from("shipping_zones").insert({ name: `ISO zone ${tag}`, provinces: ["Punjab"], cities: ["Lahore"], flat_fee_paisa: 25_000, cod_fee_paisa: 10_000, is_active: true }).select("id").single(), "zone");
+must(await sb.from("store_settings").upsert({ key: "cod_checkout", value: { enabled: true } }), "enable checkout (local only)");
+
+const payload = (o = {}) => ({
+  idempotency_key: `iso-${randomUUID()}`,
+  customer_name: "Isolated Test",
+  customer_phone_e164: "+923001112233",
+  customer_phone_normalized: "923001112233",
+  shipping_zone_id: zone.id,
+  address: { line1: "Test street 1", city: "Lahore", province: "Punjab" },
+  lines: [{ variant_id: variant.id, quantity: 1 }],
+  ...o,
+});
+const rpc = (p) => sb.rpc("create_cod_order", { payload: p });
+const ordersFor = async (key) => (await sb.from("orders").select("id,total_due_paisa,subtotal_paisa,payment_status,status").eq("idempotency_key", key)).data || [];
+
+try {
+  // 1. Forged prices / totals in the payload are ignored: the DB recomputes from the variant and zone.
+  {
+    const p = payload({ lines: [{ variant_id: variant.id, quantity: 2, unit_price_paisa: 1, price_paisa: 1 }], subtotal_paisa: 1, total_due_paisa: 1, shipping_paisa: 0 });
+    const r = await rpc(p);
+    const [o] = await ordersFor(p.idempotency_key);
+    const expected = PRICE * 2 + 25_000 + 10_000;
+    assert("forged_price_ignored", !r.error && o?.total_due_paisa === expected && o?.subtotal_paisa === PRICE * 2, `total=${o?.total_due_paisa} expected=${expected} ${r.error?.message || ""}`);
+    assert("new_order_unpaid_cod", o?.payment_status === "unpaid_cod" && o?.status === "placed", JSON.stringify(o));
+  }
+  // 2. Five concurrent submits with one idempotency key → exactly one order.
+  {
+    const p = payload();
+    const rs = await Promise.all(Array.from({ length: 5 }, () => rpc(p)));
+    const rows = await ordersFor(p.idempotency_key);
+    const errs = rs.filter((r) => r.error).map((r) => r.error.message);
+    assert("same_key_one_order", rows.length === 1, `orders=${rows.length}`);
+    assert("same_key_responses", rs.every((r) => !r.error || /duplicate key|idempotency/.test(r.error.message)), `errors=${JSON.stringify(errs)}`);
+    const again = await rpc(p);
+    assert("same_key_replay_returns_duplicate", again.data?.duplicate === true && again.data?.order_id === rows[0]?.id, JSON.stringify(again.data || again.error));
+  }
+  // 3. Oversell race on a tracked variant with 1 unit: exactly one succeeds.
+  {
+    const rs = await Promise.all(Array.from({ length: 4 }, () => rpc(payload({ lines: [{ variant_id: tracked.id, quantity: 1 }] }))));
+    const ok = rs.filter((r) => !r.error).length;
+    const stock = rs.filter((r) => (r.error?.message || "").includes("insufficient_stock")).length;
+    const left = (await sb.from("product_variants").select("quantity_on_hand").eq("id", tracked.id).single()).data?.quantity_on_hand;
+    assert("tracked_no_oversell", ok === 1 && stock === 3 && left === 0, `ok=${ok} insufficient=${stock} left=${left}`);
+  }
+  // 4–7. Limits, drafts, zones, disabled checkout.
+  const err = async (p) => (await rpc(p)).error?.message || "no error";
+  assert("quantity_over_limit_rejected", (await err(payload({ lines: [{ variant_id: variant.id, quantity: 3 }] }))).includes("quantity_exceeds_limit"));
+  assert("draft_product_rejected", (await err(payload({ lines: [{ variant_id: draftVar.id, quantity: 1 }] }))).includes("product_not_purchasable"));
+  assert("zone_mismatch_rejected", (await err(payload({ address: { line1: "x", city: "Karachi", province: "Sindh" } }))).includes("zone_mismatch"));
+  assert("missing_zone_rejected", (await err(payload({ shipping_zone_id: null }))).includes("shipping_required"));
+  assert("short_idempotency_key_rejected", (await err(payload({ idempotency_key: "abc" }))).includes("invalid_idempotency_key"));
+  // 8. Anonymous clients cannot call the order RPC or insert/read orders directly.
+  {
+    const r = await anon.rpc("create_cod_order", { payload: payload() });
+    assert("anon_rpc_denied", !!r.error, r.error?.message);
+    const ins = await anon.from("orders").insert({ order_number: `X-${tag}`, idempotency_key: `x-${tag}` });
+    assert("anon_order_insert_denied", !!ins.error, ins.error?.message);
+    const sel = await anon.from("orders").select("id").limit(1);
+    assert("anon_orders_unreadable", !!sel.error || (sel.data || []).length === 0, sel.error?.message || `rows=${sel.data?.length}`);
+  }
+  // 9. HTTP layer (optional): forged fields, double submit and disabled-state mapping through the real route.
+  if (app) {
+    const body = (key, extra = {}) => ({
+      idempotencyKey: key,
+      customerName: "Isolated Test",
+      customerPhone: "03001112233",
+      shippingZoneId: zone.id,
+      confirmCod: true,
+      address: { line1: "Test street 1", city: "Lahore", province: "Punjab" },
+      lines: [{ variantId: variant.id, quantity: 1, unitPricePaisa: 1 }],
+      totalDuePaisa: 1,
+      ...extra,
+    });
+    const post = (b) => fetch(`${app}/api/checkout/cod`, { method: "POST", headers: { "content-type": "application/json", origin: app }, body: JSON.stringify(b) });
+    let rs = [], js = [], rows = [], key = "";
+    const statuses = [];
+    for (let round = 0; round < 8; round++) {
+      key = `iso-http-${randomUUID()}`;
+      rs = await Promise.all(Array.from({ length: 6 }, () => post(body(key))));
+      js = await Promise.all(rs.map((r) => r.json().catch(() => ({}))));
+      rows = await ordersFor(key);
+      statuses.push(...rs.map((r) => r.status));
+      if (rows.length !== 1 || rs.some((r) => r.status !== 200)) break;
+    }
+    console.log(`  http rounds: ${statuses.length / 6}, statuses seen: ${[...new Set(statuses)].join(",")}`);
+    assert("http_double_submit_one_order", rows.length === 1, `orders=${rows.length} statuses=${rs.map((r) => r.status)}`);
+    assert("http_double_submit_all_ok", rs.every((r) => r.status === 200) && js.every((j) => j.orderNumber), `statuses=${rs.map((r) => r.status)} bodies=${JSON.stringify(js.map((j) => j.error || "ok"))}`);
+    assert("http_forged_price_ignored", rows[0]?.total_due_paisa === PRICE + 35_000, `total=${rows[0]?.total_due_paisa}`);
+    assert("http_no_constraint_leak", js.every((j) => !/constraint|duplicate key/i.test(JSON.stringify(j))), JSON.stringify(js));
+  }
+} finally {
+  // Local stack only: remove fixtures and turn checkout back off.
+  await sb.from("store_settings").upsert({ key: "cod_checkout", value: { enabled: false } });
+  const ids = ((await sb.from("orders").select("id").in("shipping_zone_id", [zone.id])).data || []).map((o) => o.id);
+  if (ids.length) await sb.from("orders").delete().in("id", ids);
+  await sb.from("shipping_zones").delete().eq("id", zone.id);
+  await sb.from("products").delete().in("id", [product.id, draft.id]);
+}
+
+const out = path.join(root, "docs", "COD_CHECKOUT_ISOLATED_RESULTS.json");
+fs.writeFileSync(out, JSON.stringify({ supabase: "local", app: app || null, at: new Date().toISOString(), results }, null, 2));
+const failed = results.filter((r) => !r.ok);
+console.log(`\n${results.length - failed.length}/${results.length} passed · ${path.relative(root, out)}`);
+process.exit(failed.length ? 1 : 0);

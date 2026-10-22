@@ -69,3 +69,4 @@ docs/visual-evidence/parity/*.log
 docs/visual-evidence/parity-preview/**/*.png
 docs/visual-evidence/parity-preview/*.log
 docs/visual-evidence/parity-gated/**/*.png
+.next-local

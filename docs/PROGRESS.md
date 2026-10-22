@@ -1,5 +1,11 @@
 # Progress log
 
+## 2026-10-22 (isolated tests) — local Supabase
+- Local Supabase in Docker from `supabase/migrations` (no production data); fixture-writing scripts now refuse non-local URLs.
+- Results: role matrix 15/15 · COD concurrency 6/6 · checkout isolated 18/18 (incl. 8×6 concurrent HTTP submits) · staff role × admin API/page over HTTP 86/86 (incl. legal-approval separation) — all on a local Supabase built from `supabase/migrations`, never production (`docs/ISOLATED_TESTS.md`).
+- Fixed: checkout duplicate-submit race (23505 → retry returns the existing order; no constraint leak).
+- Found: migrations rely on legacy auto-exposed grants; proposal `docs/proposals/EXPLICIT_GRANTS.md` (owner review, not applied).
+
 ## 2026-10-22 (later) — V5 content parity & release safety
 
 ### Done
@@ -13,7 +19,7 @@
 - Preview `dpl_CPF9iwcqGWj8C6k2FY9KFp5kyfTq` (`568ce08`) verified.
 
 ### Not done
-- Role matrix + COD concurrency: need an isolated database (they create Auth users/orders).
+- Role matrix + COD concurrency: done later the same day on a local Supabase (see above).
 - Owner content approvals, media rights, production alias decision.
 
 ## 2026-10-22 — V5 reconstruction (`fix/v5-correctness-parity`)

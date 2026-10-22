@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "app": "http://127.0.0.1:3001",
-  "at": "2026-10-22T19:17:21.988Z",
+  "at": "2026-10-22T21:10:48.875Z",
   "results": [
     {
       "name": "forged_price_ignored",
@@ -11,7 +11,7 @@
     {
       "name": "new_order_unpaid_cod",
       "ok": true,
-      "detail": "{\"id\":\"119b8f14-233d-49d4-afb3-003a9dc99a6f\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
+      "detail": "{\"id\":\"37479a13-fe5b-451a-ad93-f96749f7d3cc\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
     },
     {
       "name": "same_key_one_order",
@@ -21,12 +21,27 @@
     {
       "name": "same_key_responses",
       "ok": true,
-      "detail": "errors=[\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\"]"
+      "detail": "errors=[]"
     },
     {
       "name": "same_key_replay_returns_duplicate",
       "ok": true,
-      "detail": "{\"ok\":true,\"order_id\":\"3a5caf1a-e5bd-4198-8abb-cfa2947ecdab\",\"duplicate\":true,\"access_token\":\"68f2636d-7207-4d45-8a62-f524e5f3f7c5\",\"order_number\":\"LH-261023-865A39\",\"total_due_paisa\":4535000}"
+      "detail": "{\"ok\":true,\"duplicate\":true}"
+    },
+    {
+      "name": "same_key_different_cart_conflict",
+      "ok": true,
+      "detail": "idempotency_conflict"
+    },
+    {
+      "name": "same_key_different_zone_conflict",
+      "ok": true,
+      "detail": "idempotency_conflict"
+    },
+    {
+      "name": "same_key_same_cart_still_duplicate",
+      "ok": true,
+      "detail": "duplicate=true"
     },
     {
       "name": "tracked_no_oversell",
@@ -106,7 +121,12 @@
     {
       "name": "http_no_constraint_leak",
       "ok": true,
-      "detail": "[{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":false},{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":true}]"
+      "detail": "[\"ok\",\"ok\",\"ok\",\"ok\",\"ok\",\"ok\"]"
+    },
+    {
+      "name": "http_same_key_different_cart_409",
+      "ok": true,
+      "detail": "409 {\"error\":\"idempotency_conflict\",\"message\":\"This checkout was already submitted with a different cart. Check Track order before ordering again, or reload checkout.\"}"
     }
   ]
 }

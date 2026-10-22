@@ -59,6 +59,8 @@ const payload = (o = {}) => ({
   ...o,
 });
 const rpc = (p) => sb.rpc("create_cod_order", { payload: p });
+// Evidence is committed: never print order access tokens or customer fields.
+const safe = (r) => r.error?.message || JSON.stringify({ ok: r.data?.ok, duplicate: r.data?.duplicate });
 const ordersFor = async (key) => (await sb.from("orders").select("id,total_due_paisa,subtotal_paisa,payment_status,status").eq("idempotency_key", key)).data || [];
 
 try {
@@ -80,7 +82,14 @@ try {
     assert("same_key_one_order", rows.length === 1, `orders=${rows.length}`);
     assert("same_key_responses", rs.every((r) => !r.error || /duplicate key|idempotency/.test(r.error.message)), `errors=${JSON.stringify(errs)}`);
     const again = await rpc(p);
-    assert("same_key_replay_returns_duplicate", again.data?.duplicate === true && again.data?.order_id === rows[0]?.id, JSON.stringify(again.data || again.error));
+    assert("same_key_replay_returns_duplicate", again.data?.duplicate === true && again.data?.order_id === rows[0]?.id, safe(again));
+    // Same key, different cart or zone: conflict, never the earlier order as this cart's confirmation.
+    const otherCart = await rpc({ ...p, lines: [{ variant_id: variant.id, quantity: 2 }] });
+    assert("same_key_different_cart_conflict", (otherCart.error?.message || "").includes("idempotency_conflict") && (await ordersFor(p.idempotency_key)).length === 1, safe(otherCart));
+    const otherZone = await rpc({ ...p, shipping_zone_id: null });
+    assert("same_key_different_zone_conflict", (otherZone.error?.message || "").includes("idempotency_conflict"), safe(otherZone));
+    const split = await rpc({ ...p, lines: [{ variant_id: variant.id, quantity: 1 }] });
+    assert("same_key_same_cart_still_duplicate", split.data?.duplicate === true, split.error?.message || `duplicate=${split.data?.duplicate}`);
   }
   // 3. Oversell race on a tracked variant with 1 unit: exactly one succeeds.
   {
@@ -143,7 +152,11 @@ try {
     assert("http_double_submit_one_order", rows.length === 1, `orders=${rows.length} statuses=${rs.map((r) => r.status)}`);
     assert("http_double_submit_all_ok", rs.every((r) => r.status === 200) && js.every((j) => j.orderNumber), `statuses=${rs.map((r) => r.status)} bodies=${JSON.stringify(js.map((j) => j.error || "ok"))}`);
     assert("http_forged_price_ignored", rows[0]?.total_due_paisa === PRICE + 35_000, `total=${rows[0]?.total_due_paisa}`);
-    assert("http_no_constraint_leak", js.every((j) => !/constraint|duplicate key/i.test(JSON.stringify(j))), JSON.stringify(js));
+    assert("http_no_constraint_leak", js.every((j) => !/constraint|duplicate key/i.test(JSON.stringify(j))), JSON.stringify(js.map((j) => j.error || "ok")));
+    // Same key resubmitted with a different cart through the route: 409, no second order, no confirmation.
+    const changed = await post(body(key, { lines: [{ variantId: variant.id, quantity: 2 }] }));
+    const cj = await changed.json().catch(() => ({}));
+    assert("http_same_key_different_cart_409", changed.status === 409 && cj.error === "idempotency_conflict" && !cj.orderNumber && !cj.accessToken && (await ordersFor(key)).length === 1, `${changed.status} ${JSON.stringify(cj)}`);
   }
 } finally {
   // Local stack only: remove fixtures and turn checkout back off.

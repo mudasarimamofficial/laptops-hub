@@ -92,6 +92,16 @@ export async function POST(request: Request) {
 
   if (error) {
     const msg = error.message || "order_failed";
+    if (msg.includes("idempotency_conflict")) {
+      return NextResponse.json(
+        {
+          error: "idempotency_conflict",
+          message:
+            "This checkout was already submitted with a different cart. Check Track order before ordering again, or reload checkout.",
+        },
+        { status: 409 },
+      );
+    }
     const status =
       msg.includes("checkout_disabled") || msg.includes("shipping")
         ? 403

@@ -1,4 +1,4 @@
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 
 const ALLOWED_TAGS = [
   "p",
@@ -20,8 +20,6 @@ const ALLOWED_TAGS = [
   "span",
 ];
 
-const ALLOWED_ATTR = ["href", "title", "target", "rel"];
-
 /** Legal/business policy slugs — require owner/manager legal_approved, not editor publish alone. */
 export const LEGAL_CONTENT_SLUGS = new Set([
   "shipping",
@@ -31,23 +29,36 @@ export const LEGAL_CONTENT_SLUGS = new Set([
   "terms",
 ]);
 
+/** http(s), mailto, site-relative or in-page links only. */
+const SAFE_HREF = /^(?:(?:https?|mailto):|\/(?!\/)|#)/i;
+
 /**
  * Allowlist HTML sanitizer for CMS bodies rendered on the storefront.
  * Strips scripts, event handlers, unsafe protocols, and unknown tags.
+ *
+ * Uses sanitize-html (htmlparser2, no DOM): the previous isomorphic-dompurify/jsdom setup failed to load in the
+ * Vercel Node runtime (ERR_REQUIRE_ESM), which broke every server render that sanitized content.
  */
 export function sanitizeCmsHtml(dirty: string): string {
-  const clean = DOMPurify.sanitize(dirty, {
-    ALLOWED_TAGS,
-    ALLOWED_ATTR,
-    ALLOW_DATA_ATTR: false,
-    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|\/|#)/i,
-    ADD_ATTR: ["target", "rel"],
-  });
-
-  // DOMPurify may strip target; always force safe rel on remaining anchors.
-  return clean.replace(/<a\b([^>]*)>/gi, (_full, attrs: string) => {
-    let next = attrs.replace(/\brel\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, "").trimEnd();
-    next += ' rel="noopener noreferrer"';
-    return `<a${next}>`;
+  return sanitizeHtml(dirty, {
+    allowedTags: ALLOWED_TAGS,
+    allowedAttributes: { a: ["href", "title", "target", "rel"] },
+    // Drop the contents of dangerous elements entirely (not just their tags).
+    nonTextTags: ["script", "style", "textarea", "option", "noscript", "iframe", "object", "embed", "svg", "math"],
+    allowedSchemes: ["http", "https", "mailto"],
+    allowedSchemesAppliedToAttributes: ["href"],
+    allowProtocolRelative: false,
+    disallowedTagsMode: "discard",
+    transformTags: {
+      a: (tagName, attribs) => {
+        const out: Record<string, string> = {};
+        if (attribs.href && SAFE_HREF.test(attribs.href.trim())) out.href = attribs.href.trim();
+        if (attribs.title) out.title = attribs.title;
+        if (attribs.target === "_blank") out.target = "_blank";
+        // Always force a safe rel on links.
+        out.rel = "noopener noreferrer";
+        return { tagName, attribs: out };
+      },
+    },
   });
 }

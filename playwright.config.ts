@@ -19,6 +19,8 @@ export default defineConfig({
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3000",
     trace: "off",
+    // SSO-protected Vercel previews: a storage state captured after opening a share link.
+    storageState: process.env.PLAYWRIGHT_STORAGE_STATE || undefined,
     launchOptions: {
       executablePath: process.env.PLAYWRIGHT_CHROME_PATH || localChromium,
     },

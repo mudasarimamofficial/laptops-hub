@@ -31,3 +31,17 @@ assert.equal(iframe.includes("iframe"), false);
 assert.match(iframe, /safe/);
 
 console.log("sanitize-html.test.ts ok");
+
+// Adversarial cases (sanitize-html backend).
+const adv: [string, (out: string) => boolean][] = [
+  [`<a href="//evil.com">x</a>`, (o) => !o.includes("evil.com")],
+  [`<a href="JaVaScRiPt:alert(1)">x</a>`, (o) => !/javascript/i.test(o)],
+  [`<a href=" javascript:alert(1)">x</a>`, (o) => !/javascript/i.test(o)],
+  [`<a href="/pages/faq" onclick="x()" style="color:red">ok</a>`, (o) => o.includes('href="/pages/faq"') && !/onclick|style/.test(o)],
+  [`<p style="background:url(x)" class="a" id="b">t</p>`, (o) => o === "<p>t</p>"],
+  [`<svg><script>alert(1)</script></svg><p>after</p>`, (o) => o === "<p>after</p>"],
+  [`<<script>script>alert(1)<</script>/script>`, (o) => !/<script/i.test(o)],
+  [`<a href="mailto:a@b.co">m</a>`, (o) => o.includes('href="mailto:a@b.co"')],
+];
+for (const [input, ok] of adv) assert.ok(ok(sanitizeCmsHtml(input)), `${input} => ${sanitizeCmsHtml(input)}`);
+console.log("sanitize-html adversarial ok");

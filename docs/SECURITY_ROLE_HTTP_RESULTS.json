@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "base": "http://127.0.0.1:3001",
-  "at": "2026-10-22T19:18:04.438Z",
+  "at": "2026-10-22T21:05:05.403Z",
   "results": [
     {
       "name": "anon PATCH /api/admin/content/about",
@@ -421,7 +421,7 @@
     {
       "name": "owner can approve and publish a policy page",
       "ok": true,
-      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"01acb3b7-39f3-46d6-b94a-7f15529c227a\"}"
+      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"9aadf0b8-3a4a-4ddb-9ff0-bd7e0207d03d\"}"
     },
     {
       "name": "published policy renders CMS body",
@@ -437,6 +437,56 @@
       "name": "withdrawn policy is gated again immediately",
       "ok": true,
       "detail": ""
+    },
+    {
+      "name": "empty-body publish refused for a template with pending sections",
+      "ok": true,
+      "detail": "status=409"
+    },
+    {
+      "name": "about stays gated",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "empty-body publish needs explicit template approval",
+      "ok": true,
+      "detail": "status=409"
+    },
+    {
+      "name": "approved template publishes (faq)",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "published template is in the sitemap, gated pages are not",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "unpublished template is gated again",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "collection recorded once via route",
+      "ok": true,
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":false,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"9433c22b-cf80-49c2-b640-9cd87c3d69a9\"} collected=100000"
+    },
+    {
+      "name": "retry with same key replays",
+      "ok": true,
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":true,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"9433c22b-cf80-49c2-b640-9cd87c3d69a9\"}"
+    },
+    {
+      "name": "same key, different amount → 409 conflict, no constraint leak",
+      "ok": true,
+      "detail": "409 {\"error\":\"idempotency_conflict\",\"message\":\"This collection key was already used for a different order or amount. Nothing was recorded.\"}"
+    },
+    {
+      "name": "editor cannot record collections",
+      "ok": true,
+      "detail": "status=403"
     }
   ]
 }

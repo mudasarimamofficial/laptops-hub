@@ -19,6 +19,7 @@ export function ContentEditForm(props: Props) {
   const [status, setStatus] = useState(props.status);
   const [bodyHtml, setBodyHtml] = useState(props.bodyHtml);
   const [legalApproved, setLegalApproved] = useState(props.legalApproved);
+  const [approveTemplate, setApproveTemplate] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -31,6 +32,7 @@ export function ContentEditForm(props: Props) {
     try {
       const body: Record<string, unknown> = { title, status, bodyHtml };
       if (props.isLegalPage && props.canApproveLegal) body.legalApproved = legalApproved;
+      if (status === "published" && !bodyHtml.trim()) body.approveTemplate = approveTemplate;
       const res = await fetch(`/api/admin/content/${encodeURIComponent(props.slug)}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -101,10 +103,16 @@ export function ContentEditForm(props: Props) {
           onChange={(e) => setBodyHtml(e.target.value)}
         />
         <span className="mt-1 block text-xs text-[var(--lh-ink-2)]">
-          Leave empty to publish the approved V5 page layout and copy for this page. Sections still waiting for business
-          details show a “being finalised” notice with a contact link.
+          Leave empty to publish the V5 page layout and copy for this page. That is only possible when the template has
+          no sections waiting for business details; otherwise write the approved body here.
         </span>
       </label>
+      {status === "published" && !bodyHtml.trim() ? (
+        <label className="mt-3 flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={approveTemplate} onChange={(e) => setApproveTemplate(e.target.checked)} />
+          I have reviewed the V5 template copy for this page and approve publishing it
+        </label>
+      ) : null}
       {err ? <p className="mt-2 text-sm text-red-600">{err}</p> : null}
       {msg ? <p className="mt-2 text-sm text-emerald-700">{msg}</p> : null}
       <button

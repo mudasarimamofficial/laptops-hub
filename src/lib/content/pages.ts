@@ -3,7 +3,7 @@ import { createPublicClient } from "@/lib/supabase/server";
 import { LEGAL_CONTENT_SLUGS } from "@/lib/security/sanitize-html";
 import { V5_CONTENT } from "@/lib/content/v5-content";
 import type { V5Page } from "@/lib/content/types";
-import { previewAllContent, resolveContent as resolve, type ContentRow as Row, type ResolvedContent } from "@/lib/content/resolve";
+import { isContentPublic, previewAllContent, resolveContent as resolve, type ContentRow as Row, type ResolvedContent } from "@/lib/content/resolve";
 
 export { previewAllContent, type ResolvedContent };
 
@@ -13,7 +13,8 @@ export { previewAllContent, type ResolvedContent };
  * - The CMS row is the source of truth. It is read with the anon key, so RLS decides visibility:
  *   `status = 'published'` and, for policy slugs, `legal_approved = true` (migration 20261021160000).
  * - Visible row with a body  → sanitized CMS HTML inside the V5 page shell.
- * - Visible row, empty body   → the V5 template content (publishing it in admin is the owner's approval).
+ * - Visible row, empty body   → the V5 template content, only for templates with no pending ("being finalised")
+ *   sections; publishing it requires explicit template approval in admin. Otherwise the page stays gated.
  * - Not visible               → "gated": V5 shell with V5's customer-facing "being finalised" block, noindex.
  * - V5_CONTENT_PREVIEW=1 renders template content for QA/parity, and is ignored on Vercel Production.
  */
@@ -75,8 +76,10 @@ export async function contentVisibility() {
   const all = previewAllContent();
   return {
     pages: Object.fromEntries(
-      PAGE_SLUGS.map((s) => [s, all || rows.pages.some((r) => r.slug === s && (!LEGAL_CONTENT_SLUGS.has(s) || r.legal_approved === true))]),
+      PAGE_SLUGS.map((s) => [s, all || isContentPublic(V5_CONTENT.pages[s], rows.pages.find((r) => r.slug === s), LEGAL_CONTENT_SLUGS.has(s))]),
     ) as Record<string, boolean>,
-    articles: Object.fromEntries(ARTICLE_SLUGS.map((s) => [s, all || rows.articles.some((r) => r.slug === s)])) as Record<string, boolean>,
+    articles: Object.fromEntries(
+      V5_CONTENT.articles.map((a) => [a.slug, all || isContentPublic(a, rows.articles.find((r) => r.slug === a.slug), false)]),
+    ) as Record<string, boolean>,
   };
 }

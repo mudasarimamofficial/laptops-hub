@@ -3,6 +3,8 @@ import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createAuthorizedStaffClient, staffErrorResponse, type StaffRole } from "@/lib/auth/staff";
 import { LEGAL_CONTENT_SLUGS, sanitizeCmsHtml } from "@/lib/security/sanitize-html";
+import { templateHasPending } from "@/lib/content/resolve";
+import { V5_CONTENT } from "@/lib/content/v5-content";
 
 const schema = z.object({
   title: z.string().trim().min(2).max(200),
@@ -11,6 +13,8 @@ const schema = z.object({
   bodyHtml: z.string().max(100_000),
   /** Only owner/admin/manager may set true on legal policy pages. */
   legalApproved: z.boolean().optional(),
+  /** Publishing with an empty body publishes the V5 template copy; that needs this explicit approval. */
+  approveTemplate: z.boolean().optional(),
 });
 
 type Ctx = { params: Promise<{ slug: string }> };
@@ -51,6 +55,30 @@ export async function PATCH(request: Request, ctx: Ctx) {
     }
 
     const body_html = sanitizeCmsHtml(parsed.data.bodyHtml);
+
+    // An empty body publishes the V5 template. Never with unresolved owner facts, never implicitly.
+    if (parsed.data.status === "published" && !body_html.trim()) {
+      const tpl = V5_CONTENT.pages[slug];
+      if (!tpl || templateHasPending(tpl)) {
+        return NextResponse.json(
+          {
+            error: "template_pending",
+            message:
+              "This page's V5 template still has sections waiting for business details. Write the approved page body before publishing.",
+          },
+          { status: 409 },
+        );
+      }
+      if (parsed.data.approveTemplate !== true) {
+        return NextResponse.json(
+          {
+            error: "template_approval_required",
+            message: "Publishing an empty body publishes the V5 template copy. Confirm that copy is approved.",
+          },
+          { status: 409 },
+        );
+      }
+    }
     const { data: existing, error: findErr } = await supabase
       .from("content_pages")
       .select("slug, title, status, legal_approved")

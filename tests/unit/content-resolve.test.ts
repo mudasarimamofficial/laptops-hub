@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { resolveContent } from "../../src/lib/content/resolve";
+import { isContentPublic, resolveContent, templateHasPending } from "../../src/lib/content/resolve";
 import type { V5Page } from "../../src/lib/content/types";
 
 const tpl: V5Page = {
@@ -42,13 +42,28 @@ assert.equal(resolveContent("about", tpl, row({ status: "pending", body_html: "<
   assert.ok(r.html && r.html.includes("<h2>Zones</h2>"));
   assert.ok(!/script|onclick|onerror|javascript:|<img/i.test(r.html!), r.html!);
 }
-// Non-legal page published with an empty body → V5 template (publishing approves the template).
+// Published with an empty body on a template that still has pending sections → stays gated: an empty body never
+// publishes unresolved owner facts or the template copy around them (also for approved legal pages).
 {
   const r = resolveContent("about", tpl, row({ body_html: "   " }), false);
-  assert.equal(r.mode, "template");
-  assert.equal(r.blocks.length, 3);
-  assert.equal(r.preview, false);
+  assert.equal(r.mode, "gated");
+  assert.ok(!r.blocks.some((b) => b.t === "p"), "no template copy");
+  assert.equal(isContentPublic(tpl, row({ body_html: "" }), false), false);
+  assert.equal(resolveContent("shipping", tpl, row({ body_html: "", legal_approved: true }), true).mode, "gated");
 }
+// Published with an empty body on a template with no pending sections → V5 template (approval enforced at publish).
+{
+  const guideTpl: V5Page = { ...tpl, blocks: [{ t: "h2", v: "Processor generations" }, { t: "p", v: "Factual copy." }] };
+  const r = resolveContent("how-to-choose", guideTpl, row({ body_html: "" }), false);
+  assert.equal(r.mode, "template");
+  assert.equal(r.blocks.length, 2);
+  assert.equal(r.preview, false);
+  assert.equal(isContentPublic(guideTpl, row({ body_html: "" }), false), true);
+  assert.equal(isContentPublic(guideTpl, row({ status: "draft" }), false), false);
+}
+// Own CMS body is public even when the template has pending sections.
+assert.equal(isContentPublic(tpl, row({ body_html: "<p>Approved copy</p>" }), false), true);
+assert.equal(templateHasPending(tpl), true);
 // Contact page gated: the form stays, plus its own pending section only.
 {
   const r = resolveContent("contact", contactTpl, undefined, false);

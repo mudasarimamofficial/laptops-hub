@@ -26,11 +26,25 @@ export function previewAllContent() {
   return process.env.V5_CONTENT_PREVIEW === "1" && process.env.VERCEL_ENV !== "production";
 }
 
+/** Template sections still waiting for owner facts ("being finalised"). */
+export function templateHasPending(tpl: V5Page) {
+  return tpl.blocks.some((b) => b.t === "pending");
+}
+
+/**
+ * Public only when published (and legally approved for policy pages) AND it has approved copy: either its own CMS
+ * body, or an empty body on a template with no pending sections (publishing such a template requires the explicit
+ * template approval in /api/admin/content). An empty body never publishes unresolved template sections.
+ */
+export function isContentPublic(tpl: V5Page, row: ContentRow | undefined, isLegal: boolean) {
+  if (!row || row.status !== "published" || (isLegal && row.legal_approved !== true)) return false;
+  return !!(row.body_html || "").trim() || !templateHasPending(tpl);
+}
+
 export function resolveContent(slug: string, tpl: V5Page, row: ContentRow | undefined, isLegal: boolean): ResolvedContent {
   const base = { slug, kicker: tpl.kicker, intro: tpl.intro, read: tpl.read, v5Status: tpl.status, isLegal, preview: false };
-  // Defence in depth: RLS already hides these rows; enforce the same rule here so an RLS regression cannot publish.
-  const visible = !!row && row.status === "published" && (!isLegal || row.legal_approved === true);
-  if (row && visible) {
+  // Defence in depth: RLS already hides unpublished rows; enforce the same rules here so an RLS regression cannot publish.
+  if (row && isContentPublic(tpl, row, isLegal)) {
     const body = (row.body_html || "").trim();
     if (body) return { ...base, title: row.title || tpl.title, mode: "cms", blocks: [], html: sanitizeCmsHtml(body) };
     return { ...base, title: row.title || tpl.title, mode: "template", blocks: tpl.blocks, html: null };

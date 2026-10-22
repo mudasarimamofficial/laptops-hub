@@ -134,6 +134,52 @@ try {
   await call(by.owner, "PATCH", "/api/admin/content/shipping", { ...legal, status: "pending", legalApproved: false });
   html = await (await fetch(`${base}/pages/shipping`)).text();
   assert("withdrawn policy is gated again immediately", !html.includes("Local test") && html.includes("BEING FINALISED"));
+
+  // Empty-body publish = publishing the V5 template: refused while the template has pending sections, and
+  // otherwise only with explicit template approval (docs/PRODUCTION_READINESS.md, CMS rules).
+  const empty = (title, extra = {}) => ({ title, status: "published", bodyHtml: "", ...extra });
+  r = await call(by.owner, "PATCH", "/api/admin/content/about", empty("About", { approveTemplate: true }));
+  assert("empty-body publish refused for a template with pending sections", r.status === 409, `status=${r.status}`);
+  html = await (await fetch(`${base}/pages/about`)).text();
+  assert("about stays gated", html.includes("BEING FINALISED"));
+  r = await call(by.manager, "PATCH", "/api/admin/content/faq", empty("FAQ"));
+  assert("empty-body publish needs explicit template approval", r.status === 409, `status=${r.status}`);
+  r = await call(by.manager, "PATCH", "/api/admin/content/faq", empty("FAQ", { approveTemplate: true }));
+  html = await (await fetch(`${base}/pages/faq`)).text();
+  assert("approved template publishes (faq)", r.status === 200 && !html.includes("BEING FINALISED") && !/noindex/.test(html), `status=${r.status}`);
+  const sitemap = await (await fetch(`${base}/sitemap.xml`)).text();
+  assert("published template is in the sitemap, gated pages are not", sitemap.includes("/pages/faq") && !sitemap.includes("/pages/about"));
+  await call(by.manager, "PATCH", "/api/admin/content/faq", { title: "FAQ", status: "pending", bodyHtml: "" });
+  html = await (await fetch(`${base}/pages/faq`)).text();
+  assert("unpublished template is gated again", html.includes("BEING FINALISED") && /noindex/.test(html));
+
+  // COD collection through the admin route: record, replay, conflict (docs/COD_IDEMPOTENCY_CONTRACT.md).
+  const orderNumber = `LH-SANDBOX-HTTP-${Date.now()}`;
+  const { data: ord } = await admin.from("orders").insert({
+    order_number: orderNumber, status: "confirmed", payment_method: "cod", payment_status: "unpaid_cod",
+    customer_name: "SANDBOX TEST — DELETE", customer_phone_e164: "+923001112233", customer_phone_normalized: "3001112233",
+    subtotal_paisa: 1_000_000, shipping_paisa: 0, cod_fee_paisa: 0, discount_paisa: 0, tax_paisa: 0,
+    total_due_paisa: 1_000_000, amount_collected_paisa: 0, idempotency_key: `sandbox-order-${orderNumber}`,
+  }).select("id").single();
+  try {
+    const key = `http-${randomUUID()}`;
+    const post = async (u, body) => {
+      const res = await fetch(`${base}/api/admin/cod-collections`, { method: "POST", headers: { cookie: u.cookie, "content-type": "application/json", origin: base }, body: JSON.stringify(body) });
+      return { status: res.status, json: await res.json().catch(() => ({})) };
+    };
+    const c1 = await post(by.fulfillment, { orderNumber, amountPkr: 1000, idempotencyKey: key });
+    const c2 = await post(by.fulfillment, { orderNumber, amountPkr: 1000, idempotencyKey: key });
+    const c3 = await post(by.fulfillment, { orderNumber, amountPkr: 2000, idempotencyKey: key });
+    const c4 = await post(by.editor, { orderNumber, amountPkr: 1000, idempotencyKey: `http-${randomUUID()}` });
+    const o = (await admin.from("orders").select("amount_collected_paisa").eq("id", ord.id).single()).data;
+    assert("collection recorded once via route", c1.status === 200 && c1.json.idempotentReplay === false && o?.amount_collected_paisa === 100_000, `${c1.status} ${JSON.stringify(c1.json)} collected=${o?.amount_collected_paisa}`);
+    assert("retry with same key replays", c2.status === 200 && c2.json.idempotentReplay === true && c2.json.collectionId === c1.json.collectionId, `${c2.status} ${JSON.stringify(c2.json)}`);
+    assert("same key, different amount → 409 conflict, no constraint leak", c3.status === 409 && c3.json.error === "idempotency_conflict" && !/uidx|constraint|duplicate/i.test(JSON.stringify(c3.json)), `${c3.status} ${JSON.stringify(c3.json)}`);
+    assert("editor cannot record collections", c4.status === 403, `status=${c4.status}`);
+  } finally {
+    await admin.from("audit_logs").delete().eq("entity_id", ord.id);
+    await admin.from("orders").delete().eq("id", ord.id);
+  }
 } finally {
   for (const u of users) {
     await admin.from("admin_memberships").delete().eq("user_id", u.id);

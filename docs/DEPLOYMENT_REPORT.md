@@ -1,5 +1,25 @@
 # Deployment report
 
+## Preview — 2026-10-23 (security & COD integrity)
+
+| Field | Value |
+|---|---|
+| Git commit | `86b1624` on `fix/v5-correctness-parity` (draft PR #2) |
+| Deployment | `dpl_9nGNosyhPhPckFWpXLwnRWmjDkpv` (Git integration, target **Preview**, Ready) |
+| URL | https://laptops-kg7kii4d0-mudasarimamofficial-gmailcoms-projects.vercel.app (SSO: unauthenticated → 302; checked via temporary share link) |
+| Database | production `xvmmjkrkgznnakcobmww`, read-only use; **pending migrations not applied** |
+
+| Check (on Preview) | Result |
+|---|---|
+| e2e | 39 passed, 1 skipped (inquiry submit; needs non-production DB) |
+| Console sweep | clean: 30 loads, no console/hydration errors, no failed requests, no horizontal overflow |
+| Routes | `/`, `/collections/laptops`, `/pages/faq`, `/pages/shipping`, `/guides`, `/sitemap.xml` 200 · `/admin` 307 · unknown product 404 |
+| Content gating | pages gated, sitemap has 0 content URLs |
+| Security | COD POST 403 `checkout_disabled` · `/api/admin/cod-collections` and content PATCH 401 without session · 13 client chunks: only the anon JWT; one `sb_secret_` match is supabase-js's key-prefix check, not a key |
+| Runtime errors | none for this deployment |
+
+No Production promotion, alias change, COD enablement, legal approval, media publication or database change.
+
 ## Preview — 2026-10-23 (checkout race fix + isolated tests)
 
 | Field | Value |

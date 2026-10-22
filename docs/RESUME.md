@@ -1,23 +1,37 @@
 # Resume here
 
-State (2026-10-23): **All V5 templates ported (storefront + content) on `fix/v5-correctness-parity` @ `038ac89`; isolated DB tests pass; Preview `dpl_4CjAookWX8ZuQmzguQsBALkhYBwo` verified.** Not merged, no new PR, no Production change, COD off, all content pages gated (unpublished in CMS).
+State (2026-10-23): **Security & COD integrity pass done on `fix/v5-correctness-parity` (stacked draft PR #2 → `feat/v5-storefront-admin`); Preview `dpl_9nGNosyhPhPckFWpXLwnRWmjDkpv` verified. Production database NOT changed — owner approval pending (`docs/MIGRATION_PRODUCTION_APPROVAL.md`).** Not merged, no Production deploy, COD off, all content pages gated.
+
+## Current state (2026-10-23)
+| Item | Value | Status |
+|---|---|---|
+| Branch / HEAD | `fix/v5-correctness-parity` (latest commit: `git log -1`) | verified |
+| PR #1 | `feat/v5-storefront-admin → main`, draft, head `ea652f2` | verified |
+| PR #2 | `fix/v5-correctness-parity → feat/v5-storefront-admin`, draft, checks 2/2 | verified |
+| Supabase `xvmmjkrkgznnakcobmww` ledger | 6 applied (`…21120000`–`…21160000`); 6 pending in repo (`20261023110000`–`…160000`) | verified read-only |
+| Staff RPC exposure | anon/authenticated EXECUTE on `record_cod_collection`, `transition_order_status`, `consume_rate_limit` | **live on production** (verified read-only) |
+| RLS | enabled on all 22 public tables | verified read-only |
+| Catalog | 226 public PDPs 200 · 6 drafts 404 · 39 collections | verified (route check) |
+| Preview | `dpl_9nGNosyhPhPckFWpXLwnRWmjDkpv` (https://laptops-kg7kii4d0-mudasarimamofficial-gmailcoms-projects.vercel.app, SSO) | verified |
+| Production alias `laptops-hub.vercel.app` | public 200, old `ea652f2` redeploy, COD 403 | verified; owner decision |
+| Vercel env | `V5_CUTOUT_BASE`, `V5_CONTENT_PREVIEW` not defined; COD flags encrypted, Preview COD → 403 | verified |
+| Content | 13 `content_pages` rows `pending` | reported (2026-10-22) |
 
 ## Verified infrastructure
-- GitHub `mudasarimamofficial/laptops-hub` · branch `fix/v5-correctness-parity` (stacked on PR #1's head `feat/v5-storefront-admin` @ `ea652f2`)
-- Vercel `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` · Preview `dpl_CPF9iwcqGWj8C6k2FY9KFp5kyfTq` (https://laptops-p0o7svszl-mudasarimamofficial-gmailcoms-projects.vercel.app, SSO)
-- Supabase `xvmmjkrkgznnakcobmww` (CLI access; MCP connector lacks permission) · 232 products / 226 active / 6 draft · 13 content rows, all `pending` · 0 inquiries, 0 orders
-- **Production alias `laptops-hub.vercel.app` is public** and serves an older owner redeploy of `ea652f2` (COD 403). Owner decision pending.
+- GitHub `mudasarimamofficial/laptops-hub`
+- Vercel `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` (team `team_l7hth478q4bLcmoKR21X7uqm`), Git integration builds Preview per push
+- Supabase CLI is logged in; `supabase link --project-ref xvmmjkrkgznnakcobmww` (local, gitignored) allows read-only `supabase db query --linked` / `migration list --linked`. Never run `db push`, `db reset` or fixture scripts against it without owner approval.
 
-## Git / PR strategy (recommended)
-- PR #1: `feat/v5-storefront-admin → main`, 9 commits, draft, mergeable, checks green, no reviews.
-- This branch = PR #1 head + 7 commits (clean stack; 107 files vs PR #1, 158 files vs `main`).
-- **Open a stacked draft PR `fix/v5-correctness-parity → feat/v5-storefront-admin`.** It shows only the new work. Review/merge #1 into `main` first; GitHub then retargets the stacked PR to `main` (or retarget manually). Do **not** open `fix/... → main` while #1 is open (it would duplicate #1's whole diff), and do not merge either PR without owner review.
+## Git / PR strategy
+- Review/merge #1 into `main` first; GitHub then retargets #2 to `main`. Do not open `fix/... → main` while #1 is open. Do not merge either without owner review.
+- Merging does not change the database: migrations are applied separately (approval request above).
 
-## Local setup (the working tree has been wiped twice — restore first)
-1. `git status` — if tracked files show as deleted: `git restore .`
-2. `vercel env pull .env.local --yes --environment=development`
+## Local setup
+1. `git status`. If tracked files show as deleted, first check for uncommitted work (`git stash list`, `git diff`), then restore only the positively identified files from the verified commit (`git restore -- <paths>`). No blanket `git restore .`, `reset --hard` or `clean -fdx`.
+2. `vercel env pull .env.local --yes --environment=development` (do not overwrite an existing `.env.local` without checking it)
 3. Parity runs only: `V5_CUTOUT_BASE="http://127.0.0.1:4173/assets/cut"` in `.env.local`; build/start with `V5_CONTENT_PREVIEW=1` to compare content templates (never set either in Vercel before approval).
 4. `npm ci && npm run build && npx next start -p 3000 -H 127.0.0.1` · reference: `npx http-server "Laptops Hub storefront" -p 4173 -a 127.0.0.1 -c-1`
+5. Preview e2e: create a share link, save a session with `@playwright/test` chromium (`channel: "chromium"`), then `PLAYWRIGHT_BASE_URL=<url> PLAYWRIGHT_STORAGE_STATE=<state.json> VISUAL_EVIDENCE_DIR=test-results/preview-evidence npx playwright test tests/e2e` (relative evidence dir).
 
 ## QA commands
 - `npm run test:unit` · `npm run test:security:p0` · `npm run test:security:auth-matrix` · `npm run test:catalog:pagination`
@@ -29,10 +43,17 @@ State (2026-10-23): **All V5 templates ported (storefront + content) on `fix/v5-
 - Screenshots are gitignored (they may contain locally served, unapproved cutouts).
 
 ## Isolated tests
-Done on a local Supabase (`docs/ISOLATED_TESTS.md`): role matrix 15/15 · COD concurrency 6/6 · checkout isolated 18/18 (incl. 8×6 concurrent HTTP submits) · staff role × admin API/page over HTTP 86/86 (incl. legal-approval separation) — all on a local Supabase built from `supabase/migrations`, never production (`docs/ISOLATED_TESTS.md`).
+Local Supabase only (`docs/ISOLATED_TESTS.md`): role matrix 15/15 · COD collection matrix 16/16 (×8) · checkout isolated 25/25 · staff role HTTP 97/97 · production-path grant simulation identical to a fresh build.
 
 ## Safest next step
-**Owner: review and apply `supabase/migrations/20261023120000_explicit_grants.sql` to production before 2026-10-30 and before approving any legal page** (`docs/proposals/EXPLICIT_GRANTS.md`: closes anon execute on staff RPCs). Verified locally only. Apply `20261023130000_cod_collection_idempotency_race.sql` with it (same-key collection race; verified locally). Then the owner decisions below.
+1. **Owner: decide `docs/MIGRATION_PRODUCTION_APPROVAL.md`** — Option A (emergency revoke of the three exposed functions, 6 privilege rows) now; Option B (all six pending migrations) with or after deploying this branch. Do this before approving any legal page.
+2. Review PR #1, then PR #2.
+3. Owner decisions below.
+
+## Known gaps
+- e2e "inquiry dialog submits to /api/contact" is skipped (needs an inquiry-only product in a non-production DB).
+- Visual parity harness not re-run this pass (no storefront/CSS change; public pages unchanged while content is gated). Last report: `docs/V5_PIXEL_DIFF_REPORT.md`.
+- Real-device checks (iOS Safari, Android Chrome) not performed.
 
 ## Owner decisions
-Content approval per page (`docs/OWNER_CONTENT_NEEDS.md`; publish in /admin/content, legal pages also need legal approval) · media rights (catalog photos + cutouts) · shipping zones/fees · contact facts · staff bootstrap · availability/inquiry and description-cleanup proposals · production alias · COD go-live · PR review.
+Production DB approval (above) · content approval per page (`docs/OWNER_CONTENT_NEEDS.md`; publish in /admin/content — pages with "being finalised" sections need written copy; legal pages also need legal approval) · media rights (catalog photos + cutouts) · shipping zones/fees · contact facts · staff bootstrap · availability/inquiry and description-cleanup proposals · production alias · COD go-live · PR review.

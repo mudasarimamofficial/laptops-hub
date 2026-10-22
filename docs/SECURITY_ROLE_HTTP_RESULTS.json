@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "base": "http://127.0.0.1:3001",
-  "at": "2026-10-22T18:44:03.512Z",
+  "at": "2026-10-22T19:18:04.438Z",
   "results": [
     {
       "name": "anon PATCH /api/admin/content/about",
@@ -421,12 +421,17 @@
     {
       "name": "owner can approve and publish a policy page",
       "ok": true,
-      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"f6a4409d-0673-41e8-928e-3d4dbd1d18ae\"}"
+      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"01acb3b7-39f3-46d6-b94a-7f15529c227a\"}"
     },
     {
       "name": "published policy renders CMS body",
       "ok": true,
       "detail": ""
+    },
+    {
+      "name": "approver id is not readable by anon",
+      "ok": true,
+      "detail": "permission denied for table content_pages"
     },
     {
       "name": "withdrawn policy is gated again immediately",

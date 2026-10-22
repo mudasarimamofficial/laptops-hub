@@ -21,9 +21,8 @@ max_rows = 1000
 # without explicit GRANTs. When unset, new entities are NOT auto-exposed, matching the new cloud
 # default. Set to `true` to keep the legacy behaviour of auto-exposing new entities; this is
 # deprecated and the field is removed on 2026-10-30 once the always-revoked behaviour is permanent.
-# Laptops HUB: local stack only, mirrors production's legacy grants until explicit GRANTs land
-# (docs/proposals/EXPLICIT_GRANTS.md). Must be replaced before 2026-10-30.
-auto_expose_new_tables = true
+# Laptops HUB: left unset. Privileges are explicit in migrations (20261023120000_explicit_grants.sql);
+# new tables/functions need their own GRANTs.
 
 [api.tls]
 # Enable HTTPS endpoints locally using a self-signed certificate.

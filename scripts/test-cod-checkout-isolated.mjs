@@ -105,6 +105,15 @@ try {
     assert("anon_order_insert_denied", !!ins.error, ins.error?.message);
     const sel = await anon.from("orders").select("id").limit(1);
     assert("anon_orders_unreadable", !!sel.error || (sel.data || []).length === 0, sel.error?.message || `rows=${sel.data?.length}`);
+    // Server-only RPCs (staff ones trust payload.actor_user_id): no execute for anon (20261023120000).
+    for (const [fn, args] of [
+      ["record_cod_collection", { payload: {} }],
+      ["transition_order_status", { payload: {} }],
+      ["consume_rate_limit", { p_key: "probe", p_limit: 0, p_window_seconds: 0 }],
+    ]) {
+      const r = await anon.rpc(fn, args);
+      assert(`anon_${fn}_denied`, r.error?.code === "42501", r.error ? `${r.error.code} ${r.error.message}` : "executed");
+    }
   }
   // 9. HTTP layer (optional): forged fields, double submit and disabled-state mapping through the real route.
   if (app) {

@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "app": "http://127.0.0.1:3001",
-  "at": "2026-10-22T18:42:26.036Z",
+  "at": "2026-10-22T19:17:21.988Z",
   "results": [
     {
       "name": "forged_price_ignored",
@@ -11,7 +11,7 @@
     {
       "name": "new_order_unpaid_cod",
       "ok": true,
-      "detail": "{\"id\":\"b6a7c301-b2d1-40b0-865e-097128dac5eb\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
+      "detail": "{\"id\":\"119b8f14-233d-49d4-afb3-003a9dc99a6f\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
     },
     {
       "name": "same_key_one_order",
@@ -21,12 +21,12 @@
     {
       "name": "same_key_responses",
       "ok": true,
-      "detail": "errors=[\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\"]"
+      "detail": "errors=[\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\"]"
     },
     {
       "name": "same_key_replay_returns_duplicate",
       "ok": true,
-      "detail": "{\"ok\":true,\"order_id\":\"d904a0a6-d83b-4b33-b261-149cf85ba916\",\"duplicate\":true,\"access_token\":\"c7e894c6-4a04-4973-ad63-60e03884ba8a\",\"order_number\":\"LH-261022-9CD220\",\"total_due_paisa\":4535000}"
+      "detail": "{\"ok\":true,\"order_id\":\"3a5caf1a-e5bd-4198-8abb-cfa2947ecdab\",\"duplicate\":true,\"access_token\":\"68f2636d-7207-4d45-8a62-f524e5f3f7c5\",\"order_number\":\"LH-261023-865A39\",\"total_due_paisa\":4535000}"
     },
     {
       "name": "tracked_no_oversell",
@@ -74,6 +74,21 @@
       "detail": "rows=0"
     },
     {
+      "name": "anon_record_cod_collection_denied",
+      "ok": true,
+      "detail": "42501 permission denied for function record_cod_collection"
+    },
+    {
+      "name": "anon_transition_order_status_denied",
+      "ok": true,
+      "detail": "42501 permission denied for function transition_order_status"
+    },
+    {
+      "name": "anon_consume_rate_limit_denied",
+      "ok": true,
+      "detail": "42501 permission denied for function consume_rate_limit"
+    },
+    {
       "name": "http_double_submit_one_order",
       "ok": true,
       "detail": "orders=1 statuses=200,200,200,200,200,200"
@@ -91,7 +106,7 @@
     {
       "name": "http_no_constraint_leak",
       "ok": true,
-      "detail": "[{\"ok\":true,\"orderNumber\":\"LH-261022-3FFF0E\",\"accessToken\":\"f157cc7c-ace0-4acc-9907-12f9e0925953\",\"totalDuePaisa\":4535000,\"duplicate\":false},{\"ok\":true,\"orderNumber\":\"LH-261022-3FFF0E\",\"accessToken\":\"f157cc7c-ace0-4acc-9907-12f9e0925953\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261022-3FFF0E\",\"accessToken\":\"f157cc7c-ace0-4acc-9907-12f9e0925953\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261022-3FFF0E\",\"accessToken\":\"f157cc7c-ace0-4acc-9907-12f9e0925953\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261022-3FFF0E\",\"accessToken\":\"f157cc7c-ace0-4acc-9907-12f9e0925953\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261022-3FFF0E\",\"accessToken\":\"f157cc7c-ace0-4acc-9907-12f9e0925953\",\"totalDuePaisa\":4535000,\"duplicate\":true}]"
+      "detail": "[{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":false},{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":true},{\"ok\":true,\"orderNumber\":\"LH-261023-636BDF\",\"accessToken\":\"fb6676ce-7ed5-42ff-a281-b4996aefda30\",\"totalDuePaisa\":4535000,\"duplicate\":true}]"
     }
   ]
 }

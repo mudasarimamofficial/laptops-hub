@@ -128,6 +128,9 @@ try {
   // Public view now shows the CMS body; then withdraw approval and confirm it is gated again.
   let html = await (await fetch(`${base}/pages/shipping`)).text();
   assert("published policy renders CMS body", html.includes("Local test"));
+  const anonDb = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+  const leak = await anonDb.from("content_pages").select("legal_approved_by").eq("slug", "shipping");
+  assert("approver id is not readable by anon", !!leak.error, leak.error?.message || JSON.stringify(leak.data));
   await call(by.owner, "PATCH", "/api/admin/content/shipping", { ...legal, status: "pending", legalApproved: false });
   html = await (await fetch(`${base}/pages/shipping`)).text();
   assert("withdrawn policy is gated again immediately", !html.includes("Local test") && html.includes("BEING FINALISED"));

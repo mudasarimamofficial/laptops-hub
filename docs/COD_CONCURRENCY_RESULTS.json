@@ -1,16 +1,16 @@
 {
-  "at": "2026-10-22T18:34:43.828Z",
-  "orderNumber": "LH-SANDBOX-1792694083684",
+  "at": "2026-10-22T19:18:25.959Z",
+  "orderNumber": "LH-SANDBOX-1792696705667",
   "results": [
     {
       "name": "same_key_both_ok_or_one_ok",
-      "ok": true,
-      "detail": " "
+      "ok": false,
+      "detail": " duplicate key value violates unique constraint \"cod_collections_idempotency_uidx\""
     },
     {
       "name": "same_key_one_fresh_one_replay",
-      "ok": true,
-      "detail": "fresh=1 replay=1"
+      "ok": false,
+      "detail": "fresh=1 replay=0"
     },
     {
       "name": "same_key_collected_once",
@@ -20,7 +20,7 @@
     {
       "name": "diff_keys_no_double_money",
       "ok": true,
-      "detail": "ok=1 over=1 err=over_collection|"
+      "detail": "ok=1 over=1 err=|over_collection"
     },
     {
       "name": "final_collected_eq_total",

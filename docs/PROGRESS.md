@@ -1,5 +1,11 @@
 # Progress log
 
+## 2026-10-23 — explicit GRANTs (local only)
+- Migration `20261023120000_explicit_grants.sql`; local stack runs without `auto_expose_new_tables`.
+- Found on production (non-mutating probes): anon can execute `record_cod_collection` and `transition_order_status` (SECURITY DEFINER, trust `actor_user_id`) and `consume_rate_limit`. The migration restores service-role-only execute and hides `content_pages.legal_approved_by` from anon. Not applied to production.
+- Verified: privilege snapshot = legacy minus intended changes; production path identical; role matrix 15/15, checkout 21/21, role HTTP 87/87.
+- COD concurrency found intermittent (4/6): same-key collection race returns an error instead of a replay; no double collection. Not fixed.
+
 ## 2026-10-22 (isolated tests) — local Supabase
 - Local Supabase in Docker from `supabase/migrations` (no production data); fixture-writing scripts now refuse non-local URLs.
 - Results: role matrix 15/15 · COD concurrency 6/6 · checkout isolated 18/18 (incl. 8×6 concurrent HTTP submits) · staff role × admin API/page over HTTP 86/86 (incl. legal-approval separation) — all on a local Supabase built from `supabase/migrations`, never production (`docs/ISOLATED_TESTS.md`).

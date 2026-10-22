@@ -17,6 +17,11 @@ const NOTES = {
   "cart-line": "Checkout note: V5 \"Prototype cart. Checkout connects to Shopify…\" replaced with the truthful \"Online checkout is not open yet…\" (COD disabled).",
   "drawer-open": "Drawer note: V5 \"Prototype cart · checkout not connected\" replaced with \"Online checkout is not open yet\".",
   "compare-two": "Compare tray is hidden on /compare in both; table identical. Residual is anti-aliasing.",
+  content: "Content pages are compared with V5_CONTENT_PREVIEW=1 (template content); the live default for unpublished pages is the gated shell, captured as `gated-*`.",
+  "page-faq": "FAQ: the V5 question \"Why do some listings mention a CRM configuration?\" is removed — listings no longer show internal CRM labels, so the answer would be false (page ~57px shorter).",
+  "page-contact": "Contact: V5's \"Demo form · not connected · nothing is sent or stored\" is false on the live store; replaced with \"Messages are stored securely for the Laptops HUB team.\" (wraps differently on narrow screens). Success copy likewise states the message was saved and that no email is sent.",
+  "content-corrections": "Shipping, order-inquiries and privacy blocks with prototype wording (Shopify checkout, \"not connected\", prototype storage keys) are corrected in `scripts/gen-v5-content.mjs`; their paragraphs differ in length from V5.",
+  "contact-states": "`contact-submitting` and `contact-failed` have no V5 equivalent (the prototype form never talked to a server); they are captured for review, not diffed.",
 };
 
 const rows = Object.entries(results)
@@ -27,10 +32,10 @@ const rows = Object.entries(results)
   .sort((a, b) => a.scene.localeCompare(b.scene) || Number(b.vp.split("x")[0]) - Number(a.vp.split("x")[0]));
 
 const scenes = [...new Set(rows.map((r) => r.scene))];
-const fmt = (r) => (r.error ? "ERROR" : `${r.diffPct}%`);
+const fmt = (r) => (r.error ? "ERROR" : r.nextOnly ? "next-only (no V5 state)" : `${r.diffPct}%`);
 const hdr = (r) => (r.ref && r.next ? (JSON.stringify(r.ref.header) === JSON.stringify(r.next.header) ? "=" : `${JSON.stringify(r.ref.header)} vs ${JSON.stringify(r.next.header)}`) : "");
 const docH = (r) => (r.ref && r.next ? (r.ref.docH === r.next.docH ? `= ${r.ref.docH}` : `${r.ref.docH} / ${r.next.docH} (${r.next.docH - r.ref.docH})`) : "");
-const max = rows.filter((r) => !r.error).reduce((m, r) => Math.max(m, r.diffPct), 0);
+const max = rows.filter((r) => !r.error && !r.nextOnly).reduce((m, r) => Math.max(m, r.diffPct), 0);
 const overflow = rows.filter((r) => r.next && r.next.overflowX).map((r) => `${r.scene}@${r.vp}`);
 
 let md = `# V5 Pixel Diff Report

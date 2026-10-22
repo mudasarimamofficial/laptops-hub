@@ -22,6 +22,23 @@ const SHARE = arg("share", ""); // Vercel share link for SSO-protected previews 
 const OUT = path.resolve(arg("out", "docs/visual-evidence/parity"));
 const REF_PAGE = `${REF}/Laptops%20Hub%20Storefront%20v5.dc.html`;
 
+function fillContact(waitDone) {
+  return async (page) => {
+    await page.getByRole("textbox", { name: "Name" }).fill("QA Visual Test");
+    await page.getByRole("textbox", { name: "Email" }).fill("qa@example.com");
+    await page.getByRole("textbox", { name: "Message" }).fill("Parity harness message, never stored.");
+    await page.getByRole("button", { name: "Send message" }).click();
+    if (waitDone) {
+      await page.getByRole("button", { name: "Write another message" }).waitFor();
+      // Where the click left the scroll position is incidental (V5's runtime re-renders the button while
+      // Playwright scrolls it); compare the success state from the top of the page in both apps.
+      await page.waitForTimeout(700);
+      await page.evaluate(() => window.scrollTo(0, 0));
+    }
+    else await page.waitForTimeout(600);
+  };
+}
+
 export const VIEWPORTS = [
   [1920, 1080], [1897, 860], [1440, 900], [1366, 680], [1280, 800], [1024, 768],
   [905, 800], [768, 1024], [430, 932], [390, 844], [360, 780],
@@ -54,6 +71,24 @@ export const SCENES = [
   { id: "compare-empty", ref: "#/compare", next: "/compare" },
   { id: "compare-two", ref: "#/compare", next: "/compare", storage: COMPARE, full: true },
   { id: "not-found", ref: "#/no-such-page", next: "/no-such-page" },
+  // Content pages (V5 isPage). Run the Next build with V5_CONTENT_PREVIEW=1 to compare template content;
+  // without it, unpublished pages render their gated state (measured separately as content-gated-*).
+  ...["about", "why-laptops-hub", "contact", "faq", "shipping", "returns", "warranty", "condition-guide", "how-to-choose", "comparison-guide", "order-inquiries", "privacy", "terms"].map((slug) => ({ id: `page-${slug}`, ref: `#/pages/${slug}`, next: `/pages/${slug}`, full: true })),
+  { id: "guides-index", ref: "#/guides", next: "/guides", full: true },
+  ...["processor-generations-explained", "how-much-ram", "choosing-storage", "business-laptop-lines"].map((slug) => ({ id: `guide-${slug}`, ref: `#/guides/${slug}`, next: `/guides/${slug}`, full: true })),
+  { id: "page-missing", ref: "#/pages/no-such-page", next: "/pages/no-such-page" },
+  { id: "faq-expanded", ref: "#/pages/faq", next: "/pages/faq", full: true, act: async (page) => {
+      for (const q of ["Can I compare laptops before buying?", "Are these laptops new?", "How do I place an order?"]) await page.getByRole("button", { name: q }).click();
+    } },
+  // Contact form states. The Next side never reaches the real API: /api/contact is mocked in the browser.
+  { id: "contact-invalid", ref: "#/pages/contact", next: "/pages/contact", act: async (page) => {
+      await page.getByRole("textbox", { name: "Email" }).fill("not-an-email");
+      await page.getByRole("button", { name: "Send message" }).click();
+      await page.getByText("Enter a valid email address").waitFor();
+    } },
+  { id: "contact-submitting", ref: null, next: "/pages/contact", mock: "hang", act: fillContact(false) },
+  { id: "contact-success", ref: "#/pages/contact", next: "/pages/contact", mock: "ok", act: fillContact(true) },
+  { id: "contact-failed", ref: null, next: "/pages/contact", mock: "fail", act: fillContact(false) },
   // Interaction states (same user actions in both apps).
   { id: "mega-open", ref: "#/", next: "/", minW: 760, act: async (page) => { await page.getByRole("button", { name: "Laptops", exact: true }).hover(); await page.getByText(/^View all \d+ products/).waitFor(); } },
   { id: "search-open", ref: "#/", next: "/", act: async (page) => {
@@ -81,6 +116,13 @@ async function shoot(browser, url, vp, scene, file, side) {
   const ctx = await browser.newContext({ viewport: { width: vp[0], height: vp[1] }, deviceScaleFactor: 1, reducedMotion: "reduce", colorScheme: "light" });
   const page = await ctx.newPage();
   if (SHARE && side === "next") await page.goto(SHARE, { waitUntil: "load", timeout: 60000 });
+  // Contact states: answer /api/contact in the browser (no request reaches the server or the inbox).
+  await page.route("**/api/contact", (route) => {
+    if (scene.mock === "hang") return; // stays pending → "Sending…"
+    if (scene.mock === "fail") return route.fulfill({ status: 500, contentType: "application/json", body: JSON.stringify({ error: "submit_failed" }) });
+    if (scene.mock === "ok") return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true }) });
+    return route.abort();
+  });
   await page.addInitScript((seed) => {
     try {
       if (sessionStorage.getItem("lh-seeded")) return;
@@ -153,6 +195,13 @@ for (const scene of scenes) {
     const tag = `${vp[0]}x${vp[1]}`;
     const f = (k) => path.join(dir, `${tag}-${k}.png`);
     try {
+      if (scene.ref === null || arg("next-only", "") === "1") {
+        const nextGeo = await shoot(browser, `${NEXT}${scene.next}`, vp, scene, f("next"), "next");
+        results[`${scene.id}@${tag}`] = { diffPct: null, nextOnly: true, next: nextGeo, at: new Date().toISOString() };
+        fs.writeFileSync(resultsFile, JSON.stringify(results, null, 2));
+        console.log(`${scene.id.padEnd(20)} ${tag.padEnd(10)} next-only (no V5 state)  docH ${nextGeo.docH}${nextGeo.overflowX ? "  OVERFLOW-X" : ""}`);
+        continue;
+      }
       const refGeo = await shoot(browser, `${REF_PAGE}${scene.ref}`, vp, scene, f("ref"), "ref");
       const nextGeo = await shoot(browser, `${NEXT}${scene.next}`, vp, scene, f("next"), "next");
       const d = diff(f("ref"), f("next"), f("diff"));

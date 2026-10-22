@@ -442,3 +442,113 @@ button {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ── Content pages (isPage: pageCols / pageAsidePos, single column below 980px) ── */
+.v5-page-cols {
+  grid-template-columns: minmax(0, 1fr) 280px;
+}
+.v5-page-aside {
+  position: sticky;
+}
+@media (max-width: 979.98px) {
+  .v5-page-cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v5-page-aside {
+    position: static;
+  }
+}
+.v5-hov-canvas:hover {
+  background: var(--lh-canvas) !important;
+}
+.v5-hov-toc:hover {
+  border-left-color: var(--lh-action) !important;
+  color: var(--lh-ink) !important;
+}
+.v5-hov-article:hover {
+  border-color: var(--lh-action) !important;
+  transform: translateY(-2px);
+}
+
+/* CMS HTML bodies rendered with the V5 block styles (h2 / p / list / links). */
+.v5-cms {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.v5-cms > * {
+  margin: 0;
+}
+.v5-cms h2 {
+  margin: 22px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+.v5-cms h3,
+.v5-cms h4 {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.v5-cms p,
+.v5-cms blockquote {
+  max-width: 68ch;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--lh-ink-2);
+}
+.v5-cms blockquote {
+  padding-left: 16px;
+  border-left: 2px solid var(--lh-border);
+}
+.v5-cms ul,
+.v5-cms ol {
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 68ch;
+}
+.v5-cms li {
+  position: relative;
+  padding: 9px 0 9px 18px;
+  border-bottom: 1px solid var(--lh-divider);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--lh-ink);
+}
+.v5-cms ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 18px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lh-electric);
+}
+.v5-cms ol {
+  counter-reset: v5ol;
+}
+.v5-cms ol > li::before {
+  counter-increment: v5ol;
+  content: counter(v5ol) ".";
+  position: absolute;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--lh-action);
+  top: 12px;
+}
+.v5-cms a {
+  color: var(--lh-action);
+  font-weight: 600;
+}
+.v5-cms a:hover {
+  color: var(--lh-action-hover);
+}

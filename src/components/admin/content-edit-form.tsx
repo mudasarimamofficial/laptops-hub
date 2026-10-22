@@ -100,6 +100,10 @@ export function ContentEditForm(props: Props) {
           value={bodyHtml}
           onChange={(e) => setBodyHtml(e.target.value)}
         />
+        <span className="mt-1 block text-xs text-[var(--lh-ink-2)]">
+          Leave empty to publish the approved V5 page layout and copy for this page. Sections still waiting for business
+          details show a “being finalised” notice with a contact link.
+        </span>
       </label>
       {err ? <p className="mt-2 text-sm text-red-600">{err}</p> : null}
       {msg ? <p className="mt-2 text-sm text-emerald-700">{msg}</p> : null}

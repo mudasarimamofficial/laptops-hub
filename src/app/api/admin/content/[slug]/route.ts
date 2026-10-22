@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createAuthorizedStaffClient, staffErrorResponse, type StaffRole } from "@/lib/auth/staff";
 import { LEGAL_CONTENT_SLUGS, sanitizeCmsHtml } from "@/lib/security/sanitize-html";
@@ -104,6 +105,9 @@ export async function PATCH(request: Request, ctx: Ctx) {
       },
     });
 
+    // Public /pages, /guides and the sitemap read published rows through a 60s cache; expire it now so an
+    // unpublish (or legal approval withdrawal) takes effect on the next request.
+    revalidateTag("content", { expire: 0 });
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     return staffErrorResponse(e);

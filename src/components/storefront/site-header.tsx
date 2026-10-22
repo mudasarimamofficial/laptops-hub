@@ -30,7 +30,7 @@ function Wordmark({ size, onDark }: { size: number; onDark?: boolean }) {
     <>
       <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: size, letterSpacing: "-.03em", color: onDark ? "#FFFFFF" : undefined }}>
         Laptops
-      </span>
+      </span>{" "}
       <span
         style={{
           fontFamily: "var(--font-display)",
@@ -194,7 +194,7 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
               setMega(false);
               openCartDrawer();
             }}
-            aria-label="Open cart"
+            aria-label={`Open cart, ${cartCount} ${cartCount === 1 ? "item" : "items"}`}
             style={{ height: 44, padding: "0 16px", border: 0, borderRadius: 999, background: "var(--lh-action)", color: "#FFFFFF", display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 700, cursor: "pointer", marginRight: -4, boxShadow: "0 10px 24px -12px rgba(var(--lh-action-rgb),.9)" }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true">

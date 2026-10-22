@@ -32,7 +32,7 @@ export function V5ProductCard({ item }: { item: V5Card }) {
     >
       <Link
         href={item.href}
-        aria-label={item.title}
+        // Named by its content (photo alt + category badge) so the accessible name contains the visible text (WCAG 2.5.3).
         style={{ position: "relative", display: "block", aspectRatio: "5/4", background: "linear-gradient(180deg,#FFFFFF 0%,#F3F7FD 62%,var(--lh-titanium,#DFEAF7) 100%)", overflow: "hidden" }}
       >
         <span aria-hidden="true" style={{ position: "absolute", left: "12%", right: "12%", bottom: "9%", height: "10%", borderRadius: "50%", background: "radial-gradient(closest-side,rgba(10,23,48,.16),transparent)" }} />

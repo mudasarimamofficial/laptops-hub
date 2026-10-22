@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useCompare, COMPARE_MAX } from "@/lib/commerce/compare-store";
 import { useCartUi } from "@/lib/commerce/cart-ui";
 import { isValidHandle } from "@/lib/catalog/handles";
+import { useStoryInView } from "@/lib/commerce/story-ui";
 
 type Item = { handle: string; title: string; model: string; imageUrl: string | null; imageAlt: string };
 
@@ -15,26 +16,13 @@ const cache = new Map<string, Item | null>();
 /** Same exclusions as V5 (compare/page/guides/cart) plus admin and checkout. */
 const HIDDEN_ROUTES = [/^\/admin/, /^\/checkout/, /^\/compare/, /^\/cart/, /^\/pages\//, /^\/guides/];
 
-function useStoryInView(active: boolean) {
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    if (!active) return;
-    const el = document.getElementById("story");
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(([e]) => setInView(e.isIntersecting), { threshold: 0.2 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, [active]);
-  return active && inView;
-}
-
 export function CompareTray() {
   const pathname = usePathname() || "/";
   const handles = useCompare((s) => s.handles);
   const remove = useCompare((s) => s.remove);
   const clear = useCompare((s) => s.clear);
   const drawerOpen = useCartUi((s) => s.open);
-  const storyIn = useStoryInView(pathname === "/");
+  const storyIn = useStoryInView() && pathname === "/";
   const [, setTick] = useState(0);
   const key = handles.join(",");
 

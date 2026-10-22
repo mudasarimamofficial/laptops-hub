@@ -27,6 +27,16 @@ export async function createClient() {
   );
 }
 
+/**
+ * Anon client without cookies, for public catalog reads that may be cached across requests.
+ * Same privileges and RLS as an anonymous visitor.
+ */
+export function createPublicClient() {
+  return createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
 /** Server-only elevated client. Never import into client components. */
 export function createServiceClient() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;

@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { modelName, publicDescription, publicTags, toPublicSpecs } from "@/lib/catalog/specs";
 import type { PublicProduct } from "@/types/catalog";
 
-type Db = Awaited<ReturnType<typeof createClient>>;
+type Db = Pick<Awaited<ReturnType<typeof createClient>>, "from">;
 type MediaItem = { url: string; alt: string; position: number };
 
 type ProductRow = {
@@ -131,8 +131,8 @@ const productSelect = `
 const PAGE = 100;
 
 /** Paginate through the entire active catalog (no hard 226 cap). */
-export async function listAllPublicProducts(): Promise<PublicProduct[]> {
-  const supabase = await createClient();
+export async function listAllPublicProducts(db?: Db): Promise<PublicProduct[]> {
+  const supabase = db ?? (await createClient());
   const out: PublicProduct[] = [];
   let offset = 0;
   for (;;) {

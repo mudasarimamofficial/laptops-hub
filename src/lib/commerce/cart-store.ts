@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import type { CartLine } from "@/types/catalog";
 import { clampQty, lineMax } from "@/lib/commerce/cart-limits";
+import { showToast } from "@/lib/commerce/toast";
 
 const KEY = "lh-cart-v1";
 
@@ -55,8 +56,10 @@ export function useCart<T>(selector: (s: CartState & CartActions) => T): T {
       const cur = read();
       const existing = cur.lines.find((l) => l.variantId === line.variantId);
       let lines: CartLine[];
+      const max = lineMax(line.maxPerOrder ?? existing?.maxPerOrder);
+      // V5 `add`: clamp to the per-order limit and say so.
+      if ((existing?.quantity ?? 0) + line.quantity > max) showToast("Maximum quantity reached");
       if (existing) {
-        const max = lineMax(line.maxPerOrder ?? existing.maxPerOrder);
         lines = cur.lines.map((l) =>
           l.variantId === line.variantId
             ? { ...l, maxPerOrder: line.maxPerOrder ?? l.maxPerOrder, quantity: clampQty(l.quantity + line.quantity, max) }
@@ -68,6 +71,8 @@ export function useCart<T>(selector: (s: CartState & CartActions) => T): T {
       write({ lines });
     },
     update(variantId, quantity) {
+      const line = read().lines.find((l) => l.variantId === variantId);
+      if (line && quantity > lineMax(line.maxPerOrder)) showToast("Maximum quantity reached");
       const lines =
         quantity <= 0
           ? read().lines.filter((l) => l.variantId !== variantId)

@@ -1,256 +1,287 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { formatPkr } from "@/lib/money";
 import { useCart } from "@/lib/commerce/cart-store";
+import { openCartDrawer } from "@/lib/commerce/cart-ui";
+import { canPurchase } from "@/lib/catalog/availability";
+import { setStoryInView } from "@/lib/commerce/story-ui";
 
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(
-    (onStoreChange) => {
-      if (typeof window === "undefined") return () => {};
-      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-      mq.addEventListener("change", onStoreChange);
-      return () => mq.removeEventListener("change", onStoreChange);
-    },
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    () => false,
-  );
-}
-
-const ANGLE_LABELS = ["Front", "Left", "Right", "Rear"];
-
-const STEPS = [
-  { n: "01", label: "Look" },
-  { n: "02", label: "Spec" },
-  { n: "03", label: "Fit" },
-  { n: "04", label: "Buy" },
-];
-
-type Props = {
+export type StoryProps = {
   handle: string;
   title: string;
   model: string;
   config: string;
+  priceText: string;
+  stockText: string;
   pricePaisa: number;
   variantId: string;
-  /** Variant max_per_order, carried into the cart line so the cart enforces the same limit as the server. */
-  maxPerOrder?: number;
-  specs: { k: string; v: string }[];
-  /** Catalog / CDN images only — never unverified cutout assets from the public repo. */
-  images: { src: string; alt: string }[];
+  maxPerOrder: number;
+  available: boolean;
+  /** Four angles (front, left, right, rear): V5 cutouts when approved, otherwise catalog photos. */
+  angles: { src: string | null; cutout: boolean }[];
+  rows: { k: string; v: string }[];
 };
 
-export function ProductStory({ handle, title, model, config, pricePaisa, variantId, maxPerOrder, specs, images }: Props) {
-  const angles = (images.length ? images : [{ src: "", alt: title }])
-    .slice(0, 4)
-    .map((img, i) => ({
-      src: img.src,
-      alt: img.alt || `${title}, ${ANGLE_LABELS[i] || "view"}`,
-      label: ANGLE_LABELS[i] || `View ${i + 1}`,
-    }));
-  while (angles.length < 4 && angles[0]?.src) {
-    angles.push({ ...angles[angles.length % Math.max(images.length, 1)], label: ANGLE_LABELS[angles.length] || "View" });
-  }
-  const root = useRef<HTMLElement>(null);
-  const [sp, setSp] = useState(0);
-  const reduced = usePrefersReducedMotion();
+const LABELS = ["Front", "Left", "Right", "Rear"];
+const VIEW = ["Front view", "Left angle", "Right angle", "Rear view"];
+const ALT = ["front view", "left angle", "right angle", "rear view"];
+const POS = [
+  { left: "6%", width: "88%" },
+  { left: "4%", width: "92%" },
+  { left: "4%", width: "92%" },
+  { left: "6%", width: "88%" },
+];
+
+const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+function lerp(x: number, xs: number[], ys: number[]) {
+  if (x <= xs[0]) return ys[0];
+  for (let i = 1; i < xs.length; i++)
+    if (x <= xs[i]) {
+      const k = (x - xs[i - 1]) / (xs[i] - xs[i - 1]);
+      return ys[i - 1] + (ys[i] - ys[i - 1]) * k;
+    }
+  return ys[ys.length - 1];
+}
+const E = (x: number) => x * x * (3 - 2 * x);
+
+/** Port of V5 section `#story` ("02 Product story"): pinned scene, four angles, scroll-linked spec reveal. */
+export function ProductStory(p: StoryProps) {
+  const ref = useRef<HTMLElement>(null);
+  const [rm, setRm] = useState(false);
+  const [ci, setCi] = useState(0);
+  const [ctaOn, setCtaOn] = useState(false);
   const add = useCart((s) => s.add);
-  const chapter = Math.min(3, Math.floor(sp * 4));
+  const state = useRef({ ci: 0, ctaOn: false, storyIn: false });
 
   useEffect(() => {
-    if (reduced) return;
-    const el = root.current;
-    if (!el) return;
-    const onScroll = () => {
-      const rect = el.getBoundingClientRect();
-      const total = el.offsetHeight - window.innerHeight;
-      const scrolled = Math.min(Math.max(-rect.top, 0), Math.max(total, 1));
-      setSp(scrolled / Math.max(total, 1));
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [reduced]);
+    const mq = matchMedia("(prefers-reduced-motion: reduce)");
+    const on = () => setRm(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
 
-  function goChapter(i: number) {
-    const el = root.current;
-    if (!el) return;
-    if (reduced) {
-      setSp((i + 0.5) / 4);
+  useEffect(() => {
+    const s = ref.current;
+    if (!s) return;
+    let raf = 0;
+    const set = (k: string, v: number | string) => s.style.setProperty(k, typeof v === "number" ? v.toFixed(4) : v);
+    const frame = () => {
+      raf = 0;
+      const vh = innerHeight;
+      const r = s.getBoundingClientRect();
+      const H = Math.max(1, vh - 72);
+      const sh = s.firstElementChild ? (s.firstElementChild as HTMLElement).offsetHeight : H;
+      const span = Math.max(1, r.height - sh);
+      const sp = rm ? 1 : clamp((72 - r.top) / span, 0, 1);
+      const ent = clamp((vh - r.top) / H, 0, 1);
+      const ext = clamp((r.bottom - 72) / (sh * 0.55), 0, 1);
+      const ep = rm ? 1 : Math.min(ent, ext);
+      const f = rm ? state.current.ci : lerp(sp, [0, 0.14, 0.28, 0.4, 0.52, 0.64, 0.76, 1], [0, 0, 1, 1, 2, 2, 3, 3]);
+      const fi = Math.floor(f);
+      const fr = f - fi;
+      const fe = fi + E(fr);
+      set("--sp", sp);
+      set("--ep", E(ep));
+      for (let i = 0; i < 4; i++) set("--o" + i, clamp(1 - Math.abs(fe - i), 0, 1));
+      set("--tw", rm ? 0 : Math.sin(Math.PI * fr));
+      set("--px", rm ? 0 : lerp(sp, [0, 0.14, 0.4, 0.64, 0.86, 1], [0, 0, -1.6, 1.6, 0, 0]));
+      set("--py", rm ? 0 : (1 - E(ent)) * 180 + lerp(sp, [0, 0.12, 0.92, 1], [50, 0, 0, -24]));
+      set("--ps", rm ? 1 : lerp(sp, [0, 0.12, 0.4, 0.64, 0.86, 1], [0.82, 1, 1.04, 1.04, 0.98, 0.92]) * (0.86 + 0.14 * E(ent)));
+      [0.06, 0.28, 0.5, 0.7].forEach((a, i) => set("--l" + i, rm ? 1 : clamp((sp - a) / 0.08, 0, 1)));
+      const l4 = rm ? 1 : clamp((sp - 0.8) / 0.08, 0, 1);
+      set("--l4", l4);
+      const nci = rm ? state.current.ci : clamp(Math.round(f), 0, 3);
+      const on = l4 > 0.5;
+      // Story covers the compare-tray zone: hide the tray so story CTAs stay reachable.
+      const sin = r.top < vh - 90 && r.bottom > vh - 90;
+      if (nci !== state.current.ci) {
+        state.current.ci = nci;
+        setCi(nci);
+      }
+      if (on !== state.current.ctaOn) {
+        state.current.ctaOn = on;
+        setCtaOn(on);
+      }
+      if (sin !== state.current.storyIn) {
+        state.current.storyIn = sin;
+        setStoryInView(sin);
+      }
+    };
+    const sched = () => {
+      if (!raf) raf = requestAnimationFrame(frame);
+    };
+    addEventListener("scroll", sched, { passive: true });
+    addEventListener("resize", sched);
+    sched();
+    return () => {
+      cancelAnimationFrame(raf);
+      removeEventListener("scroll", sched);
+      removeEventListener("resize", sched);
+      setStoryInView(false);
+    };
+  }, [rm]);
+
+  const goCh = (i: number) => {
+    if (rm) {
+      state.current.ci = i;
+      setCi(i);
       return;
     }
-    const total = el.offsetHeight - window.innerHeight;
-    const y = el.offsetTop + (total * (i + 0.15)) / 4;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  }
+    const s = ref.current;
+    if (!s) return;
+    const sh = s.firstElementChild ? (s.firstElementChild as HTMLElement).offsetHeight : innerHeight - 72;
+    const span = Math.max(1, s.offsetHeight - sh);
+    const top = s.getBoundingClientRect().top + scrollY;
+    scrollTo({ top: top - 72 + span * [0.08, 0.34, 0.58, 0.84][i], behavior: "smooth" });
+  };
 
-  const opacities = [0, 1, 2, 3].map((i) => {
-    if (reduced) return i === chapter ? 1 : 0.15;
-    const center = (i + 0.5) / 4;
-    return Math.max(0, 1 - Math.abs(sp - center) * 5);
-  });
+  const live = ctaOn || rm;
+  const purchasable = canPurchase({ available: p.available, pricePaisa: p.pricePaisa, variantId: p.variantId });
+  const href = "/products/" + encodeURIComponent(p.handle);
+  const stageVars = { "--o0": 1, "--o1": 0, "--o2": 0, "--o3": 0 } as Record<string, number>;
+  if (rm) for (let i = 0; i < 4; i++) stageVars["--o" + i] = i === ci ? 1 : 0;
 
   return (
     <section
-      ref={root}
       id="story"
-      aria-label={`Find your next machine: ${model}`}
-      className="relative bg-[var(--lh-canvas)]"
-      style={{ height: reduced ? "auto" : "320vh" }}
+      data-screen-label="02 Product story"
+      ref={ref}
+      aria-label={`Find your next machine: ${p.model}`}
+      className="v5-story"
+      style={{ ["--ep" as string]: 0, ["--sp" as string]: 0, ["--o0" as string]: 1, ["--o1" as string]: 0, ["--o2" as string]: 0, ["--o3" as string]: 0, ["--l0" as string]: 0, ["--l1" as string]: 0, ["--l2" as string]: 0, ["--l3" as string]: 0, ["--l4" as string]: 0, ["--px" as string]: 0, ["--py" as string]: 0, ["--ps" as string]: 1, ["--tw" as string]: 0, position: "relative", background: "var(--lh-canvas)" }}
     >
-      <div className={`top-[72px] ${reduced ? "relative" : "sticky"} h-[min(calc(100vh-72px),820px)] min-h-[560px]`}>
-        <div className="relative flex h-full flex-col justify-center overflow-hidden bg-[var(--lh-navy)] text-white isolation-isolate">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 -z-[3]"
-            style={{
-              background:
-                "radial-gradient(60% 55% at 30% 80%, rgba(33,89,212,.5), transparent 70%), linear-gradient(#0A1730,#0A1730)",
-            }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-0 top-[18%] -z-[2] whitespace-nowrap font-[family-name:var(--font-display)] text-[clamp(5rem,16vw,16rem)] font-bold leading-none tracking-[-0.05em] text-transparent"
-            style={{
-              WebkitTextStroke: "1px rgba(150,185,235,.12)",
-              transform: `translate3d(calc(10vw - ${sp * 70}vw), -50%, 0)`,
-            }}
-          >
-            LATITUDE 7420
+      <div className="v5-story-sticky" style={{ top: 72 }}>
+        <div style={{ position: "relative", height: "100%", overflow: "hidden", isolation: "isolate", background: "var(--lh-navy)", color: "#FFFFFF", clipPath: "inset(calc((1 - var(--ep)) * 3.5%) calc((1 - var(--ep)) * 3%) round calc((1 - var(--ep)) * 48px))", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: -3, background: "radial-gradient(60% 55% at 30% 80%,rgba(var(--lh-action-rgb),.5),transparent 70%),linear-gradient(var(--lh-navy),var(--lh-navy) 60%,var(--lh-navy))" }} />
+          <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: -3, opacity: "calc(1 - var(--sp))", background: "radial-gradient(42% 42% at 18% 18%,rgba(var(--lh-electric-rgb),.3),transparent 70%)" }} />
+          <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: -3, opacity: "var(--sp)", background: "radial-gradient(50% 50% at 75% 25%,rgba(var(--lh-iris-rgb),.42),transparent 70%)" }} />
+          <div aria-hidden="true" className="v5-story-orbit" style={{ position: "absolute", aspectRatio: "1/1", zIndex: -2, transform: "translate(-50%,-50%)" }}>
+            <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1px solid rgba(var(--lh-haze-rgb),.14)" }} />
+            <div style={{ position: "absolute", inset: 0 }}>
+              <div style={{ position: "absolute", inset: 0, borderRadius: "50%", background: "conic-gradient(from 0deg,transparent 0deg,#1CB9E8 40deg,#2159D4 80deg,transparent 110deg)", WebkitMaskImage: "radial-gradient(closest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px))", maskImage: "radial-gradient(closest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px))", transform: "rotate(calc(var(--sp) * 260deg - 40deg))", willChange: "transform" }} />
+            </div>
+            <div style={{ position: "absolute", inset: "16%", borderRadius: "50%", border: "1px dashed rgba(var(--lh-haze-rgb),.16)", transform: "rotate(calc(var(--sp) * -140deg))" }} />
+          </div>
+          <div aria-hidden="true" style={{ position: "absolute", left: "-20%", right: "-20%", bottom: "-8%", height: "44%", zIndex: -2, transform: "perspective(700px) rotateX(68deg)", transformOrigin: "50% 100%", backgroundImage: "linear-gradient(rgba(var(--lh-electric-rgb),.16) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--lh-electric-rgb),.16) 1px,transparent 1px)", backgroundSize: "64px 64px", backgroundPosition: "0 calc(var(--sp) * 640px)", WebkitMaskImage: "linear-gradient(transparent,#000 40%)", maskImage: "linear-gradient(transparent,#000 40%)" }} />
+          <div aria-hidden="true" className="v5-story-ghost" style={{ position: "absolute", left: 0, zIndex: -2, whiteSpace: "nowrap", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(110px,18vw,290px)", letterSpacing: "-.05em", lineHeight: 1, color: "transparent", WebkitTextStroke: "1px rgba(var(--lh-haze-rgb),.12)", transform: "translate3d(calc(10vw - var(--sp) * 70vw),-50%,0)", willChange: "transform" }}>
+            {p.model.replace(/^(Dell|HP|Lenovo)\s+/i, "").toUpperCase()}
           </div>
 
-          <div className="lh-container relative grid h-full max-h-[820px] grid-cols-1 items-stretch gap-6 py-8 lg:grid-cols-2 lg:gap-10 lg:py-10">
-            <div className="flex min-h-0 min-w-0 flex-col gap-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <span className="inline-flex items-center gap-2.5 font-[family-name:var(--font-mono)] text-xs tracking-[0.14em] text-white/70">
-                  <span className="h-0.5 w-3 bg-[var(--lh-signal)]" />
+          <div className="v5-story-grid" style={{ position: "relative", width: "100%", maxWidth: 1360, margin: "0 auto", display: "grid", alignItems: "stretch" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0, minHeight: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".14em", color: "var(--lh-on-dark-2)" }}>
+                  <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
                   02 — PRODUCT STORY
                 </span>
-                <span className="font-[family-name:var(--font-mono)] text-xs text-white/70">{angles[chapter]?.label} view</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-on-dark-2)" }}>
+                  {VIEW[ci]} · {ci + 1}/4
+                </span>
               </div>
-              <div className="relative min-h-[220px] flex-1 perspective-[1400px]">
-                <div className="absolute inset-0">
-                  {angles.map((a, i) =>
+              <div className="v5-story-stage" style={{ position: "relative", perspective: 1400 }}>
+                <div aria-hidden="true" style={{ position: "absolute", left: "16%", right: "16%", top: "-14%", bottom: "22%", background: "linear-gradient(180deg,rgba(var(--lh-haze-rgb),0),rgba(var(--lh-haze-rgb),.2) 60%,rgba(var(--lh-haze-rgb),0))", clipPath: "polygon(44% 0,56% 0,100% 100%,0 100%)", opacity: "calc(.35 + var(--sp) * .5)" }} />
+                <div aria-hidden="true" style={{ position: "absolute", left: "14%", right: "14%", bottom: "5%", height: "18%", borderRadius: "50%", background: "radial-gradient(closest-side,rgba(var(--lh-electric-rgb),.5),rgba(var(--lh-action-rgb),.18) 60%,transparent)", transform: "translate3d(calc(var(--px) * 1vw),0,0) scaleX(calc(.8 + var(--ps) * .2))" }} />
+                <div aria-hidden="true" style={{ position: "absolute", left: "20%", right: "20%", bottom: "9%", height: "8%", borderRadius: "50%", background: "radial-gradient(closest-side,rgba(0,0,0,.75),transparent)", transform: "translate3d(calc(var(--px) * 1vw),0,0)" }} />
+                <div style={{ position: "absolute", inset: 0, transformStyle: "preserve-3d", transform: "translate3d(calc(var(--px) * 1vw),calc(var(--py) * 1px),0) scale(var(--ps)) rotateY(calc(var(--tw) * -10deg))", willChange: "transform", ...(rm ? (stageVars as React.CSSProperties) : {}) }}>
+                  {p.angles.map((a, i) =>
                     a.src ? (
-                      <Image
-                        key={`${a.src}-${i}`}
+                      // eslint-disable-next-line @next/next/no-img-element -- V5 layered story stage
+                      <img
+                        key={i}
                         src={a.src}
-                        alt={a.alt}
-                        fill
-                        className="object-contain p-[4%] transition-opacity duration-300"
-                        style={{ opacity: opacities[i] }}
-                        sizes="(max-width:1024px) 90vw, 45vw"
-                        priority={i === 0}
-                        unoptimized
+                        alt={`${p.model}, ${ALT[i]}`}
+                        loading={i === 0 ? "eager" : "lazy"}
+                        style={{ position: "absolute", left: POS[i].left, top: "6%", width: POS[i].width, height: "82%", objectFit: "contain", opacity: `var(--o${i})`, ...(a.cutout ? {} : { background: "#FFFFFF", borderRadius: 18 }) }}
                       />
                     ) : null,
                   )}
                 </div>
               </div>
-              {reduced ? (
-                <div className="grid grid-cols-4 gap-2">
-                  {angles.map((a, i) => (
-                    <button
-                      key={`${a.label}-${i}`}
-                      type="button"
-                      onClick={() => goChapter(i)}
-                      className="rounded-xl border border-white/15 bg-white/5 p-2"
-                      aria-pressed={chapter === i}
-                    >
+              {rm ? (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: 8 }}>
+                  {p.angles.map((a, i) => (
+                    <figure key={i} style={{ margin: 0, display: "flex", flexDirection: "column", gap: 6, padding: 8, borderRadius: 12, background: "rgba(255,255,255,.05)", border: "1px solid rgba(var(--lh-haze-rgb),.18)" }}>
                       {a.src ? (
-                        <Image src={a.src} alt="" width={120} height={75} className="mx-auto h-auto w-full object-contain" unoptimized />
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={a.src} alt={`${p.model}, ${LABELS[i].toLowerCase()} view`} loading="lazy" style={{ width: "100%", aspectRatio: "16/10", objectFit: "contain" }} />
                       ) : null}
-                      <span className="mt-1 block text-center font-[family-name:var(--font-mono)] text-[11px] text-white/70">
-                        {a.label}
-                      </span>
-                    </button>
+                      <figcaption style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-on-dark-2)", textAlign: "center" }}>{LABELS[i]}</figcaption>
+                    </figure>
                   ))}
                 </div>
               ) : null}
-              <div className="relative h-0.5 rounded bg-white/15">
-                <div
-                  className="absolute inset-y-0 left-0 rounded bg-[linear-gradient(90deg,var(--lh-action),var(--lh-electric))]"
-                  style={{ width: `${Math.max(sp, reduced ? (chapter + 1) / 4 : sp) * 100}%` }}
-                />
+              <div style={{ position: "relative", height: 2, background: "rgba(255,255,255,.14)", borderRadius: 2 }}>
+                <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "calc(var(--sp) * 100%)", background: "linear-gradient(90deg,var(--lh-action),var(--lh-electric))", borderRadius: 2, boxShadow: "0 0 12px rgba(var(--lh-electric-rgb),.7)" }} />
               </div>
             </div>
 
-            <div className="flex min-h-0 min-w-0 flex-col justify-center gap-4 overflow-auto py-1">
-              <div>
-                <h2 className="m-0 font-[family-name:var(--font-display)] text-[clamp(1.75rem,3.2vw,2.75rem)] font-bold leading-none tracking-[-0.045em]">
+            <div className="v5-story-panel" style={{ display: "flex", flexDirection: "column", justifyContent: "safe center", minWidth: 0, minHeight: 0 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <h2 className="v5-story-h2" style={{ margin: 0, fontFamily: "var(--font-display)", lineHeight: 1, letterSpacing: "-.045em", fontWeight: 700, textWrap: "balance" }}>
                   Find your next machine.
                 </h2>
-                <p className="mt-2 text-[clamp(0.95rem,1.1vw,1.05rem)] text-white/70">
-                  {model} · {config}
-                </p>
+                <span className="v5-story-sub" style={{ fontSize: "clamp(15px,1.1vw,17px)", color: "var(--lh-on-dark-2)" }}>
+                  {p.model} · {p.config}
+                </span>
               </div>
-              <div role="group" aria-label="Story chapters" className="grid grid-cols-4 gap-1.5">
-                {STEPS.map((s, i) => {
-                  const on = chapter === i;
+              <div role="group" aria-label="Story chapters" style={{ display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: 6 }}>
+                {LABELS.map((label, i) => {
+                  const on = ci === i;
                   return (
                     <button
-                      key={s.n}
+                      key={label}
                       type="button"
-                      onClick={() => goChapter(i)}
+                      onClick={() => goCh(i)}
                       aria-pressed={on}
-                      className="flex min-h-11 flex-col items-start justify-center gap-0.5 rounded-xl px-2 py-1.5 text-left transition"
-                      style={{
-                        border: `1px solid ${on ? "rgba(28,185,232,.55)" : "rgba(150,185,235,.2)"}`,
-                        background: on ? "rgba(33,89,212,.35)" : "rgba(255,255,255,.04)",
-                        color: on ? "#fff" : "rgba(255,255,255,.75)",
-                      }}
+                      style={{ minHeight: 44, padding: "6px 8px", borderRadius: 12, border: `1px solid ${on ? "rgba(var(--lh-electric-rgb),.75)" : "rgba(var(--lh-haze-rgb),.2)"}`, background: on ? "rgba(var(--lh-action-rgb),.38)" : "rgba(255,255,255,.04)", color: on ? "#FFFFFF" : "var(--lh-on-dark-2)", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center", gap: 1, cursor: "pointer", transition: "background .25s ease,border-color .25s ease,color .25s ease" }}
                     >
-                      <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.1em]">{s.n}</span>
-                      <span className="text-[13px] font-semibold">{s.label}</span>
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".1em" }}>0{i + 1}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600 }}>{label}</span>
                     </button>
                   );
                 })}
               </div>
-              <div className="grid grid-cols-2 gap-2">
-                {specs.slice(0, 4).map((r) => (
-                  <div
-                    key={r.k}
-                    className="flex flex-col gap-1.5 rounded-[14px] border border-white/15 bg-white/5 p-3"
-                  >
-                    <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.14em] text-[var(--lh-electric)]">
-                      {r.k}
-                    </span>
-                    <span className="text-[clamp(0.875rem,1.05vw,1rem)] font-semibold leading-snug">{r.v}</span>
-                  </div>
-                ))}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 8 }}>
+                {p.rows.map((r, i) => {
+                  const hot = ci === i && !rm;
+                  return (
+                    <div
+                      key={r.k}
+                      className="v5-story-spec"
+                      style={{ display: "flex", flexDirection: "column", gap: 5, borderRadius: 14, background: "rgba(255,255,255,.05)", border: `1px solid ${hot ? "rgba(var(--lh-electric-rgb),.7)" : "rgba(var(--lh-haze-rgb),.18)"}`, boxShadow: hot ? "0 0 30px -10px rgba(var(--lh-electric-rgb),.7)" : "none", opacity: `var(--l${i})`, transform: `translate3d(calc((1 - var(--l${i})) * 28px),0,0)`, transition: "border-color .3s ease,box-shadow .3s ease" }}
+                    >
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".14em", color: "var(--lh-electric)" }}>{r.k}</span>
+                      <span style={{ fontSize: "clamp(14px,1.05vw,16px)", fontWeight: 600, lineHeight: 1.3 }}>{r.v}</span>
+                      <span style={{ height: 2, borderRadius: 2, background: "linear-gradient(90deg,var(--lh-action),var(--lh-electric))", transformOrigin: "0 50%", transform: `scaleX(var(--l${i}))` }} />
+                    </div>
+                  );
+                })}
               </div>
-              <div className="flex flex-wrap items-center justify-between gap-3 rounded-[18px] border border-white/25 bg-[linear-gradient(100deg,rgba(33,89,212,.3),rgba(101,116,213,.24))] px-4 py-3">
-                <span className="flex flex-col gap-0.5">
-                  <span className="font-[family-name:var(--font-display)] text-2xl font-bold">{formatPkr(pricePaisa)}</span>
-                  <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--lh-electric-text,#8FDDF5)]">
-                    Cash on delivery
-                  </span>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap", padding: "12px 12px 12px 18px", borderRadius: 18, background: "linear-gradient(100deg,rgba(var(--lh-action-rgb),.3),rgba(var(--lh-iris-rgb),.24))", border: "1px solid rgba(var(--lh-haze-rgb),.35)", opacity: "var(--l4)", transform: "translate3d(0,calc((1 - var(--l4)) * 20px),0)", pointerEvents: live ? "auto" : "none" }}>
+                <span style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <span style={{ fontFamily: "var(--font-display)", fontSize: 24, fontWeight: 700 }}>{p.priceText}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-electric-text)" }}>{p.stockText}</span>
                 </span>
-                <span className="flex flex-wrap gap-2">
-                  <Link
-                    href={`/products/${handle}`}
-                    className="inline-flex h-[46px] items-center rounded-full border border-white/30 px-[18px] text-sm font-semibold text-white"
-                  >
+                <span style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <Link href={href} tabIndex={live ? 0 : -1} className="v5-hov-bd-electric" style={{ height: 46, padding: "0 18px", borderRadius: 999, border: "1px solid rgba(255,255,255,.3)", color: "#FFFFFF", fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
                     Details
                   </Link>
-                  <button
-                    type="button"
-                    className="inline-flex h-[46px] items-center rounded-full bg-white px-5 text-sm font-bold text-[var(--lh-ink)]"
-                    onClick={() =>
-                      add({
-                        variantId,
-                        handle,
-                        title,
-                        unitPricePaisa: pricePaisa,
-                        quantity: 1,
-                        maxPerOrder,
-                      })
-                    }
-                  >
-                    Add to cart
-                  </button>
+                  {purchasable ? (
+                    <button
+                      type="button"
+                      tabIndex={live ? 0 : -1}
+                      className="v5-hov-white-ice"
+                      onClick={() => {
+                        add({ variantId: p.variantId, handle: p.handle, title: p.title, unitPricePaisa: p.pricePaisa, quantity: 1, imageUrl: p.angles[0]?.src ?? undefined, maxPerOrder: p.maxPerOrder, model: p.model, config: p.config });
+                        openCartDrawer();
+                      }}
+                      style={{ height: 46, padding: "0 20px", border: 0, borderRadius: 999, background: "#FFFFFF", color: "var(--lh-ink)", fontWeight: 700, fontSize: 14, cursor: "pointer", whiteSpace: "nowrap" }}
+                    >
+                      Add to cart
+                    </button>
+                  ) : null}
                 </span>
               </div>
             </div>

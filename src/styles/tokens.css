@@ -16,11 +16,29 @@
   --lh-border: #dae5f2;
   --lh-divider: #e8eff7;
   --lh-success: #166044;
-  --lh-success-bg: #e8f6ef;
+  --lh-success-bg: #e8f4ee;
   --lh-warning: #865111;
   --lh-warning-bg: #fff4e0;
   --lh-error: #b42318;
   --lh-white: #ffffff;
+
+  /* Full V5 set (Laptops Hub Storefront v5.dc.html root style) */
+  --lh-signal-hover: #c71d2d;
+  --lh-action-rgb: 33, 89, 212;
+  --lh-grad-action: linear-gradient(180deg, #2c64e2 0%, #2159d4 100%);
+  --lh-electric-rgb: 28, 185, 232;
+  --lh-electric-text: #8fddf5;
+  --lh-iris-rgb: 101, 116, 213;
+  --lh-paper: #ffffff;
+  --lh-border-strong: #b9cbe6;
+  --lh-navy-rgb: 10, 23, 48;
+  --lh-deep: #081326;
+  --lh-haze-rgb: 150, 185, 235;
+  --lh-on-dark: #ffffff;
+  --lh-on-dark-2: #c9d6ee;
+  --lh-on-dark-3: #93a3c2;
+  --lh-glass: rgba(255, 255, 255, 0.88);
+  --lh-success-bd: #bfe0cf;
 
   --lh-radius-badge: 6px;
   --lh-radius-control: 12px;
@@ -33,7 +51,11 @@
   --lh-gutter: clamp(16px, 3vw, 32px);
   --lh-section: clamp(56px, 7vw, 96px);
 
-  --font-display: var(--font-sora), system-ui, sans-serif;
-  --font-body: var(--font-hanken), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  /* Fallback chains as in V5 ('Sora',sans-serif · 'Hanken Grotesk',system-ui,sans-serif · 'JetBrains Mono',monospace). */
+  /* Literal family names: next/font's generated variable appends a metric-adjusted Arial fallback that would
+     render glyphs the fonts lack (e.g. "→") in Arial instead of system-ui. The @font-face rules are self-hosted
+     by next/font (classes on <html>). */
+  --font-display: "Sora", sans-serif;
+  --font-body: "Hanken Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
 }

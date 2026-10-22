@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { showToast } from "@/lib/commerce/toast";
 
 const KEY = "lh-compare-v1";
 const MAX = 4;
@@ -53,6 +54,7 @@ export function useCompare<T>(selector: (s: State & CompareActions) => T): T {
       const cur = read().handles;
       if (cur.includes(handle)) write({ handles: cur.filter((h) => h !== handle) });
       else if (cur.length < MAX) write({ handles: [...cur, handle] });
+      else showToast("Compare holds up to 4 products");
     },
     remove(handle) {
       write({ handles: read().handles.filter((h) => h !== handle) });

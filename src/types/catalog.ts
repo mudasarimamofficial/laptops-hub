@@ -34,4 +34,8 @@ export type CartLine = {
   imageUrl?: string;
   /** Variant max_per_order captured when added; older persisted lines may lack it (hard cap applies). */
   maxPerOrder?: number;
+  /** Display fields captured when added (V5 cart shows model, configuration and SKU). */
+  model?: string;
+  config?: string;
+  sku?: string | null;
 };

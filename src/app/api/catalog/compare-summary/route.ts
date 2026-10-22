@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { listCompareSummaries } from "@/lib/catalog/queries";
+import { getV5Catalog } from "@/lib/catalog/v5";
 import { COMPARE_LIMIT, parseCompareHandles } from "@/lib/catalog/handles";
 
 export async function GET(request: Request) {
@@ -8,7 +8,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ items: [], requested: [] }, { headers: { "Cache-Control": "no-store" } });
   }
   try {
-    const items = await listCompareSummaries(requested);
+    // Served from the cached public catalog: drafts/archived handles are absent and get pruned by the tray.
+    const P = await getV5Catalog();
+    const items = requested.flatMap((h) => {
+      const p = P.find((x) => x.h === h);
+      return p ? [{ handle: p.h, title: p.t, model: p.model, imageUrl: p.imgs[0]?.u ?? null, imageAlt: p.imgs[0]?.a || p.t }] : [];
+    });
     return NextResponse.json(
       { items, requested },
       { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } },

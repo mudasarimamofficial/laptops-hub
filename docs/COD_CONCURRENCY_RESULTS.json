@@ -1,16 +1,16 @@
 {
-  "at": "2026-10-22T19:18:25.959Z",
-  "orderNumber": "LH-SANDBOX-1792696705667",
+  "at": "2026-10-22T19:33:37.494Z",
+  "orderNumber": "LH-SANDBOX-1792697616777",
   "results": [
     {
       "name": "same_key_both_ok_or_one_ok",
-      "ok": false,
-      "detail": " duplicate key value violates unique constraint \"cod_collections_idempotency_uidx\""
+      "ok": true,
+      "detail": " "
     },
     {
       "name": "same_key_one_fresh_one_replay",
-      "ok": false,
-      "detail": "fresh=1 replay=0"
+      "ok": true,
+      "detail": "fresh=1 replay=1"
     },
     {
       "name": "same_key_collected_once",
@@ -20,7 +20,7 @@
     {
       "name": "diff_keys_no_double_money",
       "ok": true,
-      "detail": "ok=1 over=1 err=|over_collection"
+      "detail": "ok=1 over=1 err=over_collection|"
     },
     {
       "name": "final_collected_eq_total",
@@ -31,6 +31,26 @@
       "name": "exactly_two_collection_rows",
       "ok": true,
       "detail": "rows=2"
+    },
+    {
+      "name": "burst_same_key_no_errors",
+      "ok": true,
+      "detail": "10x8 calls, errors=[]"
+    },
+    {
+      "name": "burst_same_key_one_fresh_per_key",
+      "ok": true,
+      "detail": "rounds with != 1 fresh: 0"
+    },
+    {
+      "name": "burst_collected_once_per_key",
+      "ok": true,
+      "detail": "collected=1000"
+    },
+    {
+      "name": "cross_order_same_key_one_collection",
+      "ok": true,
+      "detail": "rows=1 replay|fresh"
     }
   ]
 }

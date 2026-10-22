@@ -38,7 +38,7 @@ inserts as `anon`); narrowing them is a separate change.
 - Role matrix 15/15 · checkout isolated 21/21 (incl. anon denied on the three RPCs; 8×6 HTTP submits all 200) ·
   role HTTP 87/87 (incl. approver id not readable) · anon reads catalog listing/prices, hidden columns denied,
   anon product update affects 0 rows.
-- COD concurrency: intermittent 4/6 (unrelated pre-existing race, see `docs/ISOLATED_TESTS.md`).
+- COD concurrency: the unrelated same-key collection race is fixed separately in `20261023130000` (10/10).
 
 ## Applying to production (owner)
 Review, then `supabase db push` (or SQL editor) during a quiet window; re-run `npm run test:security:p0` and

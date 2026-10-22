@@ -32,7 +32,7 @@ State (2026-10-23): **All V5 templates ported (storefront + content) on `fix/v5-
 Done on a local Supabase (`docs/ISOLATED_TESTS.md`): role matrix 15/15 · COD concurrency 6/6 · checkout isolated 18/18 (incl. 8×6 concurrent HTTP submits) · staff role × admin API/page over HTTP 86/86 (incl. legal-approval separation) — all on a local Supabase built from `supabase/migrations`, never production (`docs/ISOLATED_TESTS.md`).
 
 ## Safest next step
-**Owner: review and apply `supabase/migrations/20261023120000_explicit_grants.sql` to production before 2026-10-30 and before approving any legal page** (`docs/proposals/EXPLICIT_GRANTS.md`: closes anon execute on staff RPCs). Verified locally only. Then: fix the COD collection same-key race (`docs/ISOLATED_TESTS.md`), then the owner decisions below.
+**Owner: review and apply `supabase/migrations/20261023120000_explicit_grants.sql` to production before 2026-10-30 and before approving any legal page** (`docs/proposals/EXPLICIT_GRANTS.md`: closes anon execute on staff RPCs). Verified locally only. Apply `20261023130000_cod_collection_idempotency_race.sql` with it (same-key collection race; verified locally). Then the owner decisions below.
 
 ## Owner decisions
 Content approval per page (`docs/OWNER_CONTENT_NEEDS.md`; publish in /admin/content, legal pages also need legal approval) · media rights (catalog photos + cutouts) · shipping zones/fees · contact facts · staff bootstrap · availability/inquiry and description-cleanup proposals · production alias · COD go-live · PR review.

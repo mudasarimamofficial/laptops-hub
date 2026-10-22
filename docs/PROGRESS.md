@@ -1,5 +1,9 @@
 # Progress log
 
+## 2026-10-23 — COD collection idempotency race (local only)
+- Migration `20261023130000_cod_collection_idempotency_race.sql`: `record_cod_collection` re-checks the idempotency key after locking the order and turns a `unique_violation` (same key, other order) into a replay. Grants unchanged (service_role only).
+- `test-cod-concurrency.mjs`: + 10×8 same-key bursts and a cross-order race. Old function fails them every run; fixed function 10/10 on 15 consecutive runs. Not applied to production.
+
 ## 2026-10-23 — explicit GRANTs (local only)
 - Migration `20261023120000_explicit_grants.sql`; local stack runs without `auto_expose_new_tables`.
 - Found on production (non-mutating probes): anon can execute `record_cod_collection` and `transition_order_status` (SECURITY DEFINER, trust `actor_user_id`) and `consume_rate_limit`. The migration restores service-role-only execute and hides `content_pages.legal_approved_by` from anon. Not applied to production.

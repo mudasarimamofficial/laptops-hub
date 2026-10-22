@@ -67,37 +67,46 @@ if (!actorId) {
   console.log("Created ephemeral sandbox staff for COD concurrency test");
 }
 
-const orderNumber = `LH-SANDBOX-${Date.now()}`;
 const totalDue = 10_000_00; // Rs 10,000 in paisa
 const half = 5_000_00;
 
-const { data: order, error: oErr } = await sb
-  .from("orders")
-  .insert({
-    order_number: orderNumber,
-    status: "confirmed",
-    payment_method: "cod",
-    payment_status: "unpaid_cod",
-    customer_name: "SANDBOX TEST — DELETE",
-    customer_phone_e164: "+923001112233",
-    customer_phone_normalized: "3001112233",
-    subtotal_paisa: totalDue,
-    shipping_paisa: 0,
-    cod_fee_paisa: 0,
-    discount_paisa: 0,
-    tax_paisa: 0,
-    total_due_paisa: totalDue,
-    amount_collected_paisa: 0,
-    idempotency_key: `sandbox-order-${orderNumber}`,
-    customer_note: "Automated concurrency fixture — safe to delete",
-  })
-  .select("id, order_number")
-  .single();
-
-if (oErr || !order) {
-  console.error("Failed to create sandbox order:", oErr?.message);
-  process.exit(1);
+async function sandboxOrder(suffix = "") {
+  const orderNumber = `LH-SANDBOX-${Date.now()}${suffix}`;
+  const { data, error } = await sb
+    .from("orders")
+    .insert({
+      order_number: orderNumber,
+      status: "confirmed",
+      payment_method: "cod",
+      payment_status: "unpaid_cod",
+      customer_name: "SANDBOX TEST — DELETE",
+      customer_phone_e164: "+923001112233",
+      customer_phone_normalized: "3001112233",
+      subtotal_paisa: totalDue,
+      shipping_paisa: 0,
+      cod_fee_paisa: 0,
+      discount_paisa: 0,
+      tax_paisa: 0,
+      total_due_paisa: totalDue,
+      amount_collected_paisa: 0,
+      idempotency_key: `sandbox-order-${orderNumber}`,
+      customer_note: "Automated concurrency fixture — safe to delete",
+    })
+    .select("id, order_number")
+    .single();
+  if (error || !data) {
+    console.error("Failed to create sandbox order:", error?.message);
+    process.exit(1);
+  }
+  return data;
 }
+
+const order = await sandboxOrder();
+const orderNumber = order.order_number;
+const collect = (number, key, amount = half) =>
+  sb.rpc("record_cod_collection", {
+    payload: { actor_user_id: actorId, order_number: number, amount_paisa: amount, idempotency_key: key, collector_ref: "sandbox" },
+  });
 
 const sameKey = `idem-same-${randomUUID()}`;
 const [a, b] = await Promise.all([
@@ -184,8 +193,32 @@ const { count: colCount } = await sb
   .eq("order_id", order.id);
 assert("exactly_two_collection_rows", colCount === 2, `rows=${colCount}`);
 
-// Cleanup sandbox order (cascade collections/events)
-await sb.from("orders").delete().eq("id", order.id);
+// Stress: bursts of same-key calls on one order, and one key raced across two orders.
+const o2 = await sandboxOrder("-B");
+const o3 = await sandboxOrder("-C");
+const burst = { rounds: 10, size: 8, errors: [], badSplit: 0 };
+for (let r = 0; r < burst.rounds; r++) {
+  const key = `idem-burst-${randomUUID()}`;
+  const rs = await Promise.all(Array.from({ length: burst.size }, () => collect(o2.order_number, key, 100)));
+  burst.errors.push(...rs.filter((x) => x.error).map((x) => x.error.message));
+  if (rs.filter((x) => x.data && !x.data.idempotent_replay).length !== 1) burst.badSplit++;
+}
+const { data: o2After } = await sb.from("orders").select("amount_collected_paisa").eq("id", o2.id).single();
+assert("burst_same_key_no_errors", burst.errors.length === 0, `${burst.rounds}x${burst.size} calls, errors=${JSON.stringify([...new Set(burst.errors)])}`);
+assert("burst_same_key_one_fresh_per_key", burst.badSplit === 0, `rounds with != 1 fresh: ${burst.badSplit}`);
+assert("burst_collected_once_per_key", o2After?.amount_collected_paisa === burst.rounds * 100, `collected=${o2After?.amount_collected_paisa}`);
+
+const crossKey = `idem-cross-${randomUUID()}`;
+const cross = await Promise.all([collect(o2.order_number, crossKey, 100), collect(o3.order_number, crossKey, 100)]);
+const { count: crossRows } = await sb.from("cod_collections").select("id", { count: "exact", head: true }).eq("idempotency_key", crossKey);
+assert(
+  "cross_order_same_key_one_collection",
+  cross.every((x) => !x.error) && crossRows === 1 && cross.filter((x) => x.data?.idempotent_replay).length === 1,
+  `rows=${crossRows} ${cross.map((x) => x.error?.message || (x.data?.idempotent_replay ? "replay" : "fresh")).join("|")}`,
+);
+
+// Cleanup sandbox orders (cascade collections/events)
+await sb.from("orders").delete().in("id", [order.id, o2.id, o3.id]);
 
 const out = path.join(root, "docs", "COD_CONCURRENCY_RESULTS.json");
 fs.writeFileSync(out, JSON.stringify({ at: new Date().toISOString(), orderNumber, results }, null, 2));

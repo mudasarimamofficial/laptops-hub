@@ -50,8 +50,9 @@ Notes
 Last run (2026-10-23, local stack, explicit grants, no auto-expose): role matrix 15/15 · checkout isolated 21/21
 (incl. 8×6 concurrent HTTP submits) · role HTTP 87/87.
 
-Known issue: COD concurrency is intermittent (4/6 in 5 of 7 runs; 6/6 on 2026-10-22 by timing).
-`record_cod_collection` checks the idempotency key before locking the order, so a concurrent same-key request can
-hit `cod_collections_idempotency_uidx` and get an error instead of a replay. Money is never collected twice
-(`same_key_collected_once` passes every run). Fixed on 2026-10-22 for checkout (route retries on 23505); not yet
-for collections.
+COD collection same-key race (fixed locally 2026-10-23, migration `20261023130000`, not applied to production):
+`record_cod_collection` checked the idempotency key only before locking the order, so a concurrent same-key call
+failed on `cod_collections_idempotency_uidx` instead of replaying (money was never collected twice). It now
+re-checks after `FOR UPDATE` and handles `unique_violation` (same key on another order). `test-cod-concurrency.mjs`
+adds 10×8 same-key bursts and a cross-order same-key race: old function 6–8/10 (burst + cross-order fail every
+run), fixed function 10/10 on 15 consecutive runs.

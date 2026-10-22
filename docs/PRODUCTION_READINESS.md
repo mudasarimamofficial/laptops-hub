@@ -1,13 +1,13 @@
 # Production readiness
 
-Updated: 2026-10-22 (V5 content parity, branch `fix/v5-correctness-parity` @ `568ce08`)
+Updated: 2026-10-23 (security & COD integrity pass, branch `fix/v5-correctness-parity`)
 
 | Gate | Status | Evidence / blocker |
 |---|---|---|
 | A — Source integrity | PASS | Git history preserved (no force-push, no rewrite of pushed commits). V5 export kept local and gitignored (`Laptops Hub storefront/`). No secrets in commits. Parity screenshots that contain unapproved cutouts are kept out of git. |
 | B — Visual parity | PASS (all V5 templates ported) | Storefront ≤0.4%; content templates (13 pages, guides, 4 articles, FAQ, contact states) ≤0.13% where copy is unchanged, explained deltas elsewhere (`docs/V5_PIXEL_DIFF_REPORT.md`, 427 captures). Hero/story cutouts gated (media rights). |
 | C — Functional parity | PARTIAL | Browse, filters/sort, search, compare, cart, drawer, inquiry and the V5 contact form (real `/api/contact`, success only after insert) work; e2e 39 pass / 1 intentional skip locally and on Preview. Checkout implemented but disabled. Admin content save path fixed (sanitizer); other admin flows not re-verified this pass. |
-| D — Data & security | PASS* | P0 9/9 · auth matrix 24/24 · pagination 5/5 · data parity 226/226 · routes all pass · CMS: RLS + in-code publish/legal gate, sanitize-html (adversarial tests), no unpublished content in HTML/metadata/sitemap/bundles · contact: origin check, rate limit, honeypot, validation · axe WCAG A/AA: 0 violations on 10 routes. Isolated: role matrix 15/15 · COD concurrency 6/6 · checkout isolated 18/18 (incl. 8×6 concurrent HTTP submits) · staff role × admin API/page over HTTP 86/86 (incl. legal-approval separation) — all on a local Supabase built from `supabase/migrations`, never production (`docs/ISOLATED_TESTS.md`). Explicit-GRANT migration `20261023120000` written and verified locally (role HTTP 87/87, checkout 21/21); **not applied to production** — it also closes a live exposure (anon can execute `record_cod_collection`/`transition_order_status`, which trust `actor_user_id`; see `docs/proposals/EXPLICIT_GRANTS.md`). Apply before 2026-10-30 and before approving any legal page. COD collection same-key race fixed in migration `20261023130000` (local 10/10 ×15; not applied to production). |
+| D — Data & security | **BLOCKED (owner approval)** | Code and migrations ready, production NOT fixed. Confirmed read-only on production: anon/authenticated can EXECUTE `record_cod_collection`, `transition_order_status` (SECURITY DEFINER, trust `actor_user_id`) and `consume_rate_limit`; legacy default privileges re-expose future objects. Fix: 6 pending migrations (`docs/MIGRATION_PRODUCTION_APPROVAL.md` — Option A emergency revoke, Option B full set), verified locally on production-equivalent grants. COD idempotency now conflict-safe (`docs/COD_IDEMPOTENCY_CONTRACT.md`). Local isolated: role matrix 15/15 · COD collection matrix 16/16 (8 consecutive runs; 2/8/16/32-way same-key bursts, cross-order and different-amount conflicts, over-collection) · checkout isolated 25/25 (incl. same-key different cart/zone conflicts and 8×6 concurrent HTTP submits) · staff role HTTP 97/97 (incl. CMS template gate and COD collection record/replay/conflict through the admin route). Production read-only: P0 9/9 · auth matrix 24/24 · pagination 5/5 · data parity 0 mismatches · routes all pass. axe 0 violations (10 routes) · console sweep clean. |
 | E — Business readiness | FAIL (owner) | Media rights (catalog photos + cutouts), shipping fees/zones, policies/legal, contact facts, staff bootstrap, availability/inquiry proposal, description cleanup proposal. |
 | F — Release | BLOCKED | See "Production domain" below. No promotion from this session. |
 
@@ -24,6 +24,13 @@ Updated: 2026-10-22 (V5 content parity, branch `fix/v5-correctness-parity` @ `56
 - **Vercel runtime crash in the CMS sanitizer** (isomorphic-dompurify → jsdom `ERR_REQUIRE_ESM`): dynamic content routes returned 500 and the admin content save path had logged the same error since 2026-10-21. Replaced with sanitize-html.
 
 - **Checkout duplicate-submit race**: concurrent submits with one idempotency key could lose the insert race and return a 400 exposing the `orders_idempotency_key_uidx` constraint. The route now retries once on 23505 and returns the existing order (found by the isolated HTTP stress test).
+
+## Fixed 2026-10-23
+- **Fabricated collection success**: `record_cod_collection` (20261023130000) replayed any existing row for a reused key, returning success for a different order/amount that was never recorded. Now `idempotency_conflict` (20261023150000). Reproduced before (12/16), fixed after (16/16 ×8).
+- **Admin double-collection on retry**: the collection form made a new key per submit, so a retry after a lost response could record cash twice. One key per logical collection now.
+- **Checkout confirmation for the wrong cart**: a reused checkout key with a different cart/zone returned the earlier order as success. Now 409 `idempotency_conflict` (20261023160000).
+- **CMS empty-body publish**: publishing with an empty body showed the whole V5 template, including "being finalised" sections and unapproved copy. Now refused for templates with pending sections and requires explicit template approval otherwise; rendering, sitemap and navigation share one rule.
+- **Staff RPC exposure**: migrations + in-function service-role guard (not yet applied to production — owner approval).
 
 ## Engineering checks (this pass)
 - `npx tsc --noEmit`, `npm run lint` (0 errors), `npm run build`

@@ -2,6 +2,8 @@
 
 Migration: `supabase/migrations/20261023120000_explicit_grants.sql` (2026-10-23).
 
+**Update (later 2026-10-23):** the urgent part is now a separate, smaller migration `20261023110000` that can be applied alone; future-object defaults are fixed in `20261023140000`. Current review and approval request: `docs/SECURITY_RPC_REVIEW.md`, `docs/MIGRATION_PRODUCTION_APPROVAL.md`.
+
 ## Why
 The earlier migrations never granted privileges to `anon`, `authenticated` or `service_role`; the hosted project
 got them from Supabase's legacy "auto-expose" default privileges, which are removed on **2026-10-30**. Without

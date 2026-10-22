@@ -1,5 +1,14 @@
 # Progress log
 
+## 2026-10-23 (later) — security & COD integrity pass (master bible, phases 0–7)
+- Phase 0: HEAD `c2f3bb9` = handoff; PR #1 draft, its head `ea652f2` is an ancestor (13 commits ahead). Production ledger read-only: 6 applied, 2 pending (now 6). RLS on all 22 tables.
+- Phase 1: confirmed (pg_proc ACLs) anon EXECUTE on `record_cod_collection`, `transition_order_status`, `consume_rate_limit` and legacy default privileges. Migrations `20261023110000` (emergency revoke), `20261023140000` (defaults), guard in `20261023150000`. Simulated on production-equivalent grants: Option A changes exactly 6 privilege rows; Option B ends identical to a fresh build; future objects closed.
+- Phase 2: `20261023150000` conflict semantics; admin form keeps one key per collection; `/api/admin/cod-collections` maps conflict to 409. `20261023160000` + `/api/checkout/cod` for checkout keys.
+- Phase 3: role matrix 15/15 · COD collection matrix 16/16 (8 consecutive runs; 2/8/16/32-way same-key bursts, cross-order and different-amount conflicts, over-collection) · checkout isolated 25/25 (incl. same-key different cart/zone conflicts and 8×6 concurrent HTTP submits) · staff role HTTP 97/97 (incl. CMS template gate and COD collection record/replay/conflict through the admin route) — local Supabase only.
+- Phase 4: CMS empty-body template gate (resolver, sitemap/nav, publish API, admin form, unit + HTTP tests).
+- Phase 5: tsc, lint (0 errors), unit 10 suites, build; e2e 39 passed / 1 skipped (inquiry submit needs an inquiry-only product + non-production DB); P0 9/9, auth matrix 24/24, pagination 5/5, data parity 0 mismatches, routes all pass, axe 0, console clean (production data, read-only).
+- Not applied to production; no Production deploy; COD off.
+
 ## 2026-10-23 — COD collection idempotency race (local only)
 - Migration `20261023130000_cod_collection_idempotency_race.sql`: `record_cod_collection` re-checks the idempotency key after locking the order and turns a `unique_violation` (same key, other order) into a replay. Grants unchanged (service_role only).
 - `test-cod-concurrency.mjs`: + 10×8 same-key bursts and a cross-order race. Old function fails them every run; fixed function 10/10 on 15 consecutive runs. Not applied to production.

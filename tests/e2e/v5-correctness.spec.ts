@@ -23,7 +23,7 @@ async function shot(page: Page, name: string) {
 
 for (const handle of PDP_HANDLES) {
   test(`PDP curated specs + related images: ${handle}`, async ({ page }) => {
-    const res = await page.goto(`${base}/products/${handle}`, { waitUntil: "networkidle" });
+    const res = await page.goto(`${base}/products/${handle}`, { waitUntil: "load" });
     test.skip(res?.status() === 404, "handle not public in this database");
     const specs = page.locator("section[aria-labelledby='pdp-specs'] dl");
     await expect(specs).toBeVisible();
@@ -34,13 +34,14 @@ for (const handle of PDP_HANDLES) {
     expect(main).not.toMatch(/Memory \(CRM config\)|Storage \(CRM config\)/);
     expect(main).not.toMatch(/\bcpu: /);
 
-    const related = page.locator("section:has(h2:text-is('Related')) article");
+    const related = page.locator("section[aria-labelledby='pdp-related'] article");
     const n = await related.count();
     for (let i = 0; i < n; i++) {
       const img = related.nth(i).locator("img").first();
       if (await img.count()) {
         await expect(img).toHaveAttribute("src", /^https?:\/\//);
-        expect(await img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
+        await img.scrollIntoViewIfNeeded();
+        await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
       } else {
         await expect(related.nth(i).getByText("No image")).toBeVisible();
       }
@@ -56,7 +57,7 @@ test("draft product is not public", async ({ page }) => {
 });
 
 test("public cards never show Add to cart without a purchasable variant", async ({ page }) => {
-  await page.goto(`${base}/collections/laptops`, { waitUntil: "networkidle" });
+  await page.goto(`${base}/collections/laptops`, { waitUntil: "load" });
   const cards = page.locator("article");
   const count = await cards.count();
   expect(count).toBeGreaterThan(0);
@@ -74,9 +75,9 @@ for (const vp of [
 ]) {
   test(`compare tray add/remove/persist/stale ${vp.name}`, async ({ page }) => {
     await page.setViewportSize({ width: vp.width, height: vp.height });
-    await page.goto(`${base}/collections/laptops`, { waitUntil: "networkidle" });
+    await page.goto(`${base}/collections/laptops`, { waitUntil: "load" });
     await page.evaluate(() => localStorage.removeItem("lh-compare-v1"));
-    await page.reload({ waitUntil: "networkidle" });
+    await page.reload({ waitUntil: "load" });
 
     const toggles = page.getByRole("button", { name: /^Compare$/ });
     await toggles.nth(0).click();
@@ -92,7 +93,7 @@ for (const vp of [
     expect(box && box.x >= 0 && box.x + box.width <= vp.width).toBeTruthy();
     await shot(page, `tray-${vp.name}`);
 
-    await page.reload({ waitUntil: "networkidle" });
+    await page.reload({ waitUntil: "load" });
     await expect(tray.getByText("2/4")).toBeVisible();
 
     await tray.getByRole("button", { name: /^Remove .+ from comparison$/ }).first().click();
@@ -104,7 +105,7 @@ for (const vp of [
       ([draft, keep]) => localStorage.setItem("lh-compare-v1", JSON.stringify({ handles: [draft, ...keep] })),
       [DRAFT_HANDLE, kept] as const,
     );
-    await page.reload({ waitUntil: "networkidle" });
+    await page.reload({ waitUntil: "load" });
     await expect(tray.getByText("1/4")).toBeVisible();
     await expect
       .poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("lh-compare-v1") || "{}").handles))
@@ -116,11 +117,12 @@ for (const vp of [
 }
 
 test("compare page still renders curated rows", async ({ page }) => {
-  await page.goto(`${base}/collections/laptops`, { waitUntil: "networkidle" });
+  await page.goto(`${base}/collections/laptops`, { waitUntil: "load" });
   await page.getByRole("button", { name: /^Compare$/ }).first().click();
-  await page.goto(`${base}/compare`, { waitUntil: "networkidle" });
-  await expect(page.getByRole("heading", { name: "Side by side" })).toBeVisible();
-  const rowLabels = await page.locator("tbody th").allInnerTexts();
+  await page.goto(`${base}/compare`, { waitUntil: "load" });
+  await expect(page.getByRole("heading", { name: "Compare laptops" })).toBeVisible();
+  await expect(page.getByRole("rowheader").first()).toBeVisible();
+  const rowLabels = await page.getByRole("rowheader").allInnerTexts();
   expect(rowLabels.length).toBeGreaterThan(0);
   for (const l of rowLabels) expect(l).not.toMatch(/crm|source reference/i);
   await shot(page, "compare-page-1440");
@@ -130,34 +132,34 @@ test("cart honours max_per_order on PDP, drawer and cart page", async ({ page })
   const handle = PDP_HANDLES[0];
   await page.goto(`${base}/`, { waitUntil: "domcontentloaded" });
   await page.evaluate(() => localStorage.removeItem("lh-cart-v1"));
-  const res = await page.goto(`${base}/products/${handle}`, { waitUntil: "networkidle" });
+  const res = await page.goto(`${base}/products/${handle}`, { waitUntil: "load" });
   test.skip(res?.status() === 404, "handle not public");
-  const qty = page.getByLabel("Qty");
-  const max = Number(await qty.getAttribute("max"));
+  // V5 quantity stepper: + stops at the variant limit and announces it.
+  const inc = page.getByRole("button", { name: "Increase quantity" });
+  for (let i = 0; i < 25; i++) await inc.click();
+  await expect(page.getByRole("status")).toHaveText("Maximum quantity reached");
+  const max = Number(await page.locator("span[aria-live='polite']").filter({ hasText: /^\d+$/ }).first().innerText());
   expect(max).toBeGreaterThanOrEqual(1);
   expect(max).toBeLessThanOrEqual(20);
-  await qty.fill("99");
-  await expect(qty).toHaveValue(String(max));
-  await page.getByRole("button", { name: "Add to cart" }).first().click();
-  await page.getByRole("button", { name: "Add to cart" }).first().click(); // second add must not exceed the limit
+  await page.getByRole("button", { name: /^Add to cart · / }).click();
+  await page.getByRole("button", { name: "Close cart" }).click();
+  await page.getByRole("button", { name: /^Add to cart · / }).click(); // second add must not exceed the limit
   const stored = await page.evaluate(() => JSON.parse(localStorage.getItem("lh-cart-v1") || "{}").lines);
   expect(stored[0].quantity).toBe(max);
   expect(stored[0].maxPerOrder).toBe(max);
-  await page.goto(`${base}/cart`, { waitUntil: "networkidle" });
-  const input = page.getByRole("spinbutton").first();
-  await expect(input).toHaveAttribute("max", String(max));
-  await input.fill("50");
-  await expect
-    .poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("lh-cart-v1") || "{}").lines[0].quantity))
-    .toBe(max);
+  await page.goto(`${base}/cart`, { waitUntil: "load" });
+  const qty = page.getByRole("spinbutton", { name: "Quantity" }).first();
+  await expect(qty).toHaveAttribute("aria-valuemax", String(max));
+  await page.getByRole("button", { name: "Increase quantity" }).first().click();
+  await expect(qty).toHaveAttribute("aria-valuenow", String(max));
   await page.evaluate(() => localStorage.removeItem("lh-cart-v1"));
 });
 
 test("compare tray is keyboard operable", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto(`${base}/collections/laptops`, { waitUntil: "networkidle" });
+  await page.goto(`${base}/collections/laptops`, { waitUntil: "load" });
   await page.evaluate(() => localStorage.removeItem("lh-compare-v1"));
-  await page.reload({ waitUntil: "networkidle" });
+  await page.reload({ waitUntil: "load" });
   await page.getByRole("button", { name: /^Compare$/ }).first().focus();
   await page.keyboard.press("Enter");
   const tray = page.getByRole("complementary", { name: "Comparison" });

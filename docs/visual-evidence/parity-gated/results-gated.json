@@ -1,0 +1,326 @@
+{
+  "page-contact@1440x900": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        1440,
+        73
+      ],
+      "h1": [
+        152,
+        162,
+        916,
+        61
+      ],
+      "footer": [
+        0,
+        1163,
+        1440,
+        384
+      ],
+      "docH": 1547,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:14.449Z"
+  },
+  "page-contact@390x844": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        390,
+        73
+      ],
+      "h1": [
+        16,
+        162,
+        358,
+        35
+      ],
+      "footer": [
+        0,
+        1936,
+        390,
+        1364
+      ],
+      "docH": 3300,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:17.063Z"
+  },
+  "page-faq@1440x900": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        1440,
+        73
+      ],
+      "h1": [
+        152,
+        162,
+        916,
+        61
+      ],
+      "footer": [
+        0,
+        1041,
+        1440,
+        384
+      ],
+      "docH": 1425,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:19.664Z"
+  },
+  "page-faq@390x844": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        390,
+        73
+      ],
+      "h1": [
+        16,
+        162,
+        358,
+        69
+      ],
+      "footer": [
+        0,
+        1322,
+        390,
+        1364
+      ],
+      "docH": 2686,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:22.297Z"
+  },
+  "page-shipping@1440x900": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        1440,
+        73
+      ],
+      "h1": [
+        152,
+        162,
+        916,
+        61
+      ],
+      "footer": [
+        0,
+        1014,
+        1440,
+        384
+      ],
+      "docH": 1398,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:24.904Z"
+  },
+  "page-shipping@390x844": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        390,
+        73
+      ],
+      "h1": [
+        16,
+        162,
+        358,
+        35
+      ],
+      "footer": [
+        0,
+        1237,
+        390,
+        1364
+      ],
+      "docH": 2601,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:27.669Z"
+  },
+  "page-terms@1440x900": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        1440,
+        73
+      ],
+      "h1": [
+        152,
+        162,
+        916,
+        61
+      ],
+      "footer": [
+        0,
+        1014,
+        1440,
+        384
+      ],
+      "docH": 1398,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:30.488Z"
+  },
+  "page-terms@390x844": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        390,
+        73
+      ],
+      "h1": [
+        16,
+        162,
+        358,
+        35
+      ],
+      "footer": [
+        0,
+        1237,
+        390,
+        1364
+      ],
+      "docH": 2601,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:33.123Z"
+  },
+  "guides-index@1440x900": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        1440,
+        73
+      ],
+      "h1": [
+        152,
+        162,
+        916,
+        61
+      ],
+      "footer": [
+        0,
+        735,
+        1440,
+        384
+      ],
+      "docH": 1119,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:35.843Z"
+  },
+  "guides-index@390x844": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        390,
+        73
+      ],
+      "h1": [
+        16,
+        162,
+        358,
+        69
+      ],
+      "footer": [
+        0,
+        998,
+        390,
+        1364
+      ],
+      "docH": 2362,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:38.376Z"
+  },
+  "guide-how-much-ram@1440x900": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        1440,
+        73
+      ],
+      "h1": [
+        152,
+        162,
+        916,
+        61
+      ],
+      "footer": [
+        0,
+        735,
+        1440,
+        384
+      ],
+      "docH": 1119,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:41.111Z"
+  },
+  "guide-how-much-ram@390x844": {
+    "diffPct": null,
+    "nextOnly": true,
+    "next": {
+      "header": [
+        0,
+        0,
+        390,
+        73
+      ],
+      "h1": [
+        16,
+        162,
+        358,
+        69
+      ],
+      "footer": [
+        0,
+        973,
+        390,
+        1364
+      ],
+      "docH": 2337,
+      "overflowX": false
+    },
+    "at": "2026-10-22T15:18:43.697Z"
+  }
+}

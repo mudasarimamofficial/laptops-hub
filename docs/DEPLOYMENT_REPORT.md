@@ -1,5 +1,32 @@
 # Deployment report
 
+## Preview — 2026-10-22 (V5 content parity)
+
+| Field | Value |
+|---|---|
+| Git commit | `568ce08b41b5a1b44b1b23cd9e084acd6e8a2580` (content: `3e0f01e`; sanitizer fix: `568ce08`) |
+| Branch | `fix/v5-correctness-parity` (pushed; not merged; no new PR) |
+| Vercel project | `laptops-hub` · `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` · team `team_l7hth478q4bLcmoKR21X7uqm` |
+| Deployment | `dpl_CPF9iwcqGWj8C6k2FY9KFp5kyfTq` (Git integration, target **Preview**) |
+| URL | https://laptops-p0o7svszl-mudasarimamofficial-gmailcoms-projects.vercel.app (SSO protected; checked via temporary share link) |
+| Supabase | `xvmmjkrkgznnakcobmww` (same project; 226 public products served, drafts 404) |
+| Env | `COD_CHECKOUT_ENABLED` false · `V5_CUTOUT_BASE` unset · `V5_CONTENT_PREVIEW` unset (content pages gated) |
+| Runtime errors | none for this deployment (previous deployment `dpl_Ex7Go…` had the jsdom crash, fixed here) |
+
+| Check (on Preview) | Result |
+|---|---|
+| e2e (`PLAYWRIGHT_STORAGE_STATE`) | 39 passed, 1 skipped |
+| Routes | 226/226 PDP 200 · 6/6 drafts 404 · 39/39 collections · 9/9 pages · `/pages/x`, `/guides/x` → 404 |
+| Content gating | shipping (legal) gated + noindex, no template copy in HTML; sitemap 267 URLs, 0 content URLs; no owner-checklist text in client bundles |
+| Security | COD 403 · `/admin*` → login · unauthenticated admin PATCH/POST 401 · contact cross-site 403 · 11 client chunks: no secrets, anon JWT only |
+| Console sweep | clean except the expected 404 on the missing route |
+
+### Not done
+- No Production promotion, alias change, COD enablement, legal approval or media publication.
+- Production alias `laptops-hub.vercel.app` still serves the older `ea652f2` redeploy (owner decision).
+
+---
+
 ## Preview — 2026-10-22 (V5 reconstruction)
 
 | Field | Value |

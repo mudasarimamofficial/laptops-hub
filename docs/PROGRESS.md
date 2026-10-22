@@ -1,5 +1,21 @@
 # Progress log
 
+## 2026-10-22 (later) — V5 content parity & release safety
+
+### Done
+- Ported every remaining V5 template: 13 content pages, guides index, 4 articles, FAQ accordion, contact form, missing page.
+- CMS-backed publication model (no schema change): published row + body → sanitized HTML in V5 shell; published + empty body → V5 template; otherwise gated, noindex, not in sitemap. Legal gate enforced by RLS and again in code.
+- V5 content generated from `lh-content.js` with owner checklists removed (`docs/OWNER_CONTENT_NEEDS.md`) and prototype statements corrected.
+- Contact form wired to `/api/contact`; API hardened (phone format, email-or-phone, cross-site rejection); unit-tested core; success only after the insert.
+- Fixed a Vercel-only crash: the CMS sanitizer's jsdom dependency failed with ERR_REQUIRE_ESM (dynamic content routes 500; admin content save broken since 2026-10-21). Now sanitize-html with adversarial tests.
+- a11y: WCAG 2.5.3 fixes (logo, cart button, card image links) → axe 0 violations on 10 routes.
+- Harness: content scenes, FAQ expanded, contact idle/invalid/submitting/success/failure (API mocked), gated evidence; 427 captures.
+- Preview `dpl_CPF9iwcqGWj8C6k2FY9KFp5kyfTq` (`568ce08`) verified.
+
+### Not done
+- Role matrix + COD concurrency: need an isolated database (they create Auth users/orders).
+- Owner content approvals, media rights, production alias decision.
+
 ## 2026-10-22 — V5 reconstruction (`fix/v5-correctness-parity`)
 
 ### Done

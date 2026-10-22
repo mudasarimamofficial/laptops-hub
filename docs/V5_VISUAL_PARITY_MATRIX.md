@@ -1,7 +1,7 @@
 # V5 Visual Parity Matrix
 
 Reference: `Laptops Hub Storefront v5.dc.html` + `ProductCard v5.dc.html` + `LHImg.dc.html` (local, gitignored export `Laptops Hub storefront/`; never deployed).
-Branch: `fix/v5-correctness-parity`. Measurements: `docs/V5_PIXEL_DIFF_REPORT.md` (generated) · harness `scripts/visual/capture.mjs`.
+Branch: `fix/v5-correctness-parity`. Content pages compared with `V5_CONTENT_PREVIEW=1` (template content); the live default for unpublished rows is the gated state. Measurements: `docs/V5_PIXEL_DIFF_REPORT.md` (generated) · harness `scripts/visual/capture.mjs`.
 
 Status: **MATCH** = ported 1:1 and measured ≤0.2% pixel diff with equal geometry · **MATCH\*** = match with a documented, deliberate difference · **GATED** = implemented, owner approval needed before it can be public · **NOT PORTED** = still the pre-V5 implementation.
 
@@ -27,10 +27,18 @@ Status: **MATCH** = ported 1:1 and measured ≤0.2% pixel diff with equal geomet
 | 404 | `notFound` | `app/not-found.tsx`, product variant | — | — | `not-found` | product message reworded ("export") | MATCH\* |
 | Footer | `<footer>` | `site-footer.tsx` | auto-fit cols | — | all full-page scenes | bottom line truthful (see report) | MATCH\* |
 | Toast | toast | `v5/toast.tsx` | — | aria-live status | e2e cart limit | — | MATCH |
-| Content pages, guides, FAQ, contact form | `isPage` | `app/pages/[slug]`, `app/guides` | — | — | — | pre-V5 layout; content pending owner approval | NOT PORTED |
+| Content page shell | `isPage` | `components/content/content-page.tsx` | 2 cols ≥980 (sticky aside), 1 col below | breadcrumbs, TOC smooth-scroll, side nav with SOON/current | `page-*` (11 viewports) | — | MATCH |
+| About, Why, Shipping, Returns, Warranty, Condition guide, How to choose, Comparison guide, Terms | `isPage` + `lh-content` | `app/pages/[slug]` + `lib/content/*` | as above | links, CTA, products | `page-*` ≤0.13% except shipping (corrected copy, ≤4.4% mobile) | template content shown only when the CMS row is published; today all gated | MATCH (template) / GATED (publication) |
+| FAQ (collapsed + expanded) | `isFaq` | `content/content-client.tsx` `FaqList` | — | accordion, aria-expanded, SOON tags | `page-faq`, `faq-expanded` | CRM-configuration question removed (false on live store) | MATCH\* / GATED |
+| Contact + form | `isForm` | `ContactForm` → `/api/contact` | — | idle, invalid, submitting, success, failure; honeypot; focus/scroll to confirmation | `page-contact`, `contact-*` | real submission; truthful note + confirmation copy | MATCH\* (form always live) |
+| Order inquiries, Privacy | `isPage` | as above | — | — | `page-order-inquiries`, `page-privacy` | prototype statements corrected (inquiries are stored; storage table) | MATCH\* / GATED |
+| Guides index + 4 articles | `guides` / `article` | `app/guides`, `app/guides/[slug]` | — | article cards, matching products | `guides-index`, `guide-*` ≤0.08% | — | MATCH (template) / GATED |
+| Gated page (live default) | — (V5 pending block, customer view) | `lib/content/resolve.ts` | — | Contact us link | `parity-gated/*` (next-only) | V5 has no fully-gated page; built from V5's own pending block | n/a |
+| Missing page/article | `notFound` | `notFound()` → V5 404 | — | — | `page-missing` 0–0.06% | — | MATCH |
 | Checkout, order success, track order | (not in V5) | existing | — | — | — | COD disabled | n/a |
 
 ## Next
-1. Port `isPage` (content/FAQ/contact/guides) templates.
+1. Owner: approve content (publish rows in /admin/content; legal pages also need legal approval) — `docs/OWNER_CONTENT_NEEDS.md`.
 2. Owner: media rights for cutouts → host approved copies and set `V5_CUTOUT_BASE` in Vercel.
-3. Real-device pass (iOS Safari, Android Chrome).
+3. Isolated Supabase (local Docker stack or branch) for the role matrix and COD concurrency tests.
+4. Real-device pass (iOS Safari, Android Chrome).

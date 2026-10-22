@@ -6,10 +6,11 @@ const routes = ["/","/collections/laptops","/collections/chromebooks","/search?q
 const b = await chromium.launch({ executablePath: exe });
 let problems = 0;
 for (const vp of [[1440,900],[390,844]]) {
-  const ctx = await b.newContext({ viewport:{width:vp[0],height:vp[1]} });
+  // Optional storage state (argv[3]) for SSO-protected Vercel previews.
+  const ctx = await b.newContext({ viewport:{width:vp[0],height:vp[1]}, storageState: process.argv[3] || undefined });
   for (const r of routes) {
     const p = await ctx.newPage(); const errs=[];
-    p.on("console", m=>{ if (m.type()==="error" && !/404 \(Not Found\)/.test(m.text())) errs.push(m.text().slice(0,140)); });
+    p.on("console", m=>{ if (m.type()==="error" && !/status of 404|404 \(Not Found\)/.test(m.text())) errs.push(m.text().slice(0,140)); });
     p.on("pageerror", e=>errs.push("PAGEERROR "+e.message.slice(0,140)));
     p.on("requestfailed", q=>{ if (q.url().startsWith(B) && !/_rsc=/.test(q.url())) errs.push("REQFAIL "+q.url().slice(B.length,B.length+80)); });
     await p.goto(B+r,{waitUntil:"load"}); await p.waitForTimeout(1200);

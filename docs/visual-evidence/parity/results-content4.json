@@ -1,0 +1,149 @@
+{
+  "guide-processor-generations-explained@430x932": {
+    "diffPixels": 1165,
+    "diffPct": 0.05,
+    "ref": {
+      "header": [
+        0,
+        0,
+        430,
+        73
+      ],
+      "h1": [
+        16,
+        162,
+        398,
+        69
+      ],
+      "footer": [
+        0,
+        4934,
+        430,
+        860
+      ],
+      "docH": 5794,
+      "overflowX": false
+    },
+    "next": {
+      "header": [
+        0,
+        0,
+        430,
+        73
+      ],
+      "h1": [
+        16,
+        162,
+        398,
+        69
+      ],
+      "footer": [
+        0,
+        4934,
+        430,
+        832
+      ],
+      "docH": 5766,
+      "overflowX": false
+    },
+    "at": "2026-10-22T14:23:59.259Z"
+  },
+  "guide-processor-generations-explained@1920x1080": {
+    "diffPixels": 816,
+    "diffPct": 0.01,
+    "ref": {
+      "header": [
+        0,
+        0,
+        1920,
+        73
+      ],
+      "h1": [
+        392,
+        162,
+        916,
+        122
+      ],
+      "footer": [
+        0,
+        2881,
+        1920,
+        384
+      ],
+      "docH": 3265,
+      "overflowX": false
+    },
+    "next": {
+      "header": [
+        0,
+        0,
+        1920,
+        73
+      ],
+      "h1": [
+        392,
+        162,
+        916,
+        122
+      ],
+      "footer": [
+        0,
+        2881,
+        1920,
+        384
+      ],
+      "docH": 3265,
+      "overflowX": false
+    },
+    "at": "2026-10-22T14:24:20.624Z"
+  },
+  "guide-processor-generations-explained@905x800": {
+    "diffPixels": 857,
+    "diffPct": 0.03,
+    "ref": {
+      "header": [
+        0,
+        0,
+        905,
+        73
+      ],
+      "h1": [
+        27,
+        162,
+        608,
+        81
+      ],
+      "footer": [
+        0,
+        3157,
+        905,
+        579
+      ],
+      "docH": 3736,
+      "overflowX": false
+    },
+    "next": {
+      "header": [
+        0,
+        0,
+        905,
+        73
+      ],
+      "h1": [
+        27,
+        162,
+        608,
+        81
+      ],
+      "footer": [
+        0,
+        3157,
+        905,
+        579
+      ],
+      "docH": 3736,
+      "overflowX": false
+    },
+    "at": "2026-10-22T14:24:35.084Z"
+  }
+}

@@ -1,5 +1,17 @@
 # Deployment report
 
+## Preview — 2026-10-23 (checkout race fix + isolated tests)
+
+| Field | Value |
+|---|---|
+| Git commit | `038ac89` on `fix/v5-correctness-parity` (pushed; not merged) |
+| Deployment | `dpl_4CjAookWX8ZuQmzguQsBALkhYBwo` (Git integration, target **Preview**, Ready) |
+| URL | https://laptops-3utcomm5j-mudasarimamofficial-gmailcoms-projects.vercel.app (SSO; checked via temporary share link) |
+| Checks | `/`, `/pages/shipping`, `/collections/laptops` 200 · `/admin` → 307 login · COD POST 403 `checkout_disabled` · no runtime errors for this deployment |
+| Local before push | tsc, lint (0 errors), unit, `npm run build`; isolated suite on local Supabase (`docs/ISOLATED_TESTS.md`) |
+
+No Production promotion, alias change, COD enablement, legal approval or media publication.
+
 ## Preview — 2026-10-22 (V5 content parity)
 
 | Field | Value |

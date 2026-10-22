@@ -1,6 +1,6 @@
 # Resume here
 
-State (2026-10-22): **All V5 templates ported (storefront + content) on `fix/v5-correctness-parity` @ `568ce08`; Preview verified.** Not merged, no new PR, no Production change, COD off, all content pages gated (unpublished in CMS).
+State (2026-10-23): **All V5 templates ported (storefront + content) on `fix/v5-correctness-parity` @ `038ac89`; isolated DB tests pass; Preview `dpl_4CjAookWX8ZuQmzguQsBALkhYBwo` verified.** Not merged, no new PR, no Production change, COD off, all content pages gated (unpublished in CMS).
 
 ## Verified infrastructure
 - GitHub `mudasarimamofficial/laptops-hub` · branch `fix/v5-correctness-parity` (stacked on PR #1's head `feat/v5-storefront-admin` @ `ea652f2`)

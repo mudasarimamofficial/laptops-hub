@@ -7,7 +7,7 @@ import path from "path";
  * real Supabase catalog (`npm run dev` or a Preview URL in PLAYWRIGHT_BASE_URL).
  */
 const base = process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3000";
-const outDir = path.join(process.cwd(), "docs", "visual-evidence", "correctness");
+const outDir = path.join(process.cwd(), process.env.VISUAL_EVIDENCE_DIR || "test-results/visual-evidence", "correctness");
 const PDP_HANDLES = [
   "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
   "hp-chromebook-14-g5-4-32",

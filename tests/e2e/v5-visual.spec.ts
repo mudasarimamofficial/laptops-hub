@@ -3,7 +3,9 @@ import fs from "fs";
 import path from "path";
 
 const base = process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3000";
-const outDir = path.join(process.cwd(), "docs", "visual-evidence");
+// Screenshots go to a gitignored folder by default: local runs may render locally served, unapproved media.
+// Set VISUAL_EVIDENCE_DIR=docs/visual-evidence only for runs against a Preview (no cutouts) when refreshing evidence.
+const outDir = path.join(process.cwd(), process.env.VISUAL_EVIDENCE_DIR || "test-results/visual-evidence");
 
 test.beforeAll(() => {
   fs.mkdirSync(outDir, { recursive: true });

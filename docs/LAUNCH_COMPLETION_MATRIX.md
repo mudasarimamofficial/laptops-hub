@@ -61,4 +61,4 @@ Priority: **P0** needed to accept real orders safely · **P1** essential operati
   (it needs the migration and email configuration, neither present on the shared database).
 - **Business ready:** **no** — open: owner account, zones/fees, policies + legal approval, contact facts, email
   provider, media rights, workflow approval (4.1), staff list.
-- **Launched:** **no** — production still runs `34f9839`, COD off.
+- **Launched:** **no** — production runs the release candidate (`5139ff0`, 2026-10-23) with COD off and email not configured.

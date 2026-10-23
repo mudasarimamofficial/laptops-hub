@@ -1,7 +1,7 @@
 # Resume here
 
 **Latest (2026-10-23, final launch closure):** outbox lease fix; migration `20261024100000` **applied to production 2026-10-23** (owner-approved, ledger 14;
-`docs/MIGRATION_PRODUCTION_APPROVAL.md`). Production web still `34f9839`; next: merge + deploy (step 2). Launch order:
+`docs/MIGRATION_PRODUCTION_APPROVAL.md`). **Production web: `5139ff0` (`main`, = tested tree) deployed 2026-10-23 as `dpl_FJ4mDoFeqTsMsURpVkhddnNqtXwB`**; PRs #1/#2 merged. Next: owner configuration (sequence step 3) → email → controlled test order. Launch order:
 `docs/FINAL_LAUNCH_SEQUENCE.md`; owner inputs and how-tos: `docs/FINAL_LAUNCH_OWNER_INPUTS.md`; policy skeletons:
 `docs/POLICY_DRAFTS.md`. Release candidate `140bc31`, Preview `dpl_3YJhthM3LkiAE1rbSQn3oom7b2NX` (e2e 39/1 skipped).
 Mode B not activated (not approved). Production unchanged.

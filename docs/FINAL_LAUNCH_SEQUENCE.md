@@ -18,7 +18,26 @@ storefront until launch (`docs/PUBLIC_SITE_PLAN.md`).
 `docs/MIGRATION_PRODUCTION_APPROVAL.md` § Outbox lease. Must be applied **before** step 2 (the new code calls
 `claim_notifications`). Safe for the code running today (`34f9839` has no notification code).
 
-## 2. Deploy the verified code to Production **[approve]**
+## 2. Deploy the verified code to Production — ✅ DONE 2026-10-23 (owner-approved)
+
+Approved: "merge PR #1 then PR #2 into main with merge commits, verify main equals the tested tree, let Vercel deploy
+Production, and run the read-only post-deploy checks … Keep COD off … do not enable email or COD."
+
+| Step | Result |
+|---|---|
+| Merge | PR #1 → `c9e0a21`, PR #2 (retargeted to `main`) → `5139ff0`, both merge commits; `--match-head-commit` used |
+| Tree | `main` tree `c0cf700` = tested `19089ed` (no diff); no code change after `0bfc552` |
+| Production | `laptops-hub.vercel.app` → `dpl_FJ4mDoFeqTsMsURpVkhddnNqtXwB` (`5139ff0`) |
+| Intermediate build | merging #1 first made Vercel build `c9e0a21` (old `ea652f2` code); cancel was too late, it served ~57 s (`/pages/*` 500, known jsdom crash; COD stayed 403) until `5139ff0` replaced it. Lesson: next time retarget #2 and merge only the final head, or pause auto-deploy |
+| HTTP | `/`, collection, PDP, `/pages/shipping`, search, track-order, checkout page 200 · `/admin` 307 · COD POST 403 · cron 503 (no `CRON_SECRET`) · staff retry 401 without session |
+| SEO host | robots + sitemap now use `https://laptops-hub.vercel.app` (was wrong before); 267 sitemap URLs all 200; home `index, follow` |
+| Suites (read-only) | e2e 39 passed / 1 skipped · P0 9/9 · auth matrix 24/24 · pagination 5/5 |
+| Runtime errors | none from `dpl_FJ4mDo…`; the only errors are from the intermediate deployment, before the switch |
+| Unchanged | no env change, COD off, email not configured, `SITE_PRELAUNCH` unset (site public, as before) |
+
+Rollback: Instant Rollback to `dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH` (not to `dpl_GsZMH3…`).
+
+## 2 (procedure, for reference)
 
 1. Merge PR #1 (`feat/v5-storefront-admin` → `main`), then retarget PR #2 to `main` and merge it, both with
    **merge commits** (no squash/rebase, so the deployed tree is the tested one). `main` is an ancestor of both, so

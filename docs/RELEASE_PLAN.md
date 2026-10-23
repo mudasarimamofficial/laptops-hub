@@ -8,7 +8,7 @@ false). Nothing here publishes content, approves policies or exposes unapproved 
 | | |
 |---|---|
 | Production web | `laptops-hub.vercel.app` → `dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH` = owner redeploy of `34f9839` (this branch) |
-| Production DB | `xvmmjkrkgznnakcobmww`, ledger 7 (… `20261021160000`, `20261023110000`); Option B (5 files) pending |
+| Production DB | `xvmmjkrkgznnakcobmww`, ledger 13 — Option A and Option B applied 2026-10-23 |
 | Code ↔ DB compatibility | this branch works with the DB **before and after** Option B (Preview on the same DB; Option B verified locally) |
 | PRs | #1 `feat/v5-storefront-admin → main` (draft) · #2 `fix/v5-correctness-parity → feat/v5-storefront-admin` (draft) |
 
@@ -17,7 +17,7 @@ false). Nothing here publishes content, approves policies or exposes unapproved 
 2. `supabase migration list --linked` and `supabase db push --linked --dry-run` list exactly the six Option B files (`20261023120000` … `20261023170000`).
 3. Read-only drift check (`docs/MIGRATION_PRODUCTION_APPROVAL.md`, "Option B audit"): no differences except line endings.
 
-## Stage 1 — database: Option B **[owner]**
+## Stage 1 — database: Option B **[owner]** — ✅ DONE 2026-10-23 (owner-approved; outcome in `docs/MIGRATION_PRODUCTION_APPROVAL.md`)
 Order matters only within Option B (the CLI applies files in version order, one transaction per file).
 1. Schema-only backup: `supabase db dump --linked -f backups/schema-before-option-b.sql` (store outside git).
    Optional data safety: the change touches no rows; a Supabase dashboard backup point is sufficient.

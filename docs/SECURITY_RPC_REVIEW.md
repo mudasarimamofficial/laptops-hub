@@ -7,6 +7,10 @@ own temporary login role for these queries), migrations in `supabase/migrations/
 `record_cod_collection`, `transition_order_status`, `consume_rate_limit` (verified; see
 `docs/MIGRATION_PRODUCTION_APPROVAL.md`). Findings 3–5 and the in-function guard are still pending (Option B).
 
+**Update 2026-10-23 (later):** Option B applied with owner approval — findings 1–6 are fixed on production (privileges,
+schema and functions verified identical to the tested build). Residual: #7 (`supabase_admin` defaults) and the
+`storage`-schema defaults of `postgres` (platform default; Storage unused).
+
 ## Production state before Option A (verified read-only)
 
 Ledger: 6 migrations applied (`20261021120000`–`20261021160000`). RLS enabled on all 22 public tables; anon policies

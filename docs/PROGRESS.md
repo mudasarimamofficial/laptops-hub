@@ -1,5 +1,9 @@
 # Progress log
 
+## 2026-10-23 — Option B applied to production (owner-approved)
+- Preflight (ledger 7, dry run = 6 files), schema backup (`backups/`, gitignored), `supabase db push --linked` (6 applied), ledger 13.
+- Production privileges, schema and function bodies identical to the verified local build; ACL, guard and quote-fix checks pass; anon probes 42501; P0 9/9; auth matrix 24/24; routes pass; public site smoke and runtime logs clean. No web/alias/env/COD change.
+
 ## 2026-10-23 (final pre-release pass) — audit, public site, regression
 - Verified: PR #1/#2 drafts, CI green; ledger 7 applied; dry run lists the pending Option B files.
 - Production schema fingerprint = repo-expected state (only CRLF in function text). CLI executor is a member of `postgres`; `auth.role()` exists.

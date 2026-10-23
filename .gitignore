@@ -70,3 +70,6 @@ docs/visual-evidence/parity-preview/**/*.png
 docs/visual-evidence/parity-preview/*.log
 docs/visual-evidence/parity-gated/**/*.png
 .next-local
+
+# Production schema backups (never commit)
+backups/

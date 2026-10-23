@@ -1,12 +1,38 @@
 # Production database change — owner approval request
 
-**Status: Option A APPLIED 2026-10-23 (owner-approved; see Outcome). Option B NOT applied.** Prepared 2026-10-23.
+**Status: Option A and Option B APPLIED 2026-10-23 (both owner-approved; see Outcomes). Nothing pending.** Prepared 2026-10-23.
 
 | | |
 |---|---|
 | Target | Supabase project `xvmmjkrkgznnakcobmww` ("Laptops Hub", ap-southeast-1) |
 | Applied ledger (read 2026-10-23) | `20261021120000` … `20261021160000` (6 migrations) |
 | Pending in repo (`fix/v5-correctness-parity`) | `20261023110000`, `20261023120000`, `20261023130000`, `20261023140000`, `20261023150000`, `20261023160000` |
+
+## Outcome — Option B APPLIED (2026-10-23, owner-approved)
+
+Approved by the owner in session: "run the section 4 procedure (dry run must list exactly the 6 files
+20261023120000-20261023170000, schema backup, supabase db push --linked, read-only post-checks). No web deployment,
+alias, env or COD change."
+
+| Step | Result |
+|---|---|
+| Preflight | clean tree; migration files identical to the pushed branch; linked ref `xvmmjkrkgznnakcobmww`; ledger 7; dry run listed exactly the 6 files |
+| Backup | `supabase db dump --linked` → `backups/2026-10-23-option-b/schema-before-option-b.sql` (gitignored; 11 functions, 161 grant statements, 12 default-privilege statements) plus privilege/schema/function fingerprints |
+| Pre-state | production privileges (206 rows), schema and 11 function bodies **identical** to the state the push path and rollback were tested against |
+| Apply | `supabase db push --linked`: all 6 files applied. A post-push CLI warning ("failed to cache migrations catalog", missing local pg-delta certificate) concerns a local cache only |
+| Ledger | 13 versions; `db push --dry-run` → "Remote database is up to date" |
+| Fingerprint after | privileges (206 rows), schema, default ACLs and all 11 function bodies **identical to the verified local build** of all 13 migrations |
+| ACL | `create_cod_order`, `record_cod_collection`, `transition_order_status`, `consume_rate_limit`: service_role only · `quote_cod_shipping`, `get_order_confirmation_by_token`: anon/authenticated/service_role · `content_pages.legal_approved_by` not selectable by anon · no TRUNCATE for anon · `postgres` defaults in `public` → only `postgres`, `service_role`; global PUBLIC function default removed |
+| Functions | service-role guard present in both staff RPCs; quote loop variable is `shipping_zones%ROWTYPE` |
+| Live probes (no writes) | staff RPCs, `create_cod_order`, `consume_rate_limit` → 42501 for anon · anon quote → `unserviceable` (0 zones; no cast error) · anon `legal_approved_by` → 42501 · anon catalog listing reads · service role reaches `record_cod_collection` (→ `validation_failed`) |
+| Suites (production, read-only) | P0 9/9 · auth matrix 24/24 · routes 226/226 PDPs, 6/6 drafts 404, 39/39 collections, 9/9 pages |
+| Public site | home, PDP, collection, contact, guides, sitemap 200 · admin 307 · COD 403 · no runtime errors/warnings |
+
+Observation (unchanged, out of scope): `postgres` default privileges in the `storage` schema still grant API roles
+(Supabase platform default; Storage is not used by this project).
+
+Rollback (owner instruction only): `supabase/rollback/option_b_rollback.sql`, then
+`supabase migration repair --status reverted 20261023120000 20261023130000 20261023140000 20261023150000 20261023160000 20261023170000 --linked`.
 
 ## Outcome — Option A APPLIED (2026-10-23, owner-approved)
 
@@ -61,7 +87,7 @@ grant execute on function public.record_cod_collection(jsonb), public.transition
 - **Rollback:** `grant execute on function <same three> to anon, authenticated;` (re-opens the exposure).
 - **Do not** use `supabase db push` for Option A: it would apply every pending migration.
 
-## 3. Option B — remaining pending set (6 files) — PROPOSED, not applied
+## 3. Option B — 6 files — APPLIED 2026-10-23 (see Outcome)
 
 `supabase db push --linked --dry-run` (read-only, 2026-10-23) lists exactly these, applied in this order, **one
 transaction per file**:
@@ -111,5 +137,4 @@ Option A closed the urgent exposure. Without Option B: the next function/table a
 
 ## 6. Decision
 - [x] Option A — applied 2026-10-23 (owner-approved)
-- [ ] **Approve Option B** on `xvmmjkrkgznnakcobmww`: the 6 files listed in section 3 via `supabase db push --linked`, with the section 4 procedure
-- [ ] Do not approve yet
+- [x] Option B — applied 2026-10-23 (owner-approved)

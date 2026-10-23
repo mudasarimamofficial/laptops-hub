@@ -26,8 +26,8 @@ Legend: **Verified** = tested this pass with evidence · **Done (owner-approved)
 
 | Item | Status | Where |
 |---|---|---|
-| Option B: 6 migrations (explicit grants, idempotency fixes, least-privilege defaults, server-only guard, shipping-quote fix) | **Proposed** — audited, push path + injected failure + rollback tested | `docs/MIGRATION_PRODUCTION_APPROVAL.md` |
-| Shipping quote broken once a zone exists (production function bug) | Fixed in `20261023170000` (pending, part of Option B) | `docs/SECURITY_RPC_REVIEW.md` #6 |
+| Option B: 6 migrations (explicit grants, idempotency fixes, least-privilege defaults, server-only guard, shipping-quote fix) | **Done (owner-approved)** 2026-10-23 — production verified identical to the tested build | `docs/MIGRATION_PRODUCTION_APPROVAL.md` |
+| Shipping quote broken once a zone exists (production function bug) | **Fixed on production** (`20261023170000`, Option B) | `docs/SECURITY_RPC_REVIEW.md` #6 |
 | Contact form rejected same-site posts when the server sees another host name | Fixed on branch (origin check accepts the request Host); production impact not observable without a real submit | `src/lib/validation/contact.ts` |
 | Sitemap/robots point at the SSO-protected deployment host on production | Fixed on branch; live after next production deployment | `docs/PUBLIC_SITE_PLAN.md` |
 | Pre-launch mode (noindex while gates are open) | **Proposed** (env var, default off) | `docs/PUBLIC_SITE_PLAN.md` Plan A1 |
@@ -45,9 +45,8 @@ Legend: **Verified** = tested this pass with evidence · **Done (owner-approved)
   13 content pages (0 published), 0 articles, 0 FAQ rows, 0 shipping zones, 0 orders, 0 inquiries,
   `cod_checkout.enabled = false`.
 - **Staff**: 1 auth user with an active **manager** membership; **no owner** membership.
-- Future objects created by migrations are still auto-exposed until Option B (`20261023140000`).
-- The shipping quote RPC fails as soon as a zone is added (fixed in pending `20261023170000`): **apply Option B before
-  configuring shipping zones.**
+- Option A and Option B applied 2026-10-23 (ledger 13): staff/checkout functions server-only, future objects not
+  auto-exposed, idempotency conflicts and the shipping-quote fix live. Shipping zones can now be configured.
 
 ## 4. Migration approval checklist (Option B)
 - [ ] Read `docs/MIGRATION_PRODUCTION_APPROVAL.md` (Option B section and audit)
@@ -98,7 +97,7 @@ See section "Visual parity run 2026-10-23" in `docs/V5_PIXEL_DIFF_REPORT.md`.
   recorded"), CMS publish vs legal approval
 
 ## 10. COD activation prerequisites (all required, in order)
-1. Option B applied and verified (includes the shipping-quote fix).
+1. ~~Option B applied and verified~~ — done 2026-10-23.
 2. Policies published (shipping, returns, warranty, terms, privacy) with legal approval.
 3. Contact details published; inquiry inbox owner named.
 4. At least one active shipping zone with real fees.
@@ -116,6 +115,6 @@ revoke.
 - [ ] Gate A Source integrity — PR #1 and #2 reviewed and merged in order
 - [ ] Gate B Visual parity — accepted by owner (differences documented)
 - [ ] Gate C Functional — e2e, admin flows with real staff accounts, contact inbox
-- [ ] Gate D Data/security — Option B applied and post-checks pass
+- [x] Gate D Data/security — Option B applied and post-checks pass (2026-10-23)
 - [ ] Gate E Business — sections 6, 7, 9 complete
 - [ ] Gate F Release — production deployed from `main`, smoke tests pass, pre-launch mode removed, COD decision

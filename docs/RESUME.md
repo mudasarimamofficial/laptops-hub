@@ -8,9 +8,9 @@ State (2026-10-23): **Security & COD integrity pass done on `fix/v5-correctness-
 | Branch / HEAD | `fix/v5-correctness-parity` (latest commit: `git log -1`) | verified |
 | PR #1 | `feat/v5-storefront-admin → main`, draft, head `ea652f2` | verified |
 | PR #2 | `fix/v5-correctness-parity → feat/v5-storefront-admin`, draft, checks 2/2 | verified |
-| Supabase `xvmmjkrkgznnakcobmww` ledger | 7 applied (`…21120000`–`…21160000` + `20261023110000`); 6 pending (`20261023120000`–`…170000`) | verified (dry run) |
+| Supabase `xvmmjkrkgznnakcobmww` ledger | 13 applied (Option A + Option B, owner-approved 2026-10-23); nothing pending | verified |
 | Staff RPC exposure | **closed** 2026-10-23 (Option A): anon/authenticated → 42501 on the three functions | verified |
-| Future-object default privileges | still auto-expose new tables/functions on production (fixed by pending `20261023140000`) | verified read-only |
+| Future-object default privileges | fixed on production (`20261023140000`) | verified |
 | RLS | enabled on all 22 public tables | verified read-only |
 | Catalog | 226 public PDPs 200 · 6 drafts 404 · 39 collections | verified (route check) |
 | Preview | `dpl_9nGNosyhPhPckFWpXLwnRWmjDkpv` (https://laptops-kg7kii4d0-mudasarimamofficial-gmailcoms-projects.vercel.app, SSO) | verified |
@@ -47,7 +47,7 @@ State (2026-10-23): **Security & COD integrity pass done on `fix/v5-correctness-
 Local Supabase only (`docs/ISOLATED_TESTS.md`): COD collection matrix 16/16 · role matrix 15/15 · checkout isolated 31/31 (incl. shipping quote, order confirmation by token, contact insert as anon, checkout key conflicts, 8×6 concurrent HTTP submits) · staff role HTTP 97/97 · push path and rollback verified against the production fingerprint.
 
 ## Safest next step
-1. **Owner: decide Option B** in `docs/MIGRATION_PRODUCTION_APPROVAL.md` (six migrations `20261023120000`–`…170000`; audited, push path and rollback tested). Option A is done. Then the public-site decision (`docs/PUBLIC_SITE_PLAN.md`) and the release sequence (`docs/RELEASE_PLAN.md`). Owner package: `docs/OWNER_READINESS_REPORT.md`.
+1. Option A and Option B are applied (`docs/MIGRATION_PRODUCTION_APPROVAL.md`). Next owner decision: pre-launch mode / public site. Then the public-site decision (`docs/PUBLIC_SITE_PLAN.md`) and the release sequence (`docs/RELEASE_PLAN.md`). Owner package: `docs/OWNER_READINESS_REPORT.md`.
 2. Review PR #1, then PR #2.
 3. Owner decisions below.
 

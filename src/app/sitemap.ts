@@ -1,12 +1,13 @@
 import type { MetadataRoute } from "next";
 import { getV5Catalog, V5_COLS } from "@/lib/catalog/v5";
-import { siteUrl } from "@/lib/site-url";
+import { isPrelaunch, siteUrl } from "@/lib/site-url";
 import { contentVisibility, previewAllContent } from "@/lib/content/pages";
 
 export const revalidate = 3600;
 
 /** Public, indexable URLs only: no admin, order, checkout, cart, filtered or draft pages. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (isPrelaunch()) return [];
   const base = siteUrl();
   const P = await getV5Catalog().catch(() => []);
   // Content pages and guides only once published (and legally approved); never preview-only content.

@@ -1,5 +1,17 @@
 # Deployment report
 
+## Preview — 2026-10-23 (launch completion release candidate)
+
+| Field | Value |
+|---|---|
+| Commit | `987dacc` on `fix/v5-correctness-parity` (draft PR #2) |
+| Deployment | `dpl_5bJkXRYhUktm8jpHq5gHLBbSgkt7` (Git integration, target **Preview**, Ready) |
+| Checks | e2e 39 passed / 1 skipped · console sweep clean (30 loads) · `/checkout` ordering-closed + empty-cart copy · `/track-order` renders · order lookup cross-site 403 · cron 503 without `CRON_SECRET` · admin retry 401 without session · COD 403 |
+| Database | production, read-only use; no notification provider configured on Preview (nothing sent) |
+
+Full order flow, notifications and admin lifecycle verified on the isolated stack (`docs/ISOLATED_TESTS.md`, launch
+journeys 10/10 ×2). No Production change.
+
 ## Previews — 2026-10-23 (pre-launch modes, commit `340f6d9`)
 
 | Mode | Deployment | How |

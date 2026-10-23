@@ -1,7 +1,7 @@
 # Production database change — owner approval request
 
-**Status: Option A and Option B APPLIED 2026-10-23 (owner-approved). PENDING APPROVAL: § Outbox lease
-(`20261024100000`).** Prepared 2026-10-23.
+**Status: Option A, Option B and the Outbox lease (`20261024100000`) APPLIED 2026-10-23 (all owner-approved; see
+Outcomes). Nothing pending.** Prepared 2026-10-23.
 
 | | |
 |---|---|
@@ -9,7 +9,30 @@
 | Applied ledger (read 2026-10-23) | `20261021120000` … `20261021160000` (6 migrations) |
 | Pending in repo (`fix/v5-correctness-parity`) | `20261023110000`, `20261023120000`, `20261023130000`, `20261023140000`, `20261023150000`, `20261023160000` |
 
-## Outbox lease — `20261024100000_notification_outbox_lease.sql` — AWAITING OWNER APPROVAL
+## Outcome — Outbox lease APPLIED (2026-10-23, owner-approved)
+
+Approved by the owner in session: "apply only 20261024100000_notification_outbox_lease.sql (commit 0bfc552, blob
+e2be257) to production with the documented procedure — preflight dry run must list exactly that file, schema backup,
+supabase db push --linked, read-only post-checks. No deploy, merge, env or COD change."
+
+| Step | Result |
+|---|---|
+| Preflight | clean tree; file blob `e2be257` and SHA-256 `17fa8fee…a46c` on disk; `supabase/` unchanged since `0bfc552`; linked ref `xvmmjkrkgznnakcobmww`; ledger 13; dry run listed exactly this file; table 0 rows, 10 columns, 2 constraints; function absent |
+| Backup | `supabase db dump --linked` → `backups/2026-10-23-outbox-apply/schema-before-outbox-lease.sql` (70 KB) + table grants (22 rows); gitignored |
+| Apply | `supabase db push --linked`: applied. Post-push CLI warning "failed to cache migrations catalog" (missing local pg-delta certificate) concerns a local cache only, as in Option B |
+| Ledger | 14 versions; dry run → "Remote database is up to date" |
+| Table | 0 rows · 20 columns · constraints pkey, order FK, 3 status checks · `notification_outbox_due_idx` · table grants identical to before |
+| Function | `claim_notifications`: SECURITY INVOKER (`prosecdef=false`), `search_path=""`, owner postgres, fail-closed guard present, no `coalesce(auth.role()` · EXECUTE anon false, authenticated false, service_role true · public functions 11 → 12 |
+| Live probes (no writes) | anon RPC → 42501 · service-role RPC scoped to a non-existent order → `[]` · rows still 0 |
+| Suites (production, read-only) | P0 9/9 · auth matrix 24/24 |
+| Public site | `/`, collection, PDP 200 · `/admin` 307 · COD POST 403 · no runtime errors |
+
+Not done (outside this approval): no web deploy, merge, environment or COD change. Production still runs `34f9839`.
+
+Rollback (owner instruction only): `supabase/rollback/outbox_lease_rollback.sql`, then
+`supabase migration repair --status reverted 20261024100000 --linked`.
+
+## Outbox lease — `20261024100000_notification_outbox_lease.sql` — approval request (applied, see Outcome)
 
 Revision 2 (2026-10-23, owner-requested hardening). File SHA-256 and commit: § Identity at the end of this section.
 
@@ -84,7 +107,7 @@ schema). The new application code requires this migration: apply it **before** d
 `17fa8fee44560c18785bb55095fccaa607314e96be58e7549827f59bdabaa46c`. Before pushing, confirm
 `git rev-parse HEAD:supabase/migrations/20261024100000_notification_outbox_lease.sql` equals the blob id.
 
-**Decision:** [ ] Approve applying `20261024100000` exactly as above · [ ] Do not approve
+**Decision:** [x] Approved and applied 2026-10-23
 
 ## Outcome — Option B APPLIED (2026-10-23, owner-approved)
 

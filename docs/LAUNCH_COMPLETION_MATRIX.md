@@ -31,7 +31,7 @@ Priority: **P0** needed to accept real orders safely · **P1** essential operati
 | 12 | Order list/detail, confirm → pack → dispatch (tracking) → deliver; cancel; failed delivery; return | P0 | ✅ | staff trained ❌ | isolated journeys "admin" + "cancellation" |
 | 13 | COD cash collection (exactly-once, conflicts, history) | P0 | ✅ | — | collection matrix 16/16; journey |
 | 14 | Shipping zones: create, **edit, (de)activate** | P0 | ✅ (new) | real zones ❌ | role HTTP (PATCH) |
-| 15 | New-order alert to the store + optional customer email; lease-based claims, per-recipient state, bounded retries, no duplicates | P0 | ✅ code · ⏳ DB migration `20261024100000` awaiting approval | email provider + inbox ❌ (owner 5.1–5.2) | outbox reliability 11/11; journeys "notifications" ×3 (stand-in provider); `docs/NOTIFICATIONS.md` |
+| 15 | New-order alert to the store + optional customer email; lease-based claims, per-recipient state, bounded retries, no duplicates | P0 | ✅ code · ✅ DB migration `20261024100000` applied (2026-10-23) | email provider + inbox ❌ (owner 5.1–5.2) | outbox reliability 11/11; journeys "notifications" ×3 (stand-in provider); `docs/NOTIFICATIONS.md` |
 | 16 | Dashboard: orders to confirm, unsent notifications | P1 | ✅ (new) | — | admin overview |
 | 17 | Product edit (price, status, purchasable) | P1 | ✅ | — | role HTTP |
 | 18 | CMS edit / publish / withdraw, separate legal approval | P1 | ✅ | content ❌ | role HTTP |
@@ -55,7 +55,7 @@ Priority: **P0** needed to accept real orders safely · **P1** essential operati
 ## Verdict
 
 - **Engineering ready (release candidate):** yes for every P0 above, with evidence (local isolated stack; protected
-  Preview), **once** migration `20261024100000` is approved and applied before deploying. Preview of `140bc31`
+  Preview), migration `20261024100000` applied on production 2026-10-23. Preview of `140bc31`
   (`dpl_3YJhthM3LkiAE1rbSQn3oom7b2NX`): e2e 39 passed / 1 skipped, `/` 200, `/admin` 307, COD POST 403, cron 503
   (no secret set), staff retry 401 without session, no runtime errors. The lease path itself is verified locally
   (it needs the migration and email configuration, neither present on the shared database).

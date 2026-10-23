@@ -13,7 +13,7 @@ Answer `docs/FINAL_LAUNCH_OWNER_INPUTS.md`: owner account, zones and fees, email
 rights, workflow approval. Optional now, recommended: **[approve] Mode B** (`SITE_PRELAUNCH=restricted`) to hide the
 storefront until launch (`docs/PUBLIC_SITE_PLAN.md`).
 
-## 1. Database: outbox lease migration **[approve]**
+## 1. Database: outbox lease migration — ✅ APPLIED 2026-10-23 (owner-approved)
 
 `docs/MIGRATION_PRODUCTION_APPROVAL.md` § Outbox lease. Must be applied **before** step 2 (the new code calls
 `claim_notifications`). Safe for the code running today (`34f9839` has no notification code).

@@ -24,7 +24,7 @@ const schema = z.object({
 export const runtime = "nodejs";
 
 export async function POST(request: Request) {
-  const limited = rateLimit(`quote:${clientIp(request)}`, { limit: 30, windowMs: 60_000 });
+  const limited = await rateLimit(`quote:${clientIp(request)}`, { limit: 30, windowMs: 60_000 });
   if (!limited.ok) {
     return NextResponse.json(
       { error: "rate_limited" },

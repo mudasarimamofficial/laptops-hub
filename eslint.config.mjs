@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Legacy Claude Design reference / vendor (not part of Next app)
+    "reference/**",
+    "support.js",
+    "data/**",
   ]),
 ]);
 

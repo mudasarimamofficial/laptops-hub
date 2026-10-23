@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-21T10:59:00Z",
+  "deploymentId": "dpl_1oui2NALZxJF6vXi2fpjZHurWJP8",
+  "commit": "9b24eae",
+  "previewUrl": "https://laptops-qi1nix9ah-mudasarimamofficial-gmailcoms-projects.vercel.app",
+  "routes": [
+    { "path": "/", "status": 200 },
+    { "path": "/collections/all", "status": 200 },
+    { "path": "/collections/laptops", "status": 200 },
+    { "path": "/collections/dell", "status": 200 },
+    { "path": "/collections/chromebooks", "status": 200 },
+    { "path": "/search", "status": 200 },
+    { "path": "/compare", "status": 200 },
+    { "path": "/cart", "status": 200 },
+    { "path": "/checkout", "status": 200 },
+    { "path": "/admin/login", "status": 200 },
+    { "path": "/admin", "status": 307, "location": "/admin/login" },
+    {
+      "path": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "status": 200
+    },
+    {
+      "path": "POST /api/checkout/cod",
+      "status": 403,
+      "bodyError": "checkout_disabled"
+    }
+  ],
+  "css": {
+    "compiledUtilitiesPresent": true,
+    "v5TokensPresent": true,
+    "themeAtRuleInOutputCss": false
+  },
+  "securityP0": "9/9",
+  "productionAlias": {
+    "url": "https://laptops-hub.vercel.app/",
+    "note": "Still Production alias; may 404 until approved promote — intentionally not promoted"
+  }
+}

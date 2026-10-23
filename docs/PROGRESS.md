@@ -1,5 +1,105 @@
 # Progress log
 
+## 2026-10-21 — V5 parity sprint (header / hero / card / search / cart)
+
+### Recovered
+- Working tree had deleted the entire Next.js app; restored from `feat/v5-storefront-admin` @ `0a12238`.
+- Frozen V5 export under gitignored `reference/v5/`.
+- Relinked Vercel project `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2`; pulled `.env.local` (quotes stripped).
+- Supabase project `xvmmjkrkgznnakcobmww` confirmed ACTIVE.
+
+### Implemented
+- Layered cinematic hero (V5 geometry, parallax, scroll `--hp`, three catalog product layers, price tag, chips).
+- Search overlay + `/api/catalog/search`; header opens overlay (not bare `/search` link).
+- Mobile drawer (V5-style) + desktop nav breakpoint ~1180px; header 72px + saturate blur.
+- Product card fidelity to `ProductCard v5.dc.html` (stage, chips, compare, ATC).
+- Cart slide-out drawer matching V5 chrome.
+- Env loaders strip quoted Vercel env values; P0 probes **9/9**.
+- Playwright visual smoke **8/8**; evidence in `docs/visual-evidence/`.
+- Parity matrix: `docs/V5_VISUAL_PARITY_MATRIX.md`.
+
+### Still partial / blocked
+- Cutout PNGs + `stage.png` not published (media rights) — catalog CDN stand-ins.
+- Full pixel-diff vs reference HTTP server not yet automated end-to-end.
+- COD still disabled; Production promote blocked on owner gates.
+
+---
+
+## 2026-10-21 — Vercel 404 recovery (Preview restored)
+
+### Root cause
+- Vercel project Framework preset was **Other** with Output Directory **`public`**, so READY deployments served no Next.js app root → platform `NOT_FOUND` on aliases/URLs.
+- GitHub bot linked “Preview” to Production hostname `laptops-hub.vercel.app` (misleading).
+
+### Fix
+- `vercel project update --framework nextjs` + clear output directory
+- `vercel.json` framework nextjs; Tailwind v4 `postcss.config.mjs` + `@tailwindcss/postcss`
+- `.vercelignore` so CLI deploys do not upload local archives (100MB+ failure)
+
+### Verified Preview
+- URL: https://laptops-qi1nix9ah-mudasarimamofficial-gmailcoms-projects.vercel.app (`dpl_1oui2NALZxJF6vXi2fpjZHurWJP8`, `9b24eae`)
+- Routes smoke: `/` + collections + product + search/compare/cart/checkout/admin/login = 200; `/admin` = 307 login; COD API disabled
+- Production alias left untouched (no `--prod`)
+
+---
+
+## 2026-10-21 — RC hardening (financial, CMS, catalog, roles)
+
+### Financial integrity
+- `record_cod_collection(jsonb)` — FOR UPDATE, over-collection reject, idempotency key, events+audit atomic
+- `transition_order_status(jsonb)` — locked transitions + stale `expected_from_status`
+- Concurrency script: **6/6** (`docs/COD_CONCURRENCY_RESULTS.json`)
+
+### CMS security
+- `isomorphic-dompurify` allowlist sanitizer + XSS unit tests
+- `legal_approved` separated from editorial `status`; editors cannot publish legal pages
+
+### Catalog
+- `public_catalog_listing` view; full paginated filter/sort; collections page through entire catalog
+- Pagination proof: **5/5** (226 public; last page of price sort discoverable)
+
+### Variants / media
+- Product PATCH requires `variantId` for price; ownership check
+- Unverified Dell cutouts removed from public tree (`docs/MEDIA_RIGHTS_CUTOUTS.md`)
+
+### Auth
+- Role matrix with ephemeral users: **15/15** (`docs/SECURITY_ROLE_MATRIX_RESULTS.json`)
+- Anonymous auth matrix + P0 still green
+
+### Visual
+- Playwright specs + evidence dir prepared; Chromium download flaky on network — screenshots pending completion
+
+---
+
+## 2026-10-21 — V5 storefront + merchant mutations (`feat/v5-storefront-admin`)
+
+### Storefront
+- Cinematic hero (intro / skip / reduced-motion), pinned product story, brand/featured/budget/Chromebook/compare sections
+- Mega-menu + mobile nav; floating compare tray (max 4); `/compare`
+- Collections resolve from DB seed + matchers; search with brand/category/price/sort
+- PDP gallery, compare toggle, related products
+
+### Admin / COD ops
+- Product list (search/paginate) + edit form → `PATCH /api/admin/products/[handle]`
+- Order detail + status transitions + COD cash collection (explicit, audited)
+- Content CMS for pending pages (`/admin/content`) — no auto-publish
+- Shipping zone create (prior) retained
+
+### Security / infra
+- Migration `20261021150000` collections seed + `consume_rate_limit`
+- Migration `20261021151000` pending content page seeds
+- Auth matrix: **24/24** (`docs/SECURITY_AUTH_MATRIX_RESULTS.json`)
+- P0 probes still **9/9**; build + unit tests pass
+- COD checkout remains disabled
+
+### Next
+1. Owner staff bootstrap → browser role E2E
+2. Playwright visual vs V5 reference viewports
+3. Wire approved `lh-content.js` into CMS publish flow
+4. Preview RC deploy of this branch; still no `--prod`
+
+---
+
 ## 2026-10-21 — P0 security (admin authorization)
 
 ### Fixed

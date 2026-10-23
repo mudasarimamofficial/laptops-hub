@@ -1,0 +1,81 @@
+{
+  "base": "http://127.0.0.1:3000",
+  "at": "2026-10-21T09:45:49.460Z",
+  "results": [
+    {
+      "name": "nonstaff_cannot_read_orders",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "nonstaff_cannot_list_memberships",
+      "ok": true,
+      "detail": "rows=0"
+    },
+    {
+      "name": "owner_membership_active_true",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "owner_cod_rpc_not_found_not_forbidden",
+      "ok": true,
+      "detail": "not_found"
+    },
+    {
+      "name": "admin_membership_active_true",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "admin_cod_rpc_not_found_not_forbidden",
+      "ok": true,
+      "detail": "not_found"
+    },
+    {
+      "name": "manager_membership_active_true",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "manager_cod_rpc_not_found_not_forbidden",
+      "ok": true,
+      "detail": "not_found"
+    },
+    {
+      "name": "editor_membership_active_true",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "editor_cod_rpc_forbidden",
+      "ok": true,
+      "detail": "forbidden"
+    },
+    {
+      "name": "fulfillment_membership_active_true",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "fulfillment_cod_rpc_not_found_not_forbidden",
+      "ok": true,
+      "detail": "not_found"
+    },
+    {
+      "name": "editor_membership_active_false",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "inactive_staff_rpc_forbidden",
+      "ok": true,
+      "detail": "forbidden"
+    },
+    {
+      "name": "anon_cod_api_401",
+      "ok": true,
+      "detail": "status=401"
+    }
+  ]
+}

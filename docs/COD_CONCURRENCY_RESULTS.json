@@ -1,0 +1,36 @@
+{
+  "at": "2026-10-21T09:45:11.092Z",
+  "orderNumber": "LH-SANDBOX-1792575909828",
+  "results": [
+    {
+      "name": "same_key_both_ok_or_one_ok",
+      "ok": true,
+      "detail": " "
+    },
+    {
+      "name": "same_key_one_fresh_one_replay",
+      "ok": true,
+      "detail": "fresh=1 replay=1"
+    },
+    {
+      "name": "same_key_collected_once",
+      "ok": true,
+      "detail": "collected=500000"
+    },
+    {
+      "name": "diff_keys_no_double_money",
+      "ok": true,
+      "detail": "ok=1 over=1 err=over_collection|"
+    },
+    {
+      "name": "final_collected_eq_total",
+      "ok": true,
+      "detail": "{\"amount_collected_paisa\":1000000,\"payment_status\":\"collected\",\"total_due_paisa\":1000000}"
+    },
+    {
+      "name": "exactly_two_collection_rows",
+      "ok": true,
+      "detail": "rows=2"
+    }
+  ]
+}

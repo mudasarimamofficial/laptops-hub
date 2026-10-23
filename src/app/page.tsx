@@ -1,112 +1,169 @@
-import Link from "next/link";
-import { ProductCard } from "@/components/commerce/product-card";
+import { CinematicHero } from "@/components/storefront/home/cinematic-hero";
+import { ProductStory } from "@/components/storefront/home/product-story";
+import {
+  BrandSection,
+  BudgetSection,
+  ChromebookSection,
+  CompareTeaser,
+  FeaturedSection,
+} from "@/components/storefront/home/home-sections";
 import { PendingBlock } from "@/components/ui/pending-block";
-import { listPublicProducts, countPublicProducts } from "@/lib/catalog/queries";
-import { formatPkr } from "@/lib/money";
+import { listAllPublicProducts, countPublicProducts, getPublicProductByHandle } from "@/lib/catalog/queries";
+import { COLLECTION_DEFS } from "@/lib/collections/definitions";
+import type { PublicProduct } from "@/types/catalog";
 
 export const revalidate = 60;
 
+const STORY_HANDLE = "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage";
+
+function modelLabel(p: PublicProduct) {
+  return String(p.specs.model || p.title.split(" - ")[0] || p.title);
+}
+
+function heroChips(p: PublicProduct): string[] {
+  return [p.specs.cpu || p.specs.processor, p.specs.ram, p.specs.storage || p.specs.sto, p.specs.size || p.specs.screen]
+    .map((v) => (v == null ? "" : String(v).trim()))
+    .filter(Boolean)
+    .slice(0, 4);
+}
+
+function findByTitle(products: PublicProduct[], re: RegExp) {
+  return products.find((p) => re.test(p.title) || re.test(String(p.specs.model || "")));
+}
+
 export default async function HomePage() {
-  let products: Awaited<ReturnType<typeof listPublicProducts>> = [];
+  let products: Awaited<ReturnType<typeof listAllPublicProducts>> = [];
   let count = 0;
+  let story = await getPublicProductByHandle(STORY_HANDLE).catch(() => null);
+  const chromebook = await getPublicProductByHandle("hp-chromebook-14-g5-4-32").catch(() => null);
   let catalogError: string | null = null;
 
   try {
-    [products, count] = await Promise.all([listPublicProducts(8), countPublicProducts()]);
+    [products, count] = await Promise.all([listAllPublicProducts(), countPublicProducts()]);
   } catch (e) {
     catalogError = e instanceof Error ? e.message : "Catalog unavailable";
   }
 
-  const featured = products[0];
+  if (!story && products[0]) story = products[0];
+
+  const sideLeft =
+    findByTitle(products, /probook\s*640\s*g2/i) ||
+    findByTitle(products, /hp.*640/i) ||
+    products.find((p) => /hp/i.test(p.manufacturer || "") && /laptop/i.test(p.category || p.productType || "laptop"));
+  const sideRight =
+    findByTitle(products, /thinkpad\s*t580/i) ||
+    findByTitle(products, /t580/i) ||
+    products.find((p) => /lenovo/i.test(p.manufacturer || "") && /laptop/i.test(p.category || p.productType || "laptop"));
+
+  const laptopCount = products.filter((p) => COLLECTION_DEFS.find((c) => c.slug === "laptops")?.match(p)).length;
+  const accessoryCount = products.filter((p) => COLLECTION_DEFS.find((c) => c.slug === "accessories")?.match(p)).length;
+
+  const brandSlugs = ["dell", "hp", "lenovo", "apple", "microsoft"] as const;
+  const brands = brandSlugs
+    .map((slug) => {
+      const def = COLLECTION_DEFS.find((c) => c.slug === slug)!;
+      return { slug, name: def.title, count: products.filter(def.match).length };
+    })
+    .filter((b) => b.count > 0);
+
+  const featured = [
+    ...products.filter((p) => p.featured),
+    ...products.filter((p) => !p.featured && COLLECTION_DEFS.find((c) => c.slug === "laptops")?.match(p)),
+  ]
+    .filter((p, i, arr) => arr.findIndex((x) => x.id === p.id) === i)
+    .slice(0, 8);
+
+  const storySpecs = story
+    ? [
+        { k: "CPU", v: String(story.specs.cpu || story.specs.processor || "See product page") },
+        { k: "RAM", v: String(story.specs.ram || "See product page") },
+        { k: "STORAGE", v: String(story.specs.storage || story.specs.sto || "See product page") },
+        { k: "DISPLAY", v: String(story.specs.size || story.specs.screen || "See product page") },
+      ]
+    : [];
+
+  const featuredForHero = story || products[0];
+  const mainHero = featuredForHero
+    ? {
+        handle: featuredForHero.handle,
+        label: modelLabel(featuredForHero),
+        imageUrl: featuredForHero.images[0]?.url,
+        pricePaisa: featuredForHero.pricePaisa,
+        chips: heroChips(featuredForHero),
+        stockText: "In catalog",
+      }
+    : {
+        handle: "all",
+        label: "Featured laptop",
+      };
 
   return (
     <>
-      <section className="relative overflow-hidden bg-[var(--lh-navy)] text-white">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-70"
-          style={{
-            background:
-              "radial-gradient(ellipse 60% 50% at 70% 40%, color-mix(in srgb, var(--lh-electric) 35%, transparent), transparent 70%), radial-gradient(ellipse 40% 40% at 20% 80%, color-mix(in srgb, var(--lh-iris) 40%, transparent), transparent 65%)",
-          }}
+      <CinematicHero
+        totalCount={count || products.length}
+        laptopCount={laptopCount}
+        accessoryCount={accessoryCount}
+        main={mainHero}
+        sideLeft={
+          sideLeft
+            ? {
+                handle: sideLeft.handle,
+                label: modelLabel(sideLeft),
+                imageUrl: sideLeft.images[0]?.url,
+              }
+            : undefined
+        }
+        sideRight={
+          sideRight
+            ? {
+                handle: sideRight.handle,
+                label: modelLabel(sideRight),
+                imageUrl: sideRight.images[0]?.url,
+              }
+            : undefined
+        }
+      />
+
+      {story ? (
+        <ProductStory
+          handle={story.handle}
+          title={story.title}
+          model={String(story.specs.model || story.title.split(" - ")[0] || "Latitude 7420")}
+          config={String(
+            story.specs.config || `${story.specs.ram || ""} · ${story.specs.storage || story.specs.sto || ""}`.trim(),
+          )}
+          pricePaisa={story.pricePaisa}
+          variantId={story.variantId}
+          specs={storySpecs}
+          images={story.images.map((img) => ({ src: img.url, alt: img.alt || story!.title }))}
         />
-        <div className="lh-container relative grid min-h-[min(86vh,760px)] items-center gap-10 py-16 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
-            <p className="lh-kicker text-white/70">
-              <span className="text-white/70">Pakistan · Cash on Delivery</span>
-            </p>
-            <h1 className="mt-4 max-w-xl font-[family-name:var(--font-display)] text-[clamp(2.4rem,6vw,4.2rem)] font-extrabold leading-[0.98] tracking-[-0.05em]">
-              Find your next machine
-            </h1>
-            <p className="mt-5 max-w-lg text-[1.05rem] leading-relaxed text-white/70">
-              Curated laptops, Chromebooks and accessories with transparent COD checkout — pay when it arrives.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/collections/all" className="lh-btn lh-btn-primary">
-                Shop {count > 0 ? `${count} products` : "catalog"}
-              </Link>
-              <Link href="/collections/chromebooks" className="lh-btn lh-btn-ghost">
-                Chromebooks
-              </Link>
-            </div>
-            {featured ? (
-              <p className="mt-8 font-[family-name:var(--font-mono)] text-xs tracking-wide text-white/45">
-                Featured from live catalog · {featured.title} · {formatPkr(featured.pricePaisa)}
-              </p>
-            ) : null}
-          </div>
-          <div className="relative min-h-[280px] rounded-[var(--lh-radius-frame)] border border-white/10 bg-[color-mix(in_srgb,var(--lh-titanium)_12%,transparent)] p-6 backdrop-blur-sm">
-            <div className="absolute inset-6 rounded-[24px] bg-[radial-gradient(circle_at_50%_40%,color-mix(in_srgb,var(--lh-electric)_25%,transparent),transparent_60%)]" />
-            <div className="relative flex h-full flex-col justify-end gap-2">
-              <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.14em] text-[var(--lh-electric)]">
-                V5 cinematic stage
-              </p>
-              <p className="font-[family-name:var(--font-display)] text-2xl font-bold tracking-[-0.04em]">
-                Scroll story &amp; cutouts port next
-              </p>
-              <p className="text-sm text-white/55">
-                Design tokens, wordmark and sapphire CTAs match the frozen V5 system. Full pinned product story lands with
-                media assets in reference/.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      ) : null}
 
-      <section className="lh-container py-[var(--lh-section)]">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <div>
-            <p className="lh-kicker">Live catalog</p>
-            <h2 className="mt-2 font-[family-name:var(--font-display)] text-3xl font-bold tracking-[-0.04em]">
-              Fresh from Supabase
-            </h2>
-          </div>
-          <Link href="/collections/all" className="text-sm font-semibold text-[var(--lh-action)]">
-            View all →
-          </Link>
+      {catalogError ? (
+        <div className="lh-container py-12">
+          <PendingBlock title="Catalog temporarily unavailable">{catalogError}</PendingBlock>
         </div>
-
-        {catalogError ? (
-          <PendingBlock title="Catalog not connected yet">
-            {catalogError}. Apply migrations and run <code>npm run import:catalog</code>.
-          </PendingBlock>
-        ) : products.length === 0 ? (
-          <PendingBlock title="No public products yet">
-            Import the 232-product catalog (226 public) before shopping flows go live.
-          </PendingBlock>
-        ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {products.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        )}
-      </section>
+      ) : (
+        <>
+          <BrandSection brands={brands} />
+          <FeaturedSection products={featured} />
+          <BudgetSection />
+          <ChromebookSection
+            product={chromebook}
+            blurb={
+              chromebook
+                ? `The ${chromebook.title} is in the catalog. Specs that are not yet owner-verified stay blank rather than invented.`
+                : "Chromebook listings appear here when published in the catalog."
+            }
+          />
+          <CompareTeaser />
+        </>
+      )}
 
       <section className="lh-content pb-[var(--lh-section)]">
-        <PendingBlock title="Business policies & contact">
-          Shipping fees, returns, warranty, store address and WhatsApp are owner-gated. Checkout stays disabled until
-          shipping zones and COD terms are configured in admin.
+        <PendingBlock title="Policies & store contact">
+          Shipping, returns, warranty and store contact details remain pending owner approval. We will not invent
+          business claims. Configure them in admin CMS before public launch.
         </PendingBlock>
       </section>
     </>

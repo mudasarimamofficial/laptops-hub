@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cartSubtotalPaisa, useCart } from "@/lib/commerce/cart-store";
@@ -36,13 +36,11 @@ export default function CheckoutPage() {
     totalDuePaisa: number;
   } | null>(null);
 
-  const idempotencyKey = useMemo(
-    () => (typeof crypto !== "undefined" ? crypto.randomUUID() : `k-${Date.now()}`),
-    [],
-  );
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
 
   useEffect(() => {
     if (city.trim().length < 2 || province.trim().length < 2 || lines.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- clear quote when address incomplete
       setOptions([]);
       setServerQuote(null);
       return;

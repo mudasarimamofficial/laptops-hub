@@ -1,5 +1,11 @@
 # Progress log
 
+## 2026-10-23 — launch completion pass (no Production change)
+- Owner inputs consolidated: `docs/FINAL_LAUNCH_OWNER_INPUTS.md`. Matrix: `docs/LAUNCH_COMPLETION_MATRIX.md`. Handbook: `docs/STAFF_HANDBOOK.md`. Media: `docs/MEDIA_INVENTORY.md`.
+- Built: notification delivery (outbox worker, Resend adapter, after()/cron/staff retry, no duplicates), real Track order (number + phone, rate-limited), confirmation page with items/charges/status/tracking, shipping-zone edit/(de)activate, province list shared by checkout and zones, checkout consent to terms/returns/privacy and customer-grade copy, dashboard counters.
+- Fixed: admin status panel could show the old status after an update (refresh lag) → shows the server-confirmed status; checkout showed "no delivery" for an unavailable cart item → clear message.
+- Verified: launch journeys 10/10 ×2 (isolated), collection 16/16, role matrix 15/15, checkout 31/31, role HTTP 113/113; production-data regression unchanged.
+
 ## 2026-10-23 — pre-launch modes (no Production change)
 - SEO fix: pre-launch no longer blocks crawling; header and meta agree (`noindex` / `noindex, follow`); no canonical; empty sitemap; private routes disallowed. Found and fixed collection pages dropping the layout noindex (`robotsFor`).
 - Mode A notice bar; mode B restricted coming-soon page via middleware (storefront, catalog APIs and remote image optimisation blocked; admin works).

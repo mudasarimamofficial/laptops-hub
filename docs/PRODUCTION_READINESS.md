@@ -1,12 +1,12 @@
 # Production readiness
 
-Updated: 2026-10-23 (final pre-release pass, branch `fix/v5-correctness-parity`) — **NOT production-ready: gates D, E, F not passed.**
+Updated: 2026-10-23 (launch completion pass, branch `fix/v5-correctness-parity`) — **NOT production-ready: gates D, E, F not passed.**
 
 | Gate | Status | Evidence / blocker |
 |---|---|---|
 | A — Source integrity | PASS | Git history preserved (no force-push, no rewrite of pushed commits). V5 export kept local and gitignored (`Laptops Hub storefront/`). No secrets in commits. Parity screenshots that contain unapproved cutouts are kept out of git. |
 | B — Visual parity | PASS (engineering; owner acceptance pending) | Re-measured 2026-10-23: 517 captures, no regression vs the committed runs (storefront max 0.38%, content max 7.68% = documented truthful-copy/gated baseline, gated geometry identical) — `docs/V5_PIXEL_DIFF_REPORT.md`. Hero/story cutouts gated (media rights). Real-device checks not performed. |
-| C — Functional parity | PARTIAL | Storefront, cart, compare, search, CMS gates, contact (real insert verified on local Supabase), admin pages/APIs per role (local), COD checkout and collection (local) verified; e2e 39 passed / 1 skipped (inquiry submit needs a non-production DB). Not verified: admin flows with real staff on production, contact delivery to the real inbox, real devices. Checkout disabled. |
+| C — Functional parity | **PASS (engineering)** | Browser launch journeys 10/10 ×2 on an isolated stack: checkout → confirmation → track order; admin confirm/pack/dispatch/collect/cancel; notifications delivered once with retry (stand-in provider). e2e 39/1 skipped on production data. Shipping zones editable; dashboard counters. Not verified: real email provider, real devices. `docs/LAUNCH_COMPLETION_MATRIX.md` |
 | D — Data & security | **PASS (engineering, production)** | Option A and Option B applied with owner approval (2026-10-23): production privileges, schema and function bodies identical to the verified build; staff RPCs, checkout and rate-limit functions service-role only with an in-function guard; future objects not auto-exposed; COD idempotency conflict-safe; shipping-quote fix live. P0 9/9, auth matrix 24/24 on production; isolated collection 16/16, checkout 31/31, role HTTP 97/97. Remaining for go-live: owner account (none today), staff onboarding, real admin flows on production. |
 | E — Business readiness | FAIL (owner) | Media rights (catalog photos + cutouts), shipping fees/zones, policies/legal, contact facts, staff bootstrap, availability/inquiry proposal, description cleanup proposal. |
 | F — Release | BLOCKED | Production currently runs an owner redeploy of the unreviewed branch commit `34f9839` (public, indexable). Release sequence prepared: `docs/RELEASE_PLAN.md`; public-site options: `docs/PUBLIC_SITE_PLAN.md`. |

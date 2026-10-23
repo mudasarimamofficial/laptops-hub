@@ -60,3 +60,27 @@ failed on `cod_collections_idempotency_uidx` instead of replaying (money was nev
 re-checks after `FOR UPDATE` and handles `unique_violation` (same key on another order). `test-cod-concurrency.mjs`
 adds 10×8 same-key bursts and a cross-order same-key race: old function 6–8/10 (burst + cross-order fail every
 run), fixed function 10/10 on 15 consecutive runs.
+
+## Launch journeys (browser, 2026-10-23)
+
+Real UI + real routes + local Supabase + a local stand-in for the email provider (`scripts/test-fixtures/fake-resend.mjs`,
+de-duplicates by `Idempotency-Key` like Resend). Order matters: product pages are prerendered at build time, so
+**seed before building**.
+
+```bash
+node scripts/test-fixtures/fake-resend.mjs 4599 &              # stand-in email provider
+supabase db reset --local
+node scripts/test-fixtures/seed-isolated.mjs                     # 2 products, Lahore zone, staff; writes .isolated/fixture.json
+# build + start with: NEXT_DIST_DIR=.next-local COD_CHECKOUT_ENABLED=true NEXT_PUBLIC_COD_CHECKOUT_ENABLED=true
+#   RESEND_API_KEY=re_local_test STORE_FROM_EMAIL=… STORE_NOTIFY_EMAIL=owner@lh-test.local NOTIFY_CUSTOMER_EMAIL=1
+#   RESEND_API_URL=http://127.0.0.1:4599 CRON_SECRET=local-cron-secret + local Supabase URL/keys
+npx playwright test -c playwright.isolated.config.ts
+```
+
+Result: **10/10, two consecutive runs** — product → cart → checkout → confirmation (DB rows, totals, consent version);
+business alert + customer email delivered once; track order (wrong phone refused); unserved address / invalid phone /
+over-limit refused; concurrent duplicate submit → one order, one notification; editor denied orders; manager confirm →
+pack → dispatch with tracking → full COD collection (events + audit rows) and the customer page shows it; fulfillment
+cancellation; provider outage → `failed`, staff retry → `sent`, delivered once; cron requires its secret.
+Also on this build: collection 16/16 · role matrix 15/15 · checkout 31/31 · role HTTP 113/113 (incl. zone PATCH and
+notification retry). Order lookup: cross-site 403; 10 guesses per IP per 15 min, then 429.

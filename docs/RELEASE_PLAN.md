@@ -62,6 +62,20 @@ Order matters only within Option B (the CLI applies files in version order, one 
 4. Rollback: Vercel Instant Rollback to `dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH` (works with the DB before and after
    Option B).
 
+## Production environment (names only; values owner-supplied, never committed)
+
+| Variable | Purpose | Launch value |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | database | existing |
+| `COD_CHECKOUT_ENABLED`, `NEXT_PUBLIC_COD_CHECKOUT_ENABLED` | checkout switch (plus `store_settings.cod_checkout`) | `false` until go-live |
+| `SITE_PRELAUNCH` | pre-launch mode (`restricted` / `1`) | set until launch, then removed |
+| `SITE_URL` | canonical origin (only with a custom domain) | optional |
+| `RESEND_API_KEY`, `STORE_FROM_EMAIL` | email provider + verified sender | owner account |
+| `STORE_NOTIFY_EMAIL` | new-order alert recipient | owner inbox |
+| `NOTIFY_CUSTOMER_EMAIL` | `1` to email customers who give an email | owner choice |
+| `CRON_SECRET` | protects `/api/cron/notifications` (daily safety net, `vercel.json`; Hobby allows daily) | random secret |
+| `V5_CUTOUT_BASE`, `V5_CONTENT_PREVIEW` | cutouts / template preview | **unset** |
+
 ## Stage 4 — business go-live **[owner]** (blocked today)
 Requires `docs/OWNER_READINESS_REPORT.md` items: content + legal approvals, media rights, shipping zones/fees,
 staff accounts, contact inbox, COD procedure. Then, in this order: publish approved pages → configure shipping zones →

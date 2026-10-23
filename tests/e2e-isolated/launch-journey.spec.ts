@@ -193,6 +193,58 @@ test.describe.serial("launch journeys (isolated)", () => {
     await expect(page.getByTestId("order-status")).toHaveText("Cancelled");
   });
 
+  test("fulfillment: failed delivery → re-attempt → delivered → returned; shipped cannot be cancelled", async ({ page }) => {
+    await page.goto("/");
+    const res = await apiOrder(page, `iso-fulfil-${randomUUID()}`);
+    const { orderNumber: n, accessToken } = await res.json();
+    await signIn(page, "manager");
+    await page.goto(`/admin/orders/${n}`);
+    const step = async (to: string, extra?: () => Promise<void>) => {
+      await page.getByLabel("Next status").selectOption(to);
+      await extra?.();
+      await page.getByRole("button", { name: "Update status" }).click();
+      await expect(page.getByText(`Current: ${to}`)).toBeVisible();
+    };
+    await step("confirmed");
+    await step("packing");
+    await step("shipped", async () => {
+      await page.getByLabel("Carrier (optional)").fill("Test Courier");
+      await page.getByLabel("Tracking (optional)").fill("TEST-FAIL-1");
+    });
+    // Once shipped, cancellation is no longer offered, and the server refuses it.
+    await expect(page.getByLabel("Next status").locator("option", { hasText: /^cancelled$/ })).toHaveCount(0);
+    const origin = new URL(page.url()).origin;
+    const refused = await page.request.post(`/api/admin/orders/${n}/status`, { headers: { origin }, data: { toStatus: "cancelled" } });
+    expect(refused.ok()).toBeFalsy();
+    await step("delivery_failed");
+    await step("shipped"); // re-attempt
+    await step("out_for_delivery");
+    await step("delivered");
+    await step("returned");
+    const { data: o } = await sb.from("orders").select("id, status, payment_status, amount_collected_paisa").eq("order_number", n).single();
+    expect(o).toMatchObject({ status: "returned", amount_collected_paisa: 0 });
+    const { data: ev } = await sb.from("order_events").select("to_status").eq("order_id", o!.id).order("created_at");
+    expect((ev || []).map((e) => e.to_status).filter(Boolean)).toEqual([
+      "placed", "confirmed", "packing", "shipped", "delivery_failed", "shipped", "out_for_delivery", "delivered", "returned",
+    ]);
+    await page.goto(`/order/success/${accessToken}`);
+    await expect(page.getByText("Test Courier · TEST-FAIL-1")).toBeVisible();
+  });
+
+  test("fulfillment: failed delivery → returned to store", async ({ page }) => {
+    await page.goto("/");
+    const res = await apiOrder(page, `iso-return-${randomUUID()}`);
+    const { orderNumber: n } = await res.json();
+    await signIn(page, "fulfillment");
+    await page.goto(`/admin/orders/${n}`);
+    for (const to of ["confirmed", "packing", "shipped", "delivery_failed", "returned"]) {
+      await page.getByLabel("Next status").selectOption(to);
+      await page.getByRole("button", { name: "Update status" }).click();
+      await expect(page.getByText(`Current: ${to}`)).toBeVisible();
+    }
+    await expect(page.getByText("No further transitions from this status.")).toBeVisible();
+  });
+
   test("notifications: provider outage → failed, staff retry → sent once", async ({ page }) => {
     await fakeMode(true);
     await page.goto("/");

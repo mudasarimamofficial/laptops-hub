@@ -97,7 +97,9 @@ business alert + customer email delivered once; track order (wrong phone refused
 over-limit refused; concurrent duplicate submit → one order, one notification; editor denied orders; manager confirm →
 pack → dispatch with tracking → full COD collection (events + audit rows) and the customer page shows it; fulfillment
 cancellation; provider outage → `failed`, staff retry → `accepted`, delivered once; cron requires its secret.
-With the outbox lease (2026-10-23): 10/10 twice on a fresh build; one earlier run on a loaded machine timed out
+2026-10-24 (Scenario B for the launch sequence): **12/12** — adds failed delivery → re-attempt → out for delivery →
+delivered → returned (events in order, no cash recorded), shipped cannot be cancelled (option hidden, API refuses),
+and failed delivery → returned to store (terminal). With the outbox lease (2026-10-23): 10/10 twice on a fresh build; one earlier run on a loaded machine timed out
 waiting 5 s for "Fully collected." (collection recorded correctly once), not reproduced in the next two runs.
 Also on this build: collection 16/16 · role matrix 15/15 · checkout 31/31 · role HTTP 113/113 (incl. zone PATCH and
 notification retry). Order lookup: cross-site 403; 10 guesses per IP per 15 min, then 429.

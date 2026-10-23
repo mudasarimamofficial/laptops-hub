@@ -1,0 +1,29 @@
+# Retries unsent order notifications between Vercel's once-a-day cron runs (Hobby plan limit).
+# Calls the same secret-protected endpoint as vercel.json. Inactive until the repository secret CRON_SECRET exists
+# (the same value as the Vercel Production variable). A failed run (endpoint error, or any message that failed
+# again) makes GitHub email the repository owner — that is the alert. See docs/NOTIFICATIONS.md.
+name: notification-retry
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Call the notification cron endpoint
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          ENDPOINT: ${{ vars.NOTIFY_CRON_URL || 'https://laptops-hub.vercel.app/api/cron/notifications' }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then echo "CRON_SECRET not set — skipping"; exit 0; fi
+          code=$(curl -sS -o body.json -w '%{http_code}' --max-time 90 -H "Authorization: Bearer $CRON_SECRET" "$ENDPOINT")
+          echo "HTTP $code"; cat body.json; echo
+          [ "$code" = "200" ] || { echo "::error::notification endpoint returned $code"; exit 1; }
+          failed=$(node -e 'const j=require("./body.json");process.stdout.write(String(j.failed||0))')
+          [ "$failed" = "0" ] || { echo "::error::$failed notification(s) failed again — check Admin → Unsent notifications"; exit 1; }

@@ -47,11 +47,27 @@ so check the inbox before retrying an old row.
 
 Recipient status: `pending`, `accepted`, `failed`; customer also `skipped`.
 
-## Retry frequency on the Vercel Hobby plan
+## Retry schedule and monitoring (recommendation for the Hobby plan)
 
-Hobby allows one cron run per day (`vercel.json`: 06:00 UTC). The first attempt happens right after the order;
-the cron is a daily safety net. If the provider is down at order time, the alert may wait until the next cron run
-or a staff retry — the admin overview shows **Unsent notifications** and **Orders to confirm** independently of
-email. Faster automatic retries need Vercel Pro (more frequent cron) or an external scheduler calling
-`/api/cron/notifications` with `Authorization: Bearer <CRON_SECRET>` (owner decision,
-`docs/FINAL_LAUNCH_OWNER_INPUTS.md` §5).
+1. **Immediately after each order** the server sends the alert (no schedule involved). This covers almost all orders.
+2. **Every 15 minutes**: GitHub Actions workflow `.github/workflows/notification-retry.yml` calls
+   `/api/cron/notifications` with the secret. Free (the repository is public), no extra account. It stays inactive
+   until the repository secret `CRON_SECRET` is added (GitHub → Settings → Secrets and variables → Actions), with the
+   same value as the Vercel Production variable. GitHub runs scheduled workflows only from `main`, so it starts once
+   this file is merged. GitHub may delay scheduled runs by some minutes under load and pauses schedules after 60 days
+   without repository activity (re-enable in the Actions tab).
+3. **Once a day** (06:00 UTC): the Vercel cron in `vercel.json` — backup if GitHub is unavailable.
+4. **Staff**: the admin overview shows **Orders to confirm** (independent of email) and **Unsent notifications**.
+
+Alerts on failure: a workflow run fails when the endpoint errors or a message fails again; GitHub then emails the
+repository owner. Rows that stopped retrying ("automatic retries stopped") are no longer claimed and therefore no
+longer alert — they stay in **Unsent notifications** until staff act.
+
+Monitoring procedure (owner or a named staff member):
+- Opening hours: check **Orders to confirm** at least every 2 hours — orders never depend on email arriving.
+- Daily: **Unsent notifications** must be 0; for any row open the order, read the error, fix the cause (for
+  example an expired API key or unverified domain), press **Retry sending**.
+- Weekly: Resend → Emails (delivered / bounced); GitHub → Actions → notification-retry (green runs).
+
+Alternative if GitHub is not wanted: Vercel Pro (cron as often as every minute; paid) — change the schedule in
+`vercel.json` only, no code change.

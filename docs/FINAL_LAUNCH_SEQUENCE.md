@@ -1,8 +1,8 @@
 # Final launch sequence (owner-approved steps only)
 
 Prepared 2026-10-23 for release candidate `fix/v5-correctness-parity`. Every step marked **[approve]** is a separate
-owner approval; engineering performs nothing in production without it. The store is **not launched** until step 10
-is done and the owner confirms it.
+owner approval; engineering performs nothing in production without it. The store is **not launched** until § 7
+passes and the owner confirms it.
 
 Kill switches available at every step: `store_settings.cod_checkout.enabled = false` (immediate, no deploy) ·
 `COD_CHECKOUT_ENABLED=false` + redeploy · `SITE_PRELAUNCH=restricted` + redeploy · Vercel Instant Rollback.
@@ -54,62 +54,96 @@ Rollback: Instant Rollback to `dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH` (not to `dpl_Gs
 
 ## 3. Business configuration and staff access (owner, in admin)
 
-- Owner account (handbook § 1), staff accounts with the least role they need; check Admin overview → `role owner`.
-- Shipping zones with the owner's coverage and fees (Admin → Settings). The readiness panel shows active zones.
-- Policies: write approved copy, publish, legal approval (Admin → Content).
-- Media decision recorded (`docs/MEDIA_INVENTORY.md`).
+Follow `docs/FINAL_LAUNCH_OWNER_INPUTS.md` § "Owner setup — do these in order". Engineering verifies each item
+read-only and records it in the sign-off (§ 9).
 
-## 4. Email provider (owner + engineering) **[approve env change]**
+## 4. Email provider **[approve env change]**
 
-Owner creates the Resend account and verifies the domain (`docs/FINAL_LAUNCH_OWNER_INPUTS.md` § 5). Engineering sets
-`RESEND_API_KEY`, `STORE_FROM_EMAIL`, `STORE_NOTIFY_EMAIL` (and `NOTIFY_CUSTOMER_EMAIL` if approved) for Production and
-for the test Preview branch only, then redeploys. Verify with the controlled order (step 5) — no artificial
-inquiries to the production inbox.
+Owner creates the Resend account and verifies the domain (inputs § C). With the owner's approval engineering sets, for
+**Production only**: `RESEND_API_KEY` (Sensitive), `STORE_FROM_EMAIL`, `STORE_NOTIFY_EMAIL`, `NOTIFY_CUSTOMER_EMAIL`
+(if approved), `CRON_SECRET` (Sensitive), then redeploys. Checks: `/api/cron/notifications` → 401 without the secret,
+200 `{"configured":true,…}` with it (0 rows → nothing sent). The real send is verified by Scenario A.
+Keys are never written to the repository, logs or chat.
 
-## 5. Controlled COD test order — public checkout stays closed **[approve]**
+## 5. Acceptance tests — public checkout stays closed throughout
 
-Production keeps `COD_CHECKOUT_ENABLED=false`, so its checkout API refuses every order (403) and the checkout page
-stays closed. The test runs on a **protected Preview** (Vercel login required) that uses the same database:
+Two separate scenarios, because the order rules do not allow cancelling an order once it is `shipped`
+(allowed: `placed → pending_confirmation | confirmed | cancelled`, `confirmed → packing | cancelled`,
+`packing → shipped | cancelled`, `shipped → out_for_delivery | delivery_failed`, `out_for_delivery → delivered |
+delivery_failed`, `delivered → returned`, `delivery_failed → shipped | cancelled | returned`).
 
+### Scenario B — Fulfillment, on the isolated stack (no production records)
+
+Local Supabase + fake email provider (`docs/ISOLATED_TESTS.md`, launch journeys). Covers confirm → packing → shipped
+with carrier and tracking → customer page shows them; **shipped cannot be cancelled** (option hidden, server
+refuses); delivery failed → re-attempt → out for delivery → delivered → returned; delivery failed → returned to
+store; cancellation before dispatch; COD cash collection exactly once; provider outage and staff retry; cron secret.
+No shipping, delivery, return or cash is ever recorded on a real order for testing.
+
+### Scenario A — Cancellation, one owner-authorized order on production data **[approve]**
+
+Runs on a **protected Preview** (Vercel login; no share link is created for it) because Production keeps
+`COD_CHECKOUT_ENABLED=false` and refuses every order (403).
+
+**Shared-database side effects — what the approval covers.** The Preview uses the production database. Therefore:
+
+| Effect | Detail | Reversible? |
+|---|---|---|
+| Global checkout setting | `store_settings.cod_checkout.enabled` must be **on** during the test. Production stays closed because its environment switch is off (checked before the database); other Previews refuse because the Preview-wide switch is off | yes — switched off right after |
+| Real records | 1 order with the owner's own name, phone, address and email; its items, address, events, audit entries; 1 notification row | **no** — kept as a cancelled order (no hard delete); it appears in order lists and counts |
+| Order number | one production order number is used | no |
+| Email | a real store alert to `STORE_NOTIFY_EMAIL`, and a customer email to the owner's address if enabled | no (it is sent) |
+| Rate limits | one checkout counted for the owner's IP | expires by itself |
+| Stock | none (stock is not tracked) | — |
+| Cash / shipping | none recorded | — |
+
+Steps:
 1. Branch `preview/launch-test` from `main`; Preview variables **scoped to that branch only**:
-   `COD_CHECKOUT_ENABLED=true`, `NEXT_PUBLIC_COD_CHECKOUT_ENABLED=true` (+ the email variables from step 4).
-2. Turn `store_settings.cod_checkout.enabled` **on** (Admin → Settings, or one SQL update). Re-check that Production
-   still returns 403 for a checkout POST.
-3. On the Preview, the owner orders one real product with **their own** name, phone, address and email.
-4. Verify:
-   - **Order**: confirmation page, order number, items, delivery fee, COD fee and total match the zone; Admin →
-     Orders shows it as *placed*; the overview counts it under **Orders to confirm**.
-   - **Notifications**: the store inbox receives the alert; the customer email arrives if enabled; the order page
-     shows `accepted` for each recipient.
-   - **Tracking**: Track order with order number + phone shows the status; a wrong phone is refused.
-   - **Fulfillment**: confirm → packing → shipped with carrier + tracking; the customer page shows them.
-   - **Financial records**: order totals stored in the order; `cod_collections` only if cash is actually received —
-     otherwise cancel the order (step 5.5) and rely on the collection tests (16/16 isolated). Never record cash that
-     was not received.
-5. Cancel the test order (note: "launch test"). Turn `store_settings.cod_checkout.enabled` **off** again until step 6.
-6. Delete the test branch's Preview variables and the branch.
+   `COD_CHECKOUT_ENABLED=true`, `NEXT_PUBLIC_COD_CHECKOUT_ENABLED=true` and the email variables from § 4.
+2. Engineering turns the database setting on (one approved SQL update: `update public.store_settings set value =
+   jsonb_set(value, '{enabled}', 'true') where key = 'cod_checkout'`; there is no admin switch for it); immediately
+   check Production `POST /api/checkout/cod` → 403.
+3. Owner places one order on the Preview: a real product, a real zone, own details.
+4. Verify: confirmation page and totals (item + zone delivery fee + COD fee); Admin → Orders shows *placed*; overview
+   **Orders to confirm** = 1; store alert in the inbox (and customer email if enabled); order page shows
+   **Store alert: accepted**; Track order with number + phone works, a wrong phone is refused.
+5. **Cancel** it while it is still *placed* (note: "launch acceptance test"); the customer page shows *Cancelled*.
+6. Engineering turns the database setting **off** (same update with `false`); Production still 403. Delete the branch-scoped variables and the branch.
 
-## 6. Enable COD **[approve]**
+## 6. Go-live sign-off (before any checkout switch)
 
-Production: `COD_CHECKOUT_ENABLED=true`, `NEXT_PUBLIC_COD_CHECKOUT_ENABLED=true`; `store_settings.cod_checkout`
-on; redeploy (the public variable is read at build time). Check the checkout page opens and the quote matches a zone.
+| Gate | Evidence required | Status |
+|---|---|---|
+| Owner account; staff least-privilege; test manager deactivated | membership list (read-only) | ☐ |
+| Shipping zones = owner's coverage, fees, courier notes | Admin → Settings readiness panel; quote for a real city | ☐ |
+| Contact facts published (phone, WhatsApp, email, hours) | contact page | ☐ |
+| Policies published + legal approval (shipping, returns, warranty, privacy, terms) | Admin → Content | ☐ |
+| Prices confirmed; image rights stated (or products drafted) | owner statement; `product_media.approval` | ☐ |
+| Availability-confirmation workflow approved (inputs 4.1) | owner statement | ☐ |
+| Email: domain verified, Production vars set, cron 401/200 | § 4 checks | ☐ |
+| Scenario B passed on the current `main` | journeys result | ☐ |
+| Scenario A passed and the order cancelled; setting off again | order page, inbox | ☐ |
+| Monitoring owner named; retry schedule active (`docs/NOTIFICATIONS.md`) | owner statement; workflow run | ☐ |
+| Rollback ready: last good deployment id; kill switches known | this document | ☐ |
 
-## 7. Remove restricted mode **[approve]**
+## 7. Public launch **[approve]**
 
-Unset `SITE_PRELAUNCH`, redeploy.
+1. Production: `COD_CHECKOUT_ENABLED=true`, `NEXT_PUBLIC_COD_CHECKOUT_ENABLED=true`; database setting on; remove
+   `SITE_PRELAUNCH` if it was set; redeploy (the public variable is read at build time).
+2. Verify: checkout page open; quote for a served city = zone fees; unserved city refused; invalid phone refused;
+   admin still requires sign-in; P0 9/9; auth matrix 24/24.
+3. The first real customer order: alert received, order visible under **Orders to confirm**, customer page works.
+4. SEO: robots allows crawling, home `index, follow`, sitemap on the production domain (already true today unless
+   restricted mode is turned on in the meantime). Optional: submit the sitemap in Google Search Console.
+5. First day: someone watches the store inbox and **Orders to confirm** at least every 2 hours; Vercel runtime errors
+   checked at the end of the day.
 
-## 8. Restore SEO
+The store is **launched** only after step 7 passes and the owner confirms. While COD is off it is not launched.
 
-Follows from step 7: `robots.txt` allows crawling, pages lose `noindex`, the sitemap lists the production domain.
-Optional: submit the sitemap in Google Search Console (owner account).
+## 8. Kill switches and rollback
 
-## 9. Smoke tests (read-only)
-
-Customer: home, collection, product, search, cart, checkout page (no order), track order page. Admin: sign-in,
-orders list, settings readiness panel. `PLAYWRIGHT_BASE_URL=<production> npx playwright test tests/e2e` (contact
-submit is mocked). Vercel runtime errors: none.
-
-## 10. Owner confirmation → launched
-
-Only after steps 1–9 pass and the owner confirms. First day: someone watches the store inbox and **Orders to
-confirm**; incident steps in `docs/RELEASE_PLAN.md` § Incident response.
+- Stop orders immediately (no deploy): `store_settings.cod_checkout.enabled = false`.
+- Stop orders at the edge: `COD_CHECKOUT_ENABLED=false` + redeploy.
+- Hide the storefront: `SITE_PRELAUNCH=restricted` + redeploy.
+- Web regression: Vercel → Deployments → Instant Rollback to the previous good Production deployment (today
+  `dpl_FJ4mDoFeqTsMsURpVkhddnNqtXwB` is current; `dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH` has no notifications).

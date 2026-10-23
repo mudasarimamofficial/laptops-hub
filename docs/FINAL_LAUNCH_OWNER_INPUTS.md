@@ -1,9 +1,46 @@
 # Final launch — owner inputs (single list)
 
 Everything engineering needs from the owner to open real COD orders. Nothing here may be invented by engineering.
-Answer inline (or send the answers) — each item says where it goes once answered. Updated 2026-10-23.
+Answer inline (or send the answers) — each item says where it goes once answered. Updated 2026-10-24.
 
 Legend: **🔴 blocks public orders** · 🟠 needed before launch, not before testing · 🟢 can follow launch
+
+## Owner setup — do these in order (status read from production 2026-10-24)
+
+Production today: `main` `5139ff0` live · database ledger 14 · COD **off** (environment and database) · 0 orders ·
+0 shipping zones · 13 content pages *pending*, none legal-approved · 226 products active, 6 draft · 964 photos
+*pending* · email not configured · site public and indexable.
+
+Each step: **what** to supply · **why** · **where** · **how it is verified** · whether it **blocks ordering**.
+
+| # | What | Why | Where | Verified by | Blocks orders |
+|---|---|---|---|---|---|
+| 1 | **Owner account** for yourself | No owner exists; the owner approves policies and manages staff | Guide A below (Supabase invite + one SQL line with *your* UID) | You see **role owner** on `/admin`; engineering lists memberships (read-only) | 🔴 yes |
+| 2 | **Decide on the existing manager.** It is `cod-sandbox-…@lh-test.local`, created 2026-10-21 by an automated test, never signed in, password never stored | A leftover test account must not keep manager rights | Reply "deactivate the test manager" → engineering runs `update public.admin_memberships set is_active = false where user_id = (select id from auth.users where email like 'cod-sandbox-%@lh-test.local')` (or you delete the user in Supabase → Authentication) | membership shows `is_active=false`; sign-in shows "forbidden" | 🔴 yes (security) |
+| 3 | **Staff**: name, email, role for each person | Orders need named people to confirm, pack, dispatch, collect cash | Guide A step 7 | each person signs in and sees their role | 🟠 before launch |
+| 4 | **Shipping zones**: provinces/cities, delivery fee, COD fee, courier + delivery time per zone | Without an active zone no order can be placed; fees are charged exactly as entered | Admin → Settings → Add shipping zone (guide B) | readiness panel "active zones ≥ 1"; engineering checks a quote for one served and one unserved city | 🔴 yes |
+| 5 | **Contact facts**: support phone, WhatsApp, support email, hours, address or "online only" | Customers and couriers must reach you; the contact page is still a placeholder | Admin → Content → Contact (write, publish) | contact page shows them | 🔴 yes |
+| 6 | **Email**: Resend account, verified sender domain, alert inbox, customer email Y/N | New-order alerts; optional customer confirmation | Guide C; then tell engineering in chat (never paste the key in chat — add it yourself in Vercel, or approve engineering adding it) | § "Email go-live checks" below | 🟠 alert strongly recommended; orders still appear in admin without it |
+| 7 | **Cron secret** (any long random text) in Vercel Production **and** GitHub repository secret `CRON_SECRET` (same value) | Automatic retries every 15 min (GitHub) + daily (Vercel) | Vercel → Settings → Environment Variables; GitHub → repo → Settings → Secrets and variables → Actions | `/api/cron/notifications` → 401 without, 200 with the secret; GitHub Actions run green | 🟠 |
+| 8 | **Policies**: shipping, returns, warranty, privacy, terms — your facts, your lawyer's review | Customers are bound by them; COD rules and returns must be stated | Fill `docs/POLICY_DRAFTS.md` blanks → Admin → Content → write, publish, tick legal approval (owner/admin/manager) | each page public and marked approved | 🔴 yes |
+| 9 | **Prices**: confirm the 226 published prices are current (or list changes / items to hide) | Price shown = price charged | Admin → Products (edit price or set draft) | your written confirmation | 🔴 yes |
+| 10 | **Availability-confirmation workflow** (question 4.1): approve that every order is confirmed by phone before dispatch | Stock is not tracked; the website already says this to customers | Reply "approve 4.1" | — | 🔴 yes |
+| 11 | **Photo rights** for the 964 images (own / supplier permission / manufacturer / unknown) | Publishing photos without rights is a legal risk | Reply with the source per brand or for all (guide E) | engineering records `approved`/`rejected` after your written statement | 🔴 yes (or draft the affected products) |
+| 12 | **Monitoring person** and first-day plan | Someone must watch **Orders to confirm** | Reply with the name | — | 🟠 |
+
+Optional any time: Mode B (hide the storefront until launch) — one approval, `docs/PUBLIC_SITE_PLAN.md`.
+
+### Email go-live checks (engineering, after your approval of step 6)
+1. Production variables set (names only in logs): `RESEND_API_KEY`, `STORE_FROM_EMAIL`, `STORE_NOTIFY_EMAIL`,
+   `NOTIFY_CUSTOMER_EMAIL`, `CRON_SECRET`; redeploy.
+2. Cron: 401 without the secret; 200 `{"configured":true}` with it.
+3. Real send and inbox receipt: the Scenario A order (`docs/FINAL_LAUNCH_SEQUENCE.md` § 5) — alert in your inbox,
+   **Store alert: accepted** on the order page; customer email if enabled (or `skipped`).
+4. Error handling is proven on the isolated stack (outage, partial delivery, temporary/permanent 409, retry limits);
+   it is not provoked on production.
+5. Staff visibility: **Unsent notifications** on the overview, per-recipient status on the order page.
+
+# Reference: the full question list
 
 ## 1. Identity and access 🔴
 
@@ -79,18 +116,21 @@ policy pages also need legal approval in admin. Engineering will draft from your
 
 | # | Question | Default |
 |---|---|---|
-| 8.1 | Vercel Hobby runs the notification safety net **once a day**. Is that enough (staff also see unsent alerts on the admin overview), or do you want Vercel Pro / an external scheduler for retries every few minutes? | Daily + staff retry |
+| 8.1 | Retries: recommended = GitHub Actions every 15 min (free, public repo) + Vercel daily + staff retry (`docs/NOTIFICATIONS.md`). Alternative: Vercel Pro (paid). | GitHub 15 min |
 
 ## 9. Launch approvals (one at a time) 🔴
 
 Full order with checks: **`docs/FINAL_LAUNCH_SEQUENCE.md`**. In short:
 
-1. (optional, recommended) Mode B — hide the storefront until launch.
-2. Database change for notifications (`docs/MIGRATION_PRODUCTION_APPROVAL.md` § Outbox lease).
-3. Merge PR #1 then PR #2 into `main` → Production deploy.
-4. Your configuration: owner + staff accounts, zones, policies, media decision, email account.
-5. Controlled test order on a protected Preview while public checkout stays closed; cancel it.
-6. Enable COD → remove restricted mode (SEO returns) → smoke tests → your confirmation = launched.
+Done: notification database change (2026-10-23) · `main` deployed to Production (2026-10-23).
+Remaining approvals:
+
+1. (optional) Mode B — hide the storefront until launch.
+2. Deactivate the test manager (setup step 2).
+3. Email + cron variables on Production (setup steps 6–7).
+4. Scenario A: one cancellation-only test order of yours via a protected Preview (shared-database effects listed in
+   the sequence § 5); fulfillment is tested separately on the isolated stack (Scenario B).
+5. Go-live sign-off (sequence § 6) → enable COD → your confirmation = launched (sequence § 7).
 
 ---
 
@@ -141,7 +181,9 @@ Edit or switch off a zone at any time with **Edit zone**; existing orders keep t
 5. Vercel → project **laptops-hub** → Settings → Environment Variables → add for **Production**:
    `RESEND_API_KEY` (the key, "Sensitive"), `STORE_FROM_EMAIL` (e.g. `Laptops HUB <orders@your-domain>`),
    `STORE_NOTIFY_EMAIL` (your alert inbox), `NOTIFY_CUSTOMER_EMAIL` = `1` only if 5.3 is yes, and
-   `CRON_SECRET` (any long random text). Do this **after** the notification database change (§ 9.2) is applied.
+   `CRON_SECRET` (any long random text; add the same value in GitHub → repository → Settings → Secrets and
+   variables → Actions → New repository secret `CRON_SECRET`, which turns on the 15-minute retry). The notification
+   database change is already applied (2026-10-23).
 6. Real delivery test: the controlled test order (§ 9.5). You should receive the alert within a minute; the order page
    in admin shows **Store alert: accepted**. "Accepted" means Resend took the message; if it is not in your inbox,
    check spam and Resend → Emails (it shows delivered / bounced).

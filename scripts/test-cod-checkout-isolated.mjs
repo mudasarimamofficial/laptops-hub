@@ -112,6 +112,13 @@ try {
     assert("anon_rpc_denied", !!r.error, r.error?.message);
     const ins = await anon.from("orders").insert({ order_number: `X-${tag}`, idempotency_key: `x-${tag}` });
     assert("anon_order_insert_denied", !!ins.error, ins.error?.message);
+    // Shipping quote is public: served address returns the zone, unserved address is "unserviceable".
+    const q = await anon.rpc("quote_cod_shipping", { payload: { address: { city: "Lahore", province: "Punjab" } } });
+    assert("anon_quote_served_address", !q.error && q.data?.ok === true && (q.data.options || []).some((o) => o.id === zone.id), q.error?.message || JSON.stringify({ ok: q.data?.ok, n: q.data?.options?.length }));
+    const q2 = await anon.rpc("quote_cod_shipping", { payload: { address: { city: "Lahore", province: "Punjab" }, shipping_zone_id: zone.id } });
+    assert("anon_quote_with_zone_id", !q2.error && q2.data?.ok === true, q2.error?.message || q2.data?.error);
+    const q3 = await anon.rpc("quote_cod_shipping", { payload: { address: { city: "Quetta", province: "Balochistan" } } });
+    assert("anon_quote_unserved_address", !q3.error && q3.data?.ok === false && q3.data?.error === "unserviceable", q3.error?.message || q3.data?.error);
     const sel = await anon.from("orders").select("id").limit(1);
     assert("anon_orders_unreadable", !!sel.error || (sel.data || []).length === 0, sel.error?.message || `rows=${sel.data?.length}`);
     // Server-only RPCs (staff ones trust payload.actor_user_id): no execute for anon (20261023120000).
@@ -157,6 +164,19 @@ try {
     const changed = await post(body(key, { lines: [{ variantId: variant.id, quantity: 2 }] }));
     const cj = await changed.json().catch(() => ({}));
     assert("http_same_key_different_cart_409", changed.status === 409 && cj.error === "idempotency_conflict" && !cj.orderNumber && !cj.accessToken && (await ordersFor(key)).length === 1, `${changed.status} ${JSON.stringify(cj)}`);
+
+    // Anonymous customer paths that depend on the explicit grants (20261023120000).
+    const quote = await fetch(`${app}/api/checkout/quote`, { method: "POST", headers: { "content-type": "application/json", origin: app }, body: JSON.stringify({ address: { city: "Lahore", province: "Punjab" }, shippingZoneId: zone.id, lines: [{ variantId: variant.id, quantity: 1 }] }) });
+    const qj = await quote.json().catch(() => ({}));
+    assert("http_shipping_quote_anon", quote.status === 200, `status=${quote.status} ${qj.error || ""} ${qj.message || ""}`);
+    const conf = await fetch(`${app}/order/success/${js[0].accessToken}`);
+    const confHtml = await conf.text();
+    assert("http_order_confirmation_by_token", conf.status === 200 && confHtml.includes(js[0].orderNumber), `status=${conf.status}`);
+    const marker = `iso-contact-${tag}`;
+    const contact = await fetch(`${app}/api/contact`, { method: "POST", headers: { "content-type": "application/json", origin: app }, body: JSON.stringify({ name: "Isolated Test", email: "iso@lh-test.local", subject: "Local test", message: marker }) });
+    const saved = (await sb.from("contact_inquiries").select("id").eq("message", marker)).data || [];
+    assert("http_contact_insert_as_anon", contact.status === 200 && saved.length === 1, `status=${contact.status} rows=${saved.length}`);
+    if (saved.length) await sb.from("contact_inquiries").delete().in("id", saved.map((r) => r.id));
   }
 } finally {
   // Local stack only: remove fixtures and turn checkout back off.

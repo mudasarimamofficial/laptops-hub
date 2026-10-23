@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "app": "http://127.0.0.1:3001",
-  "at": "2026-10-22T21:10:48.875Z",
+  "at": "2026-10-23T09:13:10.988Z",
   "results": [
     {
       "name": "forged_price_ignored",
@@ -11,7 +11,7 @@
     {
       "name": "new_order_unpaid_cod",
       "ok": true,
-      "detail": "{\"id\":\"37479a13-fe5b-451a-ad93-f96749f7d3cc\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
+      "detail": "{\"id\":\"58430de0-ffa3-4076-b552-3d2659ddaf67\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
     },
     {
       "name": "same_key_one_order",
@@ -21,7 +21,7 @@
     {
       "name": "same_key_responses",
       "ok": true,
-      "detail": "errors=[]"
+      "detail": "errors=[\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\"]"
     },
     {
       "name": "same_key_replay_returns_duplicate",
@@ -84,6 +84,21 @@
       "detail": "new row violates row-level security policy for table \"orders\""
     },
     {
+      "name": "anon_quote_served_address",
+      "ok": true,
+      "detail": "{\"ok\":true,\"n\":1}"
+    },
+    {
+      "name": "anon_quote_with_zone_id",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "anon_quote_unserved_address",
+      "ok": true,
+      "detail": "unserviceable"
+    },
+    {
       "name": "anon_orders_unreadable",
       "ok": true,
       "detail": "rows=0"
@@ -127,6 +142,21 @@
       "name": "http_same_key_different_cart_409",
       "ok": true,
       "detail": "409 {\"error\":\"idempotency_conflict\",\"message\":\"This checkout was already submitted with a different cart. Check Track order before ordering again, or reload checkout.\"}"
+    },
+    {
+      "name": "http_shipping_quote_anon",
+      "ok": true,
+      "detail": "status=200  "
+    },
+    {
+      "name": "http_order_confirmation_by_token",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "http_contact_insert_as_anon",
+      "ok": true,
+      "detail": "status=200 rows=1"
     }
   ]
 }

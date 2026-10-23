@@ -73,3 +73,6 @@ docs/visual-evidence/parity-gated/**/*.png
 
 # Production schema backups (never commit)
 backups/
+
+# Isolated launch-journey fixtures (local test passwords)
+.isolated/

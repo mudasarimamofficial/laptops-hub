@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "base": "http://127.0.0.1:3001",
-  "at": "2026-10-23T09:13:39.148Z",
+  "at": "2026-10-23T12:50:18.026Z",
   "results": [
     {
       "name": "anon PATCH /api/admin/content/about",
@@ -25,6 +25,16 @@
     },
     {
       "name": "anon POST /api/admin/orders/LH-NONE/status",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon POST /api/admin/notifications/retry",
       "ok": true,
       "detail": "status=401"
     },
@@ -79,6 +89,16 @@
       "detail": "status=400"
     },
     {
+      "name": "owner PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "owner POST /api/admin/notifications/retry → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
       "name": "owner GET /admin/content → 200",
       "ok": true,
       "detail": "200 "
@@ -125,6 +145,16 @@
     },
     {
       "name": "admin POST /api/admin/orders/LH-NONE/status → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "admin PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "admin POST /api/admin/notifications/retry → allowed",
       "ok": true,
       "detail": "status=400"
     },
@@ -179,6 +209,16 @@
       "detail": "status=400"
     },
     {
+      "name": "manager PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "manager POST /api/admin/notifications/retry → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
       "name": "manager GET /admin/content → 200",
       "ok": true,
       "detail": "200 "
@@ -225,6 +265,16 @@
     },
     {
       "name": "editor POST /api/admin/orders/LH-NONE/status → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "editor PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "editor POST /api/admin/notifications/retry → denied",
       "ok": true,
       "detail": "status=403"
     },
@@ -279,6 +329,16 @@
       "detail": "status=400"
     },
     {
+      "name": "fulfillment PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "fulfillment POST /api/admin/notifications/retry → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
       "name": "fulfillment GET /admin/content → redirect",
       "ok": true,
       "detail": "307 /admin/forbidden"
@@ -325,6 +385,16 @@
     },
     {
       "name": "manager(inactive) POST /api/admin/orders/LH-NONE/status → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "manager(inactive) PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "manager(inactive) POST /api/admin/notifications/retry → denied",
       "ok": true,
       "detail": "status=403"
     },
@@ -379,6 +449,16 @@
       "detail": "status=403"
     },
     {
+      "name": "nonstaff PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "nonstaff POST /api/admin/notifications/retry → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
       "name": "nonstaff GET /admin/content → redirect",
       "ok": true,
       "detail": "307 /admin/forbidden"
@@ -421,7 +501,7 @@
     {
       "name": "owner can approve and publish a policy page",
       "ok": true,
-      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"a2ff2f0c-b79b-4f34-9efa-2810bc75f69c\"}"
+      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"816b5b86-c08c-4353-946b-c16def8c0c8e\"}"
     },
     {
       "name": "published policy renders CMS body",
@@ -471,12 +551,12 @@
     {
       "name": "collection recorded once via route",
       "ok": true,
-      "detail": "200 {\"ok\":true,\"idempotentReplay\":false,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"d6dafea7-1650-4c7c-a2f3-b766459076d7\"} collected=100000"
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":false,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"76b083c5-6635-4040-a561-0415b2686a1d\"} collected=100000"
     },
     {
       "name": "retry with same key replays",
       "ok": true,
-      "detail": "200 {\"ok\":true,\"idempotentReplay\":true,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"d6dafea7-1650-4c7c-a2f3-b766459076d7\"}"
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":true,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"76b083c5-6635-4040-a561-0415b2686a1d\"}"
     },
     {
       "name": "same key, different amount → 409 conflict, no constraint leak",

@@ -3,7 +3,11 @@
 Sources: read-only catalog queries on production (`supabase db query --linked`, SELECT only; the CLI provisions its
 own temporary login role for these queries), migrations in `supabase/migrations/`, and the app's call sites.
 
-## Production state (verified read-only)
+**Update 2026-10-23:** Option A applied with owner approval — anon/authenticated no longer have EXECUTE on
+`record_cod_collection`, `transition_order_status`, `consume_rate_limit` (verified; see
+`docs/MIGRATION_PRODUCTION_APPROVAL.md`). Findings 3–5 and the in-function guard are still pending (Option B).
+
+## Production state before Option A (verified read-only)
 
 Ledger: 6 migrations applied (`20261021120000`–`20261021160000`). RLS enabled on all 22 public tables; anon policies
 only allow public catalog/CMS reads and `contact_inquiries` insert.

@@ -1,5 +1,9 @@
 # Progress log
 
+## 2026-10-23 — Option A applied to production (owner-approved)
+- Applied only `20261023110000` via `supabase db query --linked -f`, recorded with `migration repair` (ledger 7). Exactly 6 privilege rows changed; anon probes now 42501; service path intact; P0 9/9, auth matrix 24/24, routes all pass. Option B not applied.
+- Found: public alias `/pages/*` 500 (old `ea652f2` jsdom crash), pre-existing; not changed.
+
 ## 2026-10-23 (later) — security & COD integrity pass (master bible, phases 0–7)
 - Phase 0: HEAD `c2f3bb9` = handoff; PR #1 draft, its head `ea652f2` is an ancestor (13 commits ahead). Production ledger read-only: 6 applied, 2 pending (now 6). RLS on all 22 tables.
 - Phase 1: confirmed (pg_proc ACLs) anon EXECUTE on `record_cod_collection`, `transition_order_status`, `consume_rate_limit` and legacy default privileges. Migrations `20261023110000` (emergency revoke), `20261023140000` (defaults), guard in `20261023150000`. Simulated on production-equivalent grants: Option A changes exactly 6 privilege rows; Option B ends identical to a fresh build; future objects closed.

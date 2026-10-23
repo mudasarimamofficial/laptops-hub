@@ -1,6 +1,6 @@
 # Resume here
 
-State (2026-10-23): **Security & COD integrity pass done on `fix/v5-correctness-parity` (stacked draft PR #2 → `feat/v5-storefront-admin`); Preview `dpl_9nGNosyhPhPckFWpXLwnRWmjDkpv` verified. Production database NOT changed — owner approval pending (`docs/MIGRATION_PRODUCTION_APPROVAL.md`).** Not merged, no Production deploy, COD off, all content pages gated.
+State (2026-10-23): **Security & COD integrity pass done on `fix/v5-correctness-parity` (stacked draft PR #2 → `feat/v5-storefront-admin`); Preview `dpl_9nGNosyhPhPckFWpXLwnRWmjDkpv` verified. Production database: only Option A applied (owner-approved emergency revoke); Option B pending (`docs/MIGRATION_PRODUCTION_APPROVAL.md`).** Not merged, no Production deploy, COD off, all content pages gated.
 
 ## Current state (2026-10-23)
 | Item | Value | Status |
@@ -8,12 +8,13 @@ State (2026-10-23): **Security & COD integrity pass done on `fix/v5-correctness-
 | Branch / HEAD | `fix/v5-correctness-parity` (latest commit: `git log -1`) | verified |
 | PR #1 | `feat/v5-storefront-admin → main`, draft, head `ea652f2` | verified |
 | PR #2 | `fix/v5-correctness-parity → feat/v5-storefront-admin`, draft, checks 2/2 | verified |
-| Supabase `xvmmjkrkgznnakcobmww` ledger | 6 applied (`…21120000`–`…21160000`); 6 pending in repo (`20261023110000`–`…160000`) | verified read-only |
-| Staff RPC exposure | anon/authenticated EXECUTE on `record_cod_collection`, `transition_order_status`, `consume_rate_limit` | **live on production** (verified read-only) |
+| Supabase `xvmmjkrkgznnakcobmww` ledger | 7 applied (`…21120000`–`…21160000` + `20261023110000`); 5 pending (`20261023120000`–`…160000`) | verified |
+| Staff RPC exposure | **closed** 2026-10-23 (Option A): anon/authenticated → 42501 on the three functions | verified |
+| Future-object default privileges | still auto-expose new tables/functions on production (fixed by pending `20261023140000`) | verified read-only |
 | RLS | enabled on all 22 public tables | verified read-only |
 | Catalog | 226 public PDPs 200 · 6 drafts 404 · 39 collections | verified (route check) |
 | Preview | `dpl_9nGNosyhPhPckFWpXLwnRWmjDkpv` (https://laptops-kg7kii4d0-mudasarimamofficial-gmailcoms-projects.vercel.app, SSO) | verified |
-| Production alias `laptops-hub.vercel.app` | public 200, old `ea652f2` redeploy, COD 403 | verified; owner decision |
+| Production alias `laptops-hub.vercel.app` | public 200, old `ea652f2` redeploy, COD 403, **`/pages/*` 500** (old jsdom crash) | verified; owner decision |
 | Vercel env | `V5_CUTOUT_BASE`, `V5_CONTENT_PREVIEW` not defined; COD flags encrypted, Preview COD → 403 | verified |
 | Content | 13 `content_pages` rows `pending` | reported (2026-10-22) |
 
@@ -46,7 +47,7 @@ State (2026-10-23): **Security & COD integrity pass done on `fix/v5-correctness-
 Local Supabase only (`docs/ISOLATED_TESTS.md`): role matrix 15/15 · COD collection matrix 16/16 (×8) · checkout isolated 25/25 · staff role HTTP 97/97 · production-path grant simulation identical to a fresh build.
 
 ## Safest next step
-1. **Owner: decide `docs/MIGRATION_PRODUCTION_APPROVAL.md`** — Option A (emergency revoke of the three exposed functions, 6 privilege rows) now; Option B (all six pending migrations) with or after deploying this branch. Do this before approving any legal page.
+1. **Owner: decide Option B** in `docs/MIGRATION_PRODUCTION_APPROVAL.md` (the five remaining migrations; `supabase db push` now applies exactly those), with or after deploying this branch. Option A is done.
 2. Review PR #1, then PR #2.
 3. Owner decisions below.
 

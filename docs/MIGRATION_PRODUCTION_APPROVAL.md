@@ -1,6 +1,6 @@
 # Production database change — owner approval request
 
-**Status: NOT APPLIED. Nothing in this document has been run against production.** Prepared 2026-10-23.
+**Status: Option A APPLIED 2026-10-23 (owner-approved; see Outcome). Option B NOT applied.** Prepared 2026-10-23.
 
 | | |
 |---|---|
@@ -8,7 +8,26 @@
 | Applied ledger (read 2026-10-23) | `20261021120000` … `20261021160000` (6 migrations) |
 | Pending in repo (`fix/v5-correctness-parity`) | `20261023110000`, `20261023120000`, `20261023130000`, `20261023140000`, `20261023150000`, `20261023160000` |
 
-## 1. Confirmed vulnerability (severity: high, exploitable precondition not yet met)
+## Outcome — Option A APPLIED (2026-10-23, owner-approved)
+
+Approved by the owner in session: "apply only 20261023110000_emergency_revoke_staff_rpc_execute.sql, record it with
+migration repair, and run the read-only post-checks. Nothing else."
+
+| Step | Result |
+|---|---|
+| Preflight | ledger = the 6 versions above; ACL matched section 1 (anon/authenticated EXECUTE on the three functions) |
+| Apply | `supabase db query --linked -f supabase/migrations/20261023110000_emergency_revoke_staff_rpc_execute.sql` (committed file, unchanged) — no error |
+| Record | `supabase migration repair --status applied 20261023110000 --linked` → ledger now 7 versions |
+| ACL after | exactly 6 privilege rows changed: anon/authenticated EXECUTE = false on `record_cod_collection`, `transition_order_status`, `consume_rate_limit`; `service_role` = true; every other function unchanged |
+| Anon probes | all three → `42501 permission denied` (before: callable); `create_cod_order` 42501 as before; `quote_cod_shipping` still public |
+| Server path | service role reaches `consume_rate_limit` (limit 0 → false, no write) and `record_cod_collection` (→ `validation_failed`, no write) |
+| Suites (production, read-only) | P0 9/9 · auth matrix 24/24 · routes 226/226 PDPs, 6/6 drafts 404, 39/39 collections, 9/9 pages |
+| Production alias smoke | `/`, PDP, `/collections/laptops` 200 · COD 403. `/pages/*` → 500: **pre-existing**, the old `ea652f2` build's jsdom `ERR_REQUIRE_ESM` crash (fixed on this branch in `568ce08`), not related to this change |
+
+Still pending in repo (not applied): `20261023120000`, `20261023130000`, `20261023140000`, `20261023150000`,
+`20261023160000` (Option B). `supabase db push` would now apply exactly these five.
+
+## 1. Confirmed vulnerability (state before Option A) (severity: high, exploitable precondition not yet met)
 
 Read-only `pg_proc` ACL inspection on production shows `anon` and `authenticated` hold EXECUTE on:
 

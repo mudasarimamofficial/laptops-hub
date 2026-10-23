@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "crypto";
 import { NextResponse } from "next/server";
-import { processOutbox } from "@/lib/notify/outbox";
+import { processOutbox, RETRIES_STOPPED } from "@/lib/notify/outbox";
+import { createServiceClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,5 +16,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   const result = await processOutbox({ limit: 25 });
-  return NextResponse.json(result, { headers: { "Cache-Control": "no-store" } });
+  // Rows that no automatic retry will touch again: they need a staff decision (order page → Retry sending).
+  const { count, error } = await createServiceClient()
+    .from("notification_outbox")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "failed")
+    .like("last_error", `%${RETRIES_STOPPED}`);
+  if (error) throw new Error(`needs-attention count failed: ${error.message}`);
+  return NextResponse.json({ ...result, needsAttention: count ?? 0 }, { headers: { "Cache-Control": "no-store" } });
 }

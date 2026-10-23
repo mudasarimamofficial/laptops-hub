@@ -61,6 +61,18 @@ re-checks after `FOR UPDATE` and handles `unique_violation` (same key on another
 adds 10×8 same-key bursts and a cross-order same-key race: old function 6–8/10 (burst + cross-order fail every
 run), fixed function 10/10 on 15 consecutive runs.
 
+## Production write guard (2026-10-24)
+
+Every suite that writes fixtures calls `scripts/lib/local-only.mjs` first and exits 2, with no override, unless the
+URL is loopback, no key carries a hosted project ref, and the endpoint does not answer with the hosted gateway's
+`sb-project-ref` header. `ALLOW_REMOTE_FIXTURES` no longer exists; the writer suites do not read `.env.local`.
+`import-catalog.mjs` writes to a hosted project only with `--confirm-production=<ref>`.
+Verified without production writes: the 8 writing commands refuse with the real production environment (also with
+`ALLOW_REMOTE_FIXTURES=1`), production counts unchanged; a fake local endpoint answering as the production project
+and an unreachable endpoint are refused; the local stack passes. Read-only production suites (P0 probe, auth
+matrix, pagination, `tests/e2e`) are unchanged; the P0 probe's one write attempt (anon membership insert) uses a
+non-existent user id, so it cannot persist even if access rules regressed.
+
 ## Notification outbox reliability (2026-10-23, 14 migrations)
 
 `docker exec -i <db container> psql -U postgres -d postgres -v ON_ERROR_STOP=1 < tests/isolated/claim-notifications-guard.sql`

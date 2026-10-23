@@ -3,23 +3,13 @@
 For the owner and staff of Laptops HUB. Admin: `https://laptops-hub.vercel.app/admin` (sign in with your staff
 email). Roles: `docs/ADMIN_ROLE_MATRIX.md`.
 
-## 1. Owner bootstrap (one time, done by the owner)
+## 1. Owner bootstrap and staff accounts
 
-1. Supabase dashboard → project `xvmmjkrkgznnakcobmww` → Authentication → Users → **Invite user** with the owner's
-   email. The owner accepts the email and sets a password.
-2. SQL editor (copy the user id from the Users list):
-   ```sql
-   insert into public.admin_memberships (user_id, role, is_active)
-   values ('<owner user id>', 'owner', true)
-   on conflict (user_id) do update set role = 'owner', is_active = true;
-   ```
-   Only with **your own** user id — run for another id, it makes that person owner. Afterwards list
-   `admin_memberships` and check that nobody else is `owner`/`admin` unintentionally.
-3. Sign in at `/admin/login`; the overview shows `role owner`.
-
-Staff: same steps with role `admin`, `manager`, `editor` or `fulfillment`. Remove access:
+Follow `docs/FINAL_LAUNCH_OWNER_INPUTS.md` § A: **Create new user** (with Auto Confirm) in Supabase → Authentication,
+then `supabase/owner/bootstrap_owner.sql` with that email (role `owner`, or the staff role). Do not use "Invite user"
+or password-recovery emails — the website has no page to complete them. Remove access:
 `update public.admin_memberships set is_active = false where user_id = '<id>';` (sign-in then shows "forbidden").
-Never share accounts; there is no public sign-up.
+Never share accounts.
 
 ## 2. Before taking orders (owner/manager)
 

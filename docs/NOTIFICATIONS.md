@@ -59,9 +59,11 @@ Recipient status: `pending`, `accepted`, `failed`; customer also `skipped`.
 3. **Once a day** (06:00 UTC): the Vercel cron in `vercel.json` — backup if GitHub is unavailable.
 4. **Staff**: the admin overview shows **Orders to confirm** (independent of email) and **Unsent notifications**.
 
-Alerts on failure: a workflow run fails when the endpoint errors or a message fails again; GitHub then emails the
-repository owner. Rows that stopped retrying ("automatic retries stopped") are no longer claimed and therefore no
-longer alert — they stay in **Unsent notifications** until staff act.
+Alerts: a workflow run fails — and GitHub emails the person who last changed the workflow schedule (the owner,
+after merging) — when the endpoint does not answer 200, email is not configured on Production, a message failed again
+on this run, or (once an hour) messages whose automatic retries stopped are waiting for staff (`needsAttention` in the
+cron response). The log contains only counts; the secret is masked and never printed. Add the GitHub secret only
+after the Resend variables are live, otherwise every run reports "email is not configured".
 
 Monitoring procedure (owner or a named staff member):
 - Opening hours: check **Orders to confirm** at least every 2 hours — orders never depend on email arriving.

@@ -1,7 +1,12 @@
-# Retries unsent order notifications between Vercel's once-a-day cron runs (Hobby plan limit).
-# Calls the same secret-protected endpoint as vercel.json. Inactive until the repository secret CRON_SECRET exists
-# (the same value as the Vercel Production variable). A failed run (endpoint error, or any message that failed
-# again) makes GitHub email the repository owner — that is the alert. See docs/NOTIFICATIONS.md.
+# Retries unsent order notifications between Vercel's once-a-day cron runs (Hobby plan limit), and alerts when a
+# message needs staff action. Calls the same secret-protected endpoint as vercel.json. See docs/NOTIFICATIONS.md.
+#
+# Inactive until the repository secret CRON_SECRET exists (same value as the Vercel Production variable).
+# A failed run makes GitHub email the person who last changed this schedule — that is the alert:
+#   - the endpoint did not answer 200 (wrong secret, deployment error, database error);
+#   - a message failed again on this run;
+#   - once an hour: messages whose automatic retries stopped are waiting for staff (order page → Retry sending).
+# The log shows only counts; the secret is never printed (GitHub also masks it).
 name: notification-retry
 
 on:
@@ -10,6 +15,10 @@ on:
   workflow_dispatch:
 
 permissions: {}
+
+concurrency:
+  group: notification-retry
+  cancel-in-progress: false
 
 jobs:
   retry:
@@ -21,9 +30,17 @@ jobs:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
           ENDPOINT: ${{ vars.NOTIFY_CRON_URL || 'https://laptops-hub.vercel.app/api/cron/notifications' }}
         run: |
-          if [ -z "$CRON_SECRET" ]; then echo "CRON_SECRET not set — skipping"; exit 0; fi
-          code=$(curl -sS -o body.json -w '%{http_code}' --max-time 90 -H "Authorization: Bearer $CRON_SECRET" "$ENDPOINT")
-          echo "HTTP $code"; cat body.json; echo
-          [ "$code" = "200" ] || { echo "::error::notification endpoint returned $code"; exit 1; }
-          failed=$(node -e 'const j=require("./body.json");process.stdout.write(String(j.failed||0))')
-          [ "$failed" = "0" ] || { echo "::error::$failed notification(s) failed again — check Admin → Unsent notifications"; exit 1; }
+          if [ -z "$CRON_SECRET" ]; then echo "CRON_SECRET is not set — skipping (schedule inactive)."; exit 0; fi
+          code=$(curl -sS -o body.json -w '%{http_code}' --max-time 90 -H "Authorization: Bearer $CRON_SECRET" "$ENDPOINT") || true
+          code=${code:-000}
+          echo "HTTP $code"
+          [ "$code" = "200" ] || { echo "::error::notification endpoint returned HTTP $code"; exit 1; }
+          read -r configured processed accepted failed attention < <(node -e '
+            const j = require("./body.json");
+            console.log([j.configured, j.processed ?? 0, j.accepted ?? 0, j.failed ?? 0, j.needsAttention ?? 0].join(" "));')
+          echo "configured=$configured processed=$processed accepted=$accepted failed=$failed needsAttention=$attention"
+          [ "$configured" = "true" ] || { echo "::error::email is not configured on Production (RESEND_API_KEY / STORE_FROM_EMAIL / STORE_NOTIFY_EMAIL)"; exit 1; }
+          [ "$failed" = "0" ] || { echo "::error::$failed notification(s) failed again — Admin → Unsent notifications"; exit 1; }
+          if [ "$attention" != "0" ] && [ "$(date -u +%M)" -lt 15 ]; then
+            echo "::error::$attention notification(s) need staff action (automatic retries stopped) — open the order, fix the cause, press Retry sending"; exit 1
+          fi

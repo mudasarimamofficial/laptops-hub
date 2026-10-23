@@ -5,23 +5,25 @@ Answer inline (or send the answers) — each item says where it goes once answer
 
 Legend: **🔴 blocks public orders** · 🟠 needed before launch, not before testing · 🟢 can follow launch
 
-## Owner setup — do these in order (status read from production 2026-10-24)
+## Owner setup — do these in order (status read from production 2026-10-24, updated after each step)
 
 Production today: `main` `5139ff0` live · database ledger 14 · COD **off** (environment and database) · 0 orders ·
 0 shipping zones · 13 content pages *pending*, none legal-approved · 226 products active, 6 draft · 964 photos
-*pending* · email not configured · site public and indexable.
+*pending* · email not configured · site public and indexable · **0 active staff** (test manager deactivated) ·
+Supabase public sign-up **enabled** (switch off, guide A) · test suites can no longer write to production
+(fail-closed guard, `docs/ISOLATED_TESTS.md`).
 
 Each step: **what** to supply · **why** · **where** · **how it is verified** · whether it **blocks ordering**.
 
 | # | What | Why | Where | Verified by | Blocks orders |
 |---|---|---|---|---|---|
-| 1 | **Owner account** for yourself | No owner exists; the owner approves policies and manages staff | Guide A below (Supabase invite + one SQL line with *your* UID) | You see **role owner** on `/admin`; engineering lists memberships (read-only) | 🔴 yes |
+| 1 | ⏳ **Owner account** for yourself — and switch off public sign-up | No owner exists (0 active staff); the owner approves policies and manages staff | Guide A below ("Create new user" + `supabase/owner/bootstrap_owner.sql`; Auth settings table) | You see **role owner** on `/admin`; engineering lists memberships (read-only) | 🔴 yes |
 | 2 | ✅ **Done 2026-10-24 (owner-approved): test manager deactivated** — 1 row updated; memberships now 0 active / 1 total; the auth user itself remains (delete it in Supabase → Authentication if wanted). Was: It is `cod-sandbox-…@lh-test.local`, created 2026-10-21 by an automated test, never signed in, password never stored | A leftover test account must not keep manager rights | Reply "deactivate the test manager" → engineering runs `update public.admin_memberships set is_active = false where user_id = (select id from auth.users where email like 'cod-sandbox-%@lh-test.local')` (or you delete the user in Supabase → Authentication) | membership shows `is_active=false`; sign-in shows "forbidden" | 🔴 yes (security) |
 | 3 | **Staff**: name, email, role for each person | Orders need named people to confirm, pack, dispatch, collect cash | Guide A step 7 | each person signs in and sees their role | 🟠 before launch |
 | 4 | **Shipping zones**: provinces/cities, delivery fee, COD fee, courier + delivery time per zone | Without an active zone no order can be placed; fees are charged exactly as entered | Admin → Settings → Add shipping zone (guide B) | readiness panel "active zones ≥ 1"; engineering checks a quote for one served and one unserved city | 🔴 yes |
 | 5 | **Contact facts**: support phone, WhatsApp, support email, hours, address or "online only" | Customers and couriers must reach you; the contact page is still a placeholder | Admin → Content → Contact (write, publish) | contact page shows them | 🔴 yes |
 | 6 | **Email**: Resend account, verified sender domain, alert inbox, customer email Y/N | New-order alerts; optional customer confirmation | Guide C; then tell engineering in chat (never paste the key in chat — add it yourself in Vercel, or approve engineering adding it) | § "Email go-live checks" below | 🟠 alert strongly recommended; orders still appear in admin without it |
-| 7 | **Cron secret** (any long random text) in Vercel Production **and** GitHub repository secret `CRON_SECRET` (same value) | Automatic retries every 15 min (GitHub) + daily (Vercel) | Vercel → Settings → Environment Variables; GitHub → repo → Settings → Secrets and variables → Actions | `/api/cron/notifications` → 401 without, 200 with the secret; GitHub Actions run green | 🟠 |
+| 7 | ⏳ **Cron secret** (any long random text) in Vercel Production **and**, last, GitHub repository secret `CRON_SECRET` (same value). Prepared: PR #3 (retry workflow + `needsAttention`) — merge needs your approval; **not active** until merged, secret set and a run succeeds | Automatic retries every 15 min (GitHub) + daily (Vercel); alerts by GitHub email | Vercel → Settings → Environment Variables; GitHub → repo → Settings → Secrets and variables → Actions | `/api/cron/notifications` → 401 without, 200 with the secret; GitHub Actions run green | 🟠 |
 | 8 | **Policies**: shipping, returns, warranty, privacy, terms — your facts, your lawyer's review | Customers are bound by them; COD rules and returns must be stated | Fill `docs/POLICY_DRAFTS.md` blanks → Admin → Content → write, publish, tick legal approval (owner/admin/manager) | each page public and marked approved | 🔴 yes |
 | 9 | **Prices**: confirm the 226 published prices are current (or list changes / items to hide) | Price shown = price charged | Admin → Products (edit price or set draft) | your written confirmation | 🔴 yes |
 | 10 | **Availability-confirmation workflow** (question 4.1): approve that every order is confirmed by phone before dispatch | Stock is not tracked; the website already says this to customers | Reply "approve 4.1" | — | 🔴 yes |
@@ -138,22 +140,44 @@ Remaining approvals:
 
 ## A. Create the owner account (you do this yourself — engineering never grants itself owner)
 
-1. Sign in to supabase.com with the account that owns project **Laptops Hub**.
-2. Authentication → Users → **Invite user** → your email. Open the invitation email, set a password.
-3. In Users, click your new user and copy its **User UID**.
-4. SQL Editor → New query → paste, replace the UID, Run:
-   ```sql
-   insert into public.admin_memberships (user_id, role, is_active)
-   values ('PASTE-YOUR-UID', 'owner', true)
-   on conflict (user_id) do update set role = 'owner', is_active = true;
-   ```
-   Use **your own** UID only. Running this for someone else's UID would make them owner.
-5. Check: `select u.email, m.role, m.is_active from public.admin_memberships m join auth.users u on u.id = m.user_id;`
-   — you are `owner`; nobody else is `owner` or `admin` unless you intended it.
-6. Go to `https://laptops-hub.vercel.app/admin/login`, sign in; the overview shows **role owner**.
-7. Staff: same steps 2–4 with their email and the smallest role they need (`fulfillment` for packing/dispatch,
-   `manager` for orders + settings, `editor` for content only). Tell engineering who the existing manager account is
-   (question 1.2) so it can be kept or deactivated.
+The website signs staff in with **email + password only** (`/admin/login`). It has no page for accepting an
+invitation email or resetting a password, so do **not** use "Invite user" or "Send password recovery" — those links
+cannot be completed. Create the user directly instead:
+
+1. Sign in to supabase.com with the account that owns project **Laptops Hub** (`xvmmjkrkgznnakcobmww`).
+2. Authentication → Users → **Add user → Create new user**: your email, a strong password (password manager),
+   tick **Auto Confirm User**, Create.
+3. SQL Editor → New query → paste `supabase/owner/bootstrap_owner.sql`, replace only `OWNER-EMAIL@EXAMPLE.COM` with
+   your email, Run. It refuses unless exactly one confirmed user has that email and changes no other account. The
+   message shows how many *other* owner/admin accounts exist (expected: 0).
+   (Or reply in chat "make <email> the owner" and engineering runs the same file, after checking the user exists.)
+4. Check (read-only): `select u.email, m.role, m.is_active from public.admin_memberships m join auth.users u on
+   u.id = m.user_id;` — you are `owner`; the test account is `false`; nobody else unless intended.
+5. Open `https://laptops-hub.vercel.app/admin/login`, sign in → the overview shows **role owner**. Sign out and in
+   once more to confirm. Sessions refresh automatically; a deactivated membership is refused at the next request.
+6. Staff: steps 2–3 per person with the smallest role (`fulfillment` packing/dispatch, `manager` orders + settings,
+   `editor` content only) — for staff, change `'owner'` in the SQL to their role. Give them their password in
+   person or by phone, never by email.
+7. Forgotten password (until a reset page exists): the owner deletes that user in Authentication → Users and creates
+   it again (step 2), then re-runs step 3/6 for the role. Only the membership row is linked to the user; orders,
+   events and audit history are kept.
+
+### Recommended Supabase Auth settings (Dashboard → Authentication)
+
+Read 2026-10-24 (public settings endpoint): email provider only · **public sign-up enabled** · email confirmation
+required · no SAML. A self-registered user gets no staff access (every staff table and route requires an active
+membership) and sees only public catalog data, but open sign-up invites spam accounts and abuse of the project's
+email sending.
+
+| Setting | Where | Set to |
+|---|---|---|
+| Allow new users to sign up | Sign In / Providers → (general user signups) | **Off** — "Create new user" in the dashboard keeps working |
+| Email provider | Sign In / Providers → Email | On; Confirm email on |
+| Site URL | URL Configuration | `https://laptops-hub.vercel.app` (your custom domain later) |
+| Redirect URLs | URL Configuration | `https://laptops-hub.vercel.app/**` only — no `localhost`, no Preview wildcards |
+| Other providers (phone, OAuth) | Sign In / Providers | Off |
+
+The Site URL / redirect list cannot be read without dashboard access — please check them when you are signed in.
 
 ## B. Shipping zones (Admin → Settings → Add shipping zone)
 

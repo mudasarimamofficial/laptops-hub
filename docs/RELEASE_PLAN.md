@@ -60,7 +60,7 @@ Order matters only within Option B (the CLI applies files in version order, one 
    robots, COD POST → 403, `/admin` → login, content gated, console sweep, `PLAYWRIGHT_BASE_URL=<prod> npx playwright
    test tests/e2e` (read-only; contact submit is mocked).
 4. Rollback: Vercel Instant Rollback to `dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH` (works with the DB before and after
-   Option B, and after `20261024100000` while email is not configured — `docs/FINAL_LAUNCH_SEQUENCE.md` § 2).
+   Option B, and after `20261024100000` (that build has no notification code) — `docs/FINAL_LAUNCH_SEQUENCE.md` § 2).
 
 ## Production environment (names only; values owner-supplied, never committed)
 

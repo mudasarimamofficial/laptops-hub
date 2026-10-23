@@ -27,6 +27,8 @@ journeys "notifications" in `tests/e2e-isolated/launch-journey.spec.ts`.
 | Independent recipients | partial delivery keeps the accepted recipient; only the failed one is retried |
 | Accepted ≠ delivered | status `accepted` means the provider accepted the message. The admin page says "delivery to the inbox is not confirmed". Inbox delivery/bounce tracking would need provider webhooks (not built) |
 | Bounded, visible failures | backoff 1 min → 5 min → 30 min → 2 h → 6 h; max 5 automatic attempts; failed rows stay listed and counted ("Unsent notifications") |
+| Permanent vs temporary errors | 409 `concurrent_idempotent_requests` / `resource_locked`, 429, 5xx and network errors back off and retry. 409 `invalid_idempotent_request` (same key, different body) and other 4xx stop automatic retries at once ("automatic retries stopped"); staff retry after fixing the cause |
+| Who may claim | `claim_notifications()` is SECURITY INVOKER, empty `search_path`, EXECUTE for service_role only, and refuses any request whose JWT role claim is not `service_role` (a missing claim included) |
 | Timeouts | `NOTIFY_TIMEOUT_MS` (default 15 s). A timed-out send that the provider still accepted is not duplicated on retry (same key). A second request while the first is still in progress gets 409 from the provider and is retried later |
 | Not configured | without `RESEND_API_KEY`, `STORE_FROM_EMAIL` and `STORE_NOTIFY_EMAIL` nothing is claimed and nothing is reported as sent; rows stay `pending` |
 

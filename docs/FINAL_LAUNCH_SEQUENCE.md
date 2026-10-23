@@ -16,7 +16,7 @@ storefront until launch (`docs/PUBLIC_SITE_PLAN.md`).
 ## 1. Database: outbox lease migration **[approve]**
 
 `docs/MIGRATION_PRODUCTION_APPROVAL.md` § Outbox lease. Must be applied **before** step 2 (the new code calls
-`claim_notifications`). Safe for the code running today while email is not configured.
+`claim_notifications`). Safe for the code running today (`34f9839` has no notification code).
 
 ## 2. Deploy the verified code to Production **[approve]**
 
@@ -29,9 +29,9 @@ storefront until launch (`docs/PUBLIC_SITE_PLAN.md`).
 4. Read-only checks: the commit SHA of the deployment equals `main` · `/`, a product, a collection 200 (or coming-soon
    in Mode B) · `/api/checkout/cod` POST → 403 · `/admin` → login · `robots.txt`/sitemap host = the production
    domain · Vercel runtime errors: none.
-5. Rollback: Instant Rollback to the previous deployment (`dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH`). It works with the
-   migrated database while email is not configured; after email is configured, roll forward instead (old code cannot
-   record the new notification statuses — orders still work, alerts would not be recorded).
+5. Rollback: Instant Rollback to the previous deployment (`dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH`) works with the
+   migrated database. That build has no order notifications at all, so after a rollback staff must watch
+   **Orders to confirm** in admin; prefer rolling forward once email is live.
 
 ## 3. Business configuration and staff access (owner, in admin)
 

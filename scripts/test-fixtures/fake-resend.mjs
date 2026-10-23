@@ -1,7 +1,8 @@
 /**
  * Local stand-in for the Resend email API (POST /emails), for isolated tests only. Mirrors the behaviour the app
- * relies on: Bearer auth, Idempotency-Key de-duplication (same key → same id, delivered once; a second request with
- * a key still in flight → 409, as Resend does), and switchable failure modes.
+ * relies on: Bearer auth, Idempotency-Key de-duplication (same key + same body → same id, delivered once; same key
+ * with a different body → 409 invalid_idempotent_request; a key still in flight → 409 concurrent_idempotent_requests,
+ * as Resend documents), and switchable failure modes.
  *
  * Control: GET /_log, POST /_reset, POST /_mode {"fail": bool, "failTo": "addr"|null, "delayMs": n}
  *   fail     every send returns 500
@@ -14,7 +15,7 @@ import http from "http";
 
 const port = Number(process.argv[2] || 4599);
 let mode = { fail: false, failTo: null, delayMs: 0 };
-const byKey = new Map();
+const byKey = new Map(); // key → { id, body }
 const inFlight = new Set();
 const delivered = [];
 let n = 0;
@@ -48,12 +49,17 @@ http
           return send(res, 500, { name: "internal_server_error", message: "Simulated provider outage" });
         }
         const key = req.headers["idempotency-key"];
-        if (key && byKey.has(key)) return send(res, 200, { id: byKey.get(key) });
+        const sig = JSON.stringify({ from: body.from, to: body.to, subject: body.subject, text: body.text });
+        if (key && byKey.has(key)) {
+          const prev = byKey.get(key);
+          if (prev.body !== sig) return send(res, 409, { name: "invalid_idempotent_request", message: "Same key, different payload" });
+          return send(res, 200, { id: prev.id });
+        }
         if (key && inFlight.has(key)) return send(res, 409, { name: "concurrent_idempotent_requests", message: "Same key in progress" });
         if (key) inFlight.add(key);
         if (mode.delayMs) await new Promise((r) => setTimeout(r, mode.delayMs));
         const id = `fake_${delivered.length + 1}`;
-        if (key) { byKey.set(key, id); inFlight.delete(key); }
+        if (key) { byKey.set(key, { id, body: sig }); inFlight.delete(key); }
         delivered.push({ id, key: key || null, from: body.from, to: body.to, subject: body.subject, text: body.text });
         return send(res, 200, { id });
       }

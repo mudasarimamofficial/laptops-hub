@@ -63,7 +63,9 @@ run), fixed function 10/10 on 15 consecutive runs.
 
 ## Notification outbox reliability (2026-10-23, 14 migrations)
 
-`npx tsx tests/isolated/outbox-reliability.test.ts` (after `seed-isolated.mjs`, with fake-resend running and the
+`docker exec -i <db container> psql -U postgres -d postgres -v ON_ERROR_STOP=1 < tests/isolated/claim-notifications-guard.sql`
+(6/6: missing claim, authenticated, re-granted anon, forged claim under invoker rights, service role, attributes) and
+`npx tsx tests/isolated/outbox-reliability.test.ts` — now **13/13** incl. temporary vs permanent 409 and API refusal (after `seed-isolated.mjs`, with fake-resend running and the
 isolated env; refuses non-local URLs). **11/11**: 6 concurrent workers → one claim, each recipient delivered once ·
 live lease on an old row respected, expired lease on a new row recovered · stalled worker overtaken, its late write
 refused (`lost`), one delivery · crash after provider acceptance → retry with the same key, one delivery ·

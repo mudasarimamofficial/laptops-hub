@@ -13,7 +13,8 @@ import { businessOrderAlert, customerOrderConfirmation, type NotifyOrder } from 
  *   sent again. Each send carries the provider idempotency key `outbox-<id>-<recipient>` (Resend keeps keys for
  *   24 h; automatic retries stop after RETRY_WINDOW_HOURS so they stay inside that window).
  * - `accepted` means the provider accepted the message — not confirmed delivery to the inbox.
- * - Failures back off (BACKOFF_MIN) and stop after MAX_ATTEMPTS; staff can retry manually from the order page.
+ * - Temporary failures back off (BACKOFF_MIN) and stop after MAX_ATTEMPTS. A permanent provider error (e.g. 409
+ *   invalid_idempotent_request, 4xx validation) stops automatic retries at once. Staff can retry from the order page.
  * - Without provider settings nothing is claimed and nothing is reported as sent.
  */
 export const MAX_ATTEMPTS = 5;
@@ -92,6 +93,8 @@ async function leased(row: OutboxRow, patch: Record<string, unknown>): Promise<b
   return !!data?.length;
 }
 
+export const RETRIES_STOPPED = "automatic retries stopped";
+
 const backoff = (attempts: number) =>
   new Date(Date.now() + BACKOFF_MIN[Math.min(attempts, BACKOFF_MIN.length) - 1] * 60_000).toISOString();
 
@@ -111,10 +114,14 @@ async function deliverRow(row: OutboxRow, deps: OutboxDeps): Promise<"accepted" 
   if (!to) return fail("STORE_NOTIFY_EMAIL not set");
   const base = siteUrl();
 
+  let lastError: string | null = null;
+  let permanent = false;
   const attempt = async (recipient: Recipient, address: string, msg: { subject: string; text: string }): Promise<"ok" | "failed" | "lost"> => {
     const r: SendResult = await send({ to: address, ...msg, idempotencyKey: `outbox-${row.id}-${recipient}` });
     if (!r.ok) {
-      if (!(await leased(row, { [`${recipient}_status`]: "failed", last_error: safeError(`${recipient}: ${r.error}`) }))) return "lost";
+      lastError = safeError(`${recipient}: ${r.error}`);
+      if (!r.retryable) permanent = true;
+      if (!(await leased(row, { [`${recipient}_status`]: "failed", last_error: lastError }))) return "lost";
       return "failed";
     }
     // A crash between provider acceptance and this write leaves the recipient pending; the retry reuses the same
@@ -148,7 +155,13 @@ async function deliverRow(row: OutboxRow, deps: OutboxDeps): Promise<"accepted" 
   }
 
   if (failure || !customerDone) {
-    const ok = await leased(row, { status: "failed", claim_token: null, next_attempt_at: backoff(row.attempts) });
+    const ok = await leased(
+      row,
+      permanent
+        ? // No automatic retry can succeed; keep it visible for a staff decision.
+          { status: "failed", claim_token: null, next_attempt_at: "infinity", last_error: `${lastError ?? failure} · ${RETRIES_STOPPED}`.slice(0, 500) }
+        : { status: "failed", claim_token: null, next_attempt_at: backoff(row.attempts) },
+    );
     return ok ? "failed" : "lost";
   }
   const ok = await leased(row, { status: "accepted", claim_token: null, sent_at: new Date().toISOString(), last_error: null });

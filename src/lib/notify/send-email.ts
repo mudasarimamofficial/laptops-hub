@@ -14,6 +14,16 @@ export function safeError(message: string) {
   return message.replace(/[^\s@<>"]+@[^\s@<>"]+/g, "<email>").slice(0, 200);
 }
 
+/**
+ * Temporary: 429, 5xx, and the 409s Resend documents as "try again later" (same key still in progress, resource
+ * locked). Permanent: every other 4xx — including 409 `invalid_idempotent_request` (key reused with a different
+ * body within 24 h), which no retry with that key can fix.
+ */
+export function retryableStatus(status: number, name?: string) {
+  if (status === 409) return name === "concurrent_idempotent_requests" || name === "resource_locked";
+  return status === 429 || status >= 500;
+}
+
 export async function sendEmail(msg: { to: string; subject: string; text: string; idempotencyKey: string }): Promise<SendResult> {
   if (!emailConfigured()) return { ok: false, error: "not_configured", retryable: true };
   const base = (process.env.RESEND_API_URL || "https://api.resend.com").replace(/\/+$/, "");
@@ -31,8 +41,7 @@ export async function sendEmail(msg: { to: string; subject: string; text: string
     });
     const body = (await res.json().catch(() => ({}))) as { id?: string; message?: string; name?: string };
     if (res.ok && body.id) return { ok: true, id: body.id };
-    // 409: the same idempotency key is still being processed by the provider — retry later with the same key.
-    return { ok: false, error: safeError(`${res.status} ${body.name || ""} ${body.message || ""}`.trim()), retryable: res.status === 409 || res.status === 429 || res.status >= 500 };
+    return { ok: false, error: safeError(`${res.status} ${body.name || ""} ${body.message || ""}`.trim()), retryable: retryableStatus(res.status, body.name) };
   } catch (e) {
     return { ok: false, error: safeError(e instanceof Error ? e.message : "network_error"), retryable: true };
   }

@@ -11,50 +11,73 @@
 
 ## Outbox lease — `20261024100000_notification_outbox_lease.sql` — AWAITING OWNER APPROVAL
 
+Revision 2 (2026-10-23, owner-requested hardening). File SHA-256 and commit: § Identity at the end of this section.
+
 **Change.** Fixes a notification defect: stale recovery used the row's `created_at`, so an old notification could be
 taken over while a worker was still sending it, and an expired worker could overwrite a newer result; recipients
 were not tracked separately. Adds a claim lease, per-recipient state and bounded retries (`docs/NOTIFICATIONS.md`).
-Not exploitable from outside — a reliability fix required before email is switched on.
 
 **Exact SQL (one file, one transaction):**
-- `alter table notification_outbox add column` × 10: `claim_token`, `claimed_at`, `first_attempt_at`,
+- `alter table public.notification_outbox add column` × 10: `claim_token`, `claimed_at`, `first_attempt_at`,
   `next_attempt_at` (default now()), `business_status`/`customer_status` (default 'pending'),
   `business_message_id`, `business_accepted_at`, `customer_message_id`, `customer_accepted_at`.
 - `update … set status='accepted' where status='sent'` (0 rows on production).
 - 3 check constraints (row, business, customer status values); index `notification_outbox_due_idx`.
-- New function `claim_notifications(int,int,uuid,int,int,boolean)` SECURITY DEFINER, `search_path=public`,
-  service-role guard; EXECUTE revoked from public/anon/authenticated, granted to `service_role`.
-- Nothing else: no change to `create_cod_order`, RLS policies, other tables, grants on existing objects.
+- New function `public.claim_notifications(int,int,uuid,int,int,boolean)`:
+  - **SECURITY INVOKER** — runs with the caller's rights and grants nothing (service_role already holds the table
+    privileges and bypasses RLS);
+  - `set search_path = ''`; every reference schema-qualified (`public.`, `auth.`, `pg_catalog.`);
+  - **fail-closed guard** `if auth.role() is distinct from 'service_role' then raise 'forbidden' (42501)` — a missing
+    role claim is rejected (revision 1 used `coalesce(auth.role(), 'service_role')`, which let a NULL claim through);
+  - owner `postgres`; `revoke all … from public, anon, authenticated`; `grant execute … to service_role`.
+- Nothing else: no change to `create_cod_order`, RLS policies, other tables, or grants on existing objects.
 
-**Blast radius.** One table with **0 rows** (read 2026-10-23); no existing constraints other than PK/FK; one new
-function. Brief lock on `notification_outbox` only. Orders, checkout, catalog and admin are unaffected.
+**Blast radius.** One table with **0 rows**; no constraints besides PK/FK; one new function. Brief lock on
+`notification_outbox` only. Orders, checkout, catalog and admin unaffected.
 
-**Compatibility.** Code running today (`34f9839`) only writes this table when email is configured — it is not
-(no `RESEND_API_KEY` in any environment), so the new constraint (`sent` no longer allowed) cannot affect it. The new
-code (`fix/v5-correctness-parity`) requires this migration: apply **before** deploying it, and configure email only
-after both.
+**Compatibility with the Production app.** Production runs `34f9839`, which contains **no notification code** — it
+never reads or writes `notification_outbox`. The only writer today is `create_cod_order` (database side; COD is off),
+whose insert uses the column defaults and satisfies the new constraints (checkout suite 31/31 on the migrated
+schema). The new application code requires this migration: apply it **before** deploying `fix/v5-correctness-parity`.
 
-**Preflight (read-only, done 2026-10-23).** `supabase db push --linked --dry-run` → exactly
-`20261024100000_notification_outbox_lease.sql` · `notification_outbox`: 0 rows, columns = the original 10,
-constraints = pkey + order FK · `claim_notifications` does not exist.
+**Preflight (read-only, production, 2026-10-23, after revision 2):**
 
-**Verified locally (all 14 migrations):** reliability suite 11/11 (`tests/isolated/outbox-reliability.test.ts`:
-concurrent workers, lease vs row age, expired worker, crash after acceptance, partial delivery, timeout, bounded
-retries, 24 h window, manual retry, not configured, anon refused) · launch journeys 10/10 (twice) · checkout 31/31 ·
-role HTTP 113/113 · unit suites. Rollback `supabase/rollback/outbox_lease_rollback.sql` tested: table back to the
-original 10 columns, function and constraints gone, `accepted`→`sent`; re-applying the migration afterwards works.
+| Check | Result |
+|---|---|
+| Ledger | 13 applied; `20261024100000` local only |
+| `supabase db push --linked --dry-run` | exactly `20261024100000_notification_outbox_lease.sql` |
+| `notification_outbox` | 0 rows · 10 columns · 2 constraints (pkey, order FK) |
+| `claim_notifications` | does not exist |
+| `auth.role()` | exists; service_role can execute it |
+| service_role on the table | SELECT/UPDATE granted |
+| Schema backup procedure | `supabase db dump --linked` → `backups/2026-10-23-outbox-preflight/schema-before-outbox-lease.sql` (70 KB, contains `notification_outbox`; gitignored) |
+
+**Verified locally (all 14 migrations, fresh database):**
+- `tests/isolated/claim-notifications-guard.sql` **6/6**: service-role DB role with no role claim → refused ·
+  authenticated → refused · anon with EXECUTE deliberately re-granted → refused by the guard · anon DB role with a
+  forged service_role claim → passes the guard but claims **nothing** (invoker rights + RLS) · proper service-role
+  request → claims · attributes: invoker, `search_path=""`, owner postgres, EXECUTE service_role only.
+- `tests/isolated/outbox-reliability.test.ts` **13/13** (service-role API path throughout): concurrent workers, lease
+  vs row age, expired worker, crash after acceptance, partial delivery, timeout, customer skipped, bounded retries,
+  24 h window, not configured, **temporary 409** `concurrent_idempotent_requests` → backoff, later exactly one
+  delivery, **permanent 409** `invalid_idempotent_request` → automatic retries stopped at once and a staff retry
+  recovers, anon and a signed-in staff session refused via the API.
+- Launch journeys 10/10 · checkout 31/31 · role HTTP 113/113 · unit suites 13/13 (incl. 409 classification) · cron
+  401 without secret.
+- Rollback `supabase/rollback/outbox_lease_rollback.sql`: table back to 10 columns, function and new constraints
+  gone, `accepted`→`sent`; re-applying the migration afterwards gives the same result and the guard passes 6/6 again.
 
 **Procedure.**
-1. Preflight again (above); `supabase db dump --linked -f backups/<date>-outbox/schema-before.sql` (gitignored).
+1. Preflight again (table above); `supabase db dump --linked -f backups/<date>-outbox/schema-before.sql`.
 2. `supabase db push --linked` (applies only this file).
-3. Post-checks (read-only): ledger 14; dry run "up to date"; 20 columns; 3 new constraints; `claim_notifications`
-   EXECUTE = service_role only (`has_function_privilege('anon', …)` false); anon RPC call → 42501; storefront smoke;
-   P0 9/9; auth matrix 24/24.
-4. Rollback (owner instruction only): deploy pre-lease code first, then the rollback file, then
-   `supabase migration repair --status reverted 20261024100000 --linked`.
+3. Post-checks (read-only): ledger 14; dry run "up to date"; 20 columns; 5 constraints; function
+   `prosecdef = false`, `proconfig = {search_path=""}`, owner postgres; `has_function_privilege` anon/authenticated
+   false, service_role true; anon RPC call refused; storefront smoke; P0 9/9; auth matrix 24/24.
+4. Rollback (owner instruction only): run the rollback file, then
+   `supabase migration repair --status reverted 20261024100000 --linked`. Safe with `34f9839` (it does not use the
+   table); if the new code is already deployed, roll the web deployment back first.
 
-**Risk of waiting.** None while email is off. Email must not be switched on with the old code: duplicate or lost
-store alerts become possible under retries/timeouts.
+**Risk of waiting.** None while email is off; the new code must not be deployed before this is applied.
 
 **Decision:** [ ] Approve applying `20261024100000` exactly as above · [ ] Do not approve
 

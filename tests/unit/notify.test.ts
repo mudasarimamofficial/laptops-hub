@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { businessOrderAlert, customerOrderConfirmation, type NotifyOrder } from "../../src/lib/notify/templates";
-import { emailConfigured, safeError, sendEmail } from "../../src/lib/notify/send-email";
+import { emailConfigured, retryableStatus, safeError, sendEmail } from "../../src/lib/notify/send-email";
 
 const o: NotifyOrder = {
   orderNumber: "LH-261023-A1B2C3", placedAt: "2026-10-23T10:00:00Z", customerName: "Ayesha", phoneNational: "03001234567",
@@ -32,3 +32,13 @@ assert.equal(emailConfigured(), false);
   console.error(e);
   process.exit(1);
 });
+
+// Provider errors: temporary vs permanent (Resend error reference).
+assert.equal(retryableStatus(409, "concurrent_idempotent_requests"), true);
+assert.equal(retryableStatus(409, "resource_locked"), true);
+assert.equal(retryableStatus(409, "invalid_idempotent_request"), false, "same key, different body: never fixed by retrying");
+assert.equal(retryableStatus(409, undefined), false);
+assert.equal(retryableStatus(429), true);
+assert.equal(retryableStatus(503), true);
+assert.equal(retryableStatus(422), false);
+assert.equal(retryableStatus(401), false);

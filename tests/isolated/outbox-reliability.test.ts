@@ -254,9 +254,61 @@ await scenario("not configured: nothing claimed, nothing reported as sent", asyn
   assert.equal(r.attempts, 0);
 });
 
-await scenario("claim_notifications is not callable by anon", async () => {
-  const { error } = await anon.rpc("claim_notifications", {});
-  assert.ok(error, "anon must be refused");
+await scenario("temporary 409 (same key still in flight) is retried later without a duplicate", async () => {
+  const { orderId } = await newOrder(false);
+  await provider.mode({ delayMs: 1000 });
+  const slow = processOutbox({ orderId }); // worker A: request in flight at the provider
+  await sleep(250);
+  await patch(orderId, { claimed_at: ago(600_000) }); // A's lease expires while it waits
+  const b = await processOutbox({ orderId }); // worker B: same key → 409 concurrent_idempotent_requests
+  assert.equal(b.failed, 1);
+  let r = await row(orderId);
+  assert.match(r.last_error, /409 concurrent_idempotent_requests/);
+  assert.doesNotMatch(r.last_error, /automatic retries stopped/, "temporary: automatic retries continue");
+  assert.ok(Number.isFinite(Date.parse(r.next_attempt_at)) && Date.parse(r.next_attempt_at) > Date.now(), "backoff scheduled");
+  assert.equal((await slow).lost, 1, "worker A cannot record after losing the lease");
+  await provider.mode({});
+  await patch(orderId, { next_attempt_at: ago(1000) });
+  assert.equal((await processOutbox({ orderId })).accepted, 1);
+  r = await row(orderId);
+  assert.equal((await deliveredFor(orderId, r.id)).length, 1, "one delivery");
+});
+
+await scenario("permanent 409 (same key, different payload) stops automatic retries", async () => {
+  const { orderId } = await newOrder(false);
+  await processOutbox({ orderId }, { afterAccepted: () => { throw new Error("simulated crash"); } });
+  await patch(orderId, { claimed_at: ago(600_000) });
+  const from = process.env.STORE_FROM_EMAIL;
+  process.env.STORE_FROM_EMAIL = "Laptops HUB <changed@lh-test.local>"; // the message body changed under the same key
+  try {
+    assert.equal((await processOutbox({ orderId })).failed, 1);
+  } finally {
+    process.env.STORE_FROM_EMAIL = from;
+  }
+  let r = await row(orderId);
+  assert.match(r.last_error, /409 invalid_idempotent_request.*automatic retries stopped$/);
+  assert.equal(r.business_status, "failed");
+  assert.ok(!Number.isFinite(Date.parse(r.next_attempt_at)), "never due automatically");
+  assert.equal((await processOutbox({ orderId })).processed, 0, "no automatic retry");
+  assert.equal((await processOutbox({ orderId })).processed, 0, "still none on the next sweep");
+  // Staff retry after the cause is fixed (original sender restored): the provider recognises the original message.
+  assert.equal((await processOutbox({ orderId, manual: true })).accepted, 1);
+  r = await row(orderId);
+  assert.equal(r.status, "accepted");
+  assert.equal((await deliveredFor(orderId, r.id)).length, 1, "the original message only");
+});
+
+await scenario("claim_notifications: anon and signed-in users refused; service role works", async () => {
+  const a = await anon.rpc("claim_notifications", {});
+  assert.ok(a.error, "anon must be refused");
+  const user = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, { auth: { persistSession: false } });
+  const { error: signInError } = await user.auth.signInWithPassword({ email: fixture.staff.manager.email, password: fixture.staff.manager.password });
+  assert.ifError(signInError);
+  const u = await user.rpc("claim_notifications", {});
+  assert.ok(u.error, "an authenticated staff session must be refused (server-only function)");
+  const s = await sb.rpc("claim_notifications", { p_limit: 1, p_order_id: randomUUID() });
+  assert.ifError(s.error);
+  assert.deepEqual(s.data, []);
 });
 
 // Leave nothing automatically claimable behind (still visible, clearly labelled as test rows).

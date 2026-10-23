@@ -245,7 +245,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
                     Accepted by the email provider {new Date(n.sent_at).toLocaleString()} (delivery to the inbox is not confirmed)
                   </div>
                 ) : null}
-                {n.status === "failed" && n.next_attempt_at ? (
+                {n.status === "failed" && !(n.last_error || "").endsWith("automatic retries stopped") && Number.isFinite(Date.parse(n.next_attempt_at)) ? (
                   <div className="text-xs text-[var(--lh-ink-2)]">Next automatic attempt after {new Date(n.next_attempt_at).toLocaleString()}</div>
                 ) : null}
                 {n.last_error ? <div className="text-xs text-[var(--lh-error)]">{n.last_error}</div> : null}

@@ -2,8 +2,23 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PK_PROVINCES } from "@/lib/commerce/pk-places";
 
-export function ShippingZoneForm() {
+export type ZoneRow = {
+  id: string;
+  name: string;
+  provinces: string[];
+  cities: string[];
+  flat_fee_paisa: number;
+  cod_fee_paisa: number;
+  is_active: boolean;
+  notes: string;
+};
+
+const field = "rounded-xl border border-[var(--lh-border)] px-3 py-2";
+
+/** Create (no `zone`) or edit a shipping zone. Provinces come from the same list checkout uses. */
+export function ShippingZoneForm({ zone }: { zone?: ZoneRow }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [ok, setOk] = useState(false);
@@ -14,16 +29,20 @@ export function ShippingZoneForm() {
     setPending(true);
     setError(null);
     setOk(false);
-    const fd = new FormData(e.currentTarget);
-    const res = await fetch("/api/admin/shipping-zones", {
-      method: "POST",
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const provinces = fd.getAll("provinces").map(String);
+    if (!provinces.length) {
+      setPending(false);
+      setError("Select at least one province.");
+      return;
+    }
+    const res = await fetch(zone ? `/api/admin/shipping-zones/${zone.id}` : "/api/admin/shipping-zones", {
+      method: zone ? "PATCH" : "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name: fd.get("name"),
-        provinces: String(fd.get("provinces") || "")
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
+        provinces,
         cities: String(fd.get("cities") || "")
           .split(",")
           .map((s) => s.trim())
@@ -41,40 +60,54 @@ export function ShippingZoneForm() {
       return;
     }
     setOk(true);
-    (e.target as HTMLFormElement).reset();
+    if (!zone) form.reset();
     router.refresh();
   }
 
+  const idp = zone ? `z-${zone.id}` : "z-new";
   return (
-    <form onSubmit={onSubmit} className="mt-8 grid max-w-xl gap-3 rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
-      <h2 className="font-semibold">Add shipping zone</h2>
-      <p className="text-xs text-[var(--lh-ink-2)]">
-        Provinces required. Cities optional (empty = entire listed provinces). Fees in PKR major units.
-      </p>
-      <input name="name" required placeholder="Zone name" className="rounded-xl border border-[var(--lh-border)] px-3 py-2" />
-      <input
-        name="provinces"
-        required
-        placeholder="Provinces (comma-separated), e.g. Punjab, Sindh"
-        className="rounded-xl border border-[var(--lh-border)] px-3 py-2"
-      />
-      <input
-        name="cities"
-        placeholder="Cities (comma-separated), e.g. Lahore, Karachi"
-        className="rounded-xl border border-[var(--lh-border)] px-3 py-2"
-      />
-      <div className="grid grid-cols-2 gap-3">
-        <input name="flatFeePkr" type="number" min={0} step={1} defaultValue={0} placeholder="Delivery fee PKR" className="rounded-xl border border-[var(--lh-border)] px-3 py-2" />
-        <input name="codFeePkr" type="number" min={0} step={1} defaultValue={0} placeholder="COD fee PKR" className="rounded-xl border border-[var(--lh-border)] px-3 py-2" />
-      </div>
-      <input name="notes" placeholder="Notes (optional)" className="rounded-xl border border-[var(--lh-border)] px-3 py-2" />
-      <label className="flex items-center gap-2 text-sm">
-        <input name="isActive" type="checkbox" /> Active (only active zones are quotable)
+    <form onSubmit={onSubmit} className="grid max-w-xl gap-3 rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5" aria-label={zone ? `Edit ${zone.name}` : "Add shipping zone"}>
+      {zone ? null : <h2 className="font-semibold">Add shipping zone</h2>}
+      <label className="grid gap-1 text-sm">
+        Zone name (shown to customers)
+        <input name="name" required defaultValue={zone?.name} className={field} />
       </label>
-      {error ? <p className="text-sm text-[var(--lh-error)]">{error}</p> : null}
+      <fieldset className="text-sm">
+        <legend>Provinces served</legend>
+        <div className="mt-1 grid gap-1 sm:grid-cols-2">
+          {PK_PROVINCES.map((p) => (
+            <label key={p} className="flex items-center gap-2">
+              <input type="checkbox" name="provinces" value={p} defaultChecked={zone?.provinces.some((x) => x.toLowerCase() === p.toLowerCase())} />
+              {p}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <label className="grid gap-1 text-sm">
+        Cities (comma-separated; leave empty to serve the whole selected provinces)
+        <input name="cities" defaultValue={zone?.cities.join(", ")} placeholder="e.g. Lahore, Rawalpindi" className={field} />
+      </label>
+      <div className="grid grid-cols-2 gap-3">
+        <label className="grid gap-1 text-sm" htmlFor={`${idp}-fee`}>
+          Delivery fee (PKR)
+          <input id={`${idp}-fee`} name="flatFeePkr" type="number" min={0} step={1} required defaultValue={zone ? zone.flat_fee_paisa / 100 : ""} className={field} />
+        </label>
+        <label className="grid gap-1 text-sm" htmlFor={`${idp}-cod`}>
+          COD fee (PKR)
+          <input id={`${idp}-cod`} name="codFeePkr" type="number" min={0} step={1} required defaultValue={zone ? zone.cod_fee_paisa / 100 : ""} className={field} />
+        </label>
+      </div>
+      <label className="grid gap-1 text-sm">
+        Note shown at checkout (courier, delivery time)
+        <input name="notes" defaultValue={zone?.notes} maxLength={500} className={field} />
+      </label>
+      <label className="flex items-center gap-2 text-sm">
+        <input name="isActive" type="checkbox" defaultChecked={zone?.is_active} /> Active (customers can choose it)
+      </label>
+      {error ? <p role="alert" className="text-sm text-[var(--lh-error)]">{error}</p> : null}
       {ok ? <p className="text-sm text-[var(--lh-success)]">Zone saved.</p> : null}
       <button type="submit" className="lh-btn lh-btn-primary" disabled={pending}>
-        {pending ? "Saving…" : "Save zone"}
+        {pending ? "Saving…" : zone ? "Save changes" : "Add zone"}
       </button>
     </form>
   );

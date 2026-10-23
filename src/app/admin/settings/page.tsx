@@ -1,7 +1,7 @@
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 import { PendingBlock } from "@/components/ui/pending-block";
-import { ShippingZoneForm } from "./shipping-form";
+import { ShippingZoneForm, type ZoneRow } from "./shipping-form";
 import { formatPkr } from "@/lib/money";
 
 export const dynamic = "force-dynamic";
@@ -16,18 +16,25 @@ export default async function AdminSettingsPage() {
     .from("shipping_zones")
     .select("id, name, provinces, cities, flat_fee_paisa, cod_fee_paisa, is_active, notes")
     .order("name");
+  const activeZones = (zones || []).filter((z) => z.is_active).length;
+  const codSetting = (settings || []).some((r) => r.key === "cod_checkout" && (r.value as { enabled?: boolean })?.enabled === true);
+  const codEnv = process.env.COD_CHECKOUT_ENABLED === "true";
 
   return (
     <div className="lh-container py-10">
       <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold">Store settings</h1>
       <div className="mt-6">
-        <PendingBlock title="Owner decisions required">
-          Shipping rates, COD fees, served cities, and legal policies must be set by the merchant. Do not invent fees.
-          Checkout remains blocked until an active shipping zone exists and <code>cod_checkout.enabled</code> is true.
+        <PendingBlock title="Checkout readiness">
+          Online checkout opens only when all three are true: at least one active shipping zone (
+          {activeZones} now), store setting <code>cod_checkout.enabled</code> ({codSetting ? "on" : "off"}), and the
+          Production switch <code>COD_CHECKOUT_ENABLED</code> ({codEnv ? "on" : "off"}). Enter only the cities and fees
+          you have agreed with your courier.
         </PendingBlock>
       </div>
 
-      <ShippingZoneForm />
+      <div className="mt-8">
+        <ShippingZoneForm />
+      </div>
 
       <h2 className="mt-10 font-semibold">Shipping zones</h2>
       {(zones || []).length === 0 ? (
@@ -45,6 +52,12 @@ export default async function AdminSettingsPage() {
               <p className="text-[var(--lh-ink-2)]">
                 Delivery {formatPkr(z.flat_fee_paisa)} · COD fee {formatPkr(z.cod_fee_paisa)}
               </p>
+              <details className="mt-3">
+                <summary className="cursor-pointer text-[var(--lh-action)]">Edit zone</summary>
+                <div className="mt-3">
+                  <ShippingZoneForm zone={z as ZoneRow} />
+                </div>
+              </details>
             </li>
           ))}
         </ul>

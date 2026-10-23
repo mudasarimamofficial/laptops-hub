@@ -27,8 +27,14 @@ type Props = {
 
 export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollectedPaisa }: Props) {
   const router = useRouter();
-  const options = NEXT[status] || [];
-  const outstanding = Math.max(0, totalDuePaisa - amountCollectedPaisa);
+  // Show what the server just confirmed until the refreshed props arrive (router.refresh() can lag); once the
+  // props change, they win again.
+  const [statusDone, setStatusDone] = useState<{ from: string; to: string } | null>(null);
+  const [collectedDone, setCollectedDone] = useState<{ from: number; value: number } | null>(null);
+  const current = statusDone && statusDone.from === status ? statusDone.to : status;
+  const collected = collectedDone && collectedDone.from === amountCollectedPaisa ? collectedDone.value : amountCollectedPaisa;
+  const options = NEXT[current] || [];
+  const outstanding = Math.max(0, totalDuePaisa - collected);
 
   const [toStatus, setToStatus] = useState(options[0] || "");
   const [note, setNote] = useState("");
@@ -58,7 +64,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
           note,
           carrier: carrier || undefined,
           trackingNumber: trackingNumber || undefined,
-          expectedFromStatus: status,
+          expectedFromStatus: current,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -67,6 +73,8 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
         return;
       }
       setMsg(`Status → ${toStatus}`);
+      setStatusDone({ from: status, to: toStatus });
+      setToStatus((NEXT[toStatus] || [])[0] || "");
       router.refresh();
     } catch {
       setErr("Network error — try again.");
@@ -102,6 +110,10 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
         return;
       }
       collectKey.current = null;
+      if (typeof data.amountCollectedPaisa === "number") {
+        setCollectedDone({ from: amountCollectedPaisa, value: data.amountCollectedPaisa });
+        setCollectPkr(String(paisaToMajor(Math.max(0, totalDuePaisa - data.amountCollectedPaisa)) || ""));
+      }
       setMsg(
         data.idempotentReplay
           ? `Already recorded (idempotent) · ${data.paymentStatus}`
@@ -119,7 +131,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
     <div className="mt-8 grid gap-8 lg:grid-cols-2">
       <form onSubmit={changeStatus} className="space-y-3 rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
         <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold">Fulfillment status</h2>
-        <p className="text-sm text-[var(--lh-ink-2)]">Current: {status}</p>
+        <p className="text-sm text-[var(--lh-ink-2)]">Current: {current}</p>
         {options.length ? (
           <>
             <label className="block text-sm">
@@ -176,7 +188,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
       <form onSubmit={collectCod} className="space-y-3 rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
         <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold">COD cash collection</h2>
         <p className="text-sm text-[var(--lh-ink-2)]">
-          Due {formatPkr(totalDuePaisa)} · Collected {formatPkr(amountCollectedPaisa)} · Outstanding{" "}
+          Due {formatPkr(totalDuePaisa)} · Collected {formatPkr(collected)} · Outstanding{" "}
           {formatPkr(outstanding)}
         </p>
         <p className="text-xs text-[var(--lh-ink-2)]">Delivery alone is not payment. Record cash explicitly.</p>

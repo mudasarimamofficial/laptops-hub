@@ -1,5 +1,30 @@
 # Deployment report
 
+## Preview — 2026-10-23 (final pre-release pass)
+
+| Field | Value |
+|---|---|
+| Git commit | `0bbe329` on `fix/v5-correctness-parity` (draft PR #2) |
+| Deployment | `dpl_D9xCtK6K3p5xXocpCFcmaK5nBHRQ` (Git integration, target **Preview**, Ready) |
+| URL | https://laptops-eoj9nsimt-mudasarimamofficial-gmailcoms-projects.vercel.app (SSO: unauthenticated → 302; checked via temporary share link) |
+| Database | production `xvmmjkrkgznnakcobmww`, read-only use; Option B not applied |
+
+| Check (on Preview) | Result |
+|---|---|
+| e2e (desktop 1440/1897, laptop 1440x900, tablet 768x1024, mobile 390 emulation) | 39 passed, 1 skipped (inquiry submit; needs non-production DB) |
+| Console sweep | clean: 30 loads, no console/hydration errors, no failed requests, no horizontal overflow |
+| Routes | home, collection, PDP, contact, shipping, guides, compare, cart, search 200 · `/admin` 307 · unknown product 404 |
+| Content / SEO | pages gated; sitemap 0 content URLs, host = this deployment (Preview); `X-Robots-Tag: noindex` is Vercel's Preview header (pre-launch mode off) |
+| Security | COD 403 `checkout_disabled` · admin API 401 · contact cross-site 403 · 13 client chunks: only the anon JWT, no service-role strings |
+| Runtime errors | none |
+| Real devices | not tested (no physical devices) |
+
+## Production — observed 2026-10-23 (not deployed by engineering)
+
+`laptops-hub.vercel.app` → `dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH`, an owner **redeploy** of `34f9839` to Production
+(`source: redeploy`). Pages 200, content gated, COD 403, no runtime errors; public and indexable; sitemap/robots
+advertise the SSO-protected deployment host (fixed in `812ed3e`, not yet deployed). See `docs/PUBLIC_SITE_PLAN.md`.
+
 ## Preview — 2026-10-23 (security & COD integrity)
 
 | Field | Value |

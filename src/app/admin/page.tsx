@@ -17,7 +17,17 @@ async function staffSafeCounts() {
     .select("id", { count: "exact", head: true })
     .eq("status", "draft");
   const { count: media } = await supabase.from("product_media").select("id", { count: "exact", head: true });
+  const { count: toConfirm } = await supabase
+    .from("orders")
+    .select("id", { count: "exact", head: true })
+    .in("status", ["placed", "pending_confirmation"]);
+  const { count: notifyProblems } = await supabase
+    .from("notification_outbox")
+    .select("id", { count: "exact", head: true })
+    .in("status", ["pending", "failed", "sending"]);
   return {
+    toConfirm: toConfirm ?? 0,
+    notifyProblems: notifyProblems ?? 0,
     total: total ?? 0,
     active: active ?? 0,
     draft: draft ?? 0,
@@ -38,6 +48,8 @@ export default async function AdminHomePage() {
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
+          ["Orders to confirm", counts.toConfirm],
+          ["Unsent notifications", counts.notifyProblems],
           ["Products", counts.total],
           ["Public active", counts.active],
           ["Drafts", counts.draft],

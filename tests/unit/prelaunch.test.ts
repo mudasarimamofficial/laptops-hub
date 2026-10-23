@@ -11,7 +11,7 @@ for (const p of ["/", "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-25
   assert.equal(d(p), "comingSoon", p);
 }
 // Staff work continues; framework assets, robots and sitemap stay reachable.
-for (const p of ["/admin", "/admin/login", "/admin/orders/LH-1", "/api/admin/cod-collections", "/coming-soon", "/robots.txt", "/sitemap.xml", "/favicon.ico", "/_next/static/chunks/app.js", "/v5/stage.webp"]) {
+for (const p of ["/admin", "/admin/login", "/admin/orders/LH-1", "/api/admin/cod-collections", "/api/cron/notifications", "/coming-soon", "/robots.txt", "/sitemap.xml", "/favicon.ico", "/_next/static/chunks/app.js", "/v5/stage.webp"]) {
   assert.equal(d(p), "allow", p);
 }
 // Look-alike prefixes are not admin.

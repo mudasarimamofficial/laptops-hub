@@ -13,6 +13,7 @@ import fs from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { processOutbox, type OutboxRow } from "../../src/lib/notify/outbox";
+import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(url)) {
@@ -85,6 +86,7 @@ async function scenario(name: string, fn: () => Promise<void>) {
 }
 
 async function main() {
+await assertLocalOnly("outbox-reliability");
 await scenario("concurrent workers claim a row once; each recipient delivered once", async () => {
   const { orderId, email } = await newOrder();
   await provider.mode({ delayMs: 300 });

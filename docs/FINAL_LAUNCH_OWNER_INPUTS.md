@@ -75,11 +75,90 @@ policy pages also need legal approval in admin. Engineering will draft from your
 | 7.2 | If not: who will supply replacement photos, for which products first? | Replacement workflow in `docs/MEDIA_INVENTORY.md` |
 | 7.3 | The V5 hero/story cutout images: approved for use? | Currently not deployed |
 
-## 8. Launch approvals (final, one at a time) 🔴
+## 8. Decisions on automatic retries 🟢
 
-1. Activate pre-launch mode on Production (`docs/PUBLIC_SITE_PLAN.md`) — recommended now.
-2. Merge PR #1 → `main`, then PR #2 (production deploys from `main`).
-3. Configure zones, staff, notifications, publish approved pages.
-4. Controlled test order with **your** details on Production, then cancel it.
-5. Enable COD (`COD_CHECKOUT_ENABLED`, `NEXT_PUBLIC_COD_CHECKOUT_ENABLED`, `store_settings.cod_checkout`) and remove
-   `SITE_PRELAUNCH`.
+| # | Question | Default |
+|---|---|---|
+| 8.1 | Vercel Hobby runs the notification safety net **once a day**. Is that enough (staff also see unsent alerts on the admin overview), or do you want Vercel Pro / an external scheduler for retries every few minutes? | Daily + staff retry |
+
+## 9. Launch approvals (one at a time) 🔴
+
+Full order with checks: **`docs/FINAL_LAUNCH_SEQUENCE.md`**. In short:
+
+1. (optional, recommended) Mode B — hide the storefront until launch.
+2. Database change for notifications (`docs/MIGRATION_PRODUCTION_APPROVAL.md` § Outbox lease).
+3. Merge PR #1 then PR #2 into `main` → Production deploy.
+4. Your configuration: owner + staff accounts, zones, policies, media decision, email account.
+5. Controlled test order on a protected Preview while public checkout stays closed; cancel it.
+6. Enable COD → remove restricted mode (SEO returns) → smoke tests → your confirmation = launched.
+
+---
+
+# How-to guides (non-technical)
+
+## A. Create the owner account (you do this yourself — engineering never grants itself owner)
+
+1. Sign in to supabase.com with the account that owns project **Laptops Hub**.
+2. Authentication → Users → **Invite user** → your email. Open the invitation email, set a password.
+3. In Users, click your new user and copy its **User UID**.
+4. SQL Editor → New query → paste, replace the UID, Run:
+   ```sql
+   insert into public.admin_memberships (user_id, role, is_active)
+   values ('PASTE-YOUR-UID', 'owner', true)
+   on conflict (user_id) do update set role = 'owner', is_active = true;
+   ```
+   Use **your own** UID only. Running this for someone else's UID would make them owner.
+5. Check: `select u.email, m.role, m.is_active from public.admin_memberships m join auth.users u on u.id = m.user_id;`
+   — you are `owner`; nobody else is `owner` or `admin` unless you intended it.
+6. Go to `https://laptops-hub.vercel.app/admin/login`, sign in; the overview shows **role owner**.
+7. Staff: same steps 2–4 with their email and the smallest role they need (`fulfillment` for packing/dispatch,
+   `manager` for orders + settings, `editor` for content only). Tell engineering who the existing manager account is
+   (question 1.2) so it can be kept or deactivated.
+
+## B. Shipping zones (Admin → Settings → Add shipping zone)
+
+For each delivery area you agreed with your courier:
+
+1. **Name** customers see (e.g. the city or region name).
+2. **Provinces** — tick the province(s). **Cities** — leave empty for the whole province, or list cities.
+3. **Delivery fee** and **COD fee** in PKR (0 is allowed). The checkout adds them to the order total.
+4. **Note** — courier and delivery time, exactly as you can promise them.
+5. Tick **Active**, save. The readiness panel at the top shows how many zones are active.
+
+An address outside every active zone cannot order ("We do not currently deliver COD to this city/province").
+Edit or switch off a zone at any time with **Edit zone**; existing orders keep their charges.
+
+## C. Email for order alerts (Resend)
+
+1. Create an account at resend.com with the store's email (free plan is enough to start).
+2. **Domains → Add domain** — use a domain you own (e.g. the store's domain). Resend shows DNS records (TXT/MX/
+   CNAME). Add them where the domain's DNS is managed. Wait until the domain shows **Verified**.
+   Without your own verified domain, emails can only go to your own Resend login address.
+3. **API Keys → Create** — permission "Sending access", the verified domain. Copy the key once; do not email it.
+4. Send engineering (in this chat, not by email): the sender address you want (e.g. `orders@<your domain>`), the inbox
+   that should receive new-order alerts, and whether customers should get a confirmation email (5.3). Add the API key
+   yourself in Vercel (step 5) — or ask engineering to, with your explicit approval.
+5. Vercel → project **laptops-hub** → Settings → Environment Variables → add for **Production**:
+   `RESEND_API_KEY` (the key, "Sensitive"), `STORE_FROM_EMAIL` (e.g. `Laptops HUB <orders@your-domain>`),
+   `STORE_NOTIFY_EMAIL` (your alert inbox), `NOTIFY_CUSTOMER_EMAIL` = `1` only if 5.3 is yes, and
+   `CRON_SECRET` (any long random text). Do this **after** the notification database change (§ 9.2) is applied.
+6. Real delivery test: the controlled test order (§ 9.5). You should receive the alert within a minute; the order page
+   in admin shows **Store alert: accepted**. "Accepted" means Resend took the message; if it is not in your inbox,
+   check spam and Resend → Emails (it shows delivered / bounced).
+
+## D. Policy facts that need your approval
+
+Per page checklists: `docs/OWNER_CONTENT_NEEDS.md`. Skeleton drafts with blanks for your facts:
+`docs/POLICY_DRAFTS.md` — **drafts, not approved, not published**. Nothing in them is a promise until you fill the
+blanks, approve, publish and tick legal approval in Admin → Content. The facts the drafts depend on:
+
+- Shipping: zones (B), courier, delivery times, damaged-parcel handling, failed-delivery handling (3.4).
+- Returns: window and start, eligible reasons, condition, who pays return delivery, refund method and time, exchanges.
+- Warranty: length, what is covered, exclusions, how to claim, who repairs.
+- Privacy: legal name (2.1), contact for privacy requests, how long order records are kept.
+- Terms: legal name, availability confirmation (4.1), cancellation rules, governing law/jurisdiction (your lawyer).
+
+## E. Photos
+
+`docs/MEDIA_INVENTORY.md`: state in writing the source and your rights for the 964 photos (own / supplier with
+permission / manufacturer / unknown). Unknown → replace (workflow there) or set those products to draft.

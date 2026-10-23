@@ -27,11 +27,12 @@ export async function sendEmail(msg: { to: string; subject: string; text: string
         "Idempotency-Key": msg.idempotencyKey,
       },
       body: JSON.stringify({ from: process.env.STORE_FROM_EMAIL, to: [msg.to], subject: msg.subject, text: msg.text }),
-      signal: AbortSignal.timeout(15_000),
+      signal: AbortSignal.timeout(Number(process.env.NOTIFY_TIMEOUT_MS) || 15_000),
     });
     const body = (await res.json().catch(() => ({}))) as { id?: string; message?: string; name?: string };
     if (res.ok && body.id) return { ok: true, id: body.id };
-    return { ok: false, error: safeError(`${res.status} ${body.name || ""} ${body.message || ""}`.trim()), retryable: res.status === 429 || res.status >= 500 };
+    // 409: the same idempotency key is still being processed by the provider — retry later with the same key.
+    return { ok: false, error: safeError(`${res.status} ${body.name || ""} ${body.message || ""}`.trim()), retryable: res.status === 409 || res.status === 429 || res.status >= 500 };
   } catch (e) {
     return { ok: false, error: safeError(e instanceof Error ? e.message : "network_error"), retryable: true };
   }

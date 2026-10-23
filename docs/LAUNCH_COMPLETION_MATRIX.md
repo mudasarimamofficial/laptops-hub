@@ -31,7 +31,7 @@ Priority: **P0** needed to accept real orders safely · **P1** essential operati
 | 12 | Order list/detail, confirm → pack → dispatch (tracking) → deliver; cancel; failed delivery; return | P0 | ✅ | staff trained ❌ | isolated journeys "admin" + "cancellation" |
 | 13 | COD cash collection (exactly-once, conflicts, history) | P0 | ✅ | — | collection matrix 16/16; journey |
 | 14 | Shipping zones: create, **edit, (de)activate** | P0 | ✅ (new) | real zones ❌ | role HTTP (PATCH) |
-| 15 | New-order alert to the store + optional customer email; retries; no duplicate on replay | P0 | ✅ (new) | email provider + inbox ❌ (owner 5.1–5.2) | journeys "notifications" ×3 (stand-in provider) |
+| 15 | New-order alert to the store + optional customer email; lease-based claims, per-recipient state, bounded retries, no duplicates | P0 | ✅ code · ⏳ DB migration `20261024100000` awaiting approval | email provider + inbox ❌ (owner 5.1–5.2) | outbox reliability 11/11; journeys "notifications" ×3 (stand-in provider); `docs/NOTIFICATIONS.md` |
 | 16 | Dashboard: orders to confirm, unsent notifications | P1 | ✅ (new) | — | admin overview |
 | 17 | Product edit (price, status, purchasable) | P1 | ✅ | — | role HTTP |
 | 18 | CMS edit / publish / withdraw, separate legal approval | P1 | ✅ | content ❌ | role HTTP |
@@ -54,7 +54,10 @@ Priority: **P0** needed to accept real orders safely · **P1** essential operati
 
 ## Verdict
 
-- **Engineering ready (release candidate):** yes for every P0 above, with evidence; local isolated + protected Preview.
+- **Engineering ready (release candidate):** yes for every P0 above, with evidence (local isolated stack; protected
+  Preview for `987dacc`), **once** migration `20261024100000` is approved and applied before deploying. The lease
+  change is verified locally only — a Preview of the new commit is still to run (it needs the migration on the
+  shared database).
 - **Business ready:** **no** — open: owner account, zones/fees, policies + legal approval, contact facts, email
   provider, media rights, workflow approval (4.1), staff list.
 - **Launched:** **no** — production still runs `34f9839`, COD off.

@@ -18,7 +18,13 @@ export function NotificationRetry({ orderNumber }: { orderNumber: string }) {
         body: JSON.stringify({ orderNumber }),
       });
       const json = await res.json().catch(() => ({}));
-      setMsg(res.ok ? `Sent ${json.sent} · failed ${json.failed}` : json.message || json.error || `Failed (${res.status})`);
+      setMsg(
+        res.ok
+          ? json.processed === 0
+            ? "Nothing to send (already accepted, or being sent right now)."
+            : `Accepted ${json.accepted} · failed ${json.failed}${json.lost ? ` · taken over ${json.lost}` : ""}`
+          : json.message || json.error || `Failed (${res.status})`,
+      );
       router.refresh();
     } catch {
       setMsg("Network error — try again.");

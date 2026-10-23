@@ -60,7 +60,7 @@ Order matters only within Option B (the CLI applies files in version order, one 
    robots, COD POST → 403, `/admin` → login, content gated, console sweep, `PLAYWRIGHT_BASE_URL=<prod> npx playwright
    test tests/e2e` (read-only; contact submit is mocked).
 4. Rollback: Vercel Instant Rollback to `dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH` (works with the DB before and after
-   Option B).
+   Option B, and after `20261024100000` while email is not configured — `docs/FINAL_LAUNCH_SEQUENCE.md` § 2).
 
 ## Production environment (names only; values owner-supplied, never committed)
 
@@ -73,6 +73,7 @@ Order matters only within Option B (the CLI applies files in version order, one 
 | `RESEND_API_KEY`, `STORE_FROM_EMAIL` | email provider + verified sender | owner account |
 | `STORE_NOTIFY_EMAIL` | new-order alert recipient | owner inbox |
 | `NOTIFY_CUSTOMER_EMAIL` | `1` to email customers who give an email | owner choice |
+| `NOTIFY_TIMEOUT_MS` | email request timeout (default 15000) | unset |
 | `CRON_SECRET` | protects `/api/cron/notifications` (daily safety net, `vercel.json`; Hobby allows daily) | random secret |
 | `V5_CUTOUT_BASE`, `V5_CONTENT_PREVIEW` | cutouts / template preview | **unset** |
 

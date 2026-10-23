@@ -1,5 +1,10 @@
 # Resume here
 
+**Latest (2026-10-23, final launch closure):** outbox lease fix (code + migration `20261024100000`, verified locally,
+**production approval pending** — `docs/MIGRATION_PRODUCTION_APPROVAL.md` § Outbox lease). Launch order:
+`docs/FINAL_LAUNCH_SEQUENCE.md`; owner inputs and how-tos: `docs/FINAL_LAUNCH_OWNER_INPUTS.md`; policy skeletons:
+`docs/POLICY_DRAFTS.md`. Mode B not activated (not approved). Production unchanged.
+
 State (2026-10-23): **Security & COD integrity pass done on `fix/v5-correctness-parity` (stacked draft PR #2 → `feat/v5-storefront-admin`); Preview `dpl_9nGNosyhPhPckFWpXLwnRWmjDkpv` verified. Production database: only Option A applied (owner-approved emergency revoke); Option B pending (`docs/MIGRATION_PRODUCTION_APPROVAL.md`).** Not merged, no Production deploy, COD off, all content pages gated.
 
 ## Current state (2026-10-23)

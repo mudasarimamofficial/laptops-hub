@@ -92,9 +92,9 @@ test.describe.serial("launch journeys (isolated)", () => {
     const mine = log.delivered.filter((d) => d.subject.includes(orderNumber));
     expect(mine.map((d) => d.to[0]).sort()).toEqual(["buyer@lh-test.local", "owner@lh-test.local"]);
     expect(mine.find((d) => d.to[0] === "owner@lh-test.local")!.subject).toContain("New COD order");
-    const rows = await waitFor(() => outboxFor(orderNumber), (r) => r[0]?.status === "sent");
+    const rows = await waitFor(() => outboxFor(orderNumber), (r) => r[0]?.status === "accepted");
     expect(rows).toHaveLength(1);
-    expect(rows[0].status).toBe("sent");
+    expect(rows[0].status).toBe("accepted");
   });
 
   test("customer: track order by number + phone; wrong phone refused", async ({ page }) => {
@@ -137,7 +137,7 @@ test.describe.serial("launch journeys (isolated)", () => {
     expect(a.status()).toBe(200);
     expect(b.status()).toBe(200);
     expect(ja.orderNumber).toBe(jb.orderNumber);
-    const rows = await waitFor(() => outboxFor(ja.orderNumber), (r) => r[0]?.status === "sent");
+    const rows = await waitFor(() => outboxFor(ja.orderNumber), (r) => r[0]?.status === "accepted");
     expect(rows).toHaveLength(1);
     const log = await fakeLog();
     expect(log.delivered.filter((d) => d.subject.includes(ja.orderNumber))).toHaveLength(1);
@@ -207,9 +207,9 @@ test.describe.serial("launch journeys (isolated)", () => {
     await page.goto(`/admin/orders/${n}`);
     await expect(page.getByTestId("notification-status")).toHaveText("failed");
     await page.getByRole("button", { name: "Retry sending" }).click();
-    await expect(page.getByText(/Sent 1 · failed 0/)).toBeVisible();
+    await expect(page.getByText(/Accepted 1 · failed 0/)).toBeVisible();
     const rows = await outboxFor(n);
-    expect(rows[0]).toMatchObject({ status: "sent", attempts: 2 });
+    expect(rows[0]).toMatchObject({ status: "accepted", attempts: 2 });
     const log = await fakeLog();
     expect(log.delivered.filter((d) => d.subject.includes(n))).toHaveLength(1);
   });

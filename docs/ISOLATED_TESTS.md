@@ -61,6 +61,19 @@ re-checks after `FOR UPDATE` and handles `unique_violation` (same key on another
 adds 10×8 same-key bursts and a cross-order same-key race: old function 6–8/10 (burst + cross-order fail every
 run), fixed function 10/10 on 15 consecutive runs.
 
+## Notification outbox reliability (2026-10-23, 14 migrations)
+
+`npx tsx tests/isolated/outbox-reliability.test.ts` (after `seed-isolated.mjs`, with fake-resend running and the
+isolated env; refuses non-local URLs). **11/11**: 6 concurrent workers → one claim, each recipient delivered once ·
+live lease on an old row respected, expired lease on a new row recovered · stalled worker overtaken, its late write
+refused (`lost`), one delivery · crash after provider acceptance → retry with the same key, one delivery ·
+partial delivery → only the failed recipient retried after backoff · timeout the provider still accepted → one
+delivery · customer without email `skipped` · fail ×5 → no 6th automatic attempt, marker added once, staff retry
+works · first attempt 24 h old → no automatic retry · not configured → nothing claimed · anon cannot call
+`claim_notifications`. fake-resend now also simulates `delayMs`, `failTo` and 409 for a key in flight.
+Rollback file tested (restore → re-apply). Note: run it after the checkout suite only with a fresh seed (that suite
+switches local checkout off at the end).
+
 ## Launch journeys (browser, 2026-10-23)
 
 Real UI + real routes + local Supabase + a local stand-in for the email provider (`scripts/test-fixtures/fake-resend.mjs`,
@@ -81,6 +94,8 @@ Result: **10/10, two consecutive runs** — product → cart → checkout → co
 business alert + customer email delivered once; track order (wrong phone refused); unserved address / invalid phone /
 over-limit refused; concurrent duplicate submit → one order, one notification; editor denied orders; manager confirm →
 pack → dispatch with tracking → full COD collection (events + audit rows) and the customer page shows it; fulfillment
-cancellation; provider outage → `failed`, staff retry → `sent`, delivered once; cron requires its secret.
+cancellation; provider outage → `failed`, staff retry → `accepted`, delivered once; cron requires its secret.
+With the outbox lease (2026-10-23): 10/10 twice on a fresh build; one earlier run on a loaded machine timed out
+waiting 5 s for "Fully collected." (collection recorded correctly once), not reproduced in the next two runs.
 Also on this build: collection 16/16 · role matrix 15/15 · checkout 31/31 · role HTTP 113/113 (incl. zone PATCH and
 notification retry). Order lookup: cross-site 403; 10 guesses per IP per 15 min, then 429.

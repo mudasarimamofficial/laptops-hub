@@ -1,12 +1,62 @@
 # Production database change — owner approval request
 
-**Status: Option A and Option B APPLIED 2026-10-23 (both owner-approved; see Outcomes). Nothing pending.** Prepared 2026-10-23.
+**Status: Option A and Option B APPLIED 2026-10-23 (owner-approved). PENDING APPROVAL: § Outbox lease
+(`20261024100000`).** Prepared 2026-10-23.
 
 | | |
 |---|---|
 | Target | Supabase project `xvmmjkrkgznnakcobmww` ("Laptops Hub", ap-southeast-1) |
 | Applied ledger (read 2026-10-23) | `20261021120000` … `20261021160000` (6 migrations) |
 | Pending in repo (`fix/v5-correctness-parity`) | `20261023110000`, `20261023120000`, `20261023130000`, `20261023140000`, `20261023150000`, `20261023160000` |
+
+## Outbox lease — `20261024100000_notification_outbox_lease.sql` — AWAITING OWNER APPROVAL
+
+**Change.** Fixes a notification defect: stale recovery used the row's `created_at`, so an old notification could be
+taken over while a worker was still sending it, and an expired worker could overwrite a newer result; recipients
+were not tracked separately. Adds a claim lease, per-recipient state and bounded retries (`docs/NOTIFICATIONS.md`).
+Not exploitable from outside — a reliability fix required before email is switched on.
+
+**Exact SQL (one file, one transaction):**
+- `alter table notification_outbox add column` × 10: `claim_token`, `claimed_at`, `first_attempt_at`,
+  `next_attempt_at` (default now()), `business_status`/`customer_status` (default 'pending'),
+  `business_message_id`, `business_accepted_at`, `customer_message_id`, `customer_accepted_at`.
+- `update … set status='accepted' where status='sent'` (0 rows on production).
+- 3 check constraints (row, business, customer status values); index `notification_outbox_due_idx`.
+- New function `claim_notifications(int,int,uuid,int,int,boolean)` SECURITY DEFINER, `search_path=public`,
+  service-role guard; EXECUTE revoked from public/anon/authenticated, granted to `service_role`.
+- Nothing else: no change to `create_cod_order`, RLS policies, other tables, grants on existing objects.
+
+**Blast radius.** One table with **0 rows** (read 2026-10-23); no existing constraints other than PK/FK; one new
+function. Brief lock on `notification_outbox` only. Orders, checkout, catalog and admin are unaffected.
+
+**Compatibility.** Code running today (`34f9839`) only writes this table when email is configured — it is not
+(no `RESEND_API_KEY` in any environment), so the new constraint (`sent` no longer allowed) cannot affect it. The new
+code (`fix/v5-correctness-parity`) requires this migration: apply **before** deploying it, and configure email only
+after both.
+
+**Preflight (read-only, done 2026-10-23).** `supabase db push --linked --dry-run` → exactly
+`20261024100000_notification_outbox_lease.sql` · `notification_outbox`: 0 rows, columns = the original 10,
+constraints = pkey + order FK · `claim_notifications` does not exist.
+
+**Verified locally (all 14 migrations):** reliability suite 11/11 (`tests/isolated/outbox-reliability.test.ts`:
+concurrent workers, lease vs row age, expired worker, crash after acceptance, partial delivery, timeout, bounded
+retries, 24 h window, manual retry, not configured, anon refused) · launch journeys 10/10 (twice) · checkout 31/31 ·
+role HTTP 113/113 · unit suites. Rollback `supabase/rollback/outbox_lease_rollback.sql` tested: table back to the
+original 10 columns, function and constraints gone, `accepted`→`sent`; re-applying the migration afterwards works.
+
+**Procedure.**
+1. Preflight again (above); `supabase db dump --linked -f backups/<date>-outbox/schema-before.sql` (gitignored).
+2. `supabase db push --linked` (applies only this file).
+3. Post-checks (read-only): ledger 14; dry run "up to date"; 20 columns; 3 new constraints; `claim_notifications`
+   EXECUTE = service_role only (`has_function_privilege('anon', …)` false); anon RPC call → 42501; storefront smoke;
+   P0 9/9; auth matrix 24/24.
+4. Rollback (owner instruction only): deploy pre-lease code first, then the rollback file, then
+   `supabase migration repair --status reverted 20261024100000 --linked`.
+
+**Risk of waiting.** None while email is off. Email must not be switched on with the old code: duplicate or lost
+store alerts become possible under retries/timeouts.
+
+**Decision:** [ ] Approve applying `20261024100000` exactly as above · [ ] Do not approve
 
 ## Outcome — Option B APPLIED (2026-10-23, owner-approved)
 

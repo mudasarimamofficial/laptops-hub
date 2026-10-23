@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     if (!parsed.success) return NextResponse.json({ error: "validation_failed" }, { status: 400 });
     const { data: order } = await supabase.from("orders").select("id").eq("order_number", parsed.data.orderNumber).maybeSingle();
     if (!order) return NextResponse.json({ error: "not_found" }, { status: 404 });
-    const result = await processOutbox({ orderId: order.id });
+    const result = await processOutbox({ orderId: order.id, manual: true });
     if (!result.configured) {
       return NextResponse.json(
         { error: "not_configured", message: "Email delivery is not configured (RESEND_API_KEY, STORE_FROM_EMAIL, STORE_NOTIFY_EMAIL)." },

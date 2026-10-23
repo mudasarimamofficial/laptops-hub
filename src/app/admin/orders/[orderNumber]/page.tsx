@@ -35,7 +35,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
 
   const { data: outbox } = await supabase
     .from("notification_outbox")
-    .select("channel, template, status, attempts, last_error, created_at, sent_at")
+    .select("channel, template, status, attempts, last_error, created_at, sent_at, business_status, customer_status, next_attempt_at")
     .eq("order_id", order.id)
     .order("created_at");
 
@@ -236,12 +236,23 @@ export default async function AdminOrderDetailPage({ params }: Props) {
                 <div className="font-medium">
                   {n.template} · {n.channel} · <span data-testid="notification-status">{n.status}</span> · attempts {n.attempts}
                 </div>
-                {n.sent_at ? <div className="text-xs text-[var(--lh-ink-2)]">Sent {new Date(n.sent_at).toLocaleString()}</div> : null}
+                <div className="text-xs text-[var(--lh-ink-2)]">
+                  Store alert: <span data-testid="notification-business">{n.business_status}</span> · Customer email:{" "}
+                  <span data-testid="notification-customer">{n.customer_status}</span>
+                </div>
+                {n.sent_at ? (
+                  <div className="text-xs text-[var(--lh-ink-2)]">
+                    Accepted by the email provider {new Date(n.sent_at).toLocaleString()} (delivery to the inbox is not confirmed)
+                  </div>
+                ) : null}
+                {n.status === "failed" && n.next_attempt_at ? (
+                  <div className="text-xs text-[var(--lh-ink-2)]">Next automatic attempt after {new Date(n.next_attempt_at).toLocaleString()}</div>
+                ) : null}
                 {n.last_error ? <div className="text-xs text-[var(--lh-error)]">{n.last_error}</div> : null}
               </li>
             ))}
           </ul>
-          {(outbox || []).some((n) => n.status !== "sent") ? <NotificationRetry orderNumber={order.order_number} /> : null}
+          {(outbox || []).some((n) => n.status !== "accepted") ? <NotificationRetry orderNumber={order.order_number} /> : null}
         </section>
       </div>
     </div>

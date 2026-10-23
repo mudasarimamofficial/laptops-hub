@@ -13,6 +13,8 @@ email). Roles: `docs/ADMIN_ROLE_MATRIX.md`.
    values ('<owner user id>', 'owner', true)
    on conflict (user_id) do update set role = 'owner', is_active = true;
    ```
+   Only with **your own** user id — run for another id, it makes that person owner. Afterwards list
+   `admin_memberships` and check that nobody else is `owner`/`admin` unintentionally.
 3. Sign in at `/admin/login`; the overview shows `role owner`.
 
 Staff: same steps with role `admin`, `manager`, `editor` or `fulfillment`. Remove access:
@@ -53,9 +55,13 @@ order's collection history before trying again; never re-enter the same cash wit
 
 ## 5. Notifications
 
-Each order page has a **Notifications** box: `sent` (with time), `pending` (provider not configured), or `failed`
-(with the error). Press **Retry sending** after fixing the cause; the same message is never delivered twice.
-The overview counts **Unsent notifications**. A daily automatic retry also runs.
+Each order page has a **Notifications** box with the store alert and the customer email separately:
+`accepted` (the email provider took it — check the inbox; delivery is not confirmed by the website), `pending`
+(provider not configured), `failed` (with the error and the next automatic attempt), `skipped` (no customer email).
+Press **Retry sending** after fixing the cause; a recipient already accepted is never sent again. Automatic retries
+stop after 5 attempts or 23 hours ("automatic retries stopped") — then check the inbox before retrying, because after
+24 hours the provider can no longer recognise a repeat. The overview counts **Unsent notifications**; the cron safety
+net runs daily (`docs/NOTIFICATIONS.md`).
 
 ## 6. Customer inquiries
 

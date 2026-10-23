@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "base": "http://127.0.0.1:3001",
-  "at": "2026-10-23T12:50:18.026Z",
+  "at": "2026-10-23T17:50:10.061Z",
   "results": [
     {
       "name": "anon PATCH /api/admin/content/about",
@@ -501,7 +501,7 @@
     {
       "name": "owner can approve and publish a policy page",
       "ok": true,
-      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"816b5b86-c08c-4353-946b-c16def8c0c8e\"}"
+      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"3f45b53f-193e-4bac-ba48-e94605679df4\"}"
     },
     {
       "name": "published policy renders CMS body",
@@ -551,12 +551,12 @@
     {
       "name": "collection recorded once via route",
       "ok": true,
-      "detail": "200 {\"ok\":true,\"idempotentReplay\":false,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"76b083c5-6635-4040-a561-0415b2686a1d\"} collected=100000"
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":false,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"deac1ffb-1782-46c8-b05c-14cc8c675dc1\"} collected=100000"
     },
     {
       "name": "retry with same key replays",
       "ok": true,
-      "detail": "200 {\"ok\":true,\"idempotentReplay\":true,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"76b083c5-6635-4040-a561-0415b2686a1d\"}"
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":true,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"deac1ffb-1782-46c8-b05c-14cc8c675dc1\"}"
     },
     {
       "name": "same key, different amount → 409 conflict, no constraint leak",

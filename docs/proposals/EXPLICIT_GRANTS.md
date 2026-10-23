@@ -1,4 +1,4 @@
-# Explicit GRANTs — implemented locally, NOT applied to production
+# Explicit GRANTs — APPLIED to production 2026-10-23 (Option B, owner-approved)
 
 Migration: `supabase/migrations/20261023120000_explicit_grants.sql` (2026-10-23).
 
@@ -9,7 +9,7 @@ The earlier migrations never granted privileges to `anon`, `authenticated` or `s
 got them from Supabase's legacy "auto-expose" default privileges, which are removed on **2026-10-30**. Without
 explicit grants, a database rebuilt from migrations (local stack, branch, disaster recovery) denies every API call.
 
-## Security finding (live on production today)
+## Security finding (fixed on production 2026-10-23: Option A, then Option B)
 The legacy defaults re-granted EXECUTE to `anon`/`authenticated` on three functions the migrations had restricted
 to `service_role`. Verified on production 2026-10-23 with non-mutating probes (empty payload → `validation_failed`
 from inside the function, i.e. callable; `create_cod_order` correctly returns `42501`):

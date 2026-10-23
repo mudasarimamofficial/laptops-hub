@@ -23,7 +23,7 @@ export default async function OrderSuccessPage({ params }: Props) {
   if (!order) {
     return (
       <div className="lh-content py-12">
-        <PendingBlock title="Order not found">
+        <PendingBlock title="Order not found" label="Your order">
           This order link is not valid. If you placed an order, look it up with your order number and phone on{" "}
           <Link href="/track-order" className="underline">Track order</Link>.
         </PendingBlock>

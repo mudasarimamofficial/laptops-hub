@@ -135,7 +135,7 @@ export default function CheckoutPage() {
   if (lines.length === 0) {
     return (
       <div className="lh-content py-12">
-        <PendingBlock title="Cart is empty">
+        <PendingBlock title="Your cart is empty" label="Checkout">
           <Link href="/collections/all" className="text-[var(--lh-action)]">
             Browse products
           </Link>
@@ -157,7 +157,7 @@ export default function CheckoutPage() {
 
       {!checkoutEnabled ? (
         <div className="mt-6">
-          <PendingBlock title="Online ordering opens soon">
+          <PendingBlock title="Online ordering opens soon" label="Checkout">
             We are not accepting online orders yet. You can still browse, compare and build your cart.
           </PendingBlock>
         </div>

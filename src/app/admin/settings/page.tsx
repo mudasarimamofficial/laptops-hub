@@ -24,7 +24,7 @@ export default async function AdminSettingsPage() {
     <div className="lh-container py-10">
       <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold">Store settings</h1>
       <div className="mt-6">
-        <PendingBlock title="Checkout readiness">
+        <PendingBlock title="Checkout readiness" label="Before going live">
           Online checkout opens only when all three are true: at least one active shipping zone (
           {activeZones} now), store setting <code>cod_checkout.enabled</code> ({codSetting ? "on" : "off"}), and the
           Production switch <code>COD_CHECKOUT_ENABLED</code> ({codEnv ? "on" : "off"}). Enter only the cities and fees

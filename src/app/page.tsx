@@ -39,7 +39,7 @@ export default async function HomePage() {
   if (!P.length) {
     return (
       <div className="lh-container py-12">
-        <PendingBlock title="Catalog temporarily unavailable">The product catalog could not be loaded. Please try again shortly.</PendingBlock>
+        <PendingBlock title="Catalog temporarily unavailable" label="Please try again">The product catalog could not be loaded. Please try again shortly.</PendingBlock>
       </div>
     );
   }

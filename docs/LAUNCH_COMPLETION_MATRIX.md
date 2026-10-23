@@ -55,9 +55,10 @@ Priority: **P0** needed to accept real orders safely · **P1** essential operati
 ## Verdict
 
 - **Engineering ready (release candidate):** yes for every P0 above, with evidence (local isolated stack; protected
-  Preview for `987dacc`), **once** migration `20261024100000` is approved and applied before deploying. The lease
-  change is verified locally only — a Preview of the new commit is still to run (it needs the migration on the
-  shared database).
+  Preview), **once** migration `20261024100000` is approved and applied before deploying. Preview of `140bc31`
+  (`dpl_3YJhthM3LkiAE1rbSQn3oom7b2NX`): e2e 39 passed / 1 skipped, `/` 200, `/admin` 307, COD POST 403, cron 503
+  (no secret set), staff retry 401 without session, no runtime errors. The lease path itself is verified locally
+  (it needs the migration and email configuration, neither present on the shared database).
 - **Business ready:** **no** — open: owner account, zones/fees, policies + legal approval, contact facts, email
   provider, media rights, workflow approval (4.1), staff list.
 - **Launched:** **no** — production still runs `34f9839`, COD off.

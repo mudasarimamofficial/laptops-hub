@@ -30,11 +30,18 @@ export type ContactDeps = {
 
 export type ContactResult = { status: number; body: Record<string, unknown>; headers?: Record<string, string> };
 
-/** Browsers always send Origin on cross-site POSTs; reject those that are not this site. */
-export function isCrossSite(origin: string | null, requestUrl: string) {
+/**
+ * Browsers always send Origin on cross-site POSTs; reject those that are not this site. "This site" is the host the
+ * request was addressed to (X-Forwarded-Host / Host) or the host in `request.url` — servers can build the URL from a
+ * different name for the same host (e.g. `localhost` for a server bound to 127.0.0.1).
+ */
+export function isCrossSite(origin: string | null, requestUrl: string, requestHost?: string | null) {
   if (!origin) return false;
   try {
-    return new URL(origin).host !== new URL(requestUrl).host;
+    const from = new URL(origin).host;
+    const own = new Set([new URL(requestUrl).host]);
+    for (const h of (requestHost || "").split(",")) if (h.trim()) own.add(h.trim().toLowerCase());
+    return !own.has(from.toLowerCase());
   } catch {
     return true;
   }
@@ -44,8 +51,8 @@ export function isCrossSite(origin: string | null, requestUrl: string) {
  * Contact / inquiry submission. `ok: true` is returned only after the insert succeeded — except for honeypot
  * fills, which are dropped without storing (bots get no signal).
  */
-export async function processContact(input: { origin: string | null; url: string; ip: string; body: unknown }, deps: ContactDeps): Promise<ContactResult> {
-  if (isCrossSite(input.origin, input.url)) return { status: 403, body: { error: "forbidden_origin" } };
+export async function processContact(input: { origin: string | null; url: string; host?: string | null; ip: string; body: unknown }, deps: ContactDeps): Promise<ContactResult> {
+  if (isCrossSite(input.origin, input.url, input.host)) return { status: 403, body: { error: "forbidden_origin" } };
   const limited = await deps.rateLimit(`contact:${input.ip}`);
   if (!limited.ok) {
     return { status: 429, body: { error: "rate_limited", message: "Too many requests. Try again later." }, headers: { "Retry-After": String(limited.retryAfterSec) } };

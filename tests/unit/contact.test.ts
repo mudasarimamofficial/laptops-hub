@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { processContact, type ContactDeps, type ContactRow } from "../../src/lib/validation/contact";
+import { isCrossSite, processContact, type ContactDeps, type ContactRow } from "../../src/lib/validation/contact";
 
 const URL_ = "https://laptops-hub.example/api/contact";
 function deps(opts: { limited?: boolean; insertError?: string } = {}) {
@@ -76,6 +76,18 @@ const run = (body: unknown, d: ContactDeps, origin: string | null = "https://lap
     assert.equal((await run(valid, d, "https://evil.example")).status, 403);
     assert.equal(rows.length, 0);
     assert.equal((await run(valid, d, null)).status, 200);
+  }
+  // Same site addressed by another name than request.url (server bound to 127.0.0.1, URL built as localhost; or
+  // the proxy's forwarded host): allowed. A Host header never makes a different site acceptable.
+  {
+    const { d, rows } = deps();
+    const viaHost = (origin: string, host: string | null) => processContact({ origin, url: "http://localhost:3001/api/contact", host, ip: "1.2.3.4", body: valid }, d);
+    assert.equal((await viaHost("http://127.0.0.1:3001", "127.0.0.1:3001")).status, 200);
+    assert.equal((await viaHost("https://laptops-hub.vercel.app", "laptops-hub.vercel.app")).status, 200);
+    assert.equal((await viaHost("https://evil.example", "laptops-hub.vercel.app")).status, 403);
+    assert.equal((await viaHost("https://evil.example", null)).status, 403);
+    assert.equal(isCrossSite("not a url", "http://localhost:3001/", "localhost:3001"), true);
+    assert.equal(rows.length, 2);
   }
   console.log("contact.test.ts ok");
 })().catch((e) => {

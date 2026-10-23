@@ -8,6 +8,7 @@ export async function POST(request: Request) {
     {
       origin: request.headers.get("origin"),
       url: request.url,
+      host: request.headers.get("x-forwarded-host") || request.headers.get("host"),
       ip: clientIp(request),
       body: await request.json().catch(() => null),
     },

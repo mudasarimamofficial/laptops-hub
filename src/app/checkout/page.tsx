@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { cartSubtotalPaisa, useCart } from "@/lib/commerce/cart-store";
 import { formatPkr } from "@/lib/money";
 import { PendingBlock } from "@/components/ui/pending-block";
+import { PK_PROVINCES } from "@/lib/commerce/pk-places";
 
 const checkoutEnabled = process.env.NEXT_PUBLIC_COD_CHECKOUT_ENABLED === "true";
 
@@ -62,7 +63,11 @@ export default function CheckoutPage() {
         if (!res.ok || json.ok === false) {
           setOptions(json.options || []);
           setServerQuote(null);
-          setError(json.message || json.error || "Delivery not available for this address");
+          setError(
+            json.error === "product_not_purchasable" || json.error === "variant_not_found"
+              ? "An item in your cart is no longer available. Remove it from your cart and try again."
+              : json.message || "Delivery is not available for this address.",
+          );
           return;
         }
         setOptions(json.options || []);
@@ -81,7 +86,7 @@ export default function CheckoutPage() {
     e.preventDefault();
     setError(null);
     if (!checkoutEnabled) {
-      setError("COD checkout is disabled until shipping zones and policies are configured.");
+      setError("Online ordering is not open yet.");
       return;
     }
     if (!zoneId) {
@@ -121,7 +126,7 @@ export default function CheckoutPage() {
       clear();
       router.push(`/order/success/${json.accessToken}`);
     } catch {
-      setError("Network error — do not resubmit without checking Track order.");
+      setError("Network error — your order may still have been placed. Check Track order before trying again.");
     } finally {
       setPending(false);
     }
@@ -130,7 +135,7 @@ export default function CheckoutPage() {
   if (lines.length === 0) {
     return (
       <div className="lh-content py-12">
-        <PendingBlock title="Cart is empty">
+        <PendingBlock title="Your cart is empty" label="Checkout">
           <Link href="/collections/all" className="text-[var(--lh-action)]">
             Browse products
           </Link>
@@ -146,16 +151,14 @@ export default function CheckoutPage() {
         Place COD order
       </h1>
       <p className="mt-2 text-[var(--lh-ink-2)]">
-        Cash on Delivery only. Delivery options appear after you enter a city we serve. Totals are calculated on the
-        server — browser estimates are not trusted.
+        Cash on Delivery: you pay when the parcel arrives. Enter your city and province to see the delivery options and
+        the exact amount due.
       </p>
 
       {!checkoutEnabled ? (
         <div className="mt-6">
-          <PendingBlock title="Live COD acceptance is off">
-            Configure active shipping zones (cities/provinces + fees) in admin, then enable{" "}
-            <code>cod_checkout</code> after owner approval. Quote UX works for staff testing once zones exist; public
-            placement stays blocked.
+          <PendingBlock title="Online ordering opens soon" label="Checkout">
+            We are not accepting online orders yet. You can still browse, compare and build your cart.
           </PendingBlock>
         </div>
       ) : null}
@@ -189,13 +192,20 @@ export default function CheckoutPage() {
         </label>
         <label className="block text-sm">
           Province
-          <input
+          <select
             name="province"
             required
             value={province}
             onChange={(e) => setProvince(e.target.value)}
-            className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
-          />
+            className="mt-1 w-full rounded-xl border border-[var(--lh-border)] bg-white px-3 py-2"
+          >
+            <option value="">Select province</option>
+            {PK_PROVINCES.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
         </label>
         <label className="block text-sm">
           Postcode
@@ -209,7 +219,7 @@ export default function CheckoutPage() {
         <fieldset className="md:col-span-2">
           <legend className="text-sm font-semibold">Delivery option</legend>
           {quoting ? <p className="mt-2 text-sm text-[var(--lh-ink-2)]">Checking coverage…</p> : null}
-          {options.length === 0 && city.length >= 2 && province.length >= 2 && !quoting ? (
+          {options.length === 0 && !error && city.length >= 2 && province.length >= 2 && !quoting ? (
             <p className="mt-2 text-sm text-[var(--lh-error)]">No COD delivery options for this city/province yet.</p>
           ) : null}
           <div className="mt-3 space-y-2">
@@ -245,11 +255,10 @@ export default function CheckoutPage() {
 
         <div className="rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-4 md:col-span-2">
           <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-wider text-[var(--lh-ink-2)]">
-            Order summary (server quote)
+            Order summary
           </p>
           <ul className="mt-3 space-y-1 text-sm">
-            <li>Items (browser estimate): {formatPkr(localSubtotal)}</li>
-            <li>Items (server): {serverQuote ? formatPkr(serverQuote.subtotalPaisa) : "—"}</li>
+            <li>Items: {formatPkr(serverQuote ? serverQuote.subtotalPaisa : localSubtotal)}</li>
             <li>Delivery: {serverQuote ? formatPkr(serverQuote.shippingPaisa) : "—"}</li>
             <li>COD fee: {serverQuote ? formatPkr(serverQuote.codFeePaisa) : "—"}</li>
             <li className="pt-2 font-[family-name:var(--font-display)] text-lg font-bold">
@@ -260,7 +269,12 @@ export default function CheckoutPage() {
 
         <label className="flex items-start gap-2 text-sm md:col-span-2">
           <input type="checkbox" name="confirm" required className="mt-1" />
-          I will pay the final cash-due amount on delivery (COD).
+          <span>
+            I will pay the cash-due amount above on delivery, and I agree to the{" "}
+            <Link href="/pages/terms" className="underline">terms</Link>,{" "}
+            <Link href="/pages/returns" className="underline">returns policy</Link> and{" "}
+            <Link href="/pages/privacy" className="underline">privacy policy</Link>.
+          </span>
         </label>
         {error ? <p className="text-sm text-[var(--lh-error)] md:col-span-2">{error}</p> : null}
         <button

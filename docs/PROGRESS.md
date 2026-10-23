@@ -1,5 +1,115 @@
 # Progress log
 
+## 2026-10-23 — launch completion pass (no Production change)
+- Owner inputs consolidated: `docs/FINAL_LAUNCH_OWNER_INPUTS.md`. Matrix: `docs/LAUNCH_COMPLETION_MATRIX.md`. Handbook: `docs/STAFF_HANDBOOK.md`. Media: `docs/MEDIA_INVENTORY.md`.
+- Built: notification delivery (outbox worker, Resend adapter, after()/cron/staff retry, no duplicates), real Track order (number + phone, rate-limited), confirmation page with items/charges/status/tracking, shipping-zone edit/(de)activate, province list shared by checkout and zones, checkout consent to terms/returns/privacy and customer-grade copy, dashboard counters.
+- Fixed: admin status panel could show the old status after an update (refresh lag) → shows the server-confirmed status; checkout showed "no delivery" for an unavailable cart item → clear message.
+- Verified: launch journeys 10/10 ×2 (isolated), collection 16/16, role matrix 15/15, checkout 31/31, role HTTP 113/113; production-data regression unchanged.
+
+## 2026-10-23 — pre-launch modes (no Production change)
+- SEO fix: pre-launch no longer blocks crawling; header and meta agree (`noindex` / `noindex, follow`); no canonical; empty sitemap; private routes disallowed. Found and fixed collection pages dropping the layout noindex (`robotsFor`).
+- Mode A notice bar; mode B restricted coming-soon page via middleware (storefront, catalog APIs and remote image optimisation blocked; admin works).
+- Verified: local production-like builds launch 24/24, A 35/35, B 44/44; e2e 39/1 in launch and A; console clean; axe 0 in all modes; unit 12 suites; P0 9/9; auth 24/24; routes; Previews for all three modes.
+- Limits documented: Supabase public API and Shopify CDN photo URLs stay public in every mode.
+
+## 2026-10-23 — Option B applied to production (owner-approved)
+- Preflight (ledger 7, dry run = 6 files), schema backup (`backups/`, gitignored), `supabase db push --linked` (6 applied), ledger 13.
+- Production privileges, schema and function bodies identical to the verified local build; ACL, guard and quote-fix checks pass; anon probes 42501; P0 9/9; auth matrix 24/24; routes pass; public site smoke and runtime logs clean. No web/alias/env/COD change.
+
+## 2026-10-23 (final pre-release pass) — audit, public site, regression
+- Verified: PR #1/#2 drafts, CI green; ledger 7 applied; dry run lists the pending Option B files.
+- Production schema fingerprint = repo-expected state (only CRLF in function text). CLI executor is a member of `postgres`; `auth.role()` exists.
+- Push path on a local copy of production state = fresh build; injected mid-sequence failure rolls back alone; rollback SQL returns exactly to today's production state.
+- Found and fixed (branch): `quote_cod_shipping` broken once any zone exists → `20261023170000` (Option B now 6 files); contact origin check rejected same-site posts when hosts differ → accepts request Host; sitemap/robots advertised the SSO-protected deployment host → production domain.
+- Added default-off pre-launch mode (`SITE_PRELAUNCH=1`).
+- Public site: owner redeployed `34f9839` to Production (`dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH`) — `/pages/*` 500s resolved; site public and indexable (`docs/PUBLIC_SITE_PLAN.md`).
+- Regression: unit 11 suites, build, e2e 39/1 skipped, routes, data parity 0 mismatches, P0 9/9, auth 24/24, axe 0 (10 routes), console clean; visual parity rerun (517 captures: 187 storefront, 264 content, 66 gated) with no regression; isolated COD collection matrix 16/16 · role matrix 15/15 · checkout isolated 31/31 (incl. shipping quote, order confirmation by token, contact insert as anon, checkout key conflicts, 8×6 concurrent HTTP submits) · staff role HTTP 97/97.
+- Owner package: `docs/OWNER_READINESS_REPORT.md`, `docs/RELEASE_PLAN.md`.
+
+## 2026-10-23 — Option A applied to production (owner-approved)
+- Applied only `20261023110000` via `supabase db query --linked -f`, recorded with `migration repair` (ledger 7). Exactly 6 privilege rows changed; anon probes now 42501; service path intact; P0 9/9, auth matrix 24/24, routes all pass. Option B not applied.
+- Found: public alias `/pages/*` 500 (old `ea652f2` jsdom crash), pre-existing; not changed.
+
+## 2026-10-23 (later) — security & COD integrity pass (master bible, phases 0–7)
+- Phase 0: HEAD `c2f3bb9` = handoff; PR #1 draft, its head `ea652f2` is an ancestor (13 commits ahead). Production ledger read-only: 6 applied, 2 pending (now 6). RLS on all 22 tables.
+- Phase 1: confirmed (pg_proc ACLs) anon EXECUTE on `record_cod_collection`, `transition_order_status`, `consume_rate_limit` and legacy default privileges. Migrations `20261023110000` (emergency revoke), `20261023140000` (defaults), guard in `20261023150000`. Simulated on production-equivalent grants: Option A changes exactly 6 privilege rows; Option B ends identical to a fresh build; future objects closed.
+- Phase 2: `20261023150000` conflict semantics; admin form keeps one key per collection; `/api/admin/cod-collections` maps conflict to 409. `20261023160000` + `/api/checkout/cod` for checkout keys.
+- Phase 3: role matrix 15/15 · COD collection matrix 16/16 (8 consecutive runs; 2/8/16/32-way same-key bursts, cross-order and different-amount conflicts, over-collection) · checkout isolated 25/25 (incl. same-key different cart/zone conflicts and 8×6 concurrent HTTP submits) · staff role HTTP 97/97 (incl. CMS template gate and COD collection record/replay/conflict through the admin route) — local Supabase only.
+- Phase 4: CMS empty-body template gate (resolver, sitemap/nav, publish API, admin form, unit + HTTP tests).
+- Phase 5: tsc, lint (0 errors), unit 10 suites, build; e2e 39 passed / 1 skipped (inquiry submit needs an inquiry-only product + non-production DB); P0 9/9, auth matrix 24/24, pagination 5/5, data parity 0 mismatches, routes all pass, axe 0, console clean (production data, read-only).
+- Not applied to production; no Production deploy; COD off.
+
+## 2026-10-23 — COD collection idempotency race (local only)
+- Migration `20261023130000_cod_collection_idempotency_race.sql`: `record_cod_collection` re-checks the idempotency key after locking the order and turns a `unique_violation` (same key, other order) into a replay. Grants unchanged (service_role only).
+- `test-cod-concurrency.mjs`: + 10×8 same-key bursts and a cross-order race. Old function fails them every run; fixed function 10/10 on 15 consecutive runs. Not applied to production.
+
+## 2026-10-23 — explicit GRANTs (local only)
+- Migration `20261023120000_explicit_grants.sql`; local stack runs without `auto_expose_new_tables`.
+- Found on production (non-mutating probes): anon can execute `record_cod_collection` and `transition_order_status` (SECURITY DEFINER, trust `actor_user_id`) and `consume_rate_limit`. The migration restores service-role-only execute and hides `content_pages.legal_approved_by` from anon. Not applied to production.
+- Verified: privilege snapshot = legacy minus intended changes; production path identical; role matrix 15/15, checkout 21/21, role HTTP 87/87.
+- COD concurrency found intermittent (4/6): same-key collection race returns an error instead of a replay; no double collection. Not fixed.
+
+## 2026-10-22 (isolated tests) — local Supabase
+- Local Supabase in Docker from `supabase/migrations` (no production data); fixture-writing scripts now refuse non-local URLs.
+- Results: role matrix 15/15 · COD concurrency 6/6 · checkout isolated 18/18 (incl. 8×6 concurrent HTTP submits) · staff role × admin API/page over HTTP 86/86 (incl. legal-approval separation) — all on a local Supabase built from `supabase/migrations`, never production (`docs/ISOLATED_TESTS.md`).
+- Fixed: checkout duplicate-submit race (23505 → retry returns the existing order; no constraint leak).
+- Found: migrations rely on legacy auto-exposed grants; proposal `docs/proposals/EXPLICIT_GRANTS.md` (owner review, not applied).
+
+## 2026-10-22 (later) — V5 content parity & release safety
+
+### Done
+- Ported every remaining V5 template: 13 content pages, guides index, 4 articles, FAQ accordion, contact form, missing page.
+- CMS-backed publication model (no schema change): published row + body → sanitized HTML in V5 shell; published + empty body → V5 template; otherwise gated, noindex, not in sitemap. Legal gate enforced by RLS and again in code.
+- V5 content generated from `lh-content.js` with owner checklists removed (`docs/OWNER_CONTENT_NEEDS.md`) and prototype statements corrected.
+- Contact form wired to `/api/contact`; API hardened (phone format, email-or-phone, cross-site rejection); unit-tested core; success only after the insert.
+- Fixed a Vercel-only crash: the CMS sanitizer's jsdom dependency failed with ERR_REQUIRE_ESM (dynamic content routes 500; admin content save broken since 2026-10-21). Now sanitize-html with adversarial tests.
+- a11y: WCAG 2.5.3 fixes (logo, cart button, card image links) → axe 0 violations on 10 routes.
+- Harness: content scenes, FAQ expanded, contact idle/invalid/submitting/success/failure (API mocked), gated evidence; 427 captures.
+- Preview `dpl_CPF9iwcqGWj8C6k2FY9KFp5kyfTq` (`568ce08`) verified.
+
+### Not done
+- Role matrix + COD concurrency: done later the same day on a local Supabase (see above).
+- Owner content approvals, media rights, production alias decision.
+
+## 2026-10-22 — V5 reconstruction (`fix/v5-correctness-parity`)
+
+### Done
+- Phase 1 correctness patch applied and verified; fixed two pre-existing `useSyncExternalStore` render loops (compare + cart stores broke as soon as anything was added).
+- Fonts: tokens resolved invalid (mono/display never applied). Self-hosted V5 weights, literal family names, V5 fallback chains.
+- V5 data adapter + taxonomy map; data parity 226/226, 0 mismatches, identical catalog order.
+- Ported 1:1 from the V5 source: header (mega, search overlay, mobile menu), footer, toast, product card, all 10 homepage sections (hero, pinned four-angle story, Chromebooks, brands, featured, promo, spec, newer generations, budget, compare demo), collection/search view with server-side facets, PDP, cart page, cart drawer, compare page, 404.
+- Parity harness (`scripts/visual/capture.mjs`): reference vs Next at 11 viewports incl. interaction states; report `docs/V5_PIXEL_DIFF_REPORT.md`. Home hero/story 0% at all 11 viewports; every ported template ≤0.4%.
+- SEO: sitemap (268 URLs), robots (sitemap, private paths disallowed), canonical URLs, product JSON-LD from verified fields, filtered/search pages noindex, admin noindex, approved meta description.
+- Route check: 226/226 PDP 200, 6/6 drafts 404, 39/39 collections 200.
+
+### Found
+- `laptops-hub.vercel.app` (Production) is public and serves the pre-parity `ea652f2` build (owner dashboard redeploy). COD there returns 403.
+
+### Remaining
+- Port content/FAQ/contact/guides templates.
+- Owner: media rights (cutouts + catalog photos), shipping, legal, contact facts, staff bootstrap, production-domain decision.
+
+## 2026-10-21 — Phase 1 correctness patch (`fix/v5-correctness-parity`, from `ea652f2`)
+
+Prepared in Claude Design as a patch set; must be applied, checked and pushed from a machine with the repo (see `APPLY.md` in the patch). Not yet committed, built or deployed.
+
+### Implemented
+- Related products load ordered media (one batched media query; no N+1).
+- `PublicProduct.available` + `canPurchase()`; cards / PDP / AddToCart only offer cart controls when purchasable; V5 "Ask about this product" dialog posts to `/api/contact` otherwise.
+- V5 compare tray (thumbnails, names, per-item remove, Clear all, Compare); new `/api/catalog/compare-summary`; stale/private handles pruned; hidden on cart/compare/checkout/pages/guides/admin, when drawer open, and over `#story`.
+- Curated PDP + compare specs (`curateSpecs`); generated spec paragraph hidden from descriptions.
+- Public boundary: internal spec key labels renamed/dropped (`toPublicSpecs`), import QA flags removed from `tags` (`publicTags`), descriptions filtered, before data reaches client components or API JSON.
+- Cart honours `max_per_order` (store, drawer, cart page, card, PDP, story); legacy lines fall back to the DB hard cap 20.
+- `scripts/import-catalog.mjs`: syntax error in `loadEnvLocal` fixed; importer no longer writes the internal-label spec paragraph. **Not run.**
+- Unit tests: `specs`, `availability-handles`, `cart-limits`. E2E: `tests/e2e/v5-correctness.spec.ts`.
+
+### Awaiting owner
+- `docs/proposals/AVAILABILITY_INQUIRY_ONLY.md` (RLS/view change; not applied).
+- `docs/proposals/DESCRIPTION_CLEANUP.md` (3 intro texts with CRM wording + 171 stored generated paragraphs; reversible SQL; not applied).
+- Media approval (all `pending`; not changed).
+
+---
+
 ## 2026-10-21 — V5 parity sprint (header / hero / card / search / cart)
 
 ### Recovered

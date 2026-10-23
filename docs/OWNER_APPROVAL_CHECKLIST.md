@@ -1,3 +1,5 @@
+> **Superseded (2026-10-23).** This checklist dates from the prototype/Shopify handoff. Current owner package: `docs/OWNER_READINESS_REPORT.md` (live stack: Next.js + Supabase + Vercel; Shopify was only the catalog export source). Kept for history.
+
 # Owner approval checklist
 
 For Laptops HUB to complete. Nothing here was invented in the prototype; every item is currently shown to customers as "Being finalised" (or hidden). Detail per page: BUSINESS_CONTENT_REQUIREMENTS.md. Text lives in `data/lh-content.js` (pending blocks); set a page's `status` to `'ready'` once approved.

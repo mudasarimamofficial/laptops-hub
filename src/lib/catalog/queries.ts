@@ -1,5 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
+import { modelName, publicDescription, publicTags, toPublicSpecs } from "@/lib/catalog/specs";
 import type { PublicProduct } from "@/types/catalog";
+
+type Db = Pick<Awaited<ReturnType<typeof createClient>>, "from">;
+type MediaItem = { url: string; alt: string; position: number };
 
 type ProductRow = {
   id: string;
@@ -41,6 +45,14 @@ type ListingRow = {
   max_per_order: number;
 };
 
+function sortMedia(list: { url: string; alt: string | null; position: number }[], fallbackAlt: string): MediaItem[] {
+  return list
+    .filter((m) => typeof m.url === "string" && m.url.trim() !== "")
+    .slice()
+    .sort((a, b) => a.position - b.position)
+    .map((m) => ({ url: m.url, alt: m.alt || fallbackAlt, position: m.position }));
+}
+
 function mapProduct(row: ProductRow): PublicProduct | null {
   const variant = row.product_variants?.find((v) => v.purchasable && v.price_paisa > 0);
   if (!variant) return null;
@@ -48,47 +60,65 @@ function mapProduct(row: ProductRow): PublicProduct | null {
     id: row.id,
     handle: row.handle,
     title: row.title,
-    descriptionSafe: row.description_safe || "",
+    descriptionSafe: publicDescription(row.description_safe),
     manufacturer: row.manufacturer,
     productType: row.product_type,
     category: row.category,
     featured: row.featured,
-    tags: row.tags || [],
-    specs: row.specs || {},
+    tags: publicTags(row.tags),
+    specs: toPublicSpecs(row.specs),
     variantId: variant.id,
     sku: variant.sku,
     pricePaisa: variant.price_paisa,
     compareAtPaisa: variant.compare_at_paisa,
     maxPerOrder: variant.max_per_order,
-    images: (row.product_media || [])
-      .slice()
-      .sort((a, b) => a.position - b.position)
-      .map((m) => ({ url: m.url, alt: m.alt || row.title, position: m.position })),
+    available: variant.purchasable === true,
+    images: sortMedia(row.product_media || [], row.title),
   };
 }
 
-function mapListing(row: ListingRow, media: { url: string; alt: string; position: number }[] = []): PublicProduct {
+function mapListing(row: ListingRow, media: { url: string; alt: string | null; position: number }[] = []): PublicProduct {
   return {
     id: row.id,
     handle: row.handle,
     title: row.title,
-    descriptionSafe: row.description_safe || "",
+    descriptionSafe: publicDescription(row.description_safe),
     manufacturer: row.manufacturer,
     productType: row.product_type,
     category: row.category,
     featured: row.featured,
-    tags: row.tags || [],
-    specs: row.specs || {},
+    tags: publicTags(row.tags),
+    specs: toPublicSpecs(row.specs),
     variantId: row.variant_id,
     sku: row.sku,
     pricePaisa: row.price_paisa,
     compareAtPaisa: row.compare_at_paisa,
     maxPerOrder: row.max_per_order,
-    images: media
-      .slice()
-      .sort((a, b) => a.position - b.position)
-      .map((m) => ({ url: m.url, alt: m.alt || row.title, position: m.position })),
+    // public_catalog_listing only returns variants with purchasable = true AND price_paisa > 0.
+    available: true,
+    images: sortMedia(media, row.title),
   };
+}
+
+/**
+ * One query for all media of a set of products (no N+1).
+ * RLS `media_public_select` limits rows to active products.
+ * A media error degrades to "no images" (cards render their no-image state) rather than failing the page.
+ */
+async function loadMediaByProduct(supabase: Db, ids: string[]) {
+  const map = new Map<string, { url: string; alt: string | null; position: number }[]>();
+  if (!ids.length) return map;
+  const { data, error } = await supabase
+    .from("product_media")
+    .select("product_id, url, alt, position")
+    .in("product_id", ids);
+  if (error || !data) return map;
+  for (const m of data as { product_id: string; url: string; alt: string | null; position: number }[]) {
+    const list = map.get(m.product_id) || [];
+    list.push({ url: m.url, alt: m.alt, position: m.position });
+    map.set(m.product_id, list);
+  }
+  return map;
 }
 
 const productSelect = `
@@ -101,8 +131,8 @@ const productSelect = `
 const PAGE = 100;
 
 /** Paginate through the entire active catalog (no hard 226 cap). */
-export async function listAllPublicProducts(): Promise<PublicProduct[]> {
-  const supabase = await createClient();
+export async function listAllPublicProducts(db?: Db): Promise<PublicProduct[]> {
+  const supabase = db ?? (await createClient());
   const out: PublicProduct[] = [];
   let offset = 0;
   for (;;) {
@@ -230,20 +260,7 @@ export async function filterPublicProducts(filter: CatalogFilter): Promise<Catal
   if (error) throw error;
 
   const rows = (data || []) as ListingRow[];
-  const ids = rows.map((r) => r.id);
-  let mediaByProduct = new Map<string, { url: string; alt: string; position: number }[]>();
-  if (ids.length) {
-    const { data: media } = await supabase
-      .from("product_media")
-      .select("product_id, url, alt, position")
-      .in("product_id", ids);
-    mediaByProduct = new Map();
-    for (const m of media || []) {
-      const list = mediaByProduct.get(m.product_id) || [];
-      list.push({ url: m.url, alt: m.alt, position: m.position });
-      mediaByProduct.set(m.product_id, list);
-    }
-  }
+  const mediaByProduct = await loadMediaByProduct(supabase, rows.map((r) => r.id));
 
   return {
     products: rows.map((r) => mapListing(r, mediaByProduct.get(r.id) || [])),
@@ -263,8 +280,48 @@ export async function listRelatedProducts(product: PublicProduct, limit = 4): Pr
   }
   const { data, error } = await query;
   if (error) throw error;
-  const rows = (data || []) as ListingRow[];
-  return rows.slice(0, limit).map((r) => mapListing(r));
+  const picked = ((data || []) as ListingRow[]).slice(0, limit);
+  const mediaByProduct = await loadMediaByProduct(supabase, picked.map((r) => r.id));
+  return picked.map((r) => mapListing(r, mediaByProduct.get(r.id) || []));
+}
+
+export type CompareSummary = {
+  handle: string;
+  title: string;
+  model: string;
+  imageUrl: string | null;
+  imageAlt: string;
+};
+
+/**
+ * Minimal public summaries for the compare tray. Reads the public listing view, so
+ * draft/archived/non-purchasable handles are simply absent from the result. Two queries total.
+ */
+export async function listCompareSummaries(handles: string[]): Promise<CompareSummary[]> {
+  if (!handles.length) return [];
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("public_catalog_listing")
+    .select("id, handle, title, specs")
+    .in("handle", handles);
+  if (error) throw error;
+  const rows = (data || []) as Pick<ListingRow, "id" | "handle" | "title" | "specs">[];
+  const mediaByProduct = await loadMediaByProduct(supabase, rows.map((r) => r.id));
+  const byHandle = new Map(rows.map((r) => [r.handle, r]));
+  return handles.flatMap((h) => {
+    const r = byHandle.get(h);
+    if (!r) return [];
+    const img = sortMedia(mediaByProduct.get(r.id) || [], r.title)[0];
+    return [
+      {
+        handle: r.handle,
+        title: r.title,
+        model: modelName(r.title, toPublicSpecs(r.specs)),
+        imageUrl: img?.url ?? null,
+        imageAlt: img?.alt || r.title,
+      },
+    ];
+  });
 }
 
 /** Removed: privileged counts must only run after requireStaff() inside /admin pages. */

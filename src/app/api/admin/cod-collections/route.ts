@@ -48,6 +48,15 @@ export async function POST(request: Request) {
           { status: 409 },
         );
       }
+      if (msg.includes("idempotency_conflict")) {
+        return NextResponse.json(
+          {
+            error: "idempotency_conflict",
+            message: "This collection key was already used for a different order or amount. Nothing was recorded.",
+          },
+          { status: 409 },
+        );
+      }
       if (msg.includes("forbidden")) return NextResponse.json({ error: "forbidden" }, { status: 403 });
       if (msg.includes("idempotency_required") || msg.includes("validation_failed")) {
         return NextResponse.json({ error: "validation_failed" }, { status: 400 });

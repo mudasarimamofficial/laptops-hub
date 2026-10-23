@@ -1,204 +1,126 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import { formatPkr } from "@/lib/money";
 import type { PublicProduct } from "@/types/catalog";
 import { useCart } from "@/lib/commerce/cart-store";
 import { openCartDrawer } from "@/lib/commerce/cart-ui";
-import { useCompare, COMPARE_MAX } from "@/lib/commerce/compare-store";
+import { useCompare } from "@/lib/commerce/compare-store";
+import { canPurchase } from "@/lib/catalog/availability";
+import { toV5, v5Card, type V5Card } from "@/lib/catalog/v5-model";
+import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
 
-function chipList(product: PublicProduct): string[] {
-  const s = product.specs;
-  const chips = [
-    s.cpu || s.processor,
-    s.ram,
-    s.storage || s.sto,
-    s.size || s.screen,
-  ]
-    .map((v) => (v == null ? "" : String(v).trim()))
-    .filter(Boolean);
-  return chips.slice(0, 4);
-}
-
-export function ProductCard({ product }: { product: PublicProduct }) {
+/** Port of `ProductCard v5.dc.html`. Category badge only (no stock wording by design). */
+export function V5ProductCard({ item }: { item: V5Card }) {
   const [hover, setHover] = useState(false);
-  const img = product.images[0];
-  const img2 = product.images[1];
+  const [inquiring, setInquiring] = useState(false);
   const toggle = useCompare((s) => s.toggle);
-  const has = useCompare((s) => s.has(product.handle));
-  const count = useCompare((s) => s.handles.length);
+  const compared = useCompare((s) => s.handles.includes(item.h));
   const add = useCart((s) => s.add);
-  const [added, setAdded] = useState(false);
-
-  const manufacturer =
-    product.manufacturer && !/laptops hub/i.test(product.manufacturer) ? product.manufacturer : null;
-  const model = String(product.specs.model || product.title.split(" - ")[0] || product.title);
-  const config = String(
-    product.specs.config ||
-      [product.specs.cpu || product.specs.processor, product.specs.ram, product.specs.storage || product.specs.sto]
-        .filter(Boolean)
-        .join(" · ") ||
-      "",
-  );
-  const chips = chipList(product);
-  const badge = product.category || product.productType || "Laptop";
-  const cond = String(product.specs.condition || product.specs.cond || "Condition not listed");
-  const showImg = hover && img2 ? img2 : img;
+  const purchasable = canPurchase({ available: item.avail, pricePaisa: item.pricePaisa, variantId: item.variantId });
+  const img = hover && item.img2 ? item.img2 : item.img;
+  const cmp = compared
+    ? { label: "Comparing", tick: "✓", bd: "#2159D4", bg: "#EAF3FE", color: "#1748B5", box: "#2159D4", fill: "#2159D4" }
+    : { label: "Compare", tick: "", bd: "#DAE5F2", bg: "#FFFFFF", color: "#102039", box: "#9AA7BA", fill: "transparent" };
 
   return (
     <article
-      className="group relative flex h-full flex-col overflow-hidden rounded-[18px] border border-[var(--lh-border)] bg-white text-[var(--lh-ink)] transition duration-[220ms] ease-out hover:-translate-y-[3px] hover:border-[#B9CBE6] hover:shadow-[0_22px_40px_-28px_rgba(10,23,48,.45)]"
+      className="v5-card"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      style={{ position: "relative", display: "flex", flexDirection: "column", height: "100%", background: "var(--lh-paper,#FFFFFF)", border: "1px solid var(--lh-border,#DAE5F2)", borderRadius: 18, overflow: "hidden", fontFamily: "var(--font-body)", color: "var(--lh-ink,#102039)", transition: "transform .22s ease,box-shadow .22s ease,border-color .22s ease" }}
     >
       <Link
-        href={`/products/${product.handle}`}
-        aria-label={product.title}
-        className="relative block aspect-[5/4] overflow-hidden"
-        style={{
-          background: "linear-gradient(180deg, #FFFFFF 0%, #F3F7FD 62%, var(--lh-titanium) 100%)",
-        }}
+        href={item.href}
+        // Named by its content (photo alt + category badge) so the accessible name contains the visible text (WCAG 2.5.3).
+        style={{ position: "relative", display: "block", aspectRatio: "5/4", background: "linear-gradient(180deg,#FFFFFF 0%,#F3F7FD 62%,var(--lh-titanium,#DFEAF7) 100%)", overflow: "hidden" }}
       >
-        <span
-          aria-hidden
-          className="pointer-events-none absolute bottom-[9%] left-[12%] right-[12%] h-[10%] rounded-full"
-          style={{ background: "radial-gradient(closest-side, rgba(10,23,48,.16), transparent)" }}
-        />
-        {showImg ? (
-          <Image
-            src={showImg.url}
-            alt={showImg.alt || product.title}
-            fill
-            className="object-contain p-[18px] mix-blend-multiply transition-transform duration-[350ms] ease-out"
-            style={{ transform: hover ? "scale(1.03)" : "scale(1)" }}
-            sizes="(max-width:768px) 50vw, 25vw"
-            unoptimized
+        <span aria-hidden="true" style={{ position: "absolute", left: "12%", right: "12%", bottom: "9%", height: "10%", borderRadius: "50%", background: "radial-gradient(closest-side,rgba(10,23,48,.16),transparent)" }} />
+        {img ? (
+          // eslint-disable-next-line @next/next/no-img-element -- V5 card image; remote catalog CDN
+          <img
+            src={img}
+            alt={item.alt}
+            loading="lazy"
+            decoding="async"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", padding: 18, mixBlendMode: "multiply", transform: hover ? "scale(1.03)" : "scale(1)", transition: "transform .35s ease" }}
           />
-        ) : (
-          <div className="flex h-full items-center justify-center text-sm text-[var(--lh-ink-2)]">No image</div>
-        )}
-        <div className="absolute left-3 right-3 top-3 flex min-w-0 items-start justify-between gap-1.5">
-          <span className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[#BCD0F2] bg-white px-2.5 py-[5px] text-[11px] font-bold uppercase tracking-[0.04em] text-[var(--lh-action-hover)]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[var(--lh-action)]" />
-            {badge}
+        ) : null}
+        <div style={{ position: "absolute", top: 12, left: 12, right: 12, display: "flex", gap: 6, justifyContent: "space-between", alignItems: "flex-start", minWidth: 0 }}>
+          <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, letterSpacing: ".04em", textTransform: "uppercase", padding: "5px 10px", borderRadius: 999, background: "#FFFFFF", border: "1px solid #BCD0F2", color: "#1748B5", whiteSpace: "nowrap", flexShrink: 0 }}>
+            <span style={{ flexShrink: 0, width: 6, height: 6, borderRadius: "50%", background: "#2159D4" }} />
+            {item.badge}
           </span>
         </div>
       </Link>
-
-      <div className="flex flex-1 flex-col gap-3 border-t border-[var(--lh-border)] px-[18px] pb-[18px] pt-4">
-        <div className="flex min-w-0 items-center justify-between gap-2">
-          <span className="min-w-0 truncate text-xs font-bold uppercase tracking-[0.08em] text-[var(--lh-ink-2)]">
-            {manufacturer || "Brand"} · {cond}
+      <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "16px 18px 18px", flex: 1, borderTop: "1px solid var(--lh-border,#DAE5F2)" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center", minWidth: 0 }}>
+          <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "var(--lh-ink-2,#52637B)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", minWidth: 0 }}>
+            {item.brand} · {item.cond}
           </span>
-          {product.sku ? (
-            <span className="shrink-0 font-[family-name:var(--font-mono)] text-[11px] text-[var(--lh-ink-2)]">
-              {product.sku}
-            </span>
-          ) : null}
+          <span style={{ flexShrink: 0, fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-ink-2,#52637B)" }}>{item.sku}</span>
         </div>
-
-        <Link href={`/products/${product.handle}`} className="flex flex-col gap-[3px] text-[var(--lh-ink)] no-underline">
-          <span
-            className="font-[family-name:var(--font-display)] text-[18px] font-semibold leading-[1.2] tracking-[-0.015em] text-pretty"
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            {model}
+        <Link href={item.href} style={{ color: "var(--lh-ink,#102039)", textDecoration: "none", display: "flex", flexDirection: "column", gap: 3 }}>
+          <span style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 600, lineHeight: 1.2, letterSpacing: "-.015em", textWrap: "pretty", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 2, overflow: "hidden" }}>
+            {item.model}
           </span>
-          <span
-            className="min-h-[2.8em] text-[13px] leading-[1.4] text-[var(--lh-ink-2)] text-pretty"
-            style={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            {config || product.title}
+          <span style={{ fontSize: 13, color: "var(--lh-ink-2,#52637B)", lineHeight: 1.4, textWrap: "pretty", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 2, overflow: "hidden", minHeight: "2.8em" }}>
+            {item.config}
           </span>
         </Link>
-
-        {chips.length > 0 ? (
-          <div className="flex flex-wrap gap-[5px]">
-            {chips.map((chip) => (
-              <span
-                key={chip}
-                className="whitespace-nowrap rounded-[7px] bg-[var(--lh-ice)] px-2 py-1 font-[family-name:var(--font-mono)] text-[11px] font-medium text-[var(--lh-ink)]"
-              >
-                {chip}
-              </span>
-            ))}
-          </div>
-        ) : null}
-
-        <div className="mt-auto flex flex-wrap items-end justify-between gap-2 gap-x-2.5 pt-1.5">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--lh-ink-2)]">Price</span>
-            <span className="whitespace-nowrap font-[family-name:var(--font-display)] text-[21px] font-bold tracking-[-0.02em]">
-              {formatPkr(product.pricePaisa)}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+          {item.chips.map((chip) => (
+            <span key={chip} style={{ fontFamily: "var(--font-mono)", fontSize: 11, fontWeight: 500, padding: "4px 8px", borderRadius: 7, background: "var(--lh-ice,#EAF3FE)", color: "var(--lh-ink,#102039)", whiteSpace: "nowrap" }}>
+              {chip}
             </span>
+          ))}
+        </div>
+        <div style={{ marginTop: "auto", display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "8px 10px", paddingTop: 6 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: ".06em", textTransform: "uppercase", color: "var(--lh-ink-2,#52637B)" }}>Price</span>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: 21, fontWeight: 700, letterSpacing: "-.02em", color: "var(--lh-ink,#102039)", whiteSpace: "nowrap" }}>{item.priceText}</span>
           </div>
           <button
             type="button"
-            aria-pressed={has}
-            disabled={!has && count >= COMPARE_MAX}
-            onClick={() => toggle(product.handle)}
-            className="inline-flex h-9 items-center gap-[7px] whitespace-nowrap rounded-[10px] border px-3 pl-2.5 text-xs font-semibold transition disabled:opacity-50"
-            style={
-              has
-                ? {
-                    borderColor: "#2159D4",
-                    background: "#EAF3FE",
-                    color: "#1748B5",
-                  }
-                : {
-                    borderColor: "#DAE5F2",
-                    background: "#FFFFFF",
-                    color: "#102039",
-                  }
-            }
+            onClick={() => toggle(item.h)}
+            aria-pressed={compared}
+            style={{ height: 36, padding: "0 12px 0 10px", borderRadius: 10, border: `1px solid ${cmp.bd}`, background: cmp.bg, color: cmp.color, font: "600 12px var(--font-body)", cursor: "pointer", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 7, transition: "all .18s ease" }}
           >
-            <span
-              aria-hidden
-              className="grid h-3.5 w-3.5 place-items-center rounded-[4px] border-[1.5px] text-[10px] leading-none text-white"
-              style={
-                has
-                  ? { borderColor: "#2159D4", background: "#2159D4" }
-                  : { borderColor: "#9AA7BA", background: "transparent", color: "transparent" }
-              }
-            >
-              {has ? "✓" : ""}
+            <span aria-hidden="true" style={{ width: 14, height: 14, borderRadius: 4, border: `1.5px solid ${cmp.box}`, background: cmp.fill, color: "#FFFFFF", display: "grid", placeItems: "center", fontSize: 10, lineHeight: 1 }}>
+              {cmp.tick}
             </span>
-            {has ? "Comparing" : "Compare"}
+            {cmp.label}
           </button>
         </div>
-
-        <button
-          type="button"
-          className="h-[46px] rounded-xl bg-[var(--lh-action)] text-sm font-bold text-white shadow-[inset_0_1px_0_rgba(255,255,255,.18)] transition hover:bg-[var(--lh-action-hover)] active:scale-[0.98]"
-          onClick={() => {
-            add({
-              variantId: product.variantId,
-              handle: product.handle,
-              title: product.title,
-              unitPricePaisa: product.pricePaisa,
-              quantity: 1,
-              imageUrl: img?.url,
-            });
-            setAdded(true);
-            openCartDrawer();
-            window.setTimeout(() => setAdded(false), 1400);
-          }}
-        >
-          {added ? "Added" : "Add to cart"}
-        </button>
+        {purchasable ? (
+          <button
+            type="button"
+            className="v5-card-atc"
+            onClick={() => {
+              add({ variantId: item.variantId, handle: item.h, title: item.title, unitPricePaisa: item.pricePaisa, quantity: 1, imageUrl: item.img ?? undefined, maxPerOrder: item.maxPerOrder, model: item.model, config: item.config, sku: item.sku });
+              openCartDrawer();
+            }}
+            style={{ height: 46, border: 0, borderRadius: 12, background: "var(--lh-action,#2159D4)", color: "#FFFFFF", font: "700 14px var(--font-body)", cursor: "pointer", boxShadow: "inset 0 1px 0 rgba(255,255,255,.18)", transition: "background .18s ease,transform .18s ease" }}
+          >
+            Add to cart
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="v5-card-ask"
+            onClick={() => setInquiring(true)}
+            style={{ height: 46, border: "1px solid var(--lh-border,#DAE5F2)", borderRadius: 12, background: "var(--lh-paper,#FFFFFF)", color: "var(--lh-ink,#102039)", font: "700 14px var(--font-body)", cursor: "pointer", transition: "border-color .18s ease" }}
+          >
+            Ask about this product
+          </button>
+        )}
       </div>
+      {!purchasable ? <InquiryDialog open={inquiring} onClose={() => setInquiring(false)} productTitle={item.title} productHandle={item.h} /> : null}
     </article>
   );
+}
+
+/** Adapter for pages that still pass a `PublicProduct`. */
+export function ProductCard({ product }: { product: PublicProduct }) {
+  return <V5ProductCard item={v5Card(toV5(product, 0))} />;
 }

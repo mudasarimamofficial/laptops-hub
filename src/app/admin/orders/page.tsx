@@ -77,7 +77,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
 
       {error ? (
         <div className="mt-6">
-          <PendingBlock title="Orders unavailable">{error}</PendingBlock>
+          <PendingBlock title="Orders unavailable" label="Error">{error}</PendingBlock>
         </div>
       ) : orders.length === 0 ? (
         <p className="mt-8 text-[var(--lh-ink-2)]">No orders match.</p>

@@ -4,6 +4,7 @@ import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 import { formatPkr } from "@/lib/money";
 import { OrderActions } from "@/components/admin/order-actions";
+import { NotificationRetry } from "@/components/admin/notification-retry";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -31,6 +32,12 @@ export default async function AdminOrderDetailPage({ params }: Props) {
     .maybeSingle();
 
   if (!order) notFound();
+
+  const { data: outbox } = await supabase
+    .from("notification_outbox")
+    .select("channel, template, status, attempts, last_error, created_at, sent_at, business_status, customer_status, next_attempt_at")
+    .eq("order_id", order.id)
+    .order("created_at");
 
   const addr = Array.isArray(order.order_addresses) ? order.order_addresses[0] : order.order_addresses;
   const items = (order.order_items || []) as {
@@ -219,6 +226,33 @@ export default async function AdminOrderDetailPage({ params }: Props) {
               <li className="text-[var(--lh-ink-2)]">None yet.</li>
             ) : null}
           </ul>
+        </section>
+        <section>
+          <h2 className="font-semibold">Notifications</h2>
+          <ul className="mt-3 space-y-2 text-sm">
+            {(outbox || []).length === 0 ? <li className="text-[var(--lh-ink-2)]">None queued.</li> : null}
+            {(outbox || []).map((n, i) => (
+              <li key={i} className="rounded-xl border border-[var(--lh-border)] bg-white px-3 py-2" data-testid="notification-row">
+                <div className="font-medium">
+                  {n.template} · {n.channel} · <span data-testid="notification-status">{n.status}</span> · attempts {n.attempts}
+                </div>
+                <div className="text-xs text-[var(--lh-ink-2)]">
+                  Store alert: <span data-testid="notification-business">{n.business_status}</span> · Customer email:{" "}
+                  <span data-testid="notification-customer">{n.customer_status}</span>
+                </div>
+                {n.sent_at ? (
+                  <div className="text-xs text-[var(--lh-ink-2)]">
+                    Accepted by the email provider {new Date(n.sent_at).toLocaleString()} (delivery to the inbox is not confirmed)
+                  </div>
+                ) : null}
+                {n.status === "failed" && !(n.last_error || "").endsWith("automatic retries stopped") && Number.isFinite(Date.parse(n.next_attempt_at)) ? (
+                  <div className="text-xs text-[var(--lh-ink-2)]">Next automatic attempt after {new Date(n.next_attempt_at).toLocaleString()}</div>
+                ) : null}
+                {n.last_error ? <div className="text-xs text-[var(--lh-error)]">{n.last_error}</div> : null}
+              </li>
+            ))}
+          </ul>
+          {(outbox || []).some((n) => n.status !== "accepted") ? <NotificationRetry orderNumber={order.order_number} /> : null}
         </section>
       </div>
     </div>

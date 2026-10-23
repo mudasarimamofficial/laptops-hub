@@ -1,17 +1,20 @@
-import { PendingBlock } from "@/components/ui/pending-block";
+import type { Metadata } from "next";
+import { ContentPage } from "@/components/content/content-page";
+import { getGuidesIndex } from "@/lib/content/pages";
+import { canonicalFor, robotsFor } from "@/lib/site-url";
 
-export const metadata = { title: "Guides" };
+export const revalidate = 60;
 
-export default function GuidesPage() {
-  return (
-    <div className="lh-content py-12">
-      <p className="lh-kicker">Editorial</p>
-      <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold tracking-[-0.04em]">Guides</h1>
-      <div className="mt-8">
-        <PendingBlock title="Guides remain draft">
-          Four articles stay unpublished until editorial approval.
-        </PendingBlock>
-      </div>
-    </div>
-  );
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getGuidesIndex();
+  return {
+    title: "Guides",
+    description: page.mode === "gated" ? undefined : page.intro,
+    alternates: canonicalFor("/guides"),
+    robots: robotsFor(page.mode === "gated" || page.preview),
+  };
+}
+
+export default async function GuidesPage() {
+  return <ContentPage page={await getGuidesIndex()} kind="guides" />;
 }

@@ -1,5 +1,6 @@
 import { createHash } from "crypto";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import { processOutbox } from "@/lib/notify/outbox";
 import { createServiceClient } from "@/lib/supabase/server";
 import { normalizePakistanMobile } from "@/lib/phone";
 import { checkoutPayloadSchema } from "@/lib/validation/checkout";
@@ -71,7 +72,7 @@ export async function POST(request: Request) {
     customer_email: data.customerEmail ?? null,
     customer_note: data.customerNote ?? "",
     shipping_zone_id: data.shippingZoneId,
-    confirmation_version: "cod-v1-pending-legal",
+    confirmation_version: "cod-v2-terms-returns-privacy",
     ip_hash: hashIp(ip ?? null) ?? null,
     user_agent: request.headers.get("user-agent")?.slice(0, 300) ?? null,
     address: data.address,
@@ -81,12 +82,27 @@ export async function POST(request: Request) {
     })),
   };
 
-  const { data: result, error } = await supabase.rpc("create_cod_order", {
+  let { data: result, error } = await supabase.rpc("create_cod_order", {
     payload: rpcPayload,
   });
+  // A concurrent submit with the same idempotency key can lose the insert race (unique violation 23505).
+  // The winner's order exists by then, so a second call returns it as a duplicate instead of an error.
+  if (error?.code === "23505") {
+    ({ data: result, error } = await supabase.rpc("create_cod_order", { payload: rpcPayload }));
+  }
 
   if (error) {
     const msg = error.message || "order_failed";
+    if (msg.includes("idempotency_conflict")) {
+      return NextResponse.json(
+        {
+          error: "idempotency_conflict",
+          message:
+            "This checkout was already submitted with a different cart. Check Track order before ordering again, or reload checkout.",
+        },
+        { status: 409 },
+      );
+    }
     const status =
       msg.includes("checkout_disabled") || msg.includes("shipping")
         ? 403
@@ -94,6 +110,12 @@ export async function POST(request: Request) {
           ? 409
           : 400;
     return NextResponse.json({ error: msg }, { status });
+  }
+
+  // New orders only (a replay returns duplicate: true and has no new outbox row): deliver the order alert after
+  // the response is sent. Failures stay in the outbox for retry (cron / admin).
+  if (result.duplicate !== true && result.order_id) {
+    after(() => processOutbox({ orderId: result.order_id }).then(() => undefined, () => undefined));
   }
 
   return NextResponse.json({

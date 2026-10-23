@@ -1,41 +1,16 @@
-import { ProductCard } from "@/components/commerce/product-card";
-import { PendingBlock } from "@/components/ui/pending-block";
-import { countPublicProducts, listPublicProducts } from "@/lib/catalog/queries";
+import type { Metadata } from "next";
+import { CollectionPage } from "@/components/storefront/collection-page";
+import { canonicalFor, robotsFor } from "@/lib/site-url";
 
 export const revalidate = 60;
-export const metadata = { title: "All products" };
 
-export default async function AllProductsPage() {
-  let products: Awaited<ReturnType<typeof listPublicProducts>> = [];
-  let count = 0;
-  let error: string | null = null;
-  try {
-    [products, count] = await Promise.all([listPublicProducts(226), countPublicProducts()]);
-  } catch (e) {
-    error = e instanceof Error ? e.message : "Failed to load";
-  }
+type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
-  return (
-    <div className="lh-container py-12">
-      <p className="lh-kicker">Collection</p>
-      <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold tracking-[-0.04em]">
-        All products
-      </h1>
-      <p className="mt-2 text-[var(--lh-ink-2)]">
-        {error ? "—" : `${count} public products`} · no stock counts shown
-      </p>
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const filtered = Object.keys(await searchParams).some((k) => k !== "page");
+  return { title: "All products", alternates: canonicalFor("/collections/all"), robots: robotsFor(filtered) };
+}
 
-      {error ? (
-        <div className="mt-8">
-          <PendingBlock title="Catalog error">{error}</PendingBlock>
-        </div>
-      ) : (
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
+export default async function AllProductsPage({ searchParams }: Props) {
+  return <CollectionPage id="all" searchParams={await searchParams} />;
 }

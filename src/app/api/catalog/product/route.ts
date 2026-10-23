@@ -16,6 +16,7 @@ export async function GET(request: Request) {
       title: product.title,
       pricePaisa: product.pricePaisa,
       manufacturer: product.manufacturer,
+      sku: product.sku,
       specs: product.specs,
     },
   });

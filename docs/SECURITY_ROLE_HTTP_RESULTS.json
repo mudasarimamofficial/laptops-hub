@@ -1,0 +1,572 @@
+{
+  "supabase": "local",
+  "base": "http://127.0.0.1:3001",
+  "at": "2026-10-23T18:30:11.295Z",
+  "results": [
+    {
+      "name": "anon PATCH /api/admin/content/about",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon PATCH /api/admin/products/iso-http-none",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon POST /api/admin/shipping-zones",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon POST /api/admin/cod-collections",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon POST /api/admin/orders/LH-NONE/status",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon POST /api/admin/notifications/retry",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon GET /admin/content",
+      "ok": true,
+      "detail": "307 /admin/login"
+    },
+    {
+      "name": "anon GET /admin/products",
+      "ok": true,
+      "detail": "307 /admin/login"
+    },
+    {
+      "name": "anon GET /admin/orders",
+      "ok": true,
+      "detail": "307 /admin/login"
+    },
+    {
+      "name": "anon GET /admin/inquiries",
+      "ok": true,
+      "detail": "307 /admin/login"
+    },
+    {
+      "name": "anon GET /admin/settings",
+      "ok": true,
+      "detail": "307 /admin/login"
+    },
+    {
+      "name": "owner PATCH /api/admin/content/about → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "owner PATCH /api/admin/products/iso-http-none → allowed",
+      "ok": true,
+      "detail": "status=404"
+    },
+    {
+      "name": "owner POST /api/admin/shipping-zones → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "owner POST /api/admin/cod-collections → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "owner POST /api/admin/orders/LH-NONE/status → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "owner PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "owner POST /api/admin/notifications/retry → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "owner GET /admin/content → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "owner GET /admin/products → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "owner GET /admin/orders → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "owner GET /admin/inquiries → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "owner GET /admin/settings → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "admin PATCH /api/admin/content/about → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "admin PATCH /api/admin/products/iso-http-none → allowed",
+      "ok": true,
+      "detail": "status=404"
+    },
+    {
+      "name": "admin POST /api/admin/shipping-zones → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "admin POST /api/admin/cod-collections → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "admin POST /api/admin/orders/LH-NONE/status → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "admin PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "admin POST /api/admin/notifications/retry → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "admin GET /admin/content → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "admin GET /admin/products → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "admin GET /admin/orders → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "admin GET /admin/inquiries → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "admin GET /admin/settings → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "manager PATCH /api/admin/content/about → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "manager PATCH /api/admin/products/iso-http-none → allowed",
+      "ok": true,
+      "detail": "status=404"
+    },
+    {
+      "name": "manager POST /api/admin/shipping-zones → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "manager POST /api/admin/cod-collections → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "manager POST /api/admin/orders/LH-NONE/status → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "manager PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "manager POST /api/admin/notifications/retry → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "manager GET /admin/content → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "manager GET /admin/products → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "manager GET /admin/orders → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "manager GET /admin/inquiries → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "manager GET /admin/settings → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "editor PATCH /api/admin/content/about → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "editor PATCH /api/admin/products/iso-http-none → allowed",
+      "ok": true,
+      "detail": "status=404"
+    },
+    {
+      "name": "editor POST /api/admin/shipping-zones → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "editor POST /api/admin/cod-collections → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "editor POST /api/admin/orders/LH-NONE/status → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "editor PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "editor POST /api/admin/notifications/retry → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "editor GET /admin/content → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "editor GET /admin/products → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "editor GET /admin/orders → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "editor GET /admin/inquiries → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "editor GET /admin/settings → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "fulfillment PATCH /api/admin/content/about → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "fulfillment PATCH /api/admin/products/iso-http-none → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "fulfillment POST /api/admin/shipping-zones → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "fulfillment POST /api/admin/cod-collections → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "fulfillment POST /api/admin/orders/LH-NONE/status → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "fulfillment PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "fulfillment POST /api/admin/notifications/retry → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "fulfillment GET /admin/content → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "fulfillment GET /admin/products → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "fulfillment GET /admin/orders → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "fulfillment GET /admin/inquiries → 200",
+      "ok": true,
+      "detail": "200 "
+    },
+    {
+      "name": "fulfillment GET /admin/settings → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "manager(inactive) PATCH /api/admin/content/about → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "manager(inactive) PATCH /api/admin/products/iso-http-none → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "manager(inactive) POST /api/admin/shipping-zones → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "manager(inactive) POST /api/admin/cod-collections → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "manager(inactive) POST /api/admin/orders/LH-NONE/status → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "manager(inactive) PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "manager(inactive) POST /api/admin/notifications/retry → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "manager(inactive) GET /admin/content → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "manager(inactive) GET /admin/products → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "manager(inactive) GET /admin/orders → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "manager(inactive) GET /admin/inquiries → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "manager(inactive) GET /admin/settings → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "nonstaff PATCH /api/admin/content/about → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "nonstaff PATCH /api/admin/products/iso-http-none → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "nonstaff POST /api/admin/shipping-zones → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "nonstaff POST /api/admin/cod-collections → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "nonstaff POST /api/admin/orders/LH-NONE/status → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "nonstaff PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "nonstaff POST /api/admin/notifications/retry → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "nonstaff GET /admin/content → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "nonstaff GET /admin/products → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "nonstaff GET /admin/orders → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "nonstaff GET /admin/inquiries → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "nonstaff GET /admin/settings → redirect",
+      "ok": true,
+      "detail": "307 /admin/forbidden"
+    },
+    {
+      "name": "editor cannot legally approve a policy page",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "editor cannot publish a policy page",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
+      "name": "publishing a policy page without legal approval is refused",
+      "ok": true,
+      "detail": "status=409"
+    },
+    {
+      "name": "owner can approve and publish a policy page",
+      "ok": true,
+      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"1eeeae91-09c5-4542-af48-de7c54b132c8\"}"
+    },
+    {
+      "name": "published policy renders CMS body",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "approver id is not readable by anon",
+      "ok": true,
+      "detail": "permission denied for table content_pages"
+    },
+    {
+      "name": "withdrawn policy is gated again immediately",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "empty-body publish refused for a template with pending sections",
+      "ok": true,
+      "detail": "status=409"
+    },
+    {
+      "name": "about stays gated",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "empty-body publish needs explicit template approval",
+      "ok": true,
+      "detail": "status=409"
+    },
+    {
+      "name": "approved template publishes (faq)",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "published template is in the sitemap, gated pages are not",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "unpublished template is gated again",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "collection recorded once via route",
+      "ok": true,
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":false,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"85224927-a1db-4343-91bc-ae9637f1125f\"} collected=100000"
+    },
+    {
+      "name": "retry with same key replays",
+      "ok": true,
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":true,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"85224927-a1db-4343-91bc-ae9637f1125f\"}"
+    },
+    {
+      "name": "same key, different amount → 409 conflict, no constraint leak",
+      "ok": true,
+      "detail": "409 {\"error\":\"idempotency_conflict\",\"message\":\"This collection key was already used for a different order or amount. Nothing was recorded.\"}"
+    },
+    {
+      "name": "editor cannot record collections",
+      "ok": true,
+      "detail": "status=403"
+    }
+  ]
+}

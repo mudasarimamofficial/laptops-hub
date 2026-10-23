@@ -16,6 +16,12 @@ export type PublicProduct = {
   pricePaisa: number;
   compareAtPaisa: number | null;
   maxPerOrder: number;
+  /**
+   * True only when the selected variant is explicitly `purchasable` in the database.
+   * Never derived from stock quantities (none are read publicly).
+   * Server-side `create_cod_order` remains the authority at checkout.
+   */
+  available: boolean;
   images: { url: string; alt: string; position: number }[];
 };
 
@@ -26,4 +32,10 @@ export type CartLine = {
   unitPricePaisa: number;
   quantity: number;
   imageUrl?: string;
+  /** Variant max_per_order captured when added; older persisted lines may lack it (hard cap applies). */
+  maxPerOrder?: number;
+  /** Display fields captured when added (V5 cart shows model, configuration and SKU). */
+  model?: string;
+  config?: string;
+  sku?: string | null;
 };

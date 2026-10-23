@@ -1,0 +1,16 @@
+{
+  "base": "http://127.0.0.1:3000",
+  "at": "2026-10-23T12:54:37.943Z",
+  "results": {
+    "/": [],
+    "/collections/laptops": [],
+    "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage": [],
+    "/cart": [],
+    "/compare": [],
+    "/pages/contact": [],
+    "/pages/faq": [],
+    "/pages/shipping": [],
+    "/guides": [],
+    "/guides/how-much-ram": []
+  }
+}

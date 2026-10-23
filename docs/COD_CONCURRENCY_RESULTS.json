@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-21T09:45:11.092Z",
-  "orderNumber": "LH-SANDBOX-1792575909828",
+  "at": "2026-10-23T12:49:03.618Z",
+  "orderNumber": "LH-SANDBOX-1792759742600",
   "results": [
     {
       "name": "same_key_both_ok_or_one_ok",
@@ -20,7 +20,7 @@
     {
       "name": "diff_keys_no_double_money",
       "ok": true,
-      "detail": "ok=1 over=1 err=over_collection|"
+      "detail": "ok=1 over=1 err=|over_collection"
     },
     {
       "name": "final_collected_eq_total",
@@ -31,6 +31,56 @@
       "name": "exactly_two_collection_rows",
       "ok": true,
       "detail": "rows=2"
+    },
+    {
+      "name": "burst_same_key_no_errors",
+      "ok": true,
+      "detail": "174 calls over 12 keys (2/8/16/32), errors=[]"
+    },
+    {
+      "name": "burst_one_fresh_one_collection_id_per_key",
+      "ok": true,
+      "detail": "keys with != 1 fresh or mixed ids: 0"
+    },
+    {
+      "name": "burst_collected_once_per_key",
+      "ok": true,
+      "detail": "collected=1200 expected=1200"
+    },
+    {
+      "name": "burst_rows_events_audit_once_per_key",
+      "ok": true,
+      "detail": "rows=12 events=12 audit=12"
+    },
+    {
+      "name": "replay_after_completion",
+      "ok": true,
+      "detail": "{\"first\":\"ok\",\"again\":{\"ok\":true,\"collection_id\":\"aea70024-fbe0-4d12-90f1-4bcbde8a2793\",\"payment_status\":\"partially_collected\",\"idempotent_replay\":true,\"amount_collected_paisa\":1300},\"rows\":1}"
+    },
+    {
+      "name": "same_key_different_amount_conflict",
+      "ok": true,
+      "detail": "idempotency_conflict before=1300 after=1300"
+    },
+    {
+      "name": "same_key_other_order_conflict",
+      "ok": true,
+      "detail": "idempotency_conflict o3_collected=0"
+    },
+    {
+      "name": "cross_order_same_key_one_collection_one_conflict",
+      "ok": true,
+      "detail": "bad rounds=0/10 outcomes=idempotency_conflict|fresh"
+    },
+    {
+      "name": "same_order_different_amount_race_one_conflict",
+      "ok": true,
+      "detail": "bad rounds=0/10"
+    },
+    {
+      "name": "distinct_keys_no_over_collection",
+      "ok": true,
+      "detail": "ok=5 over=11 {\"amount_collected_paisa\":1000000,\"payment_status\":\"collected\"}"
     }
   ]
 }

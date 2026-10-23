@@ -1,549 +1,264 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { formatPkr } from "@/lib/money";
+import { useCompare } from "@/lib/commerce/compare-store";
 
-export type HeroLaptop = {
-  handle: string;
-  label: string;
-  imageUrl?: string;
-  pricePaisa?: number;
-  chips?: string[];
-  stockText?: string;
-};
+/** One hero laptop: V5 cutout when approved media is configured, otherwise the catalog photo (multiply blend). */
+export type HeroShot = { href: string; label: string; src: string | null; cutout: boolean };
 
-type Props = {
+export type HeroProps = {
   totalCount: number;
   laptopCount: number;
-  accessoryCount: number;
-  compareCount?: number;
-  main: HeroLaptop;
-  sideLeft?: HeroLaptop;
-  sideRight?: HeroLaptop;
+  accCount: number;
+  main: HeroShot & { priceText: string; stockText: string; chips: string[] };
+  side1: HeroShot | null;
+  side2: HeroShot | null;
 };
 
 function usePrefersReducedMotion() {
-  return useSyncExternalStore(
-    (onStoreChange) => {
-      if (typeof window === "undefined") return () => {};
-      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-      mq.addEventListener("change", onStoreChange);
-      return () => mq.removeEventListener("change", onStoreChange);
-    },
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    () => false,
-  );
-}
-
-function useIsMobile() {
-  return useSyncExternalStore(
-    (onStoreChange) => {
-      if (typeof window === "undefined") return () => {};
-      const mq = window.matchMedia("(max-width: 767px)");
-      mq.addEventListener("change", onStoreChange);
-      return () => mq.removeEventListener("change", onStoreChange);
-    },
-    () => window.matchMedia("(max-width: 767px)").matches,
-    () => false,
-  );
-}
-
-export function CinematicHero({
-  totalCount,
-  laptopCount,
-  accessoryCount,
-  compareCount = 0,
-  main,
-  sideLeft,
-  sideRight,
-}: Props) {
-  const reduced = usePrefersReducedMotion();
-  const isMobile = useIsMobile();
-  /** Entrance phase: boot → play (animating) → done. Content stays readable (no long opacity-0 blank). */
-  const [phase, setPhase] = useState<"boot" | "play" | "done">("boot");
-  const [hp, setHp] = useState(0);
-  const [mx, setMx] = useState(0);
-  const [my, setMy] = useState(0);
-
+  const [rm, setRm] = useState(false);
   useEffect(() => {
-    if (reduced) {
-      setPhase("done");
-      return;
-    }
-    let cancelled = false;
-    let doneTimer = 0;
-    // Double-rAF so first paint includes SSR content, then entrance CSS runs once.
-    const raf = requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        if (cancelled) return;
-        setPhase("play");
-        doneTimer = window.setTimeout(() => {
-          if (!cancelled) setPhase("done");
-        }, 1600);
-      });
-    });
+    const mq = matchMedia("(prefers-reduced-motion: reduce)");
+    const on = () => setRm(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  return rm;
+}
+
+const ease = "cubic-bezier(.2,.7,.2,1)";
+
+/** Port of V5 section `#top` ("01 Hero"): layered stage, scroll (--hp) and pointer (--mx/--my) parallax, intro. */
+export function CinematicHero({ totalCount, laptopCount, accCount, main, side1, side2 }: HeroProps) {
+  const rm = usePrefersReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  const [entered, setEntered] = useState(false);
+  const [introDone, setIntroDone] = useState(false);
+  const [skip, setSkip] = useState(false);
+  const compareCount = useCompare((s) => s.handles.length);
+
+  // V5 componentDidMount: entered after 80ms (0 with reduced motion), intro finished after 2.6s.
+  useEffect(() => {
+    const mq = matchMedia("(prefers-reduced-motion: reduce)");
+    const enterT = window.setTimeout(() => setEntered(true), mq.matches ? 0 : 80);
+    const introT = window.setTimeout(() => setIntroDone(true), 2600);
     return () => {
-      cancelled = true;
-      cancelAnimationFrame(raf);
-      if (doneTimer) window.clearTimeout(doneTimer);
+      window.clearTimeout(enterT);
+      window.clearTimeout(introT);
     };
-  }, [reduced]);
+  }, []);
 
+  // V5 frame(): --hp from scroll, eased pointer --mx/--my.
   useEffect(() => {
-    if (reduced || isMobile) return;
-    const onScroll = () => {
-      const y = window.scrollY;
-      const vh = window.innerHeight;
-      setHp(Math.min(1, Math.max(0, y / Math.max(vh * 0.55, 1))));
+    const h = ref.current;
+    if (!h) return;
+    const pt = { x: 0, y: 0 };
+    const pc = { x: 0, y: 0 };
+    let raf = 0;
+    const frame = () => {
+      raf = 0;
+      const r = h.getBoundingClientRect();
+      const hp = rm ? 0 : Math.min(1, Math.max(0, -r.top / Math.max(1, r.height)));
+      pc.x += (pt.x - pc.x) * 0.12;
+      pc.y += (pt.y - pc.y) * 0.12;
+      h.style.setProperty("--hp", hp.toFixed(4));
+      h.style.setProperty("--mx", (rm ? 0 : pc.x).toFixed(4));
+      h.style.setProperty("--my", (rm ? 0 : pc.y).toFixed(4));
+      if (Math.abs(pt.x - pc.x) > 0.002 || Math.abs(pt.y - pc.y) > 0.002) sched();
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [reduced, isMobile]);
+    const sched = () => {
+      if (!raf) raf = requestAnimationFrame(frame);
+    };
+    const onMove = (e: MouseEvent) => {
+      if (rm || innerWidth < 760) return;
+      const r = h.getBoundingClientRect();
+      pt.x = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      pt.y = ((e.clientY - r.top) / r.height - 0.5) * 2;
+      sched();
+    };
+    const onLeave = () => {
+      pt.x = 0;
+      pt.y = 0;
+      sched();
+    };
+    h.addEventListener("mousemove", onMove);
+    h.addEventListener("mouseleave", onLeave);
+    addEventListener("scroll", sched, { passive: true });
+    addEventListener("resize", sched);
+    sched();
+    return () => {
+      cancelAnimationFrame(raf);
+      h.removeEventListener("mousemove", onMove);
+      h.removeEventListener("mouseleave", onLeave);
+      removeEventListener("scroll", sched);
+      removeEventListener("resize", sched);
+    };
+  }, [rm]);
 
-  const showSkip = phase === "play";
-  const inO = 1; // always visible for LCP / a11y; motion via transform
-  const dd = reduced || phase === "boot" ? 0 : 1;
-  const inT = "none";
-  const lapInL = phase === "boot" ? "translate3d(-24px, 12px, 0)" : "none";
-  const lapInR = phase === "boot" ? "translate3d(24px, 12px, 0)" : "none";
-  const lapInC = phase === "boot" ? "translate3d(0, 28px, 0) scale(.96)" : "none";
-  const ringT = phase === "boot" ? "scale(.92)" : "none";
-  const sweepT = phase === "boot" ? "translate3d(-120%, 0, 0)" : "translate3d(160%, 0, 0)";
-
-  const chips = (main.chips || []).slice(0, 4);
-  const priceText = main.pricePaisa != null ? formatPkr(main.pricePaisa) : "";
+  const inn = entered || skip;
+  const dd = skip || rm ? "0" : "1";
+  const inT = inn ? "none" : "translate3d(0,28px,0)";
+  const ringT = inn ? "scale(1)" : "scale(.86)";
+  const lapInC = inn ? "none" : "translate3d(0,60px,0) scale(.94)";
+  const lapInL = inn ? "none" : "translate3d(-60px,30px,0)";
+  const lapInR = inn ? "none" : "translate3d(60px,30px,0)";
+  const sweepT = inn && !rm ? "translateX(190%)" : "translateX(-110%)";
+  const showSkip = !introDone && !skip && !rm;
+  const tr = (props: [string, number, number, boolean?][]) =>
+    props.map(([p, d, delay, eased]) => `${p} calc(var(--dd) * ${d}s) ${eased ? ease : "ease"} calc(var(--dd) * ${delay}s)`).join(",");
+  // Catalog photos have white backgrounds: multiply them into the stage. The blend must sit on the transformed link,
+  // because its transform creates the stacking context the image would otherwise blend inside.
+  const blend = (s: HeroShot) => (s.cutout ? undefined : ("multiply" as const));
 
   return (
     <section
       id="top"
-      aria-label="Hero"
-      className="relative isolate flex flex-col overflow-hidden bg-[var(--lh-canvas)] text-[var(--lh-ink)]"
-      style={
-        {
-          minHeight: isMobile ? "auto" : "max(640px, calc(100vh - 72px))",
-          ["--hp" as string]: String(hp),
-          ["--mx" as string]: String(mx),
-          ["--my" as string]: String(my),
-          ["--dd" as string]: String(dd),
-        } as React.CSSProperties
-      }
-      onMouseMove={(e) => {
-        if (reduced || isMobile) return;
-        const r = e.currentTarget.getBoundingClientRect();
-        setMx(((e.clientX - r.left) / r.width - 0.5) * 2);
-        setMy(((e.clientY - r.top) / r.height - 0.5) * 2);
-      }}
-      onMouseLeave={() => {
-        setMx(0);
-        setMy(0);
-      }}
+      data-screen-label="01 Hero"
+      ref={ref}
+      className="v5-hero"
+      style={{ ["--hp" as string]: 0, ["--mx" as string]: 0, ["--my" as string]: 0, ["--dd" as string]: dd, position: "relative", overflow: "hidden", isolation: "isolate", background: "var(--lh-canvas)", color: "var(--lh-ink)", display: "flex", flexDirection: "column" }}
     >
-      {/* Atmosphere layers — V5 exact gradients */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-[5]"
-        style={{
-          background:
-            "radial-gradient(42% 58% at 72% 60%, rgba(33,89,212,.17), rgba(33,89,212,0) 70%), radial-gradient(26% 32% at 80% 26%, rgba(28,185,232,.12), transparent 70%), linear-gradient(180deg, rgba(255,255,255,0) 72%, rgba(223,234,247,.95) 100%), linear-gradient(118deg, #F6F9FE 0%, #FFFFFF 34%, #E4EDF8 50%, #F8FBFF 58%, #EAF2FC 100%)",
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -right-[6%] -top-[30%] -z-[4] h-[160%] w-[60%]"
-        style={{
-          background: "linear-gradient(100deg, transparent 0%, rgba(255,255,255,.85) 46%, transparent 54%)",
-          transform: `rotate(8deg) translate3d(${mx * -20}px, 0, 0)`,
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -inset-10 -z-[5]"
-        style={{
-          backgroundImage: "radial-gradient(rgba(33,89,212,.2) 1px, transparent 1.4px)",
-          backgroundSize: "26px 26px",
-          WebkitMaskImage: "radial-gradient(48% 55% at 72% 50%, #000, transparent 78%)",
-          maskImage: "radial-gradient(48% 55% at 72% 50%, #000, transparent 78%)",
-          transform: `translate3d(${mx * -8}px, ${hp * 70}px, 0)`,
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-0 left-0 top-0 z-[4] w-[60%]"
-        style={{
-          background: "linear-gradient(100deg, transparent 0%, rgba(255,255,255,.55) 48%, transparent 62%)",
-          transform: sweepT,
-          transition: `transform ${1.9 * dd}s cubic-bezier(.2,.7,.2,1) ${0.35 * dd}s`,
-        }}
-      />
-
-      <div
-        className="relative z-[3] mx-auto grid w-full flex-1 items-center gap-[clamp(8px,2vw,32px)]"
-        style={{
-          maxWidth: 1440,
-          padding: isMobile ? "32px 20px 8px" : "28px clamp(24px,4vw,56px) 8px",
-          gridTemplateColumns: isMobile ? "minmax(0,1fr)" : "minmax(0,.92fr) minmax(0,1.08fr)",
-        }}
-      >
-        {/* Copy column */}
-        <div
-          className="relative z-[3] flex min-w-0 flex-col gap-[clamp(18px,2vw,26px)]"
-          style={{
-            opacity: Math.max(0, 1 - hp * 1.5),
-            transform: `translate3d(0, ${hp * -80}px, 0)`,
-          }}
-        >
-          <span
-            className="inline-flex items-center gap-3 self-start whitespace-nowrap font-[family-name:var(--font-mono)] text-xs tracking-[0.2em] text-[var(--lh-ink)]"
-            style={{
-              opacity: inO,
-              transform: inT,
-              transition: `opacity ${0.6 * dd}s ease ${0.05 * dd}s, transform ${0.7 * dd}s cubic-bezier(.2,.7,.2,1) ${0.05 * dd}s`,
-            }}
-          >
-            <span className="h-0.5 w-3 bg-[var(--lh-signal)]" />
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: -5, background: "radial-gradient(42% 58% at 72% 60%,rgba(33,89,212,.17),rgba(33,89,212,0) 70%),radial-gradient(26% 32% at 80% 26%,rgba(28,185,232,.12),transparent 70%),linear-gradient(180deg,rgba(255,255,255,0) 72%,rgba(223,234,247,.95) 100%),linear-gradient(118deg,#F6F9FE 0%,#FFFFFF 34%,#E4EDF8 50%,#F8FBFF 58%,#EAF2FC 100%)" }} />
+      <div aria-hidden="true" style={{ position: "absolute", right: "-6%", top: "-30%", width: "60%", height: "160%", zIndex: -4, background: "linear-gradient(100deg,transparent 0%,rgba(255,255,255,.85) 46%,transparent 54%)", transform: "rotate(8deg) translate3d(calc(var(--mx) * -20px),0,0)" }} />
+      <div aria-hidden="true" style={{ position: "absolute", inset: -40, zIndex: -5, backgroundImage: "radial-gradient(rgba(var(--lh-action-rgb),.2) 1px,transparent 1.4px)", backgroundSize: "26px 26px", WebkitMaskImage: "radial-gradient(48% 55% at 72% 50%,#000,transparent 78%)", maskImage: "radial-gradient(48% 55% at 72% 50%,#000,transparent 78%)", transform: "translate3d(calc(var(--mx) * -8px),calc(var(--hp) * 70px),0)" }} />
+      <div aria-hidden="true" style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: "60%", zIndex: 4, pointerEvents: "none", background: "linear-gradient(100deg,transparent 0%,rgba(255,255,255,.55) 48%,transparent 62%)", transform: sweepT, transition: `transform calc(var(--dd) * 1.9s) ${ease} calc(var(--dd) * 0.35s)` }} />
+      <div className="v5-hero-grid" style={{ flex: 1, width: "100%", maxWidth: 1440, margin: "0 auto", display: "grid", gap: "clamp(8px,2vw,32px)", alignItems: "center" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "clamp(18px,2vw,26px)", minWidth: 0, position: "relative", zIndex: 3, opacity: "calc(1 - var(--hp) * 1.5)", transform: "translate3d(0,calc(var(--hp) * -80px),0)" }}>
+          <span style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 12, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".2em", color: "var(--lh-ink)", whiteSpace: "nowrap", opacity: 1, transform: inT, transition: tr([["opacity", 0.6, 0.05], ["transform", 0.7, 0.05, true]]) }}>
+            <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
             DELL · HP · LENOVO
           </span>
-
-          <h1
-            className="m-0 font-[family-name:var(--font-display)] font-bold leading-[0.98] tracking-[-0.05em] text-[var(--lh-ink)]"
-            style={{
-              fontSize: isMobile ? "clamp(2.4rem,11vw,3.4rem)" : "clamp(2.6rem,6.2vw,4.75rem)",
-              opacity: inO,
-              transform: inT,
-              transition: `opacity ${0.7 * dd}s ease ${0.15 * dd}s, transform ${0.8 * dd}s cubic-bezier(.2,.7,.2,1) ${0.15 * dd}s`,
-            }}
-          >
-            <span className="block">The future of</span>
-            <span className="block text-[var(--lh-action)]">smarter laptop</span>
-            <span className="block">shopping.</span>
+          <h1 className="v5-hero-h1" style={{ margin: 0, fontFamily: "var(--font-display)", fontWeight: 700, lineHeight: 0.98, letterSpacing: "-.05em", color: "var(--lh-ink)", opacity: 1, transform: inT, transition: tr([["opacity", 0.7, 0.15], ["transform", 0.8, 0.15, true]]) }}>
+            <span style={{ display: "block" }}>The future of</span>
+            <span style={{ display: "block", color: "var(--lh-action)" }}>smarter laptop</span>
+            <span style={{ display: "block" }}>shopping.</span>
           </h1>
-
-          <p
-            className="m-0 max-w-[42ch] text-[clamp(16px,1.2vw,19px)] leading-[1.55] text-[var(--lh-ink-2)] text-pretty"
-            style={{
-              opacity: inO,
-              transform: inT,
-              transition: `opacity ${0.7 * dd}s ease ${0.28 * dd}s, transform ${0.8 * dd}s cubic-bezier(.2,.7,.2,1) ${0.28 * dd}s`,
-            }}
-          >
-            Laptops from Dell, HP, Lenovo and more, with the processor, memory, storage and display listed on every
-            page. Filter by spec, then compare up to four side by side.
+          <p style={{ margin: 0, maxWidth: "42ch", fontSize: "clamp(16px,1.2vw,19px)", lineHeight: 1.55, color: "var(--lh-ink-2)", textWrap: "pretty", opacity: 1, transform: inT, transition: tr([["opacity", 0.7, 0.28], ["transform", 0.8, 0.28, true]]) }}>
+            Laptops from Dell, HP, Lenovo and more, with the processor, memory, storage and display listed on every page. Filter by spec, then compare up to four side by side.
           </p>
-
-          <div
-            className="flex flex-wrap items-center gap-3"
-            style={{
-              opacity: inO,
-              transform: inT,
-              transition: `opacity ${0.7 * dd}s ease ${0.4 * dd}s, transform ${0.8 * dd}s cubic-bezier(.2,.7,.2,1) ${0.4 * dd}s`,
-            }}
-          >
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", opacity: 1, transform: inT, transition: tr([["opacity", 0.7, 0.4], ["transform", 0.8, 0.4, true]]) }}>
             <Link
               href="/collections/all"
-              className="relative inline-flex h-14 items-center gap-3 overflow-hidden rounded-[14px] bg-[linear-gradient(180deg,var(--lh-grad-action-from),var(--lh-grad-action-to))] px-7 text-base font-bold text-white shadow-[0_18px_40px_-16px_rgba(33,89,212,.85),inset_0_1px_0_rgba(255,255,255,.35)] transition hover:-translate-y-0.5"
+              className="v5-hov-cta"
+              style={{ position: "relative", overflow: "hidden", height: 56, padding: "0 28px", borderRadius: 14, background: "var(--lh-grad-action)", color: "#FFFFFF", fontWeight: 700, fontSize: 16, display: "flex", alignItems: "center", gap: 12, whiteSpace: "nowrap", boxShadow: "0 18px 40px -16px rgba(var(--lh-action-rgb),.85),inset 0 1px 0 rgba(255,255,255,.35)", transition: "transform .2s ease,box-shadow .2s ease" }}
             >
-              Shop laptops <span aria-hidden>→</span>
+              Shop laptops <span aria-hidden="true">→</span>
             </Link>
-            <Link
-              href="#brands"
-              className="inline-flex h-14 items-center rounded-[14px] border border-[var(--lh-border)] bg-white/75 px-6 text-base font-semibold text-[var(--lh-ink)] transition hover:border-[var(--lh-action)]"
-            >
+            <a href="#brands" className="v5-hov-bd-action" style={{ height: 56, padding: "0 24px", borderRadius: 14, border: "1px solid var(--lh-border)", background: "rgba(255,255,255,.75)", color: "var(--lh-ink)", fontWeight: 600, fontSize: 16, display: "flex", alignItems: "center", whiteSpace: "nowrap", transition: "border-color .2s ease" }}>
               Explore categories
-            </Link>
-            <Link
-              href="/compare"
-              className="inline-flex h-14 items-center gap-1.5 px-2.5 text-base font-semibold text-[var(--lh-action)] hover:text-[var(--lh-action-hover)]"
-            >
-              Compare{" "}
-              <span className="font-[family-name:var(--font-mono)] text-[13px] text-[var(--lh-ink-2)]">
-                ({compareCount})
-              </span>
+            </a>
+            <Link href="/compare" className="v5-hov-color-action" style={{ height: 56, padding: "0 10px", color: "var(--lh-action)", fontWeight: 600, fontSize: 16, display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
+              Compare <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--lh-ink-2)" }}>({compareCount})</span>
             </Link>
           </div>
-
-          <Link
-            href="/collections/chromebooks"
-            className="inline-flex min-h-[42px] items-center gap-2.5 self-start rounded-full border border-[var(--lh-border)] bg-white/92 py-[5px] pl-[5px] pr-3.5 text-sm font-semibold text-[var(--lh-ink)] transition hover:border-[var(--lh-electric)]"
-            style={{
-              opacity: inO,
-              transform: inT,
-              transition: `opacity ${0.8 * dd}s ease ${0.4 * dd}s, transform ${0.8 * dd}s cubic-bezier(.2,.7,.2,1) ${0.4 * dd}s`,
-            }}
+          <a
+            href="#chromebooks"
+            className="v5-hov-bd-electric"
+            style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 10, minHeight: 42, padding: "5px 14px 5px 5px", borderRadius: 999, background: "rgba(255,255,255,.92)", border: "1px solid var(--lh-border)", color: "var(--lh-ink)", fontSize: 14, fontWeight: 600, opacity: 1, transform: inT, transition: tr([["opacity", 0.8, 0.4], ["transform", 0.8, 0.4, true]]) + ",border-color .2s ease" }}
           >
-            <span className="rounded-full bg-[var(--lh-navy)] px-2.5 py-1.5 font-[family-name:var(--font-mono)] text-[10px] font-medium tracking-[0.12em] text-white">
-              CHROMEBOOKS
-            </span>
-            Browse the collection
-            <span aria-hidden className="text-[var(--lh-action)]">
-              →
-            </span>
-          </Link>
-
-          <div
-            className="flex max-w-[520px] flex-wrap gap-[clamp(16px,2.4vw,36px)] border-t border-[var(--lh-border)] pt-[clamp(10px,1.4vw,18px)]"
-            style={{
-              opacity: inO,
-              transition: `opacity ${0.8 * dd}s ease ${0.6 * dd}s`,
-            }}
-          >
-            <Link href="/collections/all" className="flex flex-col gap-0.5 text-[var(--lh-ink)]">
-              <span className="font-[family-name:var(--font-display)] text-[26px] font-bold">{totalCount}</span>
-              <span className="text-[13px] text-[var(--lh-ink-2)]">listings</span>
+            <span style={{ padding: "6px 10px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 500, letterSpacing: ".12em", whiteSpace: "nowrap" }}>CHROMEBOOKS</span>
+            Collection in preparation
+            <span aria-hidden="true" style={{ color: "var(--lh-action)" }}>→</span>
+          </a>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(16px,2.4vw,36px)", paddingTop: "clamp(10px,1.4vw,18px)", borderTop: "1px solid var(--lh-border)", maxWidth: 520, opacity: 1, transition: tr([["opacity", 0.8, 0.6]]) }}>
+            <Link href="/collections/all" style={{ display: "flex", flexDirection: "column", gap: 2, color: "var(--lh-ink)" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700 }}>{totalCount}</span>
+              <span style={{ fontSize: 13, color: "var(--lh-ink-2)" }}>listings</span>
             </Link>
-            <Link href="/collections/laptops" className="flex flex-col gap-0.5 text-[var(--lh-ink)]">
-              <span className="font-[family-name:var(--font-display)] text-[26px] font-bold text-[var(--lh-success)]">
-                {laptopCount}
-              </span>
-              <span className="text-[13px] text-[var(--lh-ink-2)]">laptops</span>
+            <Link href="/collections/laptops" style={{ display: "flex", flexDirection: "column", gap: 2, color: "var(--lh-ink)" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700, color: "var(--lh-success)" }}>{laptopCount}</span>
+              <span style={{ fontSize: 13, color: "var(--lh-ink-2)" }}>laptops</span>
             </Link>
-            <Link href="/collections/accessories" className="flex flex-col gap-0.5 text-[var(--lh-ink)]">
-              <span className="font-[family-name:var(--font-display)] text-[26px] font-bold">{accessoryCount}</span>
-              <span className="text-[13px] text-[var(--lh-ink-2)]">accessories</span>
+            <Link href="/collections/accessories" style={{ display: "flex", flexDirection: "column", gap: 2, color: "var(--lh-ink)" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700 }}>{accCount}</span>
+              <span style={{ fontSize: 13, color: "var(--lh-ink-2)" }}>accessories</span>
             </Link>
           </div>
         </div>
 
-        {/* Layered product composition — V5 geometry */}
-        <div
-          className="relative z-[1] min-w-0"
-          style={{
-            aspectRatio: isMobile ? "1 / 1" : "5 / 4",
-            marginRight: isMobile ? 0 : "clamp(-24px,-2vw,-8px)",
-          }}
-        >
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 font-[family-name:var(--font-display)] font-extrabold leading-[0.8] tracking-[-0.06em] text-transparent whitespace-nowrap"
-            style={{
-              top: isMobile ? "2%" : "8%",
-              fontSize: isMobile ? "clamp(4rem,22vw,6rem)" : "clamp(4rem,12vw,8rem)",
-              WebkitTextStroke: "1.5px rgba(33,89,212,.16)",
-              transform: `translate3d(calc(-50% + ${mx * -16}px + ${hp * -60}px), ${hp * 40}px, 0)`,
-              opacity: inO,
-              transition: `opacity ${1.2 * dd}s ease`,
-            }}
-          >
+        <div className="v5-hero-comp" style={{ position: "relative", minWidth: 0, zIndex: 1 }}>
+          <div aria-hidden="true" className="v5-hero-ghost" style={{ position: "absolute", left: "50%", fontFamily: "var(--font-display)", fontWeight: 800, lineHeight: 0.8, letterSpacing: "-.06em", color: "transparent", WebkitTextStroke: "1.5px rgba(var(--lh-action-rgb),.16)", whiteSpace: "nowrap", transform: "translate3d(calc(-50% + var(--mx) * -16px + var(--hp) * -60px),calc(var(--hp) * 40px),0)", opacity: 1, transition: tr([["opacity", 1.2, 0]]) }}>
             HUB
           </div>
-
-          <div
-            aria-hidden
-            className="absolute left-1/2 top-[44%] aspect-square w-[94%]"
-            style={{
-              transform: `translate3d(calc(-50% + ${mx * -10}px), calc(-50% + ${hp * 50}px + ${my * -6}px), 0) scale(${1 + hp * 0.18})`,
-            }}
-          >
-            <div
-              className="absolute inset-0 rounded-full border-[1.5px] border-[rgba(33,89,212,.3)] shadow-[0_0_0_14px_rgba(255,255,255,.4),0_0_80px_rgba(33,89,212,.16),inset_0_0_90px_rgba(28,185,232,.12)]"
-              style={{
-                WebkitMaskImage: "linear-gradient(#000 30%, transparent 74%)",
-                maskImage: "linear-gradient(#000 30%, transparent 74%)",
-                opacity: inO,
-                transform: ringT,
-                transition: `opacity ${1.2 * dd}s ease ${0.1 * dd}s, transform ${1.6 * dd}s cubic-bezier(.2,.7,.2,1) ${0.1 * dd}s`,
-              }}
-            />
-            <div className="absolute inset-0" style={{ opacity: inO, transition: `opacity ${1.4 * dd}s ease ${0.5 * dd}s` }}>
-              <div
-                className="absolute -inset-px rounded-full"
-                style={{
-                  background:
-                    "conic-gradient(from 292deg, transparent 0deg, #1CB9E8 44deg, #2159D4 88deg, transparent 122deg)",
-                  WebkitMaskImage: "radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px))",
-                  maskImage: "radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px))",
-                  transform: `rotate(${hp * 70 + mx * 8}deg)`,
-                }}
-              />
+          <div aria-hidden="true" style={{ position: "absolute", left: "50%", top: "44%", width: "94%", aspectRatio: "1/1", transform: "translate3d(calc(-50% + var(--mx) * -10px),calc(-50% + var(--hp) * 50px + var(--my) * -6px),0) scale(calc(1 + var(--hp) * .18))" }}>
+            <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1.5px solid rgba(var(--lh-action-rgb),.3)", boxShadow: "0 0 0 14px rgba(255,255,255,.4),0 0 80px rgba(33,89,212,.16),inset 0 0 90px rgba(28,185,232,.12)", WebkitMaskImage: "linear-gradient(#000 30%,transparent 74%)", maskImage: "linear-gradient(#000 30%,transparent 74%)", opacity: 1, transform: ringT, transition: tr([["opacity", 1.2, 0.1], ["transform", 1.6, 0.1, true]]) }} />
+            <div style={{ position: "absolute", inset: 0, opacity: 1, transition: tr([["opacity", 1.4, 0.5]]) }}>
+              <div style={{ position: "absolute", inset: -1, borderRadius: "50%", background: "conic-gradient(from 292deg,transparent 0deg,#1CB9E8 44deg,#2159D4 88deg,transparent 122deg)", WebkitMaskImage: "radial-gradient(closest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px))", maskImage: "radial-gradient(closest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px))", transform: "rotate(calc(var(--hp) * 70deg + var(--mx) * 8deg))" }} />
             </div>
-            <div className="absolute inset-[16%] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,0))]" />
+            <div style={{ position: "absolute", inset: "16%", borderRadius: "50%", background: "radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,0))" }} />
           </div>
-
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -bottom-[12%] -left-[12%] -right-[12%] h-[40%]"
-            style={{
-              background:
-                "radial-gradient(50% 50% at 50% 50%, rgba(10,23,48,.32) 0%, rgba(10,23,48,.12) 42%, rgba(10,23,48,0) 72%)",
-              transform: `translate3d(${mx * 6}px, 0, 0)`,
-            }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-[18%] top-[-6%] h-[78%] w-[64%]"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.8) 45%, rgba(214,230,255,0) 100%)",
-              clipPath: "polygon(43% 0, 57% 0, 100% 100%, 0 100%)",
-              opacity: inO,
-              transition: `opacity ${1.4 * dd}s ease ${0.3 * dd}s`,
-            }}
-          />
-
-          {/* Stage ellipse (CSS stand-in until scene.png rights cleared) */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute bottom-[1%] left-[5%] h-[12%] w-[90%] rounded-[50%]"
-            style={{
-              background: "radial-gradient(closest-side, rgba(10,23,48,.28), transparent 72%)",
-              transform: `translate3d(${mx * 8}px, ${hp * 30}px, 0)`,
-              opacity: inO,
-              transition: `opacity ${1 * dd}s ease ${0.15 * dd}s`,
-            }}
-          />
-
-          {sideLeft?.imageUrl ? (
-            <Link
-              href={`/products/${sideLeft.handle}`}
-              aria-label={sideLeft.label}
-              className="absolute bottom-[28%] left-[1%] z-[1] block w-[39%]"
-              style={{
-                transform: `translate3d(${mx * 10 + hp * -70}px, ${hp * 30 + my * 4}px, 0)`,
-              }}
-            >
-              <span
-                className="relative block aspect-[5/4] w-full"
-                style={{
-                  opacity: inO,
-                  transform: lapInL,
-                  transition: `opacity ${0.9 * dd}s ease ${0.3 * dd}s, transform ${1.1 * dd}s cubic-bezier(.2,.7,.2,1) ${0.3 * dd}s`,
-                }}
-              >
-                <Image src={sideLeft.imageUrl} alt={sideLeft.label} fill className="object-contain" sizes="20vw" unoptimized />
-              </span>
-            </Link>
-          ) : null}
-
-          {sideRight?.imageUrl ? (
-            <Link
-              href={`/products/${sideRight.handle}`}
-              aria-label={sideRight.label}
-              className="absolute bottom-[29%] right-[-1%] z-[1] block w-[43%]"
-              style={{
-                transform: `translate3d(${mx * 12 + hp * 70}px, ${hp * 26 + my * 4}px, 0)`,
-              }}
-            >
-              <span
-                className="relative block aspect-[5/4] w-full"
-                style={{
-                  opacity: inO,
-                  transform: lapInR,
-                  transition: `opacity ${0.9 * dd}s ease ${0.38 * dd}s, transform ${1.1 * dd}s cubic-bezier(.2,.7,.2,1) ${0.38 * dd}s`,
-                }}
-              >
-                <Image src={sideRight.imageUrl} alt={sideRight.label} fill className="object-contain" sizes="22vw" unoptimized />
-              </span>
-            </Link>
-          ) : null}
-
-          {main.imageUrl ? (
-            <Link
-              href={`/products/${main.handle}`}
-              aria-label={main.label}
-              className="absolute bottom-[16%] left-[18%] z-[2] block w-[64%]"
-              style={{
-                transform: `translate3d(${mx * 22}px, ${hp * -50 + my * 8}px, 0) scale(${1 + hp * 0.1})`,
-              }}
-            >
-              <span
-                className="relative block aspect-[5/4] w-full drop-shadow-[0_30px_30px_rgba(10,23,48,.45)]"
-                style={{
-                  opacity: inO,
-                  transform: lapInC,
-                  transition: `opacity ${0.9 * dd}s ease ${0.2 * dd}s, transform ${1.2 * dd}s cubic-bezier(.2,.7,.2,1) ${0.2 * dd}s`,
-                }}
-              >
-                <Image src={main.imageUrl} alt={main.label} fill className="object-contain" sizes="35vw" priority unoptimized />
-              </span>
-            </Link>
-          ) : (
-            <div className="absolute inset-[8%] flex items-center justify-center rounded-[28px] bg-[var(--lh-titanium)] text-sm text-[var(--lh-ink-2)]">
-              Featured product image
-            </div>
-          )}
-
-          {chips.length > 0 ? (
-            <div
-              className="absolute z-[3] flex flex-wrap items-end justify-end gap-2"
-              style={{
-                top: isMobile ? "4%" : "10%",
-                right: isMobile ? "2%" : "0%",
-                left: isMobile ? "2%" : "auto",
-                flexDirection: isMobile ? "row" : "column",
-                transform: `translate3d(${mx * 30}px, ${hp * -90 + my * 12}px, 0)`,
-              }}
-            >
-              {chips.map((ch, i) => (
-                <span
-                  key={ch}
-                  className="inline-flex h-[34px] items-center gap-2 whitespace-nowrap rounded-full border border-white/95 bg-white/92 px-3.5 font-[family-name:var(--font-mono)] text-xs text-[var(--lh-ink)] shadow-[0_12px_30px_-14px_rgba(10,23,48,.35),inset_0_0_0_1px_rgba(33,89,212,.08)]"
-                  style={{
-                    opacity: inO,
-                    transform: phase === "boot" ? "translate3d(24px,0,0)" : "none",
-                    transition: `opacity ${0.6 * dd}s ease ${(0.6 + i * 0.1) * dd}s, transform ${0.8 * dd}s cubic-bezier(.2,.7,.2,1) ${(0.6 + i * 0.1) * dd}s`,
-                  }}
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--lh-electric)] shadow-[0_0_8px_var(--lh-electric)]" />
-                  {ch}
-                </span>
-              ))}
-            </div>
-          ) : null}
-
-          {main.handle && main.handle !== "all" ? (
-            <Link
-              href={`/products/${main.handle}`}
-              className="absolute bottom-0 z-[3] flex items-center gap-3.5 rounded-[18px] border border-white/95 bg-white/94 py-2.5 pl-4 pr-3 text-[var(--lh-ink)] shadow-[0_18px_40px_-18px_rgba(10,23,48,.45)] transition hover:shadow-[0_0_0_2px_var(--lh-action),0_18px_40px_-18px_rgba(10,23,48,.45)]"
-              style={{
-                left: isMobile ? "4%" : "12%",
-                opacity: inO,
-                transition: `opacity ${0.8 * dd}s ease ${0.7 * dd}s, box-shadow .2s ease`,
-              }}
-            >
-              <span className="flex flex-col gap-px">
-                <span className="text-[13px] font-semibold">{main.label}</span>
-                <span className="font-[family-name:var(--font-mono)] text-[11px] text-[var(--lh-action)]">
-                  {main.stockText || "In catalog"}
-                </span>
-              </span>
-              {priceText ? (
-                <span className="whitespace-nowrap font-[family-name:var(--font-display)] text-[17px] font-bold">
-                  {priceText}
-                </span>
+          <div aria-hidden="true" style={{ position: "absolute", left: "-12%", right: "-12%", bottom: "-12%", height: "40%", background: "radial-gradient(50% 50% at 50% 50%,rgba(var(--lh-navy-rgb),.32) 0%,rgba(var(--lh-navy-rgb),.12) 42%,rgba(var(--lh-navy-rgb),0) 72%)", transform: "translate3d(calc(var(--mx) * 6px),0,0)" }} />
+          <div aria-hidden="true" style={{ position: "absolute", left: "18%", width: "64%", top: "-6%", height: "78%", background: "linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.8) 45%,rgba(214,230,255,0) 100%)", clipPath: "polygon(43% 0,57% 0,100% 100%,0 100%)", opacity: 1, transition: tr([["opacity", 1.4, 0.3]]) }} />
+          {/* eslint-disable-next-line @next/next/no-img-element -- V5 layered stage, positioned by percentage */}
+          <img src="/v5/stage.webp" alt="" aria-hidden="true" width={1800} height={520} style={{ position: "absolute", left: "5%", width: "90%", height: "auto", bottom: "1%", transform: "translate3d(calc(var(--mx) * 8px),calc(var(--hp) * 30px),0)", opacity: 1, transition: tr([["opacity", 1, 0.15]]) }} />
+          {side1 ? (
+            <Link href={side1.href} aria-label={side1.label} style={{ position: "absolute", left: "1%", bottom: "28%", width: "39%", display: "block", mixBlendMode: blend(side1), transform: "translate3d(calc(var(--mx) * 10px + var(--hp) * -70px),calc(var(--hp) * 30px + var(--my) * 4px),0)", zIndex: 1 }}>
+              {side1.src ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={side1.src} alt={side1.label} fetchPriority="high" style={{ display: "block", width: "100%", opacity: 1, transform: lapInL, transition: tr([["opacity", 0.9, 0.3], ["transform", 1.1, 0.3, true]]) }} />
               ) : null}
-              <span
-                aria-hidden
-                className="grid h-8 w-8 place-items-center rounded-full bg-[var(--lh-action)] text-sm text-white"
-              >
-                →
-              </span>
             </Link>
           ) : null}
+          {side2 ? (
+            <Link href={side2.href} aria-label={side2.label} style={{ position: "absolute", right: "-1%", bottom: "29%", width: "43%", display: "block", mixBlendMode: blend(side2), transform: "translate3d(calc(var(--mx) * 12px + var(--hp) * 70px),calc(var(--hp) * 26px + var(--my) * 4px),0)", zIndex: 1 }}>
+              {side2.src ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={side2.src} alt={side2.label} fetchPriority="high" style={{ display: "block", width: "100%", opacity: 1, transform: lapInR, transition: tr([["opacity", 0.9, 0.38], ["transform", 1.1, 0.38, true]]) }} />
+              ) : null}
+            </Link>
+          ) : null}
+          <Link href={main.href} aria-label={main.label} style={{ position: "absolute", left: "18%", bottom: "16%", width: "64%", display: "block", mixBlendMode: blend(main), transform: "translate3d(calc(var(--mx) * 22px),calc(var(--hp) * -50px + var(--my) * 8px),0) scale(calc(1 + var(--hp) * .1))", zIndex: 2 }}>
+            {main.src ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={main.src} alt={main.label} fetchPriority="high" style={{ display: "block", width: "100%", filter: main.cutout ? "drop-shadow(0 30px 30px rgba(var(--lh-navy-rgb),.45))" : undefined, opacity: 1, transform: lapInC, transition: tr([["opacity", 0.9, 0.2], ["transform", 1.2, 0.2, true]]) }} />
+            ) : null}
+          </Link>
+          <div className="v5-hero-chips" style={{ position: "absolute", zIndex: 3, display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: 8, alignItems: "flex-end", transform: "translate3d(calc(var(--mx) * 30px),calc(var(--hp) * -90px + var(--my) * 12px),0)" }}>
+            {main.chips.map((c, i) => {
+              const d = (0.6 + i * 0.1).toFixed(2);
+              return (
+                <span key={c} style={{ display: "flex", alignItems: "center", gap: 8, height: 34, padding: "0 14px", borderRadius: 999, background: "rgba(255,255,255,.92)", border: "1px solid rgba(255,255,255,.95)", boxShadow: "0 12px 30px -14px rgba(var(--lh-navy-rgb),.35),inset 0 0 0 1px rgba(var(--lh-action-rgb),.08)", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-ink)", whiteSpace: "nowrap", opacity: 1, transform: inn ? "none" : "translate3d(24px,0,0)", transition: `opacity calc(var(--dd) * .6s) ease calc(var(--dd) * ${d}s),transform calc(var(--dd) * .8s) ${ease} calc(var(--dd) * ${d}s)` }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--lh-electric)", boxShadow: "0 0 8px var(--lh-electric)" }} />
+                  {c}
+                </span>
+              );
+            })}
+          </div>
+          <Link
+            href={main.href}
+            className="v5-hero-tag v5-hov-tag"
+            style={{ position: "absolute", bottom: 0, zIndex: 3, display: "flex", alignItems: "center", gap: 14, padding: "10px 12px 10px 16px", borderRadius: 18, background: "rgba(255,255,255,.94)", border: "1px solid rgba(255,255,255,.95)", boxShadow: "0 18px 40px -18px rgba(var(--lh-navy-rgb),.45)", color: "var(--lh-ink)", opacity: 1, transition: tr([["opacity", 0.8, 0.7]]) + ",box-shadow .2s ease" }}
+          >
+            <span style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <span style={{ fontSize: 13, fontWeight: 600 }}>{main.label}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-action)" }}>{main.stockText}</span>
+            </span>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 700, whiteSpace: "nowrap" }}>{main.priceText}</span>
+            <span aria-hidden="true" style={{ width: 32, height: 32, borderRadius: "50%", display: "grid", placeItems: "center", background: "var(--lh-action)", color: "#FFFFFF", fontSize: 14 }}>→</span>
+          </Link>
         </div>
       </div>
-
-      <div className="relative flex min-h-[52px] items-center justify-center pb-[18px]">
+      <div className="v5-hero-cue-row" style={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center", paddingBottom: 18 }}>
         {showSkip ? (
           <button
             type="button"
-            className="absolute bottom-[18px] left-[clamp(16px,4vw,56px)] h-[34px] cursor-pointer rounded-full border border-[var(--lh-border)] bg-white/80 px-3.5 font-[family-name:var(--font-mono)] text-[11px] tracking-[0.1em] text-[var(--lh-ink-2)] hover:border-[var(--lh-action)] hover:text-[var(--lh-ink)]"
-            onClick={() => setPhase("done")}
+            onClick={() => {
+              setSkip(true);
+              setEntered(true);
+              setIntroDone(true);
+            }}
+            className="v5-hov-bd-action"
+            style={{ position: "absolute", left: "clamp(16px,4vw,56px)", bottom: 18, height: 34, padding: "0 14px", borderRadius: 999, border: "1px solid var(--lh-border)", background: "rgba(255,255,255,.8)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".1em", color: "var(--lh-ink-2)", cursor: "pointer" }}
           >
             SKIP INTRO
           </button>
         ) : null}
-        {!isMobile ? (
-          <span
-            aria-hidden
-            className="flex flex-col items-center gap-2.5 font-[family-name:var(--font-mono)] text-[11px] tracking-[0.2em] text-[var(--lh-ink-2)]"
-            style={{ opacity: Math.max(0, 1 - hp * 4) }}
-          >
-            SCROLL
-            <span className="h-8 w-px bg-[linear-gradient(var(--lh-action),transparent)]" />
-          </span>
-        ) : null}
+        <span aria-hidden="true" className="v5-hero-cue" style={{ flexDirection: "column", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".2em", color: "var(--lh-ink-2)", opacity: "calc(1 - var(--hp) * 4)" }}>
+          SCROLL
+          <span style={{ width: 1, height: 32, background: "linear-gradient(var(--lh-action),transparent)" }} />
+        </span>
       </div>
     </section>
   );

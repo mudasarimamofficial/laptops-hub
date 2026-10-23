@@ -1,6 +1,6 @@
 {
-  "base": "http://127.0.0.1:3000",
-  "at": "2026-10-23T09:43:54.904Z",
+  "base": "http://127.0.0.1:3100",
+  "at": "2026-10-23T11:33:43.221Z",
   "results": [
     {
       "name": "anon_patch__api_admin_products_dell_latitude_7420_core_i5_1",

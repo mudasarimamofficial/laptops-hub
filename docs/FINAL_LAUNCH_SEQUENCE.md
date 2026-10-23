@@ -52,6 +52,14 @@ Rollback: Instant Rollback to `dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH` (not to `dpl_Gs
    migrated database. That build has no order notifications at all, so after a rollback staff must watch
    **Orders to confirm** in admin; prefer rolling forward once email is live.
 
+## 2b. Notification retry schedule (PR #3) — ✅ MERGED 2026-10-24 (owner-approved)
+
+`main` `700524d` → Production `dpl_7W2x8QxLKqvcG1iw5WophtRJjhiP` (single build). Read-only checks: `/`, collection,
+PDP, `/pages/shipping`, `/admin/login` 200 · `/admin` 307 · COD POST 403 · cron 503 `cron_disabled` (no secret; also
+with a wrong bearer) · no runtime errors. GitHub workflow `notification-retry` registered (active); repository secret
+`CRON_SECRET` absent, so runs skip. Schedule becomes effective only after § 4 (email + secret) and one green run.
+No environment, COD, secret or account change.
+
 ## 3. Business configuration and staff access (owner, in admin)
 
 Follow `docs/FINAL_LAUNCH_OWNER_INPUTS.md` § "Owner setup — do these in order". Engineering verifies each item

@@ -3,7 +3,8 @@ import { Hanken_Grotesk, JetBrains_Mono, Sora } from "next/font/google";
 import { SiteFooter } from "@/components/storefront/site-footer";
 import { SiteHeader, type ChromeData } from "@/components/storefront/site-header";
 import { fmtPkr, getV5Catalog, v5Menu } from "@/lib/catalog/v5";
-import { siteUrl } from "@/lib/site-url";
+import { isPrelaunch, siteMode, siteUrl } from "@/lib/site-url";
+import { PrelaunchNotice } from "@/components/storefront/prelaunch-notice";
 import { CompareTray } from "@/components/storefront/compare-tray";
 import { CartDrawer } from "@/components/storefront/cart-drawer";
 import { Toast } from "@/components/storefront/v5/toast";
@@ -23,7 +24,8 @@ export const metadata: Metadata = {
   description:
     // V5 approved hero copy.
     "Laptops from Dell, HP, Lenovo and more, with the processor, memory, storage and display listed on every page. Filter by spec, then compare up to four side by side.",
-  robots: { index: true, follow: true },
+  // Pre-launch: noindex but followable, matching the X-Robots-Tag header (next.config.ts).
+  robots: isPrelaunch() ? { index: false, follow: true } : { index: true, follow: true },
 };
 
 /** Header/footer data: V5 menu counts and the mega-menu feature (first listed laptop). */
@@ -50,6 +52,19 @@ async function loadChrome(): Promise<ChromeData> {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const mode = siteMode();
+  // Restricted pre-launch: no storefront chrome and no catalog query (the header's mega menu shows a product photo).
+  if (mode === "restricted") {
+    return (
+      <html lang="en-PK" className={`${hanken.variable} ${sora.variable} ${jetbrains.variable}`}>
+        <body className="flex min-h-screen flex-col antialiased">
+          <main id="main" className="flex-1">
+            {children}
+          </main>
+        </body>
+      </html>
+    );
+  }
   const chrome = await loadChrome();
   return (
     <html lang="en-PK" className={`${hanken.variable} ${sora.variable} ${jetbrains.variable}`}>
@@ -60,6 +75,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         >
           Skip to content
         </a>
+        {mode === "prelaunch" ? <PrelaunchNotice /> : null}
         <SiteHeader chrome={chrome} />
         <main id="main" className="flex-1">
           {children}

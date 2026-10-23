@@ -5,7 +5,8 @@ import { contentVisibility, previewAllContent } from "@/lib/content/pages";
 
 export const revalidate = 3600;
 
-/** Public, indexable URLs only: no admin, order, checkout, cart, filtered or draft pages. */
+/** Public, indexable URLs only: no admin, order, checkout, cart, filtered or draft pages. Empty while pre-launch
+ * (every page is noindex, so none is indexable). */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (isPrelaunch()) return [];
   const base = siteUrl();

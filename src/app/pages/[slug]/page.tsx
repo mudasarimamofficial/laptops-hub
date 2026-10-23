@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ContentPage } from "@/components/content/content-page";
 import { getContentPage, PAGE_SLUGS } from "@/lib/content/pages";
+import { canonicalFor, robotsFor } from "@/lib/site-url";
 
 export const revalidate = 60;
 
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const page = await getContentPage(slug);
   if (!page) return { title: "Not found", robots: { index: false } };
-  return { title: page.title, description: page.mode === "gated" ? undefined : page.intro, alternates: { canonical: `/pages/${slug}` }, robots: page.mode === "gated" || page.preview ? { index: false, follow: true } : undefined };
+  return { title: page.title, description: page.mode === "gated" ? undefined : page.intro, alternates: canonicalFor(`/pages/${slug}`), robots: robotsFor(page.mode === "gated" || page.preview) };
 }
 
 export default async function Page({ params }: Props) {

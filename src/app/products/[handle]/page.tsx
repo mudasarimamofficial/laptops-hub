@@ -4,6 +4,7 @@ import Link from "next/link";
 import { V5ProductCard } from "@/components/commerce/product-card";
 import { ProductBuy, ProductGallery } from "@/components/commerce/product-detail";
 import { fmtPkr, getV5Catalog, V5_COLS, v5Card, v5KeySpecs, v5Related, v5SpecRows } from "@/lib/catalog/v5";
+import { canonicalFor } from "@/lib/site-url";
 
 export const revalidate = 60;
 
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: p.t,
     description,
-    alternates: { canonical: `/products/${p.h}` },
+    alternates: canonicalFor(`/products/${p.h}`),
     openGraph: { title: p.t, description, images: p.imgs[0] ? [{ url: p.imgs[0].u }] : undefined, type: "website" },
   };
 }

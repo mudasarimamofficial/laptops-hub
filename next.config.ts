@@ -3,10 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Isolated QA builds against a local Supabase use a separate output dir (docs/ISOLATED_TESTS.md).
   distDir: process.env.NEXT_DIST_DIR || ".next",
-  // Pre-launch mode (src/lib/site-url.ts): reachable, but not indexed.
+  // Pre-launch modes (src/lib/site-url.ts): every response is `noindex` — matching the page meta (`noindex, follow`)
+  // so headers and HTML never disagree. Crawling stays allowed (robots.ts) so the rule can be seen.
   async headers() {
-    if (process.env.SITE_PRELAUNCH !== "1") return [];
-    return [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] }];
+    const mode = (process.env.SITE_PRELAUNCH || "").trim().toLowerCase();
+    if (!["1", "true", "seo", "restricted"].includes(mode)) return [];
+    return [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex" }] }];
   },
   images: {
     remotePatterns: [

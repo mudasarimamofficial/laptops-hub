@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { CollectionPage } from "@/components/storefront/collection-page";
 import { V5_COLS } from "@/lib/catalog/v5";
+import { canonicalFor, robotsFor } from "@/lib/site-url";
 
 export const revalidate = 60;
 
@@ -15,9 +16,9 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const filtered = Object.keys(sp).some((k) => k !== "page");
   return {
     title: col.t,
-    alternates: { canonical: `/collections/${col.hidden ? "all" : slug}` },
+    alternates: canonicalFor(`/collections/${col.hidden ? "all" : slug}`),
     // Filter/sort permutations stay crawlable for users but are not indexed as separate pages.
-    robots: filtered || col.hidden ? { index: false, follow: true } : undefined,
+    robots: robotsFor(filtered || !!col.hidden),
   };
 }
 

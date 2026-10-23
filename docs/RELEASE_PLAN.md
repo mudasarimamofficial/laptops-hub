@@ -48,12 +48,12 @@ Order matters only within Option B (the CLI applies files in version order, one 
 1. Review PR #1 (`feat/v5-storefront-admin → main`). Merge (merge commit, no squash, to keep the stack intact).
 2. GitHub retargets PR #2 to `main`; re-run CI; review PR #2; merge.
 3. Merging to `main` triggers a **Production** build if `main` is the production branch (it has been: `18804fa`).
-   If the owner does not want that build live yet, set Plan A1 (`SITE_PRELAUNCH=1`) beforehand or pause automatic
+   If the owner does not want that build live yet, set `SITE_PRELAUNCH` for Production beforehand (`docs/PUBLIC_SITE_PLAN.md`) or pause automatic
    production deployments in Vercel first.
 
 ## Stage 3 — production web deployment **[owner]**
 1. Environment (Production), names only: `COD_CHECKOUT_ENABLED=false`, `NEXT_PUBLIC_COD_CHECKOUT_ENABLED=false`,
-   `V5_CUTOUT_BASE` unset, `V5_CONTENT_PREVIEW` unset, optional `SITE_PRELAUNCH=1` (Plan A1), optional `SITE_URL` when a
+   `V5_CUTOUT_BASE` unset, `V5_CONTENT_PREVIEW` unset, `SITE_PRELAUNCH=restricted` or `1` while pre-launch (`docs/PUBLIC_SITE_PLAN.md`), optional `SITE_URL` when a
    custom domain exists.
 2. Deploy the merged `main` commit (Git integration) — the same tree as the verified Preview.
 3. Smoke tests (no customer records created): routes, `/sitemap.xml` host = `laptops-hub.vercel.app` (or `SITE_URL`),

@@ -13,8 +13,21 @@ if (!["launch", "prelaunch", "restricted"].includes(mode)) throw new Error("mode
 
 let cookie = "";
 if (share) {
-  const r = await fetch(share, { redirect: "manual" });
-  cookie = (r.headers.getSetCookie?.() || []).map((c) => c.split(";")[0]).join("; ");
+  // Vercel sets the share cookie somewhere in a redirect chain: follow it and keep every Set-Cookie.
+  const jar = new Map();
+  let next = share;
+  for (let hop = 0; hop < 10 && next; hop++) {
+    const r = await fetch(next, { redirect: "manual", headers: jar.size ? { cookie: [...jar].map(([k, v]) => `${k}=${v}`).join("; ") } : {} });
+    for (const c of r.headers.getSetCookie?.() || []) {
+      const [kv] = c.split(";");
+      const i = kv.indexOf("=");
+      jar.set(kv.slice(0, i), kv.slice(i + 1));
+    }
+    const loc = r.headers.get("location");
+    next = r.status >= 300 && r.status < 400 && loc ? new URL(loc, next).toString() : "";
+  }
+  cookie = [...jar].map(([k, v]) => `${k}=${v}`).join("; ");
+  if (!cookie) throw new Error("share link did not set a cookie");
 }
 const results = [];
 const ok = (name, pass, detail = "") => {

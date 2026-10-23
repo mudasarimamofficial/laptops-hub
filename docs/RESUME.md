@@ -47,7 +47,7 @@ State (2026-10-23): **Security & COD integrity pass done on `fix/v5-correctness-
 Local Supabase only (`docs/ISOLATED_TESTS.md`): COD collection matrix 16/16 · role matrix 15/15 · checkout isolated 31/31 (incl. shipping quote, order confirmation by token, contact insert as anon, checkout key conflicts, 8×6 concurrent HTTP submits) · staff role HTTP 97/97 · push path and rollback verified against the production fingerprint.
 
 ## Safest next step
-1. Option A and Option B are applied (`docs/MIGRATION_PRODUCTION_APPROVAL.md`). Next owner decision: pre-launch mode / public site. Then the public-site decision (`docs/PUBLIC_SITE_PLAN.md`) and the release sequence (`docs/RELEASE_PLAN.md`). Owner package: `docs/OWNER_READINESS_REPORT.md`.
+1. Option A and Option B are applied (`docs/MIGRATION_PRODUCTION_APPROVAL.md`). Pre-launch modes implemented and verified on Previews (`docs/PUBLIC_SITE_PLAN.md`); next owner decision: activate mode B (recommended) or A on Production — the single approval is described there. Then the public-site decision (`docs/PUBLIC_SITE_PLAN.md`) and the release sequence (`docs/RELEASE_PLAN.md`). Owner package: `docs/OWNER_READINESS_REPORT.md`.
 2. Review PR #1, then PR #2.
 3. Owner decisions below.
 

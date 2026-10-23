@@ -1,5 +1,11 @@
 # Progress log
 
+## 2026-10-23 — pre-launch modes (no Production change)
+- SEO fix: pre-launch no longer blocks crawling; header and meta agree (`noindex` / `noindex, follow`); no canonical; empty sitemap; private routes disallowed. Found and fixed collection pages dropping the layout noindex (`robotsFor`).
+- Mode A notice bar; mode B restricted coming-soon page via middleware (storefront, catalog APIs and remote image optimisation blocked; admin works).
+- Verified: local production-like builds launch 24/24, A 35/35, B 44/44; e2e 39/1 in launch and A; console clean; axe 0 in all modes; unit 12 suites; P0 9/9; auth 24/24; routes; Previews for all three modes.
+- Limits documented: Supabase public API and Shopify CDN photo URLs stay public in every mode.
+
 ## 2026-10-23 — Option B applied to production (owner-approved)
 - Preflight (ledger 7, dry run = 6 files), schema backup (`backups/`, gitignored), `supabase db push --linked` (6 applied), ledger 13.
 - Production privileges, schema and function bodies identical to the verified local build; ACL, guard and quote-fix checks pass; anon probes 42501; P0 9/9; auth matrix 24/24; routes pass; public site smoke and runtime logs clean. No web/alias/env/COD change.

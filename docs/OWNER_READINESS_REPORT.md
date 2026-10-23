@@ -30,7 +30,7 @@ Legend: **Verified** = tested this pass with evidence · **Done (owner-approved)
 | Shipping quote broken once a zone exists (production function bug) | **Fixed on production** (`20261023170000`, Option B) | `docs/SECURITY_RPC_REVIEW.md` #6 |
 | Contact form rejected same-site posts when the server sees another host name | Fixed on branch (origin check accepts the request Host); production impact not observable without a real submit | `src/lib/validation/contact.ts` |
 | Sitemap/robots point at the SSO-protected deployment host on production | Fixed on branch; live after next production deployment | `docs/PUBLIC_SITE_PLAN.md` |
-| Pre-launch mode (noindex while gates are open) | **Proposed** (env var, default off) | `docs/PUBLIC_SITE_PLAN.md` Plan A1 |
+| Pre-launch modes A (SEO-only + notice) and B (restricted coming-soon) | **Verified on Previews; awaiting activation approval** (recommended: B) | `docs/PUBLIC_SITE_PLAN.md` |
 | Inquiry-only listings (products without a purchasable variant) | **Proposed**, not applied | `docs/proposals/AVAILABILITY_INQUIRY_ONLY.md` |
 | Internal wording in stored descriptions (raw API) | **Proposed**, not applied | `docs/proposals/DESCRIPTION_CLEANUP.md` |
 | Staff invite / deactivate UI | Not built (planned in role matrix) | `docs/ADMIN_ROLE_MATRIX.md` |

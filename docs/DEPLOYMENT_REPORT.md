@@ -1,5 +1,16 @@
 # Deployment report
 
+## Previews — 2026-10-23 (pre-launch modes, commit `340f6d9`)
+
+| Mode | Deployment | How |
+|---|---|---|
+| Launch | `dpl_6oZn1NSCpWt6qJLhTMzM7BDjnhL6` | Git push of `fix/v5-correctness-parity` |
+| A (`SITE_PRELAUNCH=1`) | `dpl_A4omsBWFHakfuTsHx8ccaQ7BnJ57` | branch `preview/prelaunch-seo` + branch-scoped Preview variable; Git-sourced deployment via Vercel API (target Preview) |
+| B (`SITE_PRELAUNCH=restricted`) | `dpl_34Vcoz1GbyGqnNZPc5tvSumXkAFh` | branch `preview/prelaunch-restricted` + branch-scoped Preview variable; same method |
+
+Results in `docs/PUBLIC_SITE_PLAN.md` (Evidence). No Production variable, alias or deployment changed. Share links did
+not authenticate on the two API-created deployments; they were checked with Vercel's authenticated fetch.
+
 ## Preview — 2026-10-23 (final pre-release pass)
 
 | Field | Value |

@@ -79,6 +79,11 @@ schema). The new application code requires this migration: apply it **before** d
 
 **Risk of waiting.** None while email is off; the new code must not be deployed before this is applied.
 
+**Identity.** Commit `0bfc55204187b224e247e0f9d9759fe656dca1da` (branch `fix/v5-correctness-parity`) · git blob
+`e2be257aed50783ae92ae763f7dbe837c6993695` · SHA-256 (LF, as committed and on disk at push time)
+`17fa8fee44560c18785bb55095fccaa607314e96be58e7549827f59bdabaa46c`. Before pushing, confirm
+`git rev-parse HEAD:supabase/migrations/20261024100000_notification_outbox_lease.sql` equals the blob id.
+
 **Decision:** [ ] Approve applying `20261024100000` exactly as above · [ ] Do not approve
 
 ## Outcome — Option B APPLIED (2026-10-23, owner-approved)

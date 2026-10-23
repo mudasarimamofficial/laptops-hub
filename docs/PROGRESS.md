@@ -1,5 +1,15 @@
 # Progress log
 
+## 2026-10-23 (final pre-release pass) — audit, public site, regression
+- Verified: PR #1/#2 drafts, CI green; ledger 7 applied; dry run lists the pending Option B files.
+- Production schema fingerprint = repo-expected state (only CRLF in function text). CLI executor is a member of `postgres`; `auth.role()` exists.
+- Push path on a local copy of production state = fresh build; injected mid-sequence failure rolls back alone; rollback SQL returns exactly to today's production state.
+- Found and fixed (branch): `quote_cod_shipping` broken once any zone exists → `20261023170000` (Option B now 6 files); contact origin check rejected same-site posts when hosts differ → accepts request Host; sitemap/robots advertised the SSO-protected deployment host → production domain.
+- Added default-off pre-launch mode (`SITE_PRELAUNCH=1`).
+- Public site: owner redeployed `34f9839` to Production (`dpl_DEGy9tXzDaDJoiFV3AbsT19SHcbH`) — `/pages/*` 500s resolved; site public and indexable (`docs/PUBLIC_SITE_PLAN.md`).
+- Regression: unit 11 suites, build, e2e 39/1 skipped, routes, data parity 0 mismatches, P0 9/9, auth 24/24, axe 0 (10 routes), console clean; visual parity rerun (517 captures: 187 storefront, 264 content, 66 gated) with no regression; isolated COD collection matrix 16/16 · role matrix 15/15 · checkout isolated 31/31 (incl. shipping quote, order confirmation by token, contact insert as anon, checkout key conflicts, 8×6 concurrent HTTP submits) · staff role HTTP 97/97.
+- Owner package: `docs/OWNER_READINESS_REPORT.md`, `docs/RELEASE_PLAN.md`.
+
 ## 2026-10-23 — Option A applied to production (owner-approved)
 - Applied only `20261023110000` via `supabase db query --linked -f`, recorded with `migration repair` (ledger 7). Exactly 6 privilege rows changed; anon probes now 42501; service path intact; P0 9/9, auth matrix 24/24, routes all pass. Option B not applied.
 - Found: public alias `/pages/*` 500 (old `ea652f2` jsdom crash), pre-existing; not changed.

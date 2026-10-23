@@ -54,6 +54,12 @@ Server-side identity: staff routes derive `actor_user_id` from the verified Supa
 (`createAuthorizedStaffClient` → `getUser()` + active membership + role check) and call RPCs with the service role.
 The browser never receives the service-role key (client-chunk scan in `docs/DEPLOYMENT_REPORT.md`).
 
+6. **Functional (found 2026-10-23) — `quote_cod_shipping` broken once any zone exists** (`record` loop variable
+   passed to `zone_serves_address(shipping_zones, …)`). Fix: `20261023170000`. Not a privilege issue; listed because it
+   is a public RPC.
+7. **Residual — `supabase_admin` default privileges** still auto-expose objects that role creates in `public`
+   (platform-managed). No project migration creates objects as `supabase_admin`.
+
 ## Rule for new migrations
 
 Every new table/view/function must state its grants. Server-only functions: `revoke execute … from public, anon,

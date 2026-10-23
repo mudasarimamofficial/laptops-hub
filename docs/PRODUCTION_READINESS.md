@@ -1,15 +1,15 @@
 # Production readiness
 
-Updated: 2026-10-23 (security & COD integrity pass, branch `fix/v5-correctness-parity`)
+Updated: 2026-10-23 (final pre-release pass, branch `fix/v5-correctness-parity`) — **NOT production-ready: gates D, E, F not passed.**
 
 | Gate | Status | Evidence / blocker |
 |---|---|---|
 | A — Source integrity | PASS | Git history preserved (no force-push, no rewrite of pushed commits). V5 export kept local and gitignored (`Laptops Hub storefront/`). No secrets in commits. Parity screenshots that contain unapproved cutouts are kept out of git. |
-| B — Visual parity | PASS (all V5 templates ported) | Storefront ≤0.4%; content templates (13 pages, guides, 4 articles, FAQ, contact states) ≤0.13% where copy is unchanged, explained deltas elsewhere (`docs/V5_PIXEL_DIFF_REPORT.md`, 427 captures). Hero/story cutouts gated (media rights). |
-| C — Functional parity | PARTIAL | Browse, filters/sort, search, compare, cart, drawer, inquiry and the V5 contact form (real `/api/contact`, success only after insert) work; e2e 39 pass / 1 intentional skip locally and on Preview. Checkout implemented but disabled. Admin content save path fixed (sanitizer); other admin flows not re-verified this pass. |
-| D — Data & security | **BLOCKED (owner approval, partial)** | **Staff RPC exposure closed on production 2026-10-23** (Option A, owner-approved: anon/authenticated EXECUTE revoked on `record_cod_collection`, `transition_order_status`, `consume_rate_limit`; verified 42501, service path intact, P0 9/9, auth matrix 24/24). Still pending (Option B, `docs/MIGRATION_PRODUCTION_APPROVAL.md`): explicit grants, least-privilege defaults (future objects still auto-exposed on production), in-function service-role guard, COD collection/checkout idempotency conflicts — all verified locally (`docs/ISOLATED_TESTS.md`). |
+| B — Visual parity | PASS (engineering; owner acceptance pending) | Re-measured 2026-10-23: 517 captures, no regression vs the committed runs (storefront max 0.38%, content max 7.68% = documented truthful-copy/gated baseline, gated geometry identical) — `docs/V5_PIXEL_DIFF_REPORT.md`. Hero/story cutouts gated (media rights). Real-device checks not performed. |
+| C — Functional parity | PARTIAL | Storefront, cart, compare, search, CMS gates, contact (real insert verified on local Supabase), admin pages/APIs per role (local), COD checkout and collection (local) verified; e2e 39 passed / 1 skipped (inquiry submit needs a non-production DB). Not verified: admin flows with real staff on production, contact delivery to the real inbox, real devices. Checkout disabled. |
+| D — Data & security | **BLOCKED (owner approval)** | Option A applied (staff RPC exposure closed). Option B (6 files, `docs/MIGRATION_PRODUCTION_APPROVAL.md`) audited: no schema drift, push path = fresh build, injected failure safe, rollback restores today's production exactly. Includes the shipping-quote fix (`20261023170000`) required before any shipping zone is configured. Local isolated: collection 16/16 · role matrix 15/15 · checkout 31/31 · role HTTP 97/97. Production read-only: P0 9/9 · auth matrix 24/24. |
 | E — Business readiness | FAIL (owner) | Media rights (catalog photos + cutouts), shipping fees/zones, policies/legal, contact facts, staff bootstrap, availability/inquiry proposal, description cleanup proposal. |
-| F — Release | BLOCKED | See "Production domain" below. No promotion from this session. |
+| F — Release | BLOCKED | Production currently runs an owner redeploy of the unreviewed branch commit `34f9839` (public, indexable). Release sequence prepared: `docs/RELEASE_PLAN.md`; public-site options: `docs/PUBLIC_SITE_PLAN.md`. |
 
 ## Production domain (found 2026-10-22; updated 2026-10-23)
 On 2026-10-23 every `/pages/*` route on the public alias returns **500** (old `ea652f2` build: jsdom `ERR_REQUIRE_ESM`, fixed on this branch in `568ce08`). Another reason to decide the alias.

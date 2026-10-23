@@ -25,3 +25,7 @@
 15. **Least-privilege defaults** — objects created by future migrations are not exposed to anon/authenticated; each migration grants explicitly (`20261023140000`, global revoke of PUBLIC EXECUTE because per-schema defaults cannot remove it).
 16. **Idempotency key = one operation** — collection: (order, amount); checkout: (lines, zone). A replay must match; anything else is `idempotency_conflict` with nothing written. Only the specific idempotency index counts as a key race.
 17. **Template publication needs explicit approval** — an empty CMS body publishes the V5 template only when the template has no pending sections and the publish request carries `approveTemplate: true`; no schema change.
+18. **Pre-launch mode instead of platform protection** — the project is on Vercel Hobby (no production password protection); `SITE_PRELAUNCH=1` keeps the site reachable but non-indexable (X-Robots-Tag, robots `Disallow: /`, empty sitemap). Default off.
+19. **Canonical host on production** — `siteUrl()` prefers `SITE_URL`, then `VERCEL_PROJECT_PRODUCTION_URL` on production; the per-deployment `VERCEL_URL` is behind SSO and must not be advertised.
+20. **Same-origin check uses the request Host** — the contact API accepts an Origin equal to the request's Host / X-Forwarded-Host or the host in `request.url`; anything else is rejected (403).
+21. **Option B is applied as one push with a tested rollback** — per-file transactions, every intermediate state verified safe; rollback SQL is generated from the previous migrations (`scripts/release/gen-option-b-rollback.py`).

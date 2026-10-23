@@ -24,8 +24,8 @@ migration repair, and run the read-only post-checks. Nothing else."
 | Suites (production, read-only) | P0 9/9 · auth matrix 24/24 · routes 226/226 PDPs, 6/6 drafts 404, 39/39 collections, 9/9 pages |
 | Production alias smoke | `/`, PDP, `/collections/laptops` 200 · COD 403. `/pages/*` → 500: **pre-existing**, the old `ea652f2` build's jsdom `ERR_REQUIRE_ESM` crash (fixed on this branch in `568ce08`), not related to this change |
 
-Still pending in repo (not applied): `20261023120000`, `20261023130000`, `20261023140000`, `20261023150000`,
-`20261023160000` (Option B). `supabase db push` would now apply exactly these five.
+Still pending in repo (not applied): `20261023120000` … `20261023170000` — six files (Option B, section 3).
+`supabase db push --linked --dry-run` lists exactly these six.
 
 ## 1. Confirmed vulnerability (state before Option A) (severity: high, exploitable precondition not yet met)
 
@@ -61,47 +61,55 @@ grant execute on function public.record_cod_collection(jsonb), public.transition
 - **Rollback:** `grant execute on function <same three> to anon, authenticated;` (re-opens the exposure).
 - **Do not** use `supabase db push` for Option A: it would apply every pending migration.
 
-## 3. Option B — full pending set (after Option A, or instead of it)
+## 3. Option B — remaining pending set (6 files) — PROPOSED, not applied
 
-`supabase db push --linked` applies, in order, all six pending migrations:
+`supabase db push --linked --dry-run` (read-only, 2026-10-23) lists exactly these, applied in this order, **one
+transaction per file**:
 
-| File | Effect |
+| File | Effect | Touches |
+|---|---|---|
+| `20261023120000_explicit_grants` | explicit Data API grants = current effective privileges, minus TRUNCATE/REFERENCES/TRIGGER for anon/authenticated, views SELECT-only, `content_pages.legal_approved_by` hidden from anon/authenticated | grants only |
+| `20261023130000_cod_collection_idempotency_race` | same-key race replays (superseded by 150000 within the same push) | `record_cod_collection` body |
+| `20261023140000_least_privilege_defaults` | objects later created by `postgres` are not auto-granted to anon/authenticated; global PUBLIC EXECUTE default revoked | default privileges |
+| `20261023150000_cod_collection_idempotency_conflict` | key reuse with another order/amount → `idempotency_conflict`; staff RPCs refuse non-service-role JWTs | `record_cod_collection`, `transition_order_status` bodies |
+| `20261023160000_cod_order_idempotency_conflict` | checkout key replayed with a different cart/zone → `idempotency_conflict` | `create_cod_order` body |
+| `20261023170000_fix_quote_cod_shipping_zone_type` | **bug fix found 2026-10-23**: shipping quote failed for every address once any active zone exists (`cannot cast type record to shipping_zones`) | `quote_cod_shipping` body |
+
+No table, column, index, policy or row changes. Function signatures, return shapes and owners (`postgres`) unchanged.
+
+### Audit (2026-10-23)
+| Check | Result |
 |---|---|
-| `20261023110000_emergency_revoke_staff_rpc_execute` | Option A (no-op if already applied) |
-| `20261023120000_explicit_grants` | explicit Data API grants; drops TRUNCATE/REFERENCES/TRIGGER for anon/authenticated; views read-only; hides `content_pages.legal_approved_by` from anon |
-| `20261023130000_cod_collection_idempotency_race` | same-key race replays instead of erroring (superseded by 150000) |
-| `20261023140000_least_privilege_defaults` | future tables/sequences/functions created by `postgres` are no longer auto-granted to anon/authenticated |
-| `20261023150000_cod_collection_idempotency_conflict` | key reuse with another order/amount → `idempotency_conflict`; both staff RPCs refuse non-service-role JWTs |
-| `20261023160000_cod_order_idempotency_conflict` | checkout key replayed with a different cart/zone → `idempotency_conflict` instead of the earlier order (checkout is off; no live effect) |
+| Schema drift: production vs repo-expected pre-B state (read-only fingerprint: 11 function bodies, 35 policies, 24 relations' columns, 37 indexes, 3 triggers, 2 views, default ACLs) | **identical** (function text differs only in CRLF line endings) — replacements revert nothing |
+| Executor | CLI login role `cli_login_postgres` is a member of `postgres` → `alter default privileges for role postgres` allowed; new/replaced objects stay owned by `postgres` |
+| `auth.role()` (used by the guard) | exists on production |
+| Default privileges on production | per-schema only (`public`) for `postgres` and `supabase_admin`; 140000 revokes the `postgres` ones and the global PUBLIC EXECUTE |
+| Push path (CLI `migration up`) on a local copy of production state | 6 files applied; privileges (206 rows), schema and function bodies **identical to a fresh build** |
+| Mid-sequence failure (injected failing file after 120000) | the failing file rolled back completely; 120000 stayed applied; later files not run; `migration up` resumed cleanly |
+| Intermediate states | all safe: staff RPCs stay closed (Option A) at every step; after 130000 only, a reused collection key with another order/amount would replay instead of conflict until 150000 is applied (staff-only path; 0 orders, COD off) |
+| Application compatibility | production code (`34f9839`, and this branch) and the old `ea652f2` build only select granted columns (`content_pages`: `title, body_html, status, legal_approved`; catalog through views) |
+| Customer paths under Option B (local) | shipping quote, order confirmation by token, contact insert as anon, checkout, admin actions: pass (`docs/ISOLATED_TESTS.md`) |
+| Rollback `supabase/rollback/option_b_rollback.sql` | tested: returns privileges, schema and all function bodies to **exactly** the production state of today |
 
-- **Simulated locally** (legacy auto-expose grants = production, then all six): privileges are identical to a fresh
-  build; future objects are not exposed; isolated suites pass (`docs/ISOLATED_TESTS.md`).
-- **Compatibility:** this branch's code handles `idempotency_conflict` (409) in `/api/admin/cod-collections` and
-  `/api/checkout/cod`. If the database is migrated **before** this code is deployed, the old route maps the new error to
-  a generic 500 "Could not record collection" (still no false success). No other behaviour change for current code.
-- **Rollback:** grants — re-grant from the "before" list in `docs/SECURITY_RPC_REVIEW.md`; functions — re-run the
-  function bodies from `20261021160000` / `20261023130000` / `20261021140000`; default privileges — the inverse `alter default
-  privileges … grant`. A schema-only backup (`supabase db dump --linked -f before.sql`) before applying is advised.
+### Residual risks (accepted or owner decision)
+- `supabase_admin`'s default privileges still auto-expose objects **it** creates in `public` (platform-managed; no project migration creates objects as `supabase_admin`). Review anything created from the dashboard.
+- Anon/authenticated keep INSERT/UPDATE/DELETE grants on tables (RLS denies them except `contact_inquiries` insert); narrowing is future hardening.
+- Future `create extension` run as `postgres` will need explicit EXECUTE grants for API roles (intended).
+- Brief locks while grants/functions change; no data is rewritten. Use a quiet period.
+- Rollback re-opens what Option B closes; prefer a forward fix.
 
-## 4. Preflight (read-only) and post-change checks
-
-Before: `supabase migration list --linked` shows exactly the 6 applied versions above; run the ACL query in
-`docs/SECURITY_RPC_REVIEW.md` and save the output.
-
-After (non-mutating):
-1. Same ACL query: anon/authenticated EXECUTE = false on the three functions; unchanged elsewhere (Option A).
-2. Anon probe that cannot write: `POST /rest/v1/rpc/record_cod_collection` with `{"payload":{}}` and the anon key
-   → `42501 permission denied` (today: `P0001 validation_failed`, i.e. callable).
-3. `npm run test:security:p0` (9/9) and `npm run test:security:auth-matrix` (24/24) against production.
-4. Storefront smoke: home, a PDP, `/collections/laptops`, contact form page; Supabase logs for permission errors.
+## 4. Procedure (owner-approved execution only)
+1. Read-only preflight: `supabase migration list --linked` (7 applied); `supabase db push --linked --dry-run` lists exactly the 6 files above.
+2. Backup: `supabase db dump --linked -f <outside-git>/schema-before-option-b.sql`; save the ACL/default-ACL query output from `docs/SECURITY_RPC_REVIEW.md`.
+3. Apply: `supabase db push --linked`.
+4. On failure: do not edit applied files; fix forward and re-run `supabase db push --linked` (continues with the remaining files).
+5. Post-checks (read-only): ledger 13; dry-run reports nothing; ACL — anon/authenticated EXECUTE false on `create_cod_order`, `record_cod_collection`, `transition_order_status`, `consume_rate_limit`; `has_column_privilege('anon','public.content_pages','legal_approved_by','SELECT')` false; `pg_default_acl` for `postgres` in `public` lists only `postgres`, `service_role`; anon probes 42501 on the staff RPCs; anon `quote_cod_shipping` with an address returns `ok` or `unserviceable` (not an error); `npm run test:security:p0` 9/9; `npm run test:security:auth-matrix` 24/24; storefront smoke and Vercel runtime errors.
+6. Rollback only on owner instruction: run `supabase/rollback/option_b_rollback.sql`, then `supabase migration repair --status reverted 20261023120000 20261023130000 20261023140000 20261023150000 20261023160000 20261023170000 --linked`.
 
 ## 5. Risk of waiting
-
-Each day the staff RPCs stay anon-executable, approving and publishing a legal page (or any other leak of a staff
-UUID) turns the exposure into a working way to fake cash collections and order status changes.
+Option A closed the urgent exposure. Without Option B: the next function/table any migration creates is anon-exposed by default; the staff RPCs have no in-function guard if a grant regresses; reused COD keys can return a replay for a different order/amount; checkout keys can confirm an earlier order for a different cart; the shipping quote breaks as soon as a zone is configured; the approver id becomes public when a policy page is approved.
 
 ## 6. Decision
-
-- [ ] **Approve Option A** on `xvmmjkrkgznnakcobmww` (emergency revoke only)
-- [ ] **Approve Option B** (all six pending migrations) — recommended together with deploying this branch
-- [ ] Do not approve (exposure remains live)
+- [x] Option A — applied 2026-10-23 (owner-approved)
+- [ ] **Approve Option B** on `xvmmjkrkgznnakcobmww`: the 6 files listed in section 3 via `supabase db push --linked`, with the section 4 procedure
+- [ ] Do not approve yet

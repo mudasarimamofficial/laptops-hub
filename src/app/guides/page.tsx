@@ -14,7 +14,7 @@ async function load() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await load();
-  if (!page) return { title: "Not found" }; // the 404 response itself carries noindex
+  if (!page) return { title: "Not found", robots: { index: false } }; // overrides the layout default (Next adds its own noindex too)
   return { title: "Guides", description: page.intro, alternates: canonicalFor("/guides"), robots: robotsFor(page.preview) };
 }
 

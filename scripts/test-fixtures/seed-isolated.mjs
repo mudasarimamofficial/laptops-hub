@@ -11,13 +11,11 @@ import path from "path";
 import { randomUUID } from "crypto";
 import { fileURLToPath } from "url";
 import { createClient } from "@supabase/supabase-js";
+import { assertLocalOnly } from "../lib/local-only.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(url)) {
-  console.error("Refusing to run: NEXT_PUBLIC_SUPABASE_URL must be a local Supabase.");
-  process.exit(2);
-}
+await assertLocalOnly("seed-isolated", { url });
 const sb = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 const must = ({ data, error }, what) => {
   if (error) throw new Error(`${what}: ${error.message}`);
@@ -70,6 +68,18 @@ for (const role of ["manager", "fulfillment", "editor"]) {
   const u = must(await sb.auth.admin.createUser({ email, password, email_confirm: true }), "user");
   must(await sb.from("admin_memberships").upsert({ user_id: u.user.id, role, is_active: true }), "membership");
   out.staff[role] = { email, password, id: u.user.id };
+}
+
+// Checkout requires the five policies to be published and legally approved: local stand-in policy text (never real
+// terms) so the isolated journeys can order. Suites that toggle a policy restore it afterwards.
+for (const slug of ["shipping", "returns", "warranty", "privacy", "terms"]) {
+  must(
+    await sb
+      .from("content_pages")
+      .update({ status: "published", body_html: `<h2>Local test policy</h2><p>Isolated test stand-in for ${slug}.</p>`, legal_approved: true, legal_approved_by: out.staff.manager.id })
+      .eq("slug", slug),
+    `policy ${slug}`,
+  );
 }
 
 fs.mkdirSync(path.join(root, ".isolated"), { recursive: true });

@@ -471,6 +471,53 @@ button {
 }
 
 /* CMS HTML bodies rendered with the V5 block styles (h2 / p / list / links). */
+/* FAQ in CMS copy: <details><summary>Question</summary><p>Answer</p></details> styled like the V5 FAQ card. */
+.v5-cms details {
+  max-width: 820px;
+  border: 1px solid var(--lh-border);
+  border-radius: 14px;
+  background: #ffffff;
+}
+.v5-cms details + details {
+  margin-top: -10px;
+}
+.v5-cms summary {
+  min-height: 56px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--lh-ink);
+  cursor: pointer;
+  list-style: none;
+}
+.v5-cms summary::-webkit-details-marker {
+  display: none;
+}
+.v5-cms summary::after {
+  content: "+";
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--lh-action);
+}
+.v5-cms details[open] summary::after {
+  content: "−";
+}
+.v5-cms summary:focus-visible {
+  outline: 2px solid var(--lh-action);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+.v5-cms details > :not(summary) {
+  margin: 0;
+  padding: 0 18px 18px;
+}
 .v5-cms {
   display: flex;
   flex-direction: column;

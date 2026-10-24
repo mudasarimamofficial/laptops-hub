@@ -2,33 +2,22 @@
  * Full staff-role authorization matrix using isolated Auth users + memberships.
  * Creates ephemeral fixtures, runs API/RLS checks, then deactivates/deletes them.
  *
+ * LOCAL Supabase only (scripts/lib/local-only.mjs); pass the local URL/keys explicitly.
+ *
  *   node scripts/security-role-matrix.mjs [baseUrl]
  */
 import fs from "fs";
 import path from "path";
-import { createClient } from "@supabase/supabase-js";
 import { fileURLToPath } from "url";
+import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "crypto";
+import { assertLocalOnly } from "./lib/local-only.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-function loadEnv() {
-  const p = path.join(root, ".env.local");
-  if (!fs.existsSync(p)) throw new Error(".env.local missing");
-  for (const line of fs.readFileSync(p, "utf8").split(/\r?\n/)) {
-    const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
-    if (!m || process.env[m[1]]) continue;
-    let v = m[2].trim();
-    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
-    process.env[m[1]] = v;
-  }
-}
-loadEnv();
 
-// Writes fixtures (Auth users, memberships, orders): refuse hosted databases unless explicitly allowed.
-if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(process.env.NEXT_PUBLIC_SUPABASE_URL || "") && process.env.ALLOW_REMOTE_FIXTURES !== "1") {
-  console.error("Refusing to run: NEXT_PUBLIC_SUPABASE_URL is not a local Supabase. Start `supabase start` and pass the local URL/keys (see docs/ISOLATED_TESTS.md).");
-  process.exit(2);
-}
+// Writes fixtures (Auth users, memberships, orders): local Supabase only, no override. The environment must be passed
+// explicitly — `.env.local` is never read here (it holds production keys).
+await assertLocalOnly("security-role-matrix");
 
 const base = (process.argv[2] || "http://127.0.0.1:3000").replace(/\/$/, "");
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

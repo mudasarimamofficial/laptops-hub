@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:unit": "tsx tests/unit/money.test.ts && tsx tests/unit/phone.test.ts && tsx tests/unit/staff-auth.test.ts && tsx tests/unit/sanitize-html.test.ts && tsx tests/unit/specs.test.ts && tsx tests/unit/availability-handles.test.ts && tsx tests/unit/cart-limits.test.ts && tsx tests/unit/contact.test.ts && tsx tests/unit/content-resolve.test.ts && tsx tests/unit/site-url.test.ts && tsx tests/unit/prelaunch.test.ts && tsx tests/unit/notify.test.ts",
+    "test:unit": "tsx tests/unit/money.test.ts && tsx tests/unit/phone.test.ts && tsx tests/unit/staff-auth.test.ts && tsx tests/unit/sanitize-html.test.ts && tsx tests/unit/specs.test.ts && tsx tests/unit/availability-handles.test.ts && tsx tests/unit/cart-limits.test.ts && tsx tests/unit/contact.test.ts && tsx tests/unit/home-inquiry.test.ts && tsx tests/unit/content-resolve.test.ts && tsx tests/unit/content-links.test.ts && tsx tests/unit/site-url.test.ts && tsx tests/unit/prelaunch.test.ts && tsx tests/unit/notify.test.ts && tsx tests/unit/recovery.test.ts && tsx tests/unit/local-only.test.ts",
     "test:security:p0": "node scripts/security-p0-probe.mjs",
     "test:security:auth-matrix": "node scripts/security-auth-matrix.mjs",
     "test:security:roles": "node scripts/security-role-matrix.mjs",

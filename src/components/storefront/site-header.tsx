@@ -12,7 +12,8 @@ import { LHImg } from "@/components/storefront/v5/lh-img";
 import type { V5MenuGroup } from "@/lib/catalog/v5-model";
 
 export type MegaFeature = { href: string; img: string | null; model: string; priceText: string; stockText: string };
-export type ChromeData = { menu: V5MenuGroup[]; megaFeat: MegaFeature | null; totalCount: number };
+/** `supportHref`: first public help page (FAQ → contact → order inquiries), else order tracking. */
+export type ChromeData = { menu: V5MenuGroup[]; megaFeat: MegaFeature | null; totalCount: number; supportHref: string; guidesPublic: boolean };
 
 /** V5 `navLinks` (shown at ≥1180px). */
 const NAV_LINKS: { label: string; href: string; isNew?: boolean }[] = [
@@ -135,7 +136,9 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
                 <path d="M6 9l6 6 6-6" />
               </svg>
             </button>
-            {NAV_LINKS.map((l) => {
+            {NAV_LINKS.filter((n) => n.label !== "Guides" || chrome.guidesPublic)
+              .map((n) => (n.label === "Support" ? { ...n, href: chrome.supportHref } : n))
+              .map((l) => {
               const cur = isCur(l.href, l.label);
               return (
                 <Link

@@ -4,11 +4,13 @@
  *
  * Usage:
  *   node scripts/import-catalog.mjs --dry-run
- *   node scripts/import-catalog.mjs
+ *   node scripts/import-catalog.mjs                       (local Supabase)
+ *   node scripts/import-catalog.mjs --confirm-production=<ref>   (hosted; owner approval only)
  */
 import fs from "fs";
 import path from "path";
 import { createClient } from "@supabase/supabase-js";
+import { PRODUCTION_REF, localOnlyProblems } from "./lib/local-only.mjs";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -34,6 +36,14 @@ const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!url || !key) {
   console.error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
   process.exit(1);
+}
+// Writing to a hosted project (prices, products, media) requires naming it: --confirm-production=<project ref>.
+if (!dryRun && localOnlyProblems(url, [key]).length) {
+  const confirm = (process.argv.find((a) => a.startsWith("--confirm-production=")) || "").split("=")[1];
+  if (confirm !== PRODUCTION_REF || !url.includes(PRODUCTION_REF)) {
+    console.error(`Refusing to write to a hosted database. Use --dry-run, or pass --confirm-production=${PRODUCTION_REF} after owner approval.`);
+    process.exit(2);
+  }
 }
 
 function loadCatalog() {

@@ -8,6 +8,7 @@ import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "crypto";
 import fs from "fs";
 import { formatPkr } from "../../src/lib/money";
+import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("isolated journeys need a local Supabase");
@@ -57,6 +58,7 @@ let orderUrl = "";
 
 test.describe.serial("launch journeys (isolated)", () => {
   test.beforeAll(async () => {
+    await assertLocalOnly("launch journeys");
     await fetch(`${FAKE}/_reset`, { method: "POST" });
   });
 

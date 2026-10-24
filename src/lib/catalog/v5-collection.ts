@@ -137,7 +137,7 @@ export function buildCollectionView(base: V5Product[], sp: RawParams, opts: { is
   const cbPending = !!opts.isChromebooks && !base.length;
   const empty: Filters = { cat: [], brand: [], cpu: [], gen: [], ram: [], sto: [], size: [], price: "", touch: false };
   return {
-    resultText: cbPending ? "Coming soon" : list.length + (list.length === 1 ? " product" : " products") + (list.length !== base.length ? " of " + base.length : ""),
+    resultText: cbPending ? "No Chromebooks listed" : list.length + (list.length === 1 ? " product" : " products") + (list.length !== base.length ? " of " + base.length : ""),
     resultCount: list.length,
     shownCount: shown.length,
     shownPct: Math.round((shown.length / Math.max(1, list.length)) * 100) + "%",

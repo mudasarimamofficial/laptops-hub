@@ -9,6 +9,8 @@ export type HeroShot = { href: string; label: string; src: string | null; cutout
 
 export type HeroProps = {
   totalCount: number;
+  /** Chromebooks currently listed (the hero chip describes what is really in the catalog). */
+  chromebookCount: number;
   laptopCount: number;
   accCount: number;
   main: HeroShot & { priceText: string; stockText: string; chips: string[] };
@@ -31,7 +33,7 @@ function usePrefersReducedMotion() {
 const ease = "cubic-bezier(.2,.7,.2,1)";
 
 /** Port of V5 section `#top` ("01 Hero"): layered stage, scroll (--hp) and pointer (--mx/--my) parallax, intro. */
-export function CinematicHero({ totalCount, laptopCount, accCount, main, side1, side2 }: HeroProps) {
+export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCount, main, side1, side2 }: HeroProps) {
   const rm = usePrefersReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const [entered, setEntered] = useState(false);
@@ -159,7 +161,7 @@ export function CinematicHero({ totalCount, laptopCount, accCount, main, side1, 
             style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 10, minHeight: 42, padding: "5px 14px 5px 5px", borderRadius: 999, background: "rgba(255,255,255,.92)", border: "1px solid var(--lh-border)", color: "var(--lh-ink)", fontSize: 14, fontWeight: 600, opacity: 1, transform: inT, transition: tr([["opacity", 0.8, 0.4], ["transform", 0.8, 0.4, true]]) + ",border-color .2s ease" }}
           >
             <span style={{ padding: "6px 10px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 500, letterSpacing: ".12em", whiteSpace: "nowrap" }}>CHROMEBOOKS</span>
-            Collection in preparation
+            {chromebookCount ? `${chromebookCount} listed` : "Ask what is available"}
             <span aria-hidden="true" style={{ color: "var(--lh-action)" }}>→</span>
           </a>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(16px,2.4vw,36px)", paddingTop: "clamp(10px,1.4vw,18px)", borderTop: "1px solid var(--lh-border)", maxWidth: 520, opacity: 1, transition: tr([["opacity", 0.8, 0.6]]) }}>

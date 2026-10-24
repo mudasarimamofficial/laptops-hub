@@ -42,6 +42,9 @@ const adv: [string, (out: string) => boolean][] = [
   [`<svg><script>alert(1)</script></svg><p>after</p>`, (o) => o === "<p>after</p>"],
   [`<<script>script>alert(1)<</script>/script>`, (o) => !/<script/i.test(o)],
   [`<a href="mailto:a@b.co">m</a>`, (o) => o.includes('href="mailto:a@b.co"')],
+  [`<a href="tel:+923001234567">call</a>`, (o) => o.includes('href="tel:+923001234567"')],
+  [`<a href="vbscript:x">v</a><a href="data:text/html,x">d</a>`, (o) => !/href=/.test(o)],
+  [`<details open onclick="x()"><summary style="x">Q</summary><p>A</p></details>`, (o) => o === "<details><summary>Q</summary><p>A</p></details>"],
 ];
 for (const [input, ok] of adv) assert.ok(ok(sanitizeCmsHtml(input)), `${input} => ${sanitizeCmsHtml(input)}`);
 console.log("sanitize-html adversarial ok");

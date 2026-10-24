@@ -141,10 +141,10 @@ export function CollectionView({ title, view }: { title: string; view: View }) {
             {view.cbPending ? (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,340px),1fr))", gap: 18 }}>
                 <div style={{ position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", gap: 16, padding: "clamp(24px,3vw,36px)", borderRadius: 24, background: "linear-gradient(160deg,#FFFFFF,var(--lh-ice))", border: "1px solid var(--lh-border)" }}>
-                  <span style={{ alignSelf: "flex-start", padding: "6px 12px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".12em", whiteSpace: "nowrap" }}>COMING SOON</span>
-                  <span style={{ fontFamily: "var(--font-display)", fontSize: "clamp(24px,2.4vw,32px)", fontWeight: 700, letterSpacing: "-.03em", lineHeight: 1.1, color: "var(--lh-ink)" }}>Chromebooks are on the way.</span>
+                  <span style={{ alignSelf: "flex-start", padding: "6px 12px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".12em", whiteSpace: "nowrap" }}>ASK US</span>
+                  <span style={{ fontFamily: "var(--font-display)", fontSize: "clamp(24px,2.4vw,32px)", fontWeight: 700, letterSpacing: "-.03em", lineHeight: 1.1, color: "var(--lh-ink)" }}>No Chromebooks listed right now.</span>
                   <span style={{ fontSize: 15, lineHeight: 1.6, color: "var(--lh-ink-2)", maxWidth: "52ch" }}>
-                    We aren’t listing any Chromebooks yet. Models will appear here once each one is photographed and its price, specifications and availability are confirmed. Tell us what you’re looking for and we’ll let you know.
+                    There are no Chromebooks in the catalog at the moment. Tell us the model, budget or specifications you need and our team can tell you what is available.
                   </span>
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 4 }}>
                     <button type="button" onClick={() => setAsking(true)} className="v5-hov-bg-action" style={{ height: 48, padding: "0 22px", border: 0, borderRadius: 999, background: "var(--lh-action)", color: "#FFFFFF", fontSize: 14, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>
@@ -156,7 +156,7 @@ export function CollectionView({ title, view }: { title: string; view: View }) {
                   </div>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "clamp(24px,3vw,36px)", borderRadius: 24, background: "#FFFFFF", border: "1px solid var(--lh-border)" }}>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".1em", color: "var(--lh-action)" }}>EVERY CHROMEBOOK LISTING WILL SHOW</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".1em", color: "var(--lh-action)" }}>WHAT EACH LISTING SHOWS</span>
                   {CB_NEEDED.map((nd) => (
                     <div key={nd} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "8px 0", borderBottom: "1px solid var(--lh-divider)", fontSize: 14, lineHeight: 1.45, color: "var(--lh-ink)" }}>
                       <span style={{ flexShrink: 0, width: 6, height: 6, marginTop: 7, borderRadius: "50%", background: "var(--lh-electric)" }} />

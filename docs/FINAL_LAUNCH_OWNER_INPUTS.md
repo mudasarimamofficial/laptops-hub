@@ -158,9 +158,11 @@ cannot be completed. Create the user directly instead:
 6. Staff: steps 2–3 per person with the smallest role (`fulfillment` packing/dispatch, `manager` orders + settings,
    `editor` content only) — for staff, change `'owner'` in the SQL to their role. Give them their password in
    person or by phone, never by email.
-7. Forgotten password (until a reset page exists): the owner deletes that user in Authentication → Users and creates
-   it again (step 2), then re-runs step 3/6 for the role. Only the membership row is linked to the user; orders,
-   events and audit history are kept.
+7. Forgotten password: **Forgot password?** on `/admin/login` (PR #5, `docs/ACCOUNT_RECOVERY.md`) — an email link
+   sets a new password for the same account; role and status are unchanged and all devices are signed out. It needs
+   PR #5 deployed and the Supabase SMTP + redirect settings below. Until then: the owner deletes that user in
+   Authentication → Users and creates it again (step 2), then re-runs step 3/6 for the role (only the membership row
+   is linked to the user; orders, events and audit history are kept).
 
 ### Recommended Supabase Auth settings (Dashboard → Authentication)
 
@@ -176,6 +178,9 @@ email sending.
 | Site URL | URL Configuration | `https://laptops-hub.vercel.app` (your custom domain later) |
 | Redirect URLs | URL Configuration | `https://laptops-hub.vercel.app/**` only — no `localhost`, no Preview wildcards |
 | Other providers (phone, OAuth) | Sign In / Providers | Off |
+| **SMTP** | Emails → SMTP Settings | Custom SMTP via Resend (guide C): host `smtp.resend.com`, port `465`, user `resend`, password = a Resend API key, sender = your verified address. Without it Supabase emails reach only the project's team members |
+| Redirect URL for password reset | URL Configuration → Redirect URLs | add `https://laptops-hub.vercel.app/admin/auth/confirm` |
+| Reset password email template (recommended) | Emails → Templates → Reset password | link `{{ .SiteURL }}/admin/auth/confirm?token_hash={{ .TokenHash }}&type=recovery` (works on any device) |
 
 The Site URL / redirect list cannot be read without dashboard access — please check them when you are signed in.
 
@@ -208,7 +213,9 @@ Edit or switch off a zone at any time with **Edit zone**; existing orders keep t
    `CRON_SECRET` (any long random text; add the same value in GitHub → repository → Settings → Secrets and
    variables → Actions → New repository secret `CRON_SECRET`, which turns on the 15-minute retry). The notification
    database change is already applied (2026-10-23).
-6. Real delivery test: the controlled test order (§ 9.5). You should receive the alert within a minute; the order page
+6. Supabase SMTP: create a second Resend API key ("Supabase Auth") and enter it in Supabase → Authentication →
+   Emails → SMTP Settings (guide A table) — this lets staff receive password-reset emails.
+7. Real delivery test: the controlled test order (§ 9.5). You should receive the alert within a minute; the order page
    in admin shows **Store alert: accepted**. "Accepted" means Resend took the message; if it is not in your inbox,
    check spam and Resend → Emails (it shows delivered / bounced).
 

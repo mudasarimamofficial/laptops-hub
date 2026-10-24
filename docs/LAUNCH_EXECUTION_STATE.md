@@ -5,21 +5,25 @@
 ## Repository and Production
 | Item | Value |
 |---|---|
-| Production | `main` `700524d` → `dpl_7W2x8QxLKqvcG1iw5WophtRJjhiP` (laptops-hub.vercel.app) |
+| Production | `main` `3995c0f` (PR #8) → `dpl_EKC4j17SAaEY2SDh6df5gVf4w3AV` (laptops-hub.vercel.app), deployed 2026-10-24, one build; rollback: `dpl_7W2x8QxLKqvcG1iw5WophtRJjhiP` (`700524d`) |
 | DB ledger | 14 applied (read-only check 2026-10-24); nothing pending |
 | Switches | COD env **off** · `store_settings.cod_checkout` off · email not configured · `CRON_SECRET` unset · site indexable, no restricted mode |
 | Staff | 0 active (test manager deactivated 2026-10-24) · no owner yet · Supabase public sign-up **on** (owner to switch off) |
 | Data | 226 active / 6 draft products · 964 photos pending rights · 0 zones · 0 orders · 13 content pages unpublished |
 
-## Release candidate (owner approval needed to merge)
-| PR | Branch | Head | Content |
-|---|---|---|---|
-| **#8** | `release/rc-2026-10-24` | `aa4ba36` | integration of #4 + #5 + #6 + #7 on `main` `700524d`; no migration/env/content/COD change |
-| #4–#7 | feature branches | — | reviewed parts of #8; close when #8 merges |
-
-Evidence (PR #8 comment): isolated journeys 29/29, role HTTP 126/126, checkout 32/32, outbox 13/13, COD concurrency 16/16,
-CMS stress 240/240 (1200/1200 on #6), copy gate clean, unit 16/16; Preview (production data, read-only) e2e 41/3 skipped,
-copy gate 289 paths clean, no runtime errors.
+## Release 2026-10-24 — DEPLOYED (owner-approved merge of PR #8)
+| Check (Production, read-only) | Result |
+|---|---|
+| Merge | PR #8 → `3995c0f` (merge commit); `main` tree = RC tree; #4, #5, #6 auto-marked merged; #7 open (base was the #6 branch, all commits in `main`) |
+| Deployment | `dpl_EKC4j17SAaEY2SDh6df5gVf4w3AV`, single Production build |
+| HTTP | `/`, collections, PDP, track-order, `/admin/login`, `/admin/forgot-password`, `/admin/reset-password` 200 · `/admin`, `/admin/inquiries` 307 · content pages and `/guides` 404 (unpublished) · checkout POST 403 `checkout_disabled` · cron 503 (no secret) |
+| Homepage | inquiry section present ("Tell us what you're looking for.") |
+| SEO | home `index, follow`; 404 pages `noindex` only; sitemap 267 URLs, no unpublished content |
+| `tests/e2e` | 41 passed, 2 skipped (need published content) |
+| Copy gate | 289 paths, no unfinished copy, no broken links |
+| Security | P0 9/9 · auth matrix 24/24 |
+| Runtime errors | none |
+| Unchanged | no env, secret, COD, content or account change |
 
 ## P0 done (with evidence, isolated stack unless stated)
 - CMS withdraw invariant: stress 1200/1200 consistent views, 100 cycles × 6 parallel, 0 leaks; role HTTP 118/118 ×3 (#6).
@@ -43,10 +47,9 @@ Resend, Supabase SMTP, CRON_SECRET, who monitors · H public domain · I test-or
 Instant Rollback to the previous Production deployment; COD kill switch `store_settings.cod_checkout.enabled=false`.
 
 ## NEXT ACTION
-1. Owner: approve "merge PR #8 into main with a merge commit" → engineering merges, waits for the single Production build,
-   runs read-only checks: `tests/e2e` against Production, `node scripts/check-public-copy.mjs https://laptops-hub.vercel.app`,
-   HTTP spot checks, runtime errors; records the deployment id here.
-2. Owner setup (sheet): owner account + sign-up off; confirm address/phones (then flip `confirmed` flags in
-   `src/lib/business.ts` and publish the about/contact drafts); zones; Resend + Supabase SMTP; policy facts.
-3. With approval: `node scripts/content/load-drafts.mjs --confirm-production=xvmmjkrkgznnakcobmww` loads the six page
+1. Owner setup (sheet A–I): owner account + sign-up off; confirm address/phones/hours (then set `confirmed` in
+   `src/lib/business.ts` via a small PR and publish About/Contact); shipping zones; Resend + Supabase SMTP + redirect
+   URL; policy facts and legal approval; prices; photo rights.
+2. With approval: `node scripts/content/load-drafts.mjs --confirm-production=xvmmjkrkgznnakcobmww` loads the six page
    drafts as DRAFTS (not published) for review in Admin → Content.
+3. Then: email/cron variables (approval) → Scenario A test order (approval) → go-live sign-off → COD activation (approval).

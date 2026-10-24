@@ -14,7 +14,7 @@
 ## Release candidate (owner approval needed to merge)
 | PR | Branch | Head | Content |
 |---|---|---|---|
-| **#8** | `release/rc-2026-10-24` | `84ec970` | integration of #4 + #5 + #6 + #7 on `main` `700524d`; no migration/env/content/COD change |
+| **#8** | `release/rc-2026-10-24` | `aa4ba36` | integration of #4 + #5 + #6 + #7 on `main` `700524d`; no migration/env/content/COD change |
 | #4–#7 | feature branches | — | reviewed parts of #8; close when #8 merges |
 
 Evidence (PR #8 comment): isolated journeys 29/29, role HTTP 126/126, checkout 32/32, outbox 13/13, COD concurrency 16/16,
@@ -29,7 +29,7 @@ copy gate 289 paths clean, no runtime errors.
 - Password recovery: 5/5 journeys with real emails via Mailpit, Preview evidence (#5).
 
 ## P0 still actionable without the owner
-- The one skipped product-inquiry case in `tests/e2e` → cover on the isolated stack.
+- (done) product inquiry dialog journey covered on the isolated stack (inquiry spec 7/7).
 - Legal policy HTML drafts with `OWNER TO DECIDE` blanks (internal; never published without approval) — text skeletons
   already in `docs/POLICY_DRAFTS.md`.
 - After #8 merges: production read-only verification (NEXT ACTION 1).

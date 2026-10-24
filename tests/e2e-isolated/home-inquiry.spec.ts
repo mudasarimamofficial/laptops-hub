@@ -4,6 +4,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 import fs from "fs";
+import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("inquiry journeys need a local Supabase");
@@ -22,6 +23,9 @@ async function signIn(page: Page, role: "manager" | "editor") {
 const form = (page: Page) => page.getByRole("form", { name: "Send an inquiry to Laptops HUB" });
 
 test.describe.serial("homepage inquiry (isolated)", () => {
+  test.beforeAll(async () => {
+    await assertLocalOnly("inquiry journeys");
+  });
   for (const vp of [
     { width: 375, height: 800 },
     { width: 820, height: 1000 },

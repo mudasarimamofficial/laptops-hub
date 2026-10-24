@@ -5,6 +5,7 @@
 import { expect, test } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 import fs from "fs";
+import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("content journeys need a local Supabase");
@@ -15,6 +16,7 @@ const BANNED = /being finali[sz]ed|pending business approval|we haven[’']t pub
 test.describe.serial("prepared content pages (isolated)", () => {
   let saved: { slug: string; status: string; body_html: string | null }[] = [];
   test.beforeAll(async () => {
+    await assertLocalOnly("content journeys");
     saved = (await sb.from("content_pages").select("slug, status, body_html").in("slug", SLUGS)).data || [];
     for (const slug of SLUGS) {
       await sb.from("content_pages").update({ status: "published", body_html: fs.readFileSync(`content/drafts/${slug}.html`, "utf8") }).eq("slug", slug);

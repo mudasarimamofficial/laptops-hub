@@ -6,6 +6,7 @@ import { expect, test, type Browser, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "crypto";
 import fs from "fs";
+import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("recovery journeys need a local Supabase");
@@ -49,6 +50,9 @@ const membership = async (userId: string) =>
   (await sb.from("admin_memberships").select("role, is_active").eq("user_id", userId).single()).data;
 
 test.describe.serial("staff password recovery (isolated)", () => {
+  test.beforeAll(async () => {
+    await assertLocalOnly("recovery journeys");
+  });
   const manager = fx.staff.manager as { email: string; password: string; id: string };
 
   test("full recovery: email link → new password → all sessions ended; UID, role and status unchanged", async ({ page, browser }) => {

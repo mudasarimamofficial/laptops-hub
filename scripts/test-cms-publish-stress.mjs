@@ -11,6 +11,7 @@
  */
 import { randomUUID } from "crypto";
 import { createClient } from "@supabase/supabase-js";
+import { assertLocalOnly } from "./lib/local-only.mjs";
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(url)) {
@@ -22,6 +23,7 @@ if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(base)) {
   console.error("Refusing to run: the app URL must be local.");
   process.exit(2);
 }
+await assertLocalOnly("cms-publish-stress");
 const CYCLES = Number(process.argv[3] || 100);
 const PARALLEL = Number(process.argv[4] || 6);
 const SLUG = "shipping";

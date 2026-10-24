@@ -14,7 +14,7 @@
 ## Release 2026-10-24 — DEPLOYED (owner-approved merge of PR #8)
 | Check (Production, read-only) | Result |
 |---|---|
-| Merge | PR #8 → `3995c0f` (merge commit); `main` tree = RC tree; #4, #5, #6 auto-marked merged; #7 open (base was the #6 branch, all commits in `main`) |
+| Merge | PR #8 → `3995c0f` (merge commit); `main` tree = RC tree; #4, #5, #6 auto-marked merged; #7 closed unmerged (owner-approved; all commits in `main`) |
 | Deployment | `dpl_EKC4j17SAaEY2SDh6df5gVf4w3AV`, single Production build |
 | HTTP | `/`, collections, PDP, track-order, `/admin/login`, `/admin/forgot-password`, `/admin/reset-password` 200 · `/admin`, `/admin/inquiries` 307 · content pages and `/guides` 404 (unpublished) · checkout POST 403 `checkout_disabled` · cron 503 (no secret) |
 | Homepage | inquiry section present ("Tell us what you're looking for.") |
@@ -45,6 +45,12 @@ Resend, Supabase SMTP, CRON_SECRET, who monitors · H public domain · I test-or
 
 ## Risks / rollback
 Instant Rollback to the previous Production deployment; COD kill switch `store_settings.cod_checkout.enabled=false`.
+
+## Current step (2026-10-24): owner account activation (sheet item A)
+Verified read-only before handing over: Production `3995c0f` / `dpl_EKC4j17SAaEY2SDh6df5gVf4w3AV`; ledger 14, nothing
+pending; 1 auth user (the deactivated test account), 0 active memberships; public sign-up ON; 0 zones; 0 orders; 0 inquiries;
+0/13 pages published; COD off. Waiting for the owner to: switch off sign-up, create their user, run the bootstrap SQL,
+sign in. Then engineering verifies read-only (membership role owner, sign-up disabled, admin pages reachable).
 
 ## NEXT ACTION
 1. Owner setup (sheet A–I): owner account + sign-up off; confirm address/phones/hours (then set `confirmed` in

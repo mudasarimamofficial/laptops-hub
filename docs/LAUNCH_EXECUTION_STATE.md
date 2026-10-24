@@ -53,6 +53,10 @@ pending; 1 auth user (the deactivated test account), 0 active memberships; publi
 active owner/admin; test manager inactive). Owner sign-in verified (last_sign_in_at 2026-10-24 16:20 UTC). STILL OPEN: Supabase auth settings report public
 sign-up allowed (disable_signup=false, rechecked 4× over 1 minute after the owner's save, uncached) — owner to recheck.
 Next: shipping zones (sheet item C) once the owner can sign in.
+2026-10-24 16:31 UTC recheck after the owner reported "sign-up off, zones entered": sign-up still allowed; 0 shipping
+zones; 0 audit entries since 16:00 UTC; owner session activity only at sign-in (16:20). Admin zone form verified working
+on the deployed code (isolated stack, real browser: POST 200, "Zone saved.", row stored). Owner asked to retry and report
+the on-screen message.
 
 ## NEXT ACTION
 1. Owner setup (sheet A–I): owner account + sign-up off; confirm address/phones/hours (then set `confirmed` in

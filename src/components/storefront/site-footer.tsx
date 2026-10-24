@@ -83,7 +83,7 @@ export function SiteFooter({ totalCount, vis }: { totalCount: number; vis: Visib
             <Wordmark size={22} onDark />
           </Link>
           <span style={{ fontSize: 14, lineHeight: 1.55, maxWidth: "30ch", color: "var(--lh-on-dark-2)" }}>
-            Used Dell, HP and Lenovo laptops. Prices in PKR. Chromebook collection in preparation.
+            Used Dell, HP and Lenovo laptops. Prices in PKR.
           </span>
         </div>
         {cols.map((col) => (

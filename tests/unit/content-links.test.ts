@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { isLinkPublic, mandatoryPoliciesPublic, publicLinks, supportHref, type Visibility } from "../../src/lib/content/links";
+import { isLinkPublic, mandatoryPoliciesPublic, publicLinks, supportHref, unlinkUnpublished, type Visibility } from "../../src/lib/content/links";
 
 const none: Visibility = { pages: {}, articles: {} };
 const some: Visibility = { pages: { faq: false, contact: true, shipping: true }, articles: { "core-i5-vs-i7": true } };
@@ -29,3 +29,11 @@ assert.equal(mandatoryPoliciesPublic(some), false);
 assert.equal(mandatoryPoliciesPublic({ pages: { shipping: true, returns: true, warranty: true, privacy: true, terms: true }, articles: {} }), true);
 
 console.log("content-links.test.ts ok");
+
+// Published copy never links to content that is not public; other links stay.
+{
+  const html = '<p>Read <a href="/pages/how-to-choose">how to choose</a>, <a href="/pages/contact">contact us</a>, <a href="/compare">compare</a> or <a href="https://example.com/x">elsewhere</a>.</p>';
+  const out = unlinkUnpublished(html, some);
+  assert.equal(out, '<p>Read how to choose, <a href="/pages/contact">contact us</a>, <a href="/compare">compare</a> or <a href="https://example.com/x">elsewhere</a>.</p>');
+  console.log("unlinkUnpublished ok");
+}

@@ -41,6 +41,7 @@ async function loadChrome(vis: Visibility): Promise<ChromeData> {
         .map((g) => ({ ...g, items: publicLinks(g.items, vis) }))
         .filter((g) => g.items.length > 0),
       supportHref: support,
+      guidesPublic: Object.values(vis.articles).some(Boolean),
       totalCount: P.length,
       megaFeat: p
         ? {
@@ -53,7 +54,7 @@ async function loadChrome(vis: Visibility): Promise<ChromeData> {
         : null,
     };
   } catch {
-    return { menu: [], megaFeat: null, totalCount: 0, supportHref: support };
+    return { menu: [], megaFeat: null, totalCount: 0, supportHref: support, guidesPublic: Object.values(vis.articles).some(Boolean) };
   }
 }
 

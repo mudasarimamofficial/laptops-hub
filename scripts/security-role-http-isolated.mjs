@@ -74,12 +74,14 @@ const APIS = [
   { m: "POST", p: "/api/admin/orders/LH-NONE/status", roles: ["owner", "admin", "manager", "fulfillment"] },
   { m: "PATCH", p: "/api/admin/shipping-zones/00000000-0000-4000-8000-000000000000", roles: ["owner", "admin", "manager"] },
   { m: "POST", p: "/api/admin/notifications/retry", roles: ["owner", "admin", "manager", "fulfillment"] },
+  { m: "PATCH", p: "/api/admin/inquiries/00000000-0000-4000-8000-000000000000", roles: ["owner", "admin", "manager", "fulfillment"] },
 ];
 const PAGES = [
   { p: "/admin/content", roles: ["owner", "admin", "manager", "editor"] },
   { p: "/admin/products", roles: ["owner", "admin", "manager", "editor"] },
   { p: "/admin/orders", roles: ["owner", "admin", "manager", "fulfillment"] },
-  { p: "/admin/inquiries", roles: ["owner", "admin", "manager", "editor", "fulfillment"] },
+  // Inquiries hold customer contact data: customer-facing roles only (not editors).
+  { p: "/admin/inquiries", roles: ["owner", "admin", "manager", "fulfillment"] },
   { p: "/admin/settings", roles: ["owner", "admin", "manager"] },
 ];
 

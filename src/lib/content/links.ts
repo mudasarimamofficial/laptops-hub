@@ -28,6 +28,13 @@ export function supportHref(vis: Visibility): string {
   return SUPPORT_ORDER.find((h) => isLinkPublic(h, vis)) ?? SUPPORT_FALLBACK;
 }
 
+/** In published CMS copy, a link to content that is not public becomes plain text (never a link to a 404). */
+export function unlinkUnpublished(html: string, vis: Visibility): string {
+  return html.replace(/<a\b[^>]*\bhref="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, (whole, href: string, inner: string) =>
+    href.startsWith("/") && !isLinkPublic(href, vis) ? inner : whole,
+  );
+}
+
 export function mandatoryPoliciesPublic(vis: Visibility): boolean {
   return MANDATORY_POLICY_SLUGS.every((s) => vis.pages[s]);
 }

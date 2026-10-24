@@ -41,15 +41,26 @@ export function isContentPublic(tpl: V5Page, row: ContentRow | undefined, isLega
   return !!(row.body_html || "").trim() || !templateHasPending(tpl);
 }
 
+/**
+ * Public page intros where the V5 template intro describes unfinished work or another page's purpose. The V5 template
+ * text is kept for (non-production) preview only.
+ */
+export const PUBLIC_INTROS: Record<string, string> = {
+  about: "A laptop retailer in Bahawalpur, Pakistan, with prices in PKR and the recorded specifications of each listing.",
+  faq: "Answers to common questions about ordering, payment, delivery and our laptops.",
+  "order-inquiries": "How to check on an existing order or ask our team about it.",
+};
+
 export function resolveContent(slug: string, tpl: V5Page, row: ContentRow | undefined, isLegal: boolean): ResolvedContent {
-  const base = { slug, kicker: tpl.kicker, intro: tpl.intro, read: tpl.read, v5Status: tpl.status, isLegal, preview: false };
+  const base = { slug, kicker: tpl.kicker, intro: PUBLIC_INTROS[slug] ?? tpl.intro, read: tpl.read, v5Status: tpl.status, isLegal, preview: false };
   // Defence in depth: RLS already hides unpublished rows; enforce the same rules here so an RLS regression cannot publish.
   if (row && isContentPublic(tpl, row, isLegal)) {
     const body = (row.body_html || "").trim();
-    if (body) return { ...base, title: row.title || tpl.title, mode: "cms", blocks: [], html: sanitizeCmsHtml(body) };
+    // CMS copy replaces the template text; the template's working form (contact page) stays below it.
+    if (body) return { ...base, title: row.title || tpl.title, mode: "cms", blocks: tpl.blocks.filter((b) => b.t === "form"), html: sanitizeCmsHtml(body) };
     return { ...base, title: row.title || tpl.title, mode: "template", blocks: tpl.blocks, html: null };
   }
-  if (previewAllContent()) return { ...base, title: tpl.title, mode: "template", blocks: tpl.blocks, html: null, preview: true };
+  if (previewAllContent()) return { ...base, intro: tpl.intro, title: tpl.title, mode: "template", blocks: tpl.blocks, html: null, preview: true };
   // Gated: only the template's form (functionality, not a claim) and its customer-facing "being finalised"
   // sections; no unapproved copy. Pages without such a section get one named after the page.
   const blocks: V5Block[] = tpl.blocks.filter((b) => b.t === "form" || b.t === "pending");

@@ -2,6 +2,11 @@ import { z } from "zod";
 
 const PHONE_RE = /^\+?[0-9][0-9\s-]{9,14}$/;
 
+/** Homepage inquiry options (labels are stored as written). WhatsApp is offered only once a business line is verified. */
+export const INQUIRY_TOPICS = ["Laptop recommendation", "Specific model inquiry", "Order question", "General inquiry"] as const;
+export const INQUIRY_BUDGETS = ["Under Rs 40,000", "Rs 40,000 – 60,000", "Rs 60,000 – 100,000", "Over Rs 100,000"] as const;
+export const INQUIRY_CONTACT = ["call", "email"] as const;
+
 export const contactSchema = z
   .object({
     name: z.string().trim().min(2).max(120),
@@ -14,11 +19,19 @@ export const contactSchema = z
     email: z.string().trim().email().max(254).optional().or(z.literal("")),
     subject: z.string().trim().max(160).optional().default(""),
     message: z.string().trim().min(5).max(4000),
+    /** Which form sent it. Only the homepage form sets "home"; its subject is then built here, not by the client. */
+    source: z.enum(["contact", "home"]).optional().default("contact"),
+    topic: z.enum(INQUIRY_TOPICS).optional(),
+    budget: z.enum(INQUIRY_BUDGETS).optional(),
+    useCase: z.string().trim().max(120).optional().or(z.literal("")),
+    preferred: z.enum(INQUIRY_CONTACT).optional(),
     /** Honeypot — bots fill this; humans leave empty */
     company: z.string().optional(),
   })
-  // A reply needs at least one way to reach the sender.
-  .refine((d) => !!(d.email || d.phone), "contact_required");
+  // A reply needs at least one way to reach the sender, and the preferred way must be one they gave.
+  .refine((d) => !!(d.email || d.phone), "contact_required")
+  .refine((d) => d.preferred !== "call" || !!d.phone, "preferred_call_needs_phone")
+  .refine((d) => d.preferred !== "email" || !!d.email, "preferred_email_needs_email");
 
 export type ContactRow = { name: string; phone: string | null; email: string | null; subject: string; message: string };
 
@@ -60,12 +73,23 @@ export async function processContact(input: { origin: string | null; url: string
   const parsed = contactSchema.safeParse(input.body);
   if (!parsed.success) return { status: 400, body: { error: "validation_failed", message: "Invalid submission." } };
   if (parsed.data.company) return { status: 200, body: { ok: true } };
+  const d = parsed.data;
+  const home = d.source === "home";
+  // Homepage inquiries: provenance and options are written by the server from validated values, so staff can tell
+  // them apart in /admin/inquiries (subject) and see every answer (message), without a schema change.
+  const details = home
+    ? [
+        d.budget ? `Budget: ${d.budget}` : null,
+        d.useCase ? `Use: ${d.useCase}` : null,
+        d.preferred ? `Preferred contact: ${d.preferred === "call" ? "phone call" : "email"}` : null,
+      ].filter(Boolean)
+    : [];
   const { error } = await deps.insert({
-    name: parsed.data.name,
-    phone: parsed.data.phone || null,
-    email: parsed.data.email || null,
-    subject: parsed.data.subject || "",
-    message: parsed.data.message,
+    name: d.name,
+    phone: d.phone || null,
+    email: d.email || null,
+    subject: home ? `Homepage inquiry · ${d.topic ?? "General inquiry"}` : d.subject || "",
+    message: details.length ? `${d.message}\n\n${details.join("\n")}` : d.message,
   });
   if (error) return { status: 500, body: { error: "submit_failed", message: "Could not save your message." } };
   return { status: 200, body: { ok: true } };

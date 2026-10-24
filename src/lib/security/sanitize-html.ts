@@ -18,6 +18,9 @@ const ALLOWED_TAGS = [
   "blockquote",
   "a",
   "span",
+  // Native, keyboard-accessible FAQ accordion (no attributes allowed).
+  "details",
+  "summary",
 ];
 
 /** Legal/business policy slugs — require owner/manager legal_approved, not editor publish alone. */
@@ -29,8 +32,8 @@ export const LEGAL_CONTENT_SLUGS = new Set([
   "terms",
 ]);
 
-/** http(s), mailto, site-relative or in-page links only. */
-const SAFE_HREF = /^(?:(?:https?|mailto):|\/(?!\/)|#)/i;
+/** http(s), mailto, tel, site-relative or in-page links only. */
+const SAFE_HREF = /^(?:(?:https?|mailto|tel):|\/(?!\/)|#)/i;
 
 /**
  * Allowlist HTML sanitizer for CMS bodies rendered on the storefront.
@@ -45,7 +48,7 @@ export function sanitizeCmsHtml(dirty: string): string {
     allowedAttributes: { a: ["href", "title", "target", "rel"] },
     // Drop the contents of dangerous elements entirely (not just their tags).
     nonTextTags: ["script", "style", "textarea", "option", "noscript", "iframe", "object", "embed", "svg", "math"],
-    allowedSchemes: ["http", "https", "mailto"],
+    allowedSchemes: ["http", "https", "mailto", "tel"],
     allowedSchemesAppliedToAttributes: ["href"],
     allowProtocolRelative: false,
     disallowedTagsMode: "discard",

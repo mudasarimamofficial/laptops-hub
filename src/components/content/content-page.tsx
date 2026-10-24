@@ -3,7 +3,7 @@ import { V5ProductCard } from "@/components/commerce/product-card";
 import { ContactForm, FaqList, TocButtons } from "@/components/content/content-client";
 import { getV5Catalog, V5_COLS, v5Card, type V5Product } from "@/lib/catalog/v5";
 import { V5_CONTENT } from "@/lib/content/v5-content";
-import { supportHref } from "@/lib/content/links";
+import { supportHref, unlinkUnpublished } from "@/lib/content/links";
 import { contentVisibility, type ResolvedContent } from "@/lib/content/pages";
 import type { V5Block } from "@/lib/content/types";
 
@@ -187,7 +187,7 @@ export async function ContentPage({ page, kind }: { page: ResolvedContent; kind:
 
   const blocks = [...page.blocks];
   if (kind === "article" && page.mode !== "gated") blocks.push({ t: "articles" });
-  const cms = page.html ? cmsWithToc(page.html) : null;
+  const cms = page.html ? cmsWithToc(unlinkUnpublished(page.html, vis)) : null;
   const toc = cms ? cms.toc : blocks.flatMap((b, i) => (b.t === "h2" ? [{ id: `sec-${i}`, label: fill(b.v, tok) }] : []));
 
   // Header tag: V5 status tags only in (non-production) preview. Public pages are complete, so never tagged.
@@ -242,11 +242,10 @@ export async function ContentPage({ page, kind }: { page: ResolvedContent; kind:
       </section>
       <section className="v5-page-cols" style={{ maxWidth: 1200, margin: "0 auto", padding: "40px clamp(16px,3vw,32px) 96px", display: "grid", gap: "clamp(28px,4vw,64px)", alignItems: "start", color: "var(--lh-ink)" }}>
         <article style={{ display: "flex", flexDirection: "column", gap: 18, minWidth: 0 }}>
-          {cms ? (
-            <div className="v5-cms" dangerouslySetInnerHTML={{ __html: cms.html }} />
-          ) : (
-            blocks.map((b, i) => <Block key={i} b={b} i={i} ctx={ctx} pageSlug={page.slug} />)
-          )}
+          {cms ? <div className="v5-cms" dangerouslySetInnerHTML={{ __html: cms.html }} /> : null}
+          {blocks.map((b, i) => (
+            <Block key={i} b={b} i={i} ctx={ctx} pageSlug={page.slug} />
+          ))}
         </article>
         <aside aria-label="Page navigation" className="v5-page-aside" style={{ top: 96, display: "flex", flexDirection: "column", gap: 22, minWidth: 0 }}>
           {toc.length > 1 ? (

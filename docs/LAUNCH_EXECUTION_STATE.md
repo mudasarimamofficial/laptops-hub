@@ -49,8 +49,10 @@ Instant Rollback to the previous Production deployment; COD kill switch `store_s
 ## Current step (2026-10-24): owner account activation (sheet item A)
 Verified read-only before handing over: Production `3995c0f` / `dpl_EKC4j17SAaEY2SDh6df5gVf4w3AV`; ledger 14, nothing
 pending; 1 auth user (the deactivated test account), 0 active memberships; public sign-up ON; 0 zones; 0 orders; 0 inquiries;
-0/13 pages published; COD off. Waiting for the owner to: switch off sign-up, create their user, run the bootstrap SQL,
-sign in. Then engineering verifies read-only (membership role owner, sign-up disabled, admin pages reachable).
+0/13 pages published; COD off. Verified read-only after the owner's report: owner membership OK (gmail.com user, role owner, active, confirmed; only
+active owner/admin; test manager inactive). NOT yet confirmed: (1) no sign-in recorded on the owner user (last_sign_in_at
+empty); (2) Supabase auth settings still report public sign-up allowed (disable_signup=false). Owner asked to recheck both.
+Next: shipping zones (sheet item C) once the owner can sign in.
 
 ## NEXT ACTION
 1. Owner setup (sheet A–I): owner account + sign-up off; confirm address/phones/hours (then set `confirmed` in

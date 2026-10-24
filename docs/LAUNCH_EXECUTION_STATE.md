@@ -5,11 +5,26 @@
 ## Repository and Production
 | Item | Value |
 |---|---|
-| Production | `main` `3995c0f` (PR #8) → `dpl_EKC4j17SAaEY2SDh6df5gVf4w3AV` (laptops-hub.vercel.app), deployed 2026-10-24, one build; rollback: `dpl_7W2x8QxLKqvcG1iw5WophtRJjhiP` (`700524d`) |
+| Production | `main` `2b43236` (PR #9) → `dpl_5mzkYNtaPuru6op8UmCAKa6VQyJ7` (laptops-hub.vercel.app), deployed 2026-10-24 ~18:47 UTC, one build; rollback: `dpl_EKC4j17SAaEY2SDh6df5gVf4w3AV` (`3995c0f`, PR #8) |
 | DB ledger | 14 applied (read-only check 2026-10-24); nothing pending |
 | Switches | COD env **off** · `store_settings.cod_checkout` off · email not configured · `CRON_SECRET` unset · site indexable, no restricted mode |
-| Staff | 0 active (test manager deactivated 2026-10-24) · no owner yet · Supabase public sign-up **on** (owner to switch off) |
-| Data | 226 active / 6 draft products · 964 photos pending rights · 0 zones · 0 orders · 13 content pages unpublished |
+| Staff | owner active (role owner) · test manager inactive · 2 auth users · Supabase public sign-up **off** (`disable_signup=true`, 3× uncached, 17:57 UTC) |
+| Data | 226 active / 6 draft products · 964 photos pending rights · 0 zones (owner to re-enter on the fixed form) · 0 orders · 13 content pages unpublished |
+
+## Fix 2026-10-24 — DEPLOYED (owner-approved merge of PR #9)
+Root cause of "zones entered but not saved": the zone form had no `method` and no hydration guard, so a submit before the
+page's JavaScript loaded became a native GET reload (`/admin/settings?name=…`) — no API request, nothing stored, no message
+(reproduced on the PR #8 build). The earlier note "admin zone form verified working" only covered a submit after hydration.
+PR #9: every JS-posted form has `method="post"` and a submit disabled until hydrated (zones, product/content edit, order
+actions, checkout, track order, contact); zone saves show the stored row or a specific error. Isolated suites: journeys
+36/36, roles 126/126, checkout 32/32, unit 16/16.
+| Check (Production, read-only) | Result |
+|---|---|
+| Deployment | `dpl_5mzkYNtaPuru6op8UmCAKa6VQyJ7` READY, single build; no runtime errors |
+| e2e (tests/e2e) | 41 passed, 2 skipped |
+| Copy gate | 289 paths, no unfinished copy, no broken links |
+| HTTP | `/`, collections, track-order, checkout, `/admin/login` 200 · `/admin/settings` 307 → login · `/pages/nope` 404 · zone POST without session 401 · track-order and inquiry forms `method="post"` |
+| DB | 0 zones · 0 orders · 2 auth users · `cod_checkout` off |
 
 ## Release 2026-10-24 — DEPLOYED (owner-approved merge of PR #8)
 | Check (Production, read-only) | Result |

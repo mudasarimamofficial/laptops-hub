@@ -5,6 +5,23 @@ Answer inline (or send the answers) — each item says where it goes once answer
 
 Legend: **🔴 blocks public orders** · 🟠 needed before launch, not before testing · 🟢 can follow launch
 
+## Approvals and facts still needed (Bible ch. 17) — status 2026-10-24
+
+| | Item | Status | Impact |
+|---|---|---|---|
+| A | Owner identity: create your Auth user + run `supabase/owner/bootstrap_owner.sql`; switch off public sign-up | waiting | no staff can use admin today |
+| B | Address: "1st Floor, Al Raheem Center Plaza, University Chowk" vs listing "Shop no 3 … near Allied Bank, Bahawalpur Cantt 63100" — which is correct? Which of 0309 3372974 / 0313 6565663 / 0339 9100199 is primary, which has WhatsApp? Opening hours? | waiting | contact/about pages and "Or call" links stay hidden until confirmed |
+| C | Delivery provinces/cities, courier, delivery fee and COD fee per zone, delivery time, failed-delivery handling | waiting | no order can be placed without a zone |
+| D | Legal entity name, returns, warranty, privacy retention, terms; legal review | waiting | checkout refuses orders until all five policies are published + approved |
+| E | Confirm the call-to-confirm stock workflow and the 226 prices | waiting | launch gate G4 |
+| F | Rights to the 964 photos | waiting | launch gate G3 |
+| G | Email domain, Resend sender, alert inbox, Supabase SMTP + redirect URL, CRON_SECRET, who monitors | waiting | no order alerts or password-reset emails |
+| H | Public domain: stay on laptops-hub.vercel.app or move to laptopshub.pk | waiting (optional) | SEO/canonical |
+| I | Approvals: merge release candidate PR #8 · load page drafts as drafts · Scenario A test order · COD go-live | PR #8 ready | each is a separate approval |
+
+Prepared for your review (nothing published): page copy for About, Why Laptops HUB, Contact, FAQ, Condition guide and
+Order inquiries in `content/drafts/`; policy skeletons in `docs/POLICY_DRAFTS.md`.
+
 ## Owner setup — do these in order (status read from production 2026-10-24, updated after each step)
 
 Production today: `main` `5139ff0` live · database ledger 14 · COD **off** (environment and database) · 0 orders ·

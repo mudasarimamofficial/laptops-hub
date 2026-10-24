@@ -2,6 +2,9 @@
 
 ## CHECKPOINT 2026-10-24 (read first)
 
+**Live state and next action: `docs/LAUNCH_EXECUTION_STATE.md`** (release candidate PR #8; owner sheet in
+`docs/FINAL_LAUNCH_OWNER_INPUTS.md`). The table below is the earlier snapshot.
+
 Production: `main` `700524d` → `dpl_7W2x8QxLKqvcG1iw5WophtRJjhiP` · DB ledger 14 · COD **off** · 0 orders · 0 zones ·
 **0 active staff** (test manager deactivated) · email not configured · retry workflow registered, inactive (no secret).
 

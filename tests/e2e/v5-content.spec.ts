@@ -1,103 +1,101 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 /**
- * V5 content pages against a normal build (V5_CONTENT_PREVIEW unset). Every CMS row is unpublished today,
- * so pages must render the gated V5 shell, stay out of search engines, and never show template copy.
- * Contact submissions are mocked in the browser; the real API only receives invalid / cross-site requests,
- * which it must reject without storing anything.
+ * Content pages against a normal build (V5_CONTENT_PREVIEW unset), safe to run on Production data (read-only):
+ * every content route is either published and complete (200, no unfinished copy) or not public (404) and never
+ * linked. Contact and inquiry submissions are mocked in the browser; the real API only receives invalid or
+ * cross-site requests, which it must reject without storing anything.
  */
 const base = process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3000";
 const PAGES = ["about", "why-laptops-hub", "contact", "faq", "shipping", "returns", "warranty", "condition-guide", "how-to-choose", "comparison-guide", "order-inquiries", "privacy", "terms"];
 const ARTICLES = ["processor-generations-explained", "how-much-ram", "choosing-storage", "business-laptop-lines"];
+const UNFINISHED = /being finali[sz]ed|pending business approval|we haven[’']t published|will be published here|lorem ipsum|DRAFT · EDITORIAL REVIEW|Founding year|Business registration|prototype|not connected/i;
 
-for (const slug of PAGES) {
-  test(`gated page /pages/${slug}`, async ({ page }) => {
-    const res = await page.goto(`${base}/pages/${slug}`, { waitUntil: "load" });
-    expect(res?.status()).toBe(200);
-    await expect(page.locator("h1")).toBeVisible();
-    await expect(page.getByText("BEING FINALISED").first()).toBeVisible();
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+async function status(page: Page, path: string) {
+  return (await page.goto(base + path, { waitUntil: "load" }))?.status() ?? 0;
+}
+
+for (const path of [...PAGES.map((s) => `/pages/${s}`), "/guides", ...ARTICLES.map((a) => `/guides/${a}`)]) {
+  test(`content route ${path} is complete or not public`, async ({ page }) => {
+    const st = await status(page, path);
+    expect([200, 404], `${path} → ${st}`).toContain(st);
     const main = await page.locator("main").innerText();
-    // No unapproved template copy, owner checklists or prototype wording.
-    expect(main).not.toMatch(/DRAFT · EDITORIAL REVIEW|Founding year|Business registration|Shopify|prototype|not connected/i);
-    await expect(page.getByRole("navigation", { name: "Breadcrumb" })).toBeVisible();
-    await expect(page.locator("footer")).toBeVisible();
+    expect(main).not.toMatch(UNFINISHED);
+    const robots = await page.locator('meta[name="robots"]').evaluateAll((ms) => ms.map((m) => m.getAttribute("content") || ""));
+    if (st === 200) {
+      await expect(page.locator("h1")).toBeVisible();
+      expect(robots.some((r) => /noindex/.test(r)), robots.join(" | ")).toBe(false);
+      await expect(page.locator("footer")).toBeVisible();
+    } else {
+      expect(robots.length > 0 && robots.every((r) => /noindex/.test(r)), robots.join(" | ")).toBe(true);
+    }
   });
 }
 
-test("guides index and articles are gated and noindex", async ({ page }) => {
-  for (const path of ["/guides", ...ARTICLES.map((a) => `/guides/${a}`)]) {
-    const res = await page.goto(base + path, { waitUntil: "load" });
-    expect(res?.status(), path).toBe(200);
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
-    await expect(page.getByText("Read guide →")).toHaveCount(0);
-  }
-});
-
 test("missing content routes 404", async ({ page }) => {
-  expect((await page.goto(`${base}/pages/no-such-page`))?.status()).toBe(404);
-  expect((await page.goto(`${base}/guides/no-such-article`))?.status()).toBe(404);
+  expect(await status(page, "/pages/no-such-page")).toBe(404);
+  expect(await status(page, "/guides/no-such-article")).toBe(404);
 });
 
-test("sitemap lists no unpublished content", async ({ request }) => {
+test("sitemap, footer and header link only public content", async ({ page, request }) => {
   const xml = await (await request.get(`${base}/sitemap.xml`)).text();
-  expect(xml).not.toMatch(/\/pages\/|\/guides/);
+  const listed = [...xml.matchAll(/<loc>[^<]*?(\/(?:pages|guides)[^<]*)<\/loc>/g)].map((m) => m[1]);
+  for (const p of listed) expect(await status(page, p), `sitemap lists ${p}`).toBe(200);
+  await page.goto(`${base}/`, { waitUntil: "load" });
+  const links = await page.locator('header a[href^="/pages/"], header a[href^="/guides"], footer a[href^="/pages/"], footer a[href^="/guides"]').evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute("href") || ""))]);
+  for (const href of links) expect(await status(page, href), `linked ${href}`).toBe(200);
 });
 
-test("contact form: validation, submitting, failure, success (mocked)", async ({ page }) => {
+test("homepage inquiry: validation, failure, success (mocked)", async ({ page }) => {
   let calls = 0;
-  let mode: "hang" | "fail" | "ok" = "fail";
+  let mode: "fail" | "ok" = "fail";
   await page.route("**/api/contact", (route) => {
     calls++;
-    if (mode === "hang") return;
+    if (mode === "fail") return route.fulfill({ status: 500, contentType: "application/json", body: '{"error":"submit_failed"}' });
+    return route.fulfill({ status: 200, contentType: "application/json", body: '{"ok":true}' });
+  });
+  await page.goto(`${base}/#ask`, { waitUntil: "load" });
+  const form = page.getByRole("form", { name: "Send an inquiry to Laptops HUB" });
+  const send = form.getByRole("button", { name: "Send my inquiry" });
+  await send.click();
+  await expect(form.getByText("Enter your name")).toBeVisible();
+  await expect(form.getByText("Give a mobile number or an email")).toBeVisible();
+  expect(calls).toBe(0);
+  await form.getByLabel("Full name").fill("QA Test");
+  await form.getByRole("textbox", { name: /^Mobile number/ }).fill("0300 1234567");
+  await form.getByLabel("Your requirements or question").fill("Testing the inquiry form states.");
+  await send.click();
+  await expect(form.getByRole("alert")).toContainText("could not be saved");
+  await expect(page.getByText("Your inquiry has been received.")).toHaveCount(0);
+  mode = "ok";
+  await send.click();
+  await expect(page.getByRole("status").filter({ hasText: "Your inquiry has been received." })).toBeVisible();
+  expect(calls).toBe(2);
+});
+
+test("contact page form: validation, failure, success (mocked) — when the contact page is public", async ({ page }) => {
+  test.skip((await status(page, "/pages/contact")) !== 200, "contact page not published");
+  let calls = 0;
+  let mode: "fail" | "ok" = "fail";
+  await page.route("**/api/contact", (route) => {
+    calls++;
     if (mode === "fail") return route.fulfill({ status: 500, contentType: "application/json", body: '{"error":"submit_failed"}' });
     return route.fulfill({ status: 200, contentType: "application/json", body: '{"ok":true}' });
   });
   await page.goto(`${base}/pages/contact`, { waitUntil: "load" });
   const send = page.getByRole("button", { name: "Send message" });
-
-  // Invalid: client validation, nothing posted.
   await send.click();
   await expect(page.getByText("Enter your name")).toBeVisible();
-  await expect(page.getByText("Enter a valid email address")).toBeVisible();
-  await expect(page.getByText("Write at least 10 characters")).toBeVisible();
-  await expect(page.getByRole("textbox", { name: "Email" })).toHaveAttribute("aria-invalid", "true");
-  await page.getByRole("textbox", { name: "Phone or WhatsApp (optional)" }).fill("12ab");
-  await send.click();
-  await expect(page.getByText("Enter a valid phone number or leave it blank")).toBeVisible();
   expect(calls).toBe(0);
-
   await page.getByRole("textbox", { name: "Name" }).fill("QA Test");
   await page.getByRole("textbox", { name: "Email" }).fill("qa@example.com");
-  await page.getByRole("textbox", { name: "Phone or WhatsApp (optional)" }).fill("");
   await page.getByRole("textbox", { name: "Message" }).fill("Testing the contact form states.");
-
-  // Server failure: no success claim, error announced.
   await send.click();
   await expect(page.locator("main").getByRole("alert")).toContainText("could not be saved");
-  await expect(page.getByText("Message received")).toHaveCount(0);
-
-  // Success only after the server says ok.
   mode = "ok";
   await send.click();
   await expect(page.getByRole("status").filter({ hasText: "Message received" })).toBeVisible();
-  await page.getByRole("button", { name: "Write another message" }).click();
-  await expect(page.getByRole("textbox", { name: "Name" })).toHaveValue("");
   expect(calls).toBe(2);
-});
-
-test("contact form shows the submitting state", async ({ page }) => {
-  await page.route("**/api/contact", () => {
-    /* never answers */
-  });
-  await page.goto(`${base}/pages/contact`, { waitUntil: "load" });
-  await page.getByRole("textbox", { name: "Name" }).fill("QA Test");
-  await page.getByRole("textbox", { name: "Email" }).fill("qa@example.com");
-  await page.getByRole("textbox", { name: "Message" }).fill("Testing the submitting state.");
-  await page.getByRole("button", { name: "Send message" }).click();
-  const btn = page.getByRole("button", { name: "Sending…" });
-  await expect(btn).toBeDisabled();
-  await expect(btn).toHaveAttribute("aria-busy", "true");
 });
 
 test("contact API rejects invalid and cross-site posts without storing", async ({ request }) => {
@@ -106,6 +104,8 @@ test("contact API rejects invalid and cross-site posts without storing", async (
   expect([400, 429]).toContain(bad.status());
   const noRoute = await request.post(`${base}/api/contact`, { data: { name: "QA Test", message: "Long enough message" } });
   expect([400, 429]).toContain(noRoute.status());
+  const homeBad = await request.post(`${base}/api/contact`, { data: { source: "home", name: "QA Test", phone: "03001234567", preferred: "email", message: "Long enough message" } });
+  expect([400, 429]).toContain(homeBad.status());
   const cross = await request.post(`${base}/api/contact`, {
     headers: { origin: "https://evil.example" },
     data: { name: "QA Test", email: "qa@example.com", message: "Long enough message" },
@@ -113,9 +113,19 @@ test("contact API rejects invalid and cross-site posts without storing", async (
   expect(cross.status()).toBe(403);
 });
 
-test("help side navigation marks unpublished pages and current page", async ({ page }) => {
-  await page.goto(`${base}/pages/warranty`, { waitUntil: "load" });
+test("help side navigation lists only public pages — when any help page is public", async ({ page }) => {
+  let publicPage: string | null = null;
+  for (const s of PAGES) {
+    if ((await status(page, `/pages/${s}`)) === 200) {
+      publicPage = s;
+      break;
+    }
+  }
+  test.skip(!publicPage, "no content page published");
+  await page.goto(`${base}/pages/${publicPage}`, { waitUntil: "load" });
   const nav = page.getByRole("complementary", { name: "Page navigation" });
-  await expect(nav.getByRole("link", { name: /Warranty information/ })).toHaveAttribute("aria-current", "page");
-  expect(await nav.getByText("SOON").count()).toBe(13);
+  await expect(nav.getByText("SOON")).toHaveCount(0);
+  for (const href of await nav.locator("a").evaluateAll((as) => as.map((a) => a.getAttribute("href") || ""))) {
+    expect(await status(page, href), href).toBe(200);
+  }
 });

@@ -11,6 +11,8 @@
  */
 const base = (process.argv[2] || "http://127.0.0.1:3001").replace(/\/+$/, "");
 const strictPolicies = process.argv.includes("--strict-policies");
+// Protected Vercel Previews: pass the session cookie (e.g. `_vercel_jwt=…`) in COPY_GATE_COOKIE.
+const headers = process.env.COPY_GATE_COOKIE ? { cookie: process.env.COPY_GATE_COOKIE } : {};
 const BANNED = [
   /being finali[sz]ed/i,
   /pending business approval/i,
@@ -32,7 +34,7 @@ const seen = new Map(); // path → status
 const queue = ["/", "/collections/all", "/compare", "/search", "/track-order", "/cart", ...PAGES.map((p) => `/pages/${p}`), "/guides", ...ARTICLES.map((a) => `/guides/${a}`)];
 
 async function sitemapPaths() {
-  const xml = await (await fetch(`${base}/sitemap.xml`)).text();
+  const xml = await (await fetch(`${base}/sitemap.xml`, { headers })).text();
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
 }
 
@@ -48,7 +50,7 @@ const visible = (html) =>
 async function visit(p) {
   if (seen.has(p)) return;
   seen.set(p, 0);
-  const res = await fetch(base + p, { redirect: "manual" });
+  const res = await fetch(base + p, { redirect: "manual", headers });
   seen.set(p, res.status);
   if (res.status >= 300 && res.status < 400) return;
   const html = await res.text();

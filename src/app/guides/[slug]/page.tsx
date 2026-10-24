@@ -17,7 +17,7 @@ async function load(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const a = await load(slug);
-  if (!a) return { title: "Not found", robots: { index: false } };
+  if (!a) return { title: "Not found" }; // the 404 response itself carries noindex
   return { title: a.title, description: a.intro, alternates: canonicalFor(`/guides/${slug}`), robots: robotsFor(a.preview) };
 }
 

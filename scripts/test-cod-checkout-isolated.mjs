@@ -145,6 +145,20 @@ try {
       ...extra,
     });
     const post = (b) => fetch(`${app}/api/checkout/cod`, { method: "POST", headers: { "content-type": "application/json", origin: app }, body: JSON.stringify(b) });
+    // Checkout requires the five policies published + legally approved: local stand-ins, restored afterwards.
+    const POLICY = ["shipping", "returns", "warranty", "privacy", "terms"];
+    const savedPolicies = (await sb.from("content_pages").select("slug, status, body_html, legal_approved, legal_approved_by").in("slug", POLICY)).data || [];
+    const approver = (await sb.from("admin_memberships").select("user_id").limit(1).maybeSingle()).data?.user_id ?? null;
+    for (const slug of POLICY) {
+      await sb.from("content_pages").update({ status: "published", body_html: `<p>Isolated test stand-in for ${slug}.</p>`, legal_approved: true, legal_approved_by: approver }).eq("slug", slug);
+    }
+    // A withdrawn policy stops ordering on the next request: refused, no order.
+    await sb.from("content_pages").update({ legal_approved: false }).eq("slug", "terms");
+    const gateKey = `iso-http-gate-${randomUUID()}`;
+    const gated = await post(body(gateKey));
+    const gj = await gated.json().catch(() => ({}));
+    assert("http_policy_withdrawn_refuses_order", gated.status === 403 && gj.error === "policies_pending" && (await ordersFor(gateKey)).length === 0, `${gated.status} ${JSON.stringify(gj)}`);
+    await sb.from("content_pages").update({ legal_approved: true }).eq("slug", "terms");
     let rs = [], js = [], rows = [], key = "";
     const statuses = [];
     for (let round = 0; round < 8; round++) {
@@ -177,6 +191,9 @@ try {
     const saved = (await sb.from("contact_inquiries").select("id").eq("message", marker)).data || [];
     assert("http_contact_insert_as_anon", contact.status === 200 && saved.length === 1, `status=${contact.status} rows=${saved.length}`);
     if (saved.length) await sb.from("contact_inquiries").delete().in("id", saved.map((r) => r.id));
+    for (const row of savedPolicies) {
+      await sb.from("content_pages").update({ status: row.status, body_html: row.body_html, legal_approved: row.legal_approved, legal_approved_by: row.legal_approved_by }).eq("slug", row.slug);
+    }
   }
 } finally {
   // Local stack only: remove fixtures and turn checkout back off.

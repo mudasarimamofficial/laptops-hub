@@ -6,6 +6,7 @@ import { ProductBuy, ProductGallery } from "@/components/commerce/product-detail
 import { fmtPkr, getV5Catalog, V5_COLS, v5Card, v5KeySpecs, v5Related, v5SpecRows } from "@/lib/catalog/v5";
 import { canonicalFor } from "@/lib/site-url";
 import { contentVisibility } from "@/lib/content/pages";
+import { publicLinks } from "@/lib/content/links";
 
 export const revalidate = 60;
 
@@ -45,8 +46,8 @@ export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
   const r = await load(handle);
   if (!r) notFound();
-  // Policy links show their state from the CMS (published + legal approval), not a fixed label.
-  const policyPublic = (await contentVisibility()).pages;
+  // Only public policies are linked (published + legally approved); never an unfinished page.
+  const policies = publicLinks(POLICIES, await contentVisibility());
   const { P, p } = r;
   const bid = p.brand.toLowerCase();
   const brandHref = V5_COLS[bid] ? `/collections/${bid}` : `/search?q=${encodeURIComponent(p.brand)}`;
@@ -114,16 +115,16 @@ export default async function ProductPage({ params }: Props) {
             </div>
             <ProductBuy handle={p.h} title={p.t} model={p.model} config={p.config} sku={p.sku} variantId={p.variantId} pricePaisa={p.pricePaisa} maxPerOrder={p.maxPerOrder} available={p.avail} imageUrl={p.imgs[0]?.u ?? null} />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,150px),1fr))", gap: 8 }}>
-            {POLICIES.map((pl) => (
-              <Link key={pl.href} href={pl.href} className="v5-hov-bd-action" style={{ display: "flex", flexDirection: "column", gap: 3, padding: "12px 14px", borderRadius: 14, background: "#FFFFFF", border: "1px solid var(--lh-border)", color: "var(--lh-ink)" }}>
-                <span style={{ fontSize: 14, fontWeight: 700 }}>{pl.label}</span>
-                {policyPublic[pl.href.split("/").pop()!] ? null : (
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".06em", color: "var(--lh-warning)" }}>BEING FINALISED</span>
-                )}
-              </Link>
-            ))}
-          </div>
+          {policies.length ? (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,150px),1fr))", gap: 8 }}>
+              {policies.map((pl) => (
+                <Link key={pl.href} href={pl.href} className="v5-hov-bd-action" style={{ display: "flex", flexDirection: "column", gap: 3, padding: "12px 14px", borderRadius: 14, background: "#FFFFFF", border: "1px solid var(--lh-border)", color: "var(--lh-ink)" }}>
+                  <span style={{ fontSize: 14, fontWeight: 700 }}>{pl.label}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".06em", color: "var(--lh-ink-2)" }}>READ POLICY</span>
+                </Link>
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
 

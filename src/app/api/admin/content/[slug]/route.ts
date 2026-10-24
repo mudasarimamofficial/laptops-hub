@@ -133,16 +133,12 @@ export async function PATCH(request: Request, ctx: Ctx) {
       },
     });
 
-    // Public /pages, /guides, product pages (policy links) and the sitemap read published rows through a 60s data
-    // cache and are themselves ISR pages. Expire both — the data tag and the rendered pages — so a publish, unpublish
-    // or legal-approval withdrawal is what the next visitor sees (an expired tag alone can still let one stale ISR
-    // page through while it regenerates in the background).
+    // /pages and /guides read publication fresh on every request (the security guarantee). Every other page shows
+    // content links in its header/footer (and product pages link policies) from a 60s cache: expire the data tag and
+    // all rendered pages so links follow the change on the next request (CMS changes are rare; pages regenerate on
+    // demand).
     revalidateTag("content", { expire: 0 });
-    revalidatePath(`/pages/${slug}`);
-    revalidatePath("/pages/[slug]", "page");
-    revalidatePath("/guides", "page");
-    revalidatePath("/guides/[slug]", "page");
-    revalidatePath("/products/[handle]", "page");
+    revalidatePath("/", "layout");
     revalidatePath("/sitemap.xml");
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {

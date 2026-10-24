@@ -4,6 +4,8 @@ import { processOutbox } from "@/lib/notify/outbox";
 import { createServiceClient } from "@/lib/supabase/server";
 import { normalizePakistanMobile } from "@/lib/phone";
 import { checkoutPayloadSchema } from "@/lib/validation/checkout";
+import { contentVisibility } from "@/lib/content/pages";
+import { mandatoryPoliciesPublic } from "@/lib/content/links";
 
 export const runtime = "nodejs";
 
@@ -56,6 +58,18 @@ export async function POST(request: Request) {
   if ((setting?.value as { enabled?: boolean } | null)?.enabled !== true) {
     return NextResponse.json(
       { error: "checkout_disabled", message: "COD checkout is disabled in store settings." },
+      { status: 403 },
+    );
+  }
+
+  // Customers consent to these policies at checkout: no order until every one is published and legally approved
+  // (read fresh — a withdrawal stops ordering on the next request).
+  if (!mandatoryPoliciesPublic(await contentVisibility(true))) {
+    return NextResponse.json(
+      {
+        error: "policies_pending",
+        message: "Online ordering is not available right now. Please contact Laptops HUB to order.",
+      },
       { status: 403 },
     );
   }

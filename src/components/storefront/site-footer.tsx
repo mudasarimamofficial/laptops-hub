@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/storefront/site-header";
+import { publicLinks, type Visibility } from "@/lib/content/links";
 
 /** V5 `footerCols`. */
 const FOOTER_COLS = [
@@ -59,7 +60,9 @@ const FOOTER_COLS = [
   },
 ];
 
-export function SiteFooter({ totalCount }: { totalCount: number }) {
+/** Content links (help, policies, company pages) appear only once that page is public. */
+export function SiteFooter({ totalCount, vis }: { totalCount: number; vis: Visibility }) {
+  const cols = FOOTER_COLS.map((c) => ({ ...c, links: publicLinks(c.links, vis) })).filter((c) => c.links.length > 0);
   return (
     <footer
       style={{
@@ -83,7 +86,7 @@ export function SiteFooter({ totalCount }: { totalCount: number }) {
             Used Dell, HP and Lenovo laptops. Prices in PKR. Chromebook collection in preparation.
           </span>
         </div>
-        {FOOTER_COLS.map((col) => (
+        {cols.map((col) => (
           <div key={col.title} style={{ display: "flex", flexDirection: "column", gap: 11 }}>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", color: "var(--lh-electric-text)" }}>{col.title}</span>
             {col.links.map((l) => (

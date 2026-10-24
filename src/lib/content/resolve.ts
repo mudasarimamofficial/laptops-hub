@@ -26,9 +26,9 @@ export function previewAllContent() {
   return process.env.V5_CONTENT_PREVIEW === "1" && process.env.VERCEL_ENV !== "production";
 }
 
-/** Template sections still waiting for owner facts ("being finalised"). */
+/** Template sections still waiting for owner facts: "being finalised" blocks or unanswered FAQ items. */
 export function templateHasPending(tpl: V5Page) {
-  return tpl.blocks.some((b) => b.t === "pending");
+  return tpl.blocks.some((b) => b.t === "pending" || (b.t === "faq" && b.items.some((i) => i.pending)));
 }
 
 /**

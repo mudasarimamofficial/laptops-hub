@@ -3,6 +3,7 @@ import { V5ProductCard } from "@/components/commerce/product-card";
 import { ContactForm, FaqList, TocButtons } from "@/components/content/content-client";
 import { getV5Catalog, V5_COLS, v5Card, type V5Product } from "@/lib/catalog/v5";
 import { V5_CONTENT } from "@/lib/content/v5-content";
+import { supportHref } from "@/lib/content/links";
 import { contentVisibility, type ResolvedContent } from "@/lib/content/pages";
 import type { V5Block } from "@/lib/content/types";
 
@@ -178,10 +179,10 @@ export async function ContentPage({ page, kind }: { page: ResolvedContent; kind:
     nocond: P.filter((p) => !p.cond).length,
   };
   const ctx: Ctx = { P, tok, current: page.slug, isArticle: kind === "article" };
-  const vis = await contentVisibility();
+  const vis = await contentVisibility(true);
 
   const crumbs = [{ label: "Home", href: "/" }];
-  if (kind === "page") crumbs.push({ label: "Help", href: "/pages/faq" });
+  if (kind === "page" && page.slug !== "faq") crumbs.push({ label: "Help", href: supportHref(vis) });
   if (kind === "article") crumbs.push({ label: "Guides", href: "/guides" });
 
   const blocks = [...page.blocks];
@@ -189,22 +190,24 @@ export async function ContentPage({ page, kind }: { page: ResolvedContent; kind:
   const cms = page.html ? cmsWithToc(page.html) : null;
   const toc = cms ? cms.toc : blocks.flatMap((b, i) => (b.t === "h2" ? [{ id: `sec-${i}`, label: fill(b.v, tok) }] : []));
 
-  // Header tag: V5 tags in preview; otherwise only the customer-safe "being finalised" pill.
-  const hasPending = page.mode === "gated" || blocks.some((b) => b.t === "pending");
+  // Header tag: V5 status tags only in (non-production) preview. Public pages are complete, so never tagged.
   const tag = page.preview
     ? page.v5Status === "pending"
       ? { text: PEND_TAG, warn: true }
       : page.v5Status === "draft"
         ? { text: "DRAFT · EDITORIAL REVIEW" + (page.read ? " · " + page.read.toUpperCase() : ""), warn: false }
         : null
-    : hasPending
-      ? { text: PEND_TAG, warn: true }
-      : null;
+    : null;
 
   const isArt = kind !== "page";
+  // Side navigation lists only public pages (preview: all, with V5 status marks).
   const side = isArt
-    ? V5_CONTENT.articles.map((a) => ({ label: a.title, href: `/guides/${a.slug}`, pend: page.preview ? false : !vis.articles[a.slug] }))
-    : Object.entries(V5_CONTENT.pages).map(([k, p]) => ({ label: p.title, href: `/pages/${k}`, pend: page.preview ? p.status === "pending" : !vis.pages[k] }));
+    ? V5_CONTENT.articles
+        .filter((a) => page.preview || vis.articles[a.slug])
+        .map((a) => ({ label: a.title, href: `/guides/${a.slug}`, pend: false }))
+    : Object.entries(V5_CONTENT.pages)
+        .filter(([k]) => page.preview || vis.pages[k])
+        .map(([k, p]) => ({ label: p.title, href: `/pages/${k}`, pend: page.preview && p.status === "pending" }));
   const currentHref = kind === "page" ? `/pages/${page.slug}` : kind === "article" ? `/guides/${page.slug}` : "/guides";
 
   return (

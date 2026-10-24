@@ -130,12 +130,26 @@ try {
   // Public view now shows the CMS body; then withdraw approval and confirm it is gated again.
   let html = await (await fetch(`${base}/pages/shipping`)).text();
   assert("published policy renders CMS body", html.includes("Local test"));
+  // Product pages label each policy link from the CMS state (published + approved → no "being finalised" tag).
+  const pdpHandle = (await admin.from("products").select("handle").eq("status", "active").limit(1).maybeSingle()).data?.handle;
+  const deliveryCard = async () => {
+    const page = await (await fetch(`${base}/products/${pdpHandle}`)).text();
+    return [...page.matchAll(/<a[^>]*href="\/pages\/shipping"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => m[1]).find((t) => />Delivery</.test(t)) ?? null;
+  };
+  if (pdpHandle) {
+    const card = await deliveryCard();
+    assert("product page: published delivery policy has no pending tag", card !== null && !card.includes("BEING FINALISED"), String(card).slice(0, 120));
+  }
   const anonDb = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
   const leak = await anonDb.from("content_pages").select("legal_approved_by").eq("slug", "shipping");
   assert("approver id is not readable by anon", !!leak.error, leak.error?.message || JSON.stringify(leak.data));
   await call(by.owner, "PATCH", "/api/admin/content/shipping", { ...legal, status: "pending", legalApproved: false });
   html = await (await fetch(`${base}/pages/shipping`)).text();
   assert("withdrawn policy is gated again immediately", !html.includes("Local test") && html.includes("BEING FINALISED"));
+  if (pdpHandle) {
+    const card = await deliveryCard();
+    assert("product page: withdrawn delivery policy is tagged again immediately", card !== null && card.includes("BEING FINALISED"), String(card).slice(0, 120));
+  }
 
   // Empty-body publish = publishing the V5 template: refused while the template has pending sections, and
   // otherwise only with explicit template approval (docs/PRODUCTION_READINESS.md, CMS rules).

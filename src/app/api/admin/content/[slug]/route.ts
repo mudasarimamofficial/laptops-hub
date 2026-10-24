@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createAuthorizedStaffClient, staffErrorResponse, type StaffRole } from "@/lib/auth/staff";
 import { LEGAL_CONTENT_SLUGS, sanitizeCmsHtml } from "@/lib/security/sanitize-html";
@@ -133,9 +133,17 @@ export async function PATCH(request: Request, ctx: Ctx) {
       },
     });
 
-    // Public /pages, /guides and the sitemap read published rows through a 60s cache; expire it now so an
-    // unpublish (or legal approval withdrawal) takes effect on the next request.
+    // Public /pages, /guides, product pages (policy links) and the sitemap read published rows through a 60s data
+    // cache and are themselves ISR pages. Expire both — the data tag and the rendered pages — so a publish, unpublish
+    // or legal-approval withdrawal is what the next visitor sees (an expired tag alone can still let one stale ISR
+    // page through while it regenerates in the background).
     revalidateTag("content", { expire: 0 });
+    revalidatePath(`/pages/${slug}`);
+    revalidatePath("/pages/[slug]", "page");
+    revalidatePath("/guides", "page");
+    revalidatePath("/guides/[slug]", "page");
+    revalidatePath("/products/[handle]", "page");
+    revalidatePath("/sitemap.xml");
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     return staffErrorResponse(e);

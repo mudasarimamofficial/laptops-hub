@@ -5,6 +5,7 @@ import { V5ProductCard } from "@/components/commerce/product-card";
 import { ProductBuy, ProductGallery } from "@/components/commerce/product-detail";
 import { fmtPkr, getV5Catalog, V5_COLS, v5Card, v5KeySpecs, v5Related, v5SpecRows } from "@/lib/catalog/v5";
 import { canonicalFor } from "@/lib/site-url";
+import { contentVisibility } from "@/lib/content/pages";
 
 export const revalidate = 60;
 
@@ -44,6 +45,8 @@ export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
   const r = await load(handle);
   if (!r) notFound();
+  // Policy links show their state from the CMS (published + legal approval), not a fixed label.
+  const policyPublic = (await contentVisibility()).pages;
   const { P, p } = r;
   const bid = p.brand.toLowerCase();
   const brandHref = V5_COLS[bid] ? `/collections/${bid}` : `/search?q=${encodeURIComponent(p.brand)}`;
@@ -115,7 +118,9 @@ export default async function ProductPage({ params }: Props) {
             {POLICIES.map((pl) => (
               <Link key={pl.href} href={pl.href} className="v5-hov-bd-action" style={{ display: "flex", flexDirection: "column", gap: 3, padding: "12px 14px", borderRadius: 14, background: "#FFFFFF", border: "1px solid var(--lh-border)", color: "var(--lh-ink)" }}>
                 <span style={{ fontSize: 14, fontWeight: 700 }}>{pl.label}</span>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".06em", color: "var(--lh-warning)" }}>BEING FINALISED</span>
+                {policyPublic[pl.href.split("/").pop()!] ? null : (
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".06em", color: "var(--lh-warning)" }}>BEING FINALISED</span>
+                )}
               </Link>
             ))}
           </div>

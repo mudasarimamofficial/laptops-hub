@@ -53,6 +53,13 @@ test.describe.serial("staff password recovery (isolated)", () => {
   test.beforeAll(async () => {
     await assertLocalOnly("recovery journeys");
   });
+  // Later suites sign in with the fixture passwords: put back the ones these journeys change.
+  test.afterAll(async () => {
+    for (const role of ["manager", "fulfillment", "editor"] as const) {
+      const s = fx.staff[role] as { id: string; password: string };
+      await sb.auth.admin.updateUserById(s.id, { password: s.password });
+    }
+  });
   const manager = fx.staff.manager as { email: string; password: string; id: string };
 
   test("full recovery: email link → new password → all sessions ended; UID, role and status unchanged", async ({ page, browser }) => {

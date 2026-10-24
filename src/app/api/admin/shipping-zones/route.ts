@@ -1,49 +1,46 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
 import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
+import { ZONE_COLUMNS, zoneInputProblem, zoneInputSchema } from "@/lib/commerce/zone-input";
 
-const schema = z.object({
-  name: z.string().trim().min(2).max(120),
-  provinces: z.array(z.string().trim().min(2)).min(1),
-  cities: z.array(z.string().trim().min(2)).default([]),
-  flatFeePkr: z.number().min(0).max(1_000_000),
-  codFeePkr: z.number().min(0).max(1_000_000),
-  isActive: z.boolean().default(false),
-  notes: z.string().trim().max(500).default(""),
-});
-
+/** Create a shipping zone. Answers with the stored row, so staff see exactly what was saved. */
 export async function POST(request: Request) {
   try {
     const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager"]);
     const body = await request.json().catch(() => null);
-    const parsed = schema.safeParse(body);
+    const parsed = zoneInputSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: "validation_failed" }, { status: 400 });
+      return NextResponse.json({ error: "validation_failed", message: zoneInputProblem(parsed.error) }, { status: 400 });
     }
 
-    const { error } = await supabase.from("shipping_zones").insert({
-      name: parsed.data.name,
-      provinces: parsed.data.provinces,
-      cities: parsed.data.cities,
-      flat_fee_paisa: pkrMajorToPaisa(parsed.data.flatFeePkr),
-      cod_fee_paisa: pkrMajorToPaisa(parsed.data.codFeePkr),
-      is_active: parsed.data.isActive,
-      notes: parsed.data.notes,
-    });
+    const { data: zone, error } = await supabase
+      .from("shipping_zones")
+      .insert({
+        name: parsed.data.name,
+        provinces: parsed.data.provinces,
+        cities: parsed.data.cities,
+        flat_fee_paisa: pkrMajorToPaisa(parsed.data.flatFeePkr),
+        cod_fee_paisa: pkrMajorToPaisa(parsed.data.codFeePkr),
+        is_active: parsed.data.isActive,
+        notes: parsed.data.notes,
+      })
+      .select(ZONE_COLUMNS)
+      .single();
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error || !zone) {
+      console.error("shipping zone insert failed", error?.code ?? "", error?.message ?? "");
+      return NextResponse.json({ error: "server_error", message: "The zone could not be saved. Nothing was changed." }, { status: 500 });
     }
 
     await supabase.from("audit_logs").insert({
       actor_user_id: staff.userId,
       action: "shipping_zone.create",
       entity_type: "shipping_zones",
+      entity_id: zone.id,
       after: parsed.data,
     });
 
-    return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
+    return NextResponse.json({ ok: true, zone }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     return staffErrorResponse(e);
   }

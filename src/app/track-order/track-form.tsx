@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useHydrated } from "@/lib/ui/use-hydrated";
 
 export function TrackOrderForm() {
   const router = useRouter();
+  // Before hydration the submit stays disabled (and forms post): a click can never become a GET page reload.
+  const hydrated = useHydrated();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +36,7 @@ export function TrackOrderForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-8 grid max-w-xl gap-4" aria-describedby={error ? "track-error" : undefined}>
+    <form method="post" onSubmit={onSubmit} className="mt-8 grid max-w-xl gap-4" aria-describedby={error ? "track-error" : undefined}>
       <label className="block text-sm">
         Order number
         <input name="orderNumber" required autoComplete="off" className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2 uppercase" />
@@ -45,7 +48,7 @@ export function TrackOrderForm() {
       {error ? (
         <p id="track-error" role="alert" className="text-sm text-[var(--lh-error)]">{error}</p>
       ) : null}
-      <button type="submit" className="lh-btn lh-btn-primary" disabled={busy}>
+      <button type="submit" className="lh-btn lh-btn-primary" disabled={busy || !hydrated}>
         {busy ? "Looking up…" : "Find my order"}
       </button>
     </form>

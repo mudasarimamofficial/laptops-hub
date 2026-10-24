@@ -72,12 +72,14 @@ const APIS = [
   { m: "POST", p: "/api/admin/orders/LH-NONE/status", roles: ["owner", "admin", "manager", "fulfillment"] },
   { m: "PATCH", p: "/api/admin/shipping-zones/00000000-0000-4000-8000-000000000000", roles: ["owner", "admin", "manager"] },
   { m: "POST", p: "/api/admin/notifications/retry", roles: ["owner", "admin", "manager", "fulfillment"] },
+  { m: "PATCH", p: "/api/admin/inquiries/00000000-0000-4000-8000-000000000000", roles: ["owner", "admin", "manager", "fulfillment"] },
 ];
 const PAGES = [
   { p: "/admin/content", roles: ["owner", "admin", "manager", "editor"] },
   { p: "/admin/products", roles: ["owner", "admin", "manager", "editor"] },
   { p: "/admin/orders", roles: ["owner", "admin", "manager", "fulfillment"] },
-  { p: "/admin/inquiries", roles: ["owner", "admin", "manager", "editor", "fulfillment"] },
+  // Inquiries hold customer contact data: customer-facing roles only (not editors).
+  { p: "/admin/inquiries", roles: ["owner", "admin", "manager", "fulfillment"] },
   { p: "/admin/settings", roles: ["owner", "admin", "manager"] },
 ];
 
@@ -113,8 +115,9 @@ try {
     }
   }
 
-  // Legal approval separation on a policy page (local writes).
+  // Legal approval separation on a policy page (local writes; the shipping row is restored at the end).
   const by = Object.fromEntries(subjects.map((s) => [s.label, s]));
+  const savedShipping = (await admin.from("content_pages").select("title, status, body_html, legal_approved, legal_approved_by").eq("slug", "shipping").single()).data;
   const legal = { title: "Shipping & delivery", status: "published", bodyHtml: "<p>Local test</p>" };
   let r = await call(by.editor, "PATCH", "/api/admin/content/shipping", { ...legal, legalApproved: true });
   assert("editor cannot legally approve a policy page", r.status === 403, `status=${r.status}`);
@@ -125,33 +128,51 @@ try {
   r = await call(by.owner, "PATCH", "/api/admin/content/shipping", { ...legal, legalApproved: true });
   const row = (await admin.from("content_pages").select("status, legal_approved, legal_approved_by").eq("slug", "shipping").single()).data;
   assert("owner can approve and publish a policy page", r.status === 200 && row?.legal_approved === true && row?.legal_approved_by === by.owner.id, `status=${r.status} ${JSON.stringify(row)}`);
-  // Public view now shows the CMS body; then withdraw approval and confirm it is gated again.
-  let html = await (await fetch(`${base}/pages/shipping`)).text();
-  assert("published policy renders CMS body", html.includes("Local test"));
+  // Public view now shows the CMS body; then withdraw approval and confirm it is gone (404, no links) immediately.
+  let res = await fetch(`${base}/pages/shipping`);
+  let html = await res.text();
+  assert("published policy renders CMS body", res.status === 200 && html.includes("Local test"), `status=${res.status}`);
+  // Product pages and the footer link a policy only while it is public; unpublished pages are never linked.
+  const pdpHandle = (await admin.from("products").select("handle").eq("status", "active").limit(1).maybeSingle()).data?.handle;
+  const deliveryCard = async () => {
+    const page = await (await fetch(`${base}/products/${pdpHandle}`)).text();
+    return [...page.matchAll(/<a[^>]*href="\/pages\/shipping"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => m[1]).find((t) => />Delivery</.test(t)) ?? null;
+  };
+  const footerLinksShipping = async () => /href="\/pages\/shipping"/.test(await (await fetch(`${base}/compare`)).text());
+  if (pdpHandle) {
+    const card = await deliveryCard();
+    assert("product page: published delivery policy is linked, untagged", card !== null && !/being finalised/i.test(card), String(card).slice(0, 120));
+  }
+  assert("footer links a published policy", await footerLinksShipping());
   const anonDb = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
   const leak = await anonDb.from("content_pages").select("legal_approved_by").eq("slug", "shipping");
   assert("approver id is not readable by anon", !!leak.error, leak.error?.message || JSON.stringify(leak.data));
   await call(by.owner, "PATCH", "/api/admin/content/shipping", { ...legal, status: "pending", legalApproved: false });
-  html = await (await fetch(`${base}/pages/shipping`)).text();
-  assert("withdrawn policy is gated again immediately", !html.includes("Local test") && html.includes("BEING FINALISED"));
+  res = await fetch(`${base}/pages/shipping`);
+  html = await res.text();
+  assert("withdrawn policy is gone immediately (404, text not served)", res.status === 404 && !html.includes("Local test"), `status=${res.status}`);
+  if (pdpHandle) assert("product page: withdrawn delivery policy is no longer linked", (await deliveryCard()) === null);
+  assert("footer no longer links the withdrawn policy", !(await footerLinksShipping()));
 
-  // Empty-body publish = publishing the V5 template: refused while the template has pending sections, and
-  // otherwise only with explicit template approval (docs/PRODUCTION_READINESS.md, CMS rules).
+  // Empty-body publish = publishing the V5 template: refused while the template has pending sections or unanswered
+  // FAQ items, and otherwise only with explicit template approval (docs/PRODUCTION_READINESS.md, CMS rules).
   const empty = (title, extra = {}) => ({ title, status: "published", bodyHtml: "", ...extra });
   r = await call(by.owner, "PATCH", "/api/admin/content/about", empty("About", { approveTemplate: true }));
   assert("empty-body publish refused for a template with pending sections", r.status === 409, `status=${r.status}`);
-  html = await (await fetch(`${base}/pages/about`)).text();
-  assert("about stays gated", html.includes("BEING FINALISED"));
-  r = await call(by.manager, "PATCH", "/api/admin/content/faq", empty("FAQ"));
+  assert("unpublished page answers 404 (no placeholder page)", (await fetch(`${base}/pages/about`)).status === 404);
+  r = await call(by.owner, "PATCH", "/api/admin/content/faq", empty("FAQ", { approveTemplate: true }));
+  assert("empty-body publish refused for a template with unanswered FAQ items", r.status === 409, `status=${r.status}`);
+  r = await call(by.manager, "PATCH", "/api/admin/content/comparison-guide", empty("Comparison guide"));
   assert("empty-body publish needs explicit template approval", r.status === 409, `status=${r.status}`);
-  r = await call(by.manager, "PATCH", "/api/admin/content/faq", empty("FAQ", { approveTemplate: true }));
-  html = await (await fetch(`${base}/pages/faq`)).text();
-  assert("approved template publishes (faq)", r.status === 200 && !html.includes("BEING FINALISED") && !/noindex/.test(html), `status=${r.status}`);
+  r = await call(by.manager, "PATCH", "/api/admin/content/comparison-guide", empty("Comparison guide", { approveTemplate: true }));
+  res = await fetch(`${base}/pages/comparison-guide`);
+  html = await res.text();
+  assert("approved template publishes (comparison-guide)", r.status === 200 && res.status === 200 && !/being finalised/i.test(html) && !/noindex/.test(html), `status=${r.status}/${res.status}`);
   const sitemap = await (await fetch(`${base}/sitemap.xml`)).text();
-  assert("published template is in the sitemap, gated pages are not", sitemap.includes("/pages/faq") && !sitemap.includes("/pages/about"));
-  await call(by.manager, "PATCH", "/api/admin/content/faq", { title: "FAQ", status: "pending", bodyHtml: "" });
-  html = await (await fetch(`${base}/pages/faq`)).text();
-  assert("unpublished template is gated again", html.includes("BEING FINALISED") && /noindex/.test(html));
+  assert("published template is in the sitemap, unpublished pages are not", sitemap.includes("/pages/comparison-guide") && !sitemap.includes("/pages/about"));
+  await call(by.manager, "PATCH", "/api/admin/content/comparison-guide", { title: "Comparison guide", status: "pending", bodyHtml: "" });
+  assert("unpublished template is gone again (404)", (await fetch(`${base}/pages/comparison-guide`)).status === 404);
+  if (savedShipping) await admin.from("content_pages").update(savedShipping).eq("slug", "shipping");
 
   // COD collection through the admin route: record, replay, conflict (docs/COD_IDEMPOTENCY_CONTRACT.md).
   const orderNumber = `LH-SANDBOX-HTTP-${Date.now()}`;

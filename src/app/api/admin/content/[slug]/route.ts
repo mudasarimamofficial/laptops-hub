@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createAuthorizedStaffClient, staffErrorResponse, type StaffRole } from "@/lib/auth/staff";
 import { LEGAL_CONTENT_SLUGS, sanitizeCmsHtml } from "@/lib/security/sanitize-html";
@@ -133,9 +133,13 @@ export async function PATCH(request: Request, ctx: Ctx) {
       },
     });
 
-    // Public /pages, /guides and the sitemap read published rows through a 60s cache; expire it now so an
-    // unpublish (or legal approval withdrawal) takes effect on the next request.
+    // /pages and /guides read publication fresh on every request (the security guarantee). Every other page shows
+    // content links in its header/footer (and product pages link policies) from a 60s cache: expire the data tag and
+    // all rendered pages so links follow the change on the next request (CMS changes are rare; pages regenerate on
+    // demand).
     revalidateTag("content", { expire: 0 });
+    revalidatePath("/", "layout");
+    revalidatePath("/sitemap.xml");
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     return staffErrorResponse(e);

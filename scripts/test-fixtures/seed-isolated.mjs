@@ -70,6 +70,18 @@ for (const role of ["manager", "fulfillment", "editor"]) {
   out.staff[role] = { email, password, id: u.user.id };
 }
 
+// Checkout requires the five policies to be published and legally approved: local stand-in policy text (never real
+// terms) so the isolated journeys can order. Suites that toggle a policy restore it afterwards.
+for (const slug of ["shipping", "returns", "warranty", "privacy", "terms"]) {
+  must(
+    await sb
+      .from("content_pages")
+      .update({ status: "published", body_html: `<h2>Local test policy</h2><p>Isolated test stand-in for ${slug}.</p>`, legal_approved: true, legal_approved_by: out.staff.manager.id })
+      .eq("slug", slug),
+    `policy ${slug}`,
+  );
+}
+
 fs.mkdirSync(path.join(root, ".isolated"), { recursive: true });
 fs.writeFileSync(path.join(root, ".isolated", "fixture.json"), JSON.stringify(out, null, 2));
 console.log(`seeded ${out.products.length} products, zone ${out.zone.id}, staff ${Object.keys(out.staff).join(", ")}`);

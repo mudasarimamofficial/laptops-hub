@@ -12,6 +12,9 @@ import {
   type CmpDemo,
 } from "@/components/storefront/home/home-sections";
 import { PendingBlock } from "@/components/ui/pending-block";
+import { HomeInquirySection } from "@/components/storefront/home/home-inquiry";
+import { confirmedPhones, telHref } from "@/lib/business";
+import { contentVisibility } from "@/lib/content/pages";
 import { cpuFmt, fmtPkr, getV5Catalog, ord, stoFmt, v5Card, v5Link, type V5Product } from "@/lib/catalog/v5";
 import { cutoutUrl } from "@/lib/catalog/v5-media";
 
@@ -147,6 +150,7 @@ export default async function HomePage() {
     <>
       <CinematicHero
         totalCount={P.length}
+        chromebookCount={P.filter((p) => p.cat === "chromebook").length}
         laptopCount={lapN}
         accCount={accN}
         main={{ ...shot(HM, HM_HANDLE, "dell7420-0.png"), priceText: fmtPkr(HM.pricePaisa), stockText: stockText(HM), chips: HM.chips }}
@@ -178,6 +182,7 @@ export default async function HomePage() {
       <NewGenSection cards={[...newGen].sort((x, y) => (y.gen ?? 0) - (x.gen ?? 0) || x.i - y.i).slice(0, 10).map(v5Card)} count={newGen.length} />
       <BudgetSection tiles={["under-40k", "40k-60k", "over-60k"].map((id) => v5Link(P, id))} />
       <CompareDemoSection demo={cmpDemo} />
+      <HomeInquirySection phones={confirmedPhones().map((p) => ({ display: p.display, href: telHref(p) }))} privacyHref={(await contentVisibility()).pages.privacy ? "/pages/privacy" : null} />
     </>
   );
 }

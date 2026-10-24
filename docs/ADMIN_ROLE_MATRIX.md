@@ -7,7 +7,7 @@
 | Orders list / status / COD collect | ✓ | ✓ | ✓ | — | ✓ |
 | Content pages CMS | ✓ | ✓ | ✓ | ✓ | — |
 | Settings / shipping | ✓ | ✓ | ✓ | — | — |
-| Inquiries | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Inquiries (view, contact details, status) | ✓ | ✓ | ✓ | — | ✓ |
 | Staff invite / deactivate (planned) | ✓ | ✓ | — | — | — |
 
 Enforcement: `requireStaff` / `requireStaffPage([...roles])` on each route and API. Inactive membership → forbidden. No public self-elevation.

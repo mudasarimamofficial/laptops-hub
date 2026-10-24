@@ -1,5 +1,32 @@
 # Resume here
 
+## CHECKPOINT 2026-10-24 (read first)
+
+Production: `main` `700524d` → `dpl_7W2x8QxLKqvcG1iw5WophtRJjhiP` · DB ledger 14 · COD **off** · 0 orders · 0 zones ·
+**0 active staff** (test manager deactivated) · email not configured · retry workflow registered, inactive (no secret).
+
+Open draft PRs to `main` (all green; each merge redeploys Production; owner approval required):
+| PR | Branch | What | Evidence |
+|---|---|---|---|
+| #4 | `chore/test-production-guard` | fixture-writing suites can never write to production (`scripts/lib/local-only.mjs`) | 7 writers refuse with prod env; prod counts unchanged |
+| #5 | `feat/admin-password-recovery` | staff password recovery (Supabase Auth) | 5/5 recovery journeys (Mailpit), Preview evidence comment |
+| #6 | `fix/cms-cache-timing` | publish/withdraw visible on next request; PDP policy tags follow CMS state | role HTTP 115/115 ×10 after journeys |
+Merge notes: #4 and #5 both edit the `test:unit` line in `package.json` (resolve by keeping both tests). #4 and #6 both edit
+`scripts/security-role-http-isolated.mjs` (different hunks).
+
+Blocked on the owner:
+- **"ULTIMATE AUTONOMOUS FULL-LAUNCH PROJECT BIBLE" was referenced on 2026-10-24 but not attached** — needed for approved
+  business facts/copy (removing every customer-visible "BEING FINALISED", policies, contact, homepage inquiry form spec).
+- Owner account + public sign-up off (guide A) · shipping zones · Resend + Supabase SMTP · policy facts · prices ·
+  photo rights · workflow 4.1. Single source: `docs/FINAL_LAUNCH_OWNER_INPUTS.md`; launch order `docs/FINAL_LAUNCH_SEQUENCE.md`.
+
+Customer-visible placeholders today (all need owner facts): content pages with pending sections (gated pages show
+"BEING FINALISED"), PDP policy tags (until policies are published — fixed in #6 to follow CMS), FAQ answers marked
+pending, checkout "Online ordering opens soon" (correct while COD is off).
+
+Local test stack: `supabase/config.toml` site URL `http://127.0.0.1:3001`; isolated env script pattern in
+`docs/ISOLATED_TESTS.md`; product pages are prerendered — seed before build.
+
 **Latest (2026-10-23, final launch closure):** outbox lease fix; migration `20261024100000` **applied to production 2026-10-23** (owner-approved, ledger 14;
 `docs/MIGRATION_PRODUCTION_APPROVAL.md`). **Production web: `700524d` (`main`) deployed 2026-10-24 as `dpl_7W2x8QxLKqvcG1iw5WophtRJjhiP`**; PRs #1/#2/#3 merged. Next: owner configuration (sequence step 3) → email → controlled test order. Launch order:
 `docs/FINAL_LAUNCH_SEQUENCE.md`; owner inputs and how-tos: `docs/FINAL_LAUNCH_OWNER_INPUTS.md`; policy skeletons:

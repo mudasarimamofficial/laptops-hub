@@ -14,13 +14,11 @@ import path from "path";
 import { randomUUID } from "crypto";
 import { fileURLToPath } from "url";
 import { createClient } from "@supabase/supabase-js";
+import { assertLocalOnly } from "./lib/local-only.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(url)) {
-  console.error("Refusing to run: NEXT_PUBLIC_SUPABASE_URL must be a local Supabase.");
-  process.exit(2);
-}
+await assertLocalOnly("security-role-http-isolated", { url });
 const base = (process.argv[2] || "http://127.0.0.1:3000").replace(/\/$/, "");
 const admin = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 const cookieName = `sb-${new URL(url).hostname.split(".")[0]}-auth-token`;

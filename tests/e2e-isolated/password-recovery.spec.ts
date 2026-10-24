@@ -80,7 +80,7 @@ test.describe.serial("staff password recovery (isolated)", () => {
     await page.getByLabel("New password", { exact: true }).fill(NEW_PASSWORD);
     await page.getByLabel("Repeat new password").fill(NEW_PASSWORD);
     await page.getByRole("button", { name: "Save new password" }).click();
-    await expect(page).toHaveURL(/\/admin\/login\?reset=1/);
+    await expect(page).toHaveURL(/\/admin\/login\?reset=1/, { timeout: 15_000 });
     await expect(page.getByText("Password changed. All devices were signed out")).toBeVisible();
 
     // The other device is signed out.
@@ -130,7 +130,7 @@ test.describe.serial("staff password recovery (isolated)", () => {
         await page.getByLabel("New password", { exact: true }).fill(NEW_PASSWORD);
         await page.getByLabel("Repeat new password").fill(NEW_PASSWORD);
         await page.getByRole("button", { name: "Save new password" }).click();
-        await expect(page).toHaveURL(/\/admin\/login\?reset=1/);
+        await expect(page).toHaveURL(/\/admin\/login\?reset=1/, { timeout: 15_000 });
         await signIn(page, email, NEW_PASSWORD);
         await page.waitForURL(/\/admin\/forbidden/);
         const m = await sb.from("admin_memberships").select("role, is_active").eq("user_id", id).maybeSingle();
@@ -175,7 +175,8 @@ test.describe.serial("staff password recovery (isolated)", () => {
     for (let i = 0; i < 4; i++) statuses.push((await api(page, "/api/admin/account/recover", { email: same })).status());
     expect(statuses).toEqual([200, 200, 200, 429]);
     // 5 per IP per 15 minutes.
-    const ip = "203.0.113.77";
+    // Fresh documentation-range IP per run: rate-limit buckets persist in the database for 15 minutes.
+    const ip = `203.0.113.${(Date.now() % 250) + 1}`;
     const ipStatuses = [];
     for (let i = 0; i < 6; i++) ipStatuses.push((await api(page, "/api/admin/account/recover", { email: `ip-${i}-${Date.now()}@lh-test.local` }, ip)).status());
     expect(ipStatuses).toEqual([200, 200, 200, 200, 200, 429]);

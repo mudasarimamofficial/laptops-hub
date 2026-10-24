@@ -45,6 +45,16 @@ export async function updateSession(request: NextRequest) {
 
   const isLogin = path.startsWith("/admin/login");
   const isForbidden = path.startsWith("/admin/forbidden");
+  // Password recovery: reachable without staff membership (it never grants any). The reset page and API check
+  // for a fresh recovery session themselves.
+  const isRecovery = ["/admin/forgot-password", "/admin/auth/confirm", "/admin/reset-password"].some(
+    (p) => path === p || path.startsWith(`${p}/`),
+  );
+  if (isRecovery) {
+    supabaseResponse.headers.set("Cache-Control", "private, no-store");
+    supabaseResponse.headers.set("Referrer-Policy", "no-referrer");
+    return supabaseResponse;
+  }
 
   if (!user && !isLogin) {
     const url = request.nextUrl.clone();

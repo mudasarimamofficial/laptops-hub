@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatPkr, paisaToMajor } from "@/lib/money";
+import { useHydrated } from "@/lib/ui/use-hydrated";
 
 const NEXT: Record<string, string[]> = {
   placed: ["pending_confirmation", "confirmed", "cancelled"],
@@ -27,6 +28,8 @@ type Props = {
 
 export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollectedPaisa }: Props) {
   const router = useRouter();
+  // Before hydration the submit stays disabled (and forms post): a click can never become a GET page reload.
+  const hydrated = useHydrated();
   // Show what the server just confirmed until the refreshed props arrive (router.refresh() can lag); once the
   // props change, they win again.
   const [statusDone, setStatusDone] = useState<{ from: string; to: string } | null>(null);
@@ -129,7 +132,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
 
   return (
     <div className="mt-8 grid gap-8 lg:grid-cols-2">
-      <form onSubmit={changeStatus} className="space-y-3 rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
+      <form method="post" onSubmit={changeStatus} className="space-y-3 rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
         <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold">Fulfillment status</h2>
         <p className="text-sm text-[var(--lh-ink-2)]">Current: {current}</p>
         {options.length ? (
@@ -174,7 +177,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
             </label>
             <button
               type="submit"
-              disabled={busy}
+              disabled={busy || !hydrated}
               className="rounded-[var(--lh-radius-pill)] bg-[linear-gradient(180deg,var(--lh-grad-action-from),var(--lh-grad-action-to))] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
             >
               Update status
@@ -185,7 +188,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
         )}
       </form>
 
-      <form onSubmit={collectCod} className="space-y-3 rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
+      <form method="post" onSubmit={collectCod} className="space-y-3 rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
         <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold">COD cash collection</h2>
         <p className="text-sm text-[var(--lh-ink-2)]">
           Due {formatPkr(totalDuePaisa)} · Collected {formatPkr(collected)} · Outstanding{" "}
@@ -217,7 +220,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
             </label>
             <button
               type="submit"
-              disabled={busy}
+              disabled={busy || !hydrated}
               className="rounded-[var(--lh-radius-pill)] border border-[var(--lh-border)] px-5 py-2 text-sm font-semibold disabled:opacity-60"
             >
               Record collection

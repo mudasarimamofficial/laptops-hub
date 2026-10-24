@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatPkr, paisaToMajor } from "@/lib/money";
+import { useHydrated } from "@/lib/ui/use-hydrated";
 
 type Variant = {
   id: string;
@@ -25,6 +26,8 @@ type Props = {
 
 export function ProductEditForm(props: Props) {
   const router = useRouter();
+  // Before hydration the submit stays disabled (and forms post): a click can never become a GET page reload.
+  const hydrated = useHydrated();
   const [title, setTitle] = useState(props.title);
   const [descriptionSafe, setDescriptionSafe] = useState(props.descriptionSafe);
   const [status, setStatus] = useState(props.status);
@@ -84,7 +87,7 @@ export function ProductEditForm(props: Props) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-8 max-w-2xl space-y-5">
+    <form method="post" onSubmit={onSubmit} className="mt-8 max-w-2xl space-y-5">
       <label className="block text-sm">
         <span className="font-medium">Title</span>
         <input
@@ -183,7 +186,7 @@ export function ProductEditForm(props: Props) {
       {msg ? <p className="text-sm text-emerald-700">{msg}</p> : null}
       <button
         type="submit"
-        disabled={busy}
+        disabled={busy || !hydrated}
         className="rounded-[var(--lh-radius-pill)] bg-[linear-gradient(180deg,var(--lh-grad-action-from),var(--lh-grad-action-to))] px-6 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
       >
         {busy ? "Saving…" : "Save product"}

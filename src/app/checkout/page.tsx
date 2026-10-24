@@ -7,6 +7,7 @@ import { cartSubtotalPaisa, useCart } from "@/lib/commerce/cart-store";
 import { formatPkr } from "@/lib/money";
 import { PendingBlock } from "@/components/ui/pending-block";
 import { PK_PROVINCES } from "@/lib/commerce/pk-places";
+import { useHydrated } from "@/lib/ui/use-hydrated";
 
 const checkoutEnabled = process.env.NEXT_PUBLIC_COD_CHECKOUT_ENABLED === "true";
 
@@ -20,6 +21,8 @@ type ShipOption = {
 
 export default function CheckoutPage() {
   const router = useRouter();
+  // Before hydration the submit stays disabled (and forms post): a click can never become a GET page reload.
+  const hydrated = useHydrated();
   const lines = useCart((s) => s.lines);
   const clear = useCart((s) => s.clear);
   const localSubtotal = cartSubtotalPaisa(lines);
@@ -163,7 +166,7 @@ export default function CheckoutPage() {
         </div>
       ) : null}
 
-      <form onSubmit={onSubmit} className="mt-8 grid gap-4 md:grid-cols-2">
+      <form method="post" onSubmit={onSubmit} className="mt-8 grid gap-4 md:grid-cols-2">
         <label className="block text-sm">
           Full name
           <input name="name" required className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2" />
@@ -280,7 +283,7 @@ export default function CheckoutPage() {
         <button
           type="submit"
           className="lh-btn lh-btn-primary md:col-span-2"
-          disabled={pending || !checkoutEnabled || !zoneId || !serverQuote}
+          disabled={pending || !hydrated || !checkoutEnabled || !zoneId || !serverQuote}
         >
           {pending ? "Placing order…" : "Place COD order"}
         </button>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useHydrated } from "@/lib/ui/use-hydrated";
 
 type Props = {
   slug: string;
@@ -15,6 +16,8 @@ type Props = {
 
 export function ContentEditForm(props: Props) {
   const router = useRouter();
+  // Before hydration the submit stays disabled (and forms post): a click can never become a GET page reload.
+  const hydrated = useHydrated();
   const [title, setTitle] = useState(props.title);
   const [status, setStatus] = useState(props.status);
   const [bodyHtml, setBodyHtml] = useState(props.bodyHtml);
@@ -53,7 +56,7 @@ export function ContentEditForm(props: Props) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
+    <form method="post" onSubmit={onSubmit} className="rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="font-[family-name:var(--font-mono)] text-sm font-semibold uppercase tracking-wider">{props.slug}</h2>
         <span className="text-xs text-[var(--lh-ink-2)]">
@@ -117,7 +120,7 @@ export function ContentEditForm(props: Props) {
       {msg ? <p className="mt-2 text-sm text-emerald-700">{msg}</p> : null}
       <button
         type="submit"
-        disabled={busy}
+        disabled={busy || !hydrated}
         className="mt-4 rounded-[var(--lh-radius-pill)] bg-[linear-gradient(180deg,var(--lh-grad-action-from),var(--lh-grad-action-to))] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
       >
         {busy ? "Saving…" : "Save page"}

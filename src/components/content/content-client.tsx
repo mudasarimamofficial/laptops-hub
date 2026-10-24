@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useHydrated } from "@/lib/ui/use-hydrated";
 
 /** V5 FAQ accordion (`isFaq`): one card, rows toggle independently, SOON tag on unanswered questions. */
 export function FaqList({ items }: { items: { q: string; a: string; pend: boolean }[] }) {
@@ -80,6 +81,7 @@ const EMPTY: Fields = { name: "", email: "", phone: "", subject: SUBJECTS[0], ms
  * visible to staff in /admin/inquiries). Success is shown only after the server confirms the insert.
  */
 export function ContactForm() {
+  const hydrated = useHydrated();
   const [f, setF] = useState<Fields>(EMPTY);
   const [e, setE] = useState<Errors>({});
   const [status, setStatus] = useState<Status>({ kind: "idle" });
@@ -141,6 +143,7 @@ export function ContactForm() {
     <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: "clamp(20px,3vw,32px)", borderRadius: 24, background: "#FFFFFF", border: "1px solid var(--lh-border)", boxShadow: "0 24px 50px -36px rgba(var(--lh-navy-rgb),.5)", maxWidth: 760 }}>
       {status.kind !== "sent" ? (
         <form
+          method="post"
           noValidate
           onSubmit={(ev) => {
             ev.preventDefault();
@@ -198,7 +201,7 @@ export function ContactForm() {
           <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
             <button
               type="submit"
-              disabled={status.kind === "sending"}
+              disabled={!hydrated || status.kind === "sending"}
               aria-busy={status.kind === "sending"}
               className="v5-hov-bg-action"
               style={{ height: 52, padding: "0 28px", border: 0, borderRadius: 999, background: "var(--lh-action)", color: "#FFFFFF", fontSize: 15, fontWeight: 700, cursor: status.kind === "sending" ? "wait" : "pointer", opacity: status.kind === "sending" ? 0.7 : 1 }}

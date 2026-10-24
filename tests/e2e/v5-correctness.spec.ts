@@ -180,4 +180,5 @@ test("COD checkout stays disabled", async ({ request }) => {
 // Inquiry submission is not exercised end to end: every public product is purchasable today
 // (see docs/proposals/AVAILABILITY_INQUIRY_ONLY.md), and posting to /api/contact would write a real
 // contact_inquiries row. Run it only against a non-production database.
-test.skip("inquiry dialog submits to /api/contact (needs an inquiry-only product and a non-production DB)", () => {});
+// The inquiry dialog submission (writes to contact_inquiries) is covered on the isolated stack:
+// tests/e2e-isolated/home-inquiry.spec.ts, "product inquiry dialog … reaches staff".

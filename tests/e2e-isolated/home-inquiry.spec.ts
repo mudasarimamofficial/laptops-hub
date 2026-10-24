@@ -104,6 +104,31 @@ test.describe.serial("homepage inquiry (isolated)", () => {
     await ctx.close();
   });
 
+  test("product inquiry dialog (inquiry-only listing) is saved once and reaches staff", async ({ page }) => {
+    // The isolated catalog has no Chromebooks, so the collection offers the same "Ask about …" dialog that inquiry-only
+    // products use (src/components/commerce/inquiry-dialog.tsx).
+    const marker = `dialog-inq-${Date.now()}`;
+    await page.goto("/collections/chromebooks");
+    await expect(page.getByText("No Chromebooks listed right now.")).toBeVisible();
+    await page.getByRole("button", { name: "Ask about Chromebooks" }).click();
+    const dialog = page.getByRole("dialog");
+    await dialog.getByRole("button", { name: "Send inquiry" }).click();
+    await expect(dialog.getByText("Enter a valid phone number")).toBeVisible();
+    await dialog.getByLabel("Name").fill("Dialog Inquiry Test");
+    await dialog.getByLabel("Phone or WhatsApp number").fill("0301 7654321");
+    await dialog.getByLabel("Message (optional)").fill(`Looking for a Chromebook under 50k. ${marker}`);
+    await dialog.getByRole("button", { name: "Send inquiry" }).click();
+    await expect(dialog.getByText("Your inquiry has been received.")).toBeVisible();
+    await expect.poll(async () => (await rowsFor(marker)).length).toBe(1);
+    const [row] = await rowsFor(marker);
+    expect(row.subject).toMatch(/^Availability: Chromebooks/);
+    expect(row.message).toContain("Product: /products/chromebooks");
+    await dialog.getByRole("button", { name: "Close" }).click();
+    await signIn(page, "manager");
+    await page.goto("/admin/inquiries");
+    await expect(page.getByTestId("inquiry").filter({ hasText: marker })).toContainText("0301 7654321");
+  });
+
   test("bots, cross-site posts, server errors and offline submissions are handled truthfully", async ({ page }) => {
     await page.goto("/");
     const origin = new URL(page.url()).origin;

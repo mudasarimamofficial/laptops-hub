@@ -91,8 +91,15 @@ npm run build
 git push -u origin feat/merchant-operating-system   # Preview
 ```
 
+## Preview
+
+- Branch pushed: `origin/feat/merchant-operating-system`
+- Mutating admin features that need new columns (soft-delete, theme tables, media origin) **will error against Production DB** until migrations are approved.
+- Safe on Preview today: shell navigation, product list/edit of existing columns, CSV export, import dry-run (commit blocked on non-local), collections list (create may fail if `collection_type` missing — API has fallback), overview KPIs.
+
 ## NEXT ACTION
 
-1. Push feature branch for Vercel Preview (read-only/smoke safe; mutating admin against Prod schema incomplete)  
-2. Continue bulk editor + variant matrix + storefront theme wire behind flag  
-3. Playwright local admin journeys
+1. Confirm Vercel Preview Ready for latest commit `8c678f7`  
+2. Playwright admin journeys on local stack (`NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321`)  
+3. Variant options matrix UI + inventory settings form  
+4. Owner package: Production migration approval for `20261025120000` + `20261025130000`

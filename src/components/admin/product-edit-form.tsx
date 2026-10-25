@@ -10,6 +10,8 @@ type Variant = {
   title: string;
   sku: string | null;
   pricePaisa: number;
+  inventoryMode?: "tracked" | "untracked";
+  quantityOnHand?: number | null;
 };
 
 type Props = {
@@ -38,6 +40,12 @@ export function ProductEditForm(props: Props) {
   const [variantId, setVariantId] = useState(props.variants[0]?.id || "");
   const selected = props.variants.find((v) => v.id === variantId) || props.variants[0];
   const [pricePkr, setPricePkr] = useState(String(paisaToMajor(selected?.pricePaisa || 0)));
+  const [inventoryMode, setInventoryMode] = useState<"tracked" | "untracked">(
+    selected?.inventoryMode === "tracked" ? "tracked" : "untracked",
+  );
+  const [quantityOnHand, setQuantityOnHand] = useState(
+    String(selected?.quantityOnHand ?? 0),
+  );
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -45,7 +53,11 @@ export function ProductEditForm(props: Props) {
   function onVariantChange(id: string) {
     setVariantId(id);
     const v = props.variants.find((x) => x.id === id);
-    if (v) setPricePkr(String(paisaToMajor(v.pricePaisa)));
+    if (v) {
+      setPricePkr(String(paisaToMajor(v.pricePaisa)));
+      setInventoryMode(v.inventoryMode === "tracked" ? "tracked" : "untracked");
+      setQuantityOnHand(String(v.quantityOnHand ?? 0));
+    }
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -66,6 +78,8 @@ export function ProductEditForm(props: Props) {
       if (variantId && pricePkr) {
         body.variantId = variantId;
         body.pricePkr = Number(pricePkr);
+        body.inventoryMode = inventoryMode;
+        body.quantityOnHand = inventoryMode === "tracked" ? Number(quantityOnHand) : null;
       }
       const res = await fetch(`/api/admin/products/${encodeURIComponent(props.handle)}`, {
         method: "PATCH",
@@ -77,7 +91,7 @@ export function ProductEditForm(props: Props) {
         setErr(data.message || data.error || `Save failed (${res.status})`);
         return;
       }
-      setMsg("Saved. Only the selected variant price was updated.");
+      setMsg("Saved. Selected variant price and inventory settings were updated.");
       router.refresh();
     } catch {
       setErr("Network error — try again.");
@@ -151,6 +165,45 @@ export function ProductEditForm(props: Props) {
           Other variants keep their own prices. Stock counts are never shown publicly.
         </span>
       </label>
+      <fieldset className="space-y-2 rounded-xl border border-[var(--lh-border)] p-3">
+        <legend className="px-1 text-sm font-medium">Inventory (selected variant)</legend>
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="radio"
+            name="inv"
+            checked={inventoryMode === "untracked"}
+            onChange={() => setInventoryMode("untracked")}
+            className="mt-1"
+          />
+          <span>
+            Confirm availability
+            <span className="block text-xs text-[var(--lh-ink-2)]">Not unlimited stock — staff confirms before dispatch.</span>
+          </span>
+        </label>
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="radio"
+            name="inv"
+            checked={inventoryMode === "tracked"}
+            onChange={() => setInventoryMode("tracked")}
+            className="mt-1"
+          />
+          <span>Tracked quantity</span>
+        </label>
+        {inventoryMode === "tracked" ? (
+          <label className="block text-sm">
+            <span className="font-medium">Quantity on hand</span>
+            <input
+              type="number"
+              min={0}
+              className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
+              value={quantityOnHand}
+              onChange={(e) => setQuantityOnHand(e.target.value)}
+              required
+            />
+          </label>
+        ) : null}
+      </fieldset>
       <div className="grid gap-4 sm:grid-cols-3">
         <label className="block text-sm">
           <span className="font-medium">Manufacturer</span>

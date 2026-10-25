@@ -1,0 +1,66 @@
+/* Admin console tokens — separate from frozen V5 storefront. */
+.admin-app {
+  --adm-sidebar-w: 248px;
+  --adm-sidebar-bg: #0b1528;
+  --adm-sidebar-border: rgba(255, 255, 255, 0.08);
+  --adm-sidebar-text: #c5d0e4;
+  --adm-sidebar-muted: #8494b0;
+  --adm-sidebar-active: rgba(33, 89, 212, 0.22);
+  --adm-sidebar-hover: rgba(255, 255, 255, 0.06);
+  --adm-topbar-h: 56px;
+  --adm-canvas: #f3f6fb;
+  --adm-surface: #ffffff;
+  --adm-surface-2: #eef3fa;
+  --adm-ink: #102039;
+  --adm-ink-2: #52637b;
+  --adm-border: #d7e2ef;
+  --adm-divider: #e8eff7;
+  --adm-focus: #2159d4;
+  --adm-danger: #b42318;
+  --adm-danger-bg: #fef3f2;
+  --adm-success: #166044;
+  --adm-success-bg: #e8f4ee;
+  --adm-warning: #865111;
+  --adm-warning-bg: #fff4e0;
+  --adm-radius: 10px;
+  --adm-radius-lg: 14px;
+  --adm-shadow: 0 1px 2px rgba(16, 32, 57, 0.06), 0 8px 24px rgba(16, 32, 57, 0.04);
+  background: var(--adm-canvas);
+  color: var(--adm-ink);
+  font-family: var(--font-body);
+}
+
+.admin-app a:focus-visible,
+.admin-app button:focus-visible,
+.admin-app input:focus-visible,
+.admin-app select:focus-visible,
+.admin-app textarea:focus-visible {
+  outline: 2px solid var(--adm-focus);
+  outline-offset: 2px;
+}
+
+.adm-skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: var(--adm-focus);
+  color: white;
+  font-weight: 600;
+}
+
+.adm-skip:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-app *,
+  .admin-app *::before,
+  .admin-app *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ProductDangerZone } from "@/components/admin/product-danger-zone";
+import { ProductEditForm } from "@/components/admin/product-edit-form";
+import { ProductMediaManager } from "@/components/admin/product-media-manager";
+import { AdminPageHeader } from "@/components/admin/ui/page-header";
+import { StatusBadge } from "@/components/admin/ui/status-badge";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
-import { ProductEditForm } from "@/components/admin/product-edit-form";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -16,37 +20,62 @@ export default async function AdminProductEditPage({ params }: Props) {
   const { data } = await supabase
     .from("products")
     .select(
-      "handle, title, description_safe, status, featured, manufacturer, product_type, category, product_variants(id, title, sku, price_paisa)",
+      "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, product_variants(id, title, sku, price_paisa, inventory_mode, quantity_on_hand), product_media(id, url, alt, position, approval)",
     )
     .eq("handle", handle)
     .maybeSingle();
 
   if (!data) notFound();
 
-  const variants = ((data.product_variants as { id: string; title: string; sku: string | null; price_paisa: number }[]) || []).map(
-    (v) => ({
-      id: v.id,
-      title: v.title || "Default",
-      sku: v.sku,
-      pricePaisa: v.price_paisa,
-    }),
-  );
+  const variants = (
+    (data.product_variants as {
+      id: string;
+      title: string;
+      sku: string | null;
+      price_paisa: number;
+      inventory_mode?: string;
+      quantity_on_hand?: number | null;
+    }[]) || []
+  ).map((v) => ({
+    id: v.id,
+    title: v.title || "Default",
+    sku: v.sku,
+    pricePaisa: v.price_paisa,
+    inventoryMode: (v.inventory_mode === "tracked" ? "tracked" : "untracked") as "tracked" | "untracked",
+    quantityOnHand: v.quantity_on_hand ?? null,
+  }));
 
   if (!variants.length) notFound();
 
+  const media = (
+    (data.product_media as { id: string; url: string; alt: string; position: number; approval?: string }[]) || []
+  ).sort((a, b) => a.position - b.position);
+
   return (
-    <div className="lh-container py-10">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider text-[var(--lh-ink-2)]">
-            {data.handle}
-          </p>
-          <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold">Edit product</h1>
-        </div>
-        <Link href="/admin/products" className="text-sm text-[var(--lh-action)]">
-          ← Catalog
-        </Link>
-      </div>
+    <>
+      <AdminPageHeader
+        title={data.title}
+        description={`Handle ${data.handle} · media rights ${data.media_approval || "pending"}`}
+        breadcrumbs={[
+          { href: "/admin", label: "Overview" },
+          { href: "/admin/products", label: "Products" },
+          { label: data.title },
+        ]}
+        actions={
+          <div className="flex flex-wrap items-center gap-3">
+            <StatusBadge status={data.status} />
+            <Link
+              href={`/products/${data.handle}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-semibold text-[var(--lh-action)] hover:underline"
+            >
+              View on storefront
+            </Link>
+          </div>
+        }
+      />
+
       <ProductEditForm
         handle={data.handle}
         title={data.title}
@@ -58,6 +87,10 @@ export default async function AdminProductEditPage({ params }: Props) {
         category={data.category}
         variants={variants}
       />
-    </div>
+
+      <ProductMediaManager handle={data.handle} initialMedia={media} />
+
+      <ProductDangerZone handle={data.handle} title={data.title} status={data.status} />
+    </>
   );
 }

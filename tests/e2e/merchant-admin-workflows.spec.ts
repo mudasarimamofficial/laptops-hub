@@ -122,7 +122,14 @@ test.describe.serial("merchant admin workflows", () => {
 
   test("owner inventory + inquiries + orders shells load", async ({ page }) => {
     await signIn(page, owner.email, owner.password);
-    for (const path of ["/admin/inventory", "/admin/inquiries", "/admin/orders", "/admin/content", "/admin/online-store"]) {
+    for (const path of [
+      "/admin/inventory",
+      "/admin/inquiries",
+      "/admin/orders",
+      "/admin/content",
+      "/admin/online-store",
+      "/admin/navigation",
+    ]) {
       await page.goto(path);
       await expect(page.locator("#admin-main")).toBeVisible({ timeout: 20_000 });
       await expect(page.getByRole("heading").first()).toBeVisible({ timeout: 20_000 });

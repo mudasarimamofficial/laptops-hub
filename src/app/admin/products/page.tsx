@@ -76,6 +76,12 @@ export default async function AdminProductsPage({ searchParams }: Props) {
               Export
             </Link>
             <Link
+              href="/admin/products/bulk"
+              className="inline-flex rounded-lg border border-[var(--adm-border)] bg-[var(--adm-surface)] px-4 py-2 text-sm font-semibold hover:bg-[var(--adm-surface-2)]"
+            >
+              Bulk edit
+            </Link>
+            <Link
               href="/admin/products/new"
               className="inline-flex rounded-lg bg-[var(--lh-action)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--lh-action-hover)]"
             >

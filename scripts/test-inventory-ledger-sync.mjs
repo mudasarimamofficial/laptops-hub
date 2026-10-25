@@ -106,4 +106,4 @@ if (!negErr) {
 }
 
 console.log("inventory-ledger-sync: ok", { delta: last.delta, after: last.quantity_after });
-process.exit(0);
+process.exitCode = 0;

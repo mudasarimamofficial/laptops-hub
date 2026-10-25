@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-23T12:49:03.618Z",
-  "orderNumber": "LH-SANDBOX-1792759742600",
+  "at": "2026-10-25T20:22:48.907Z",
+  "orderNumber": "LH-SANDBOX-1792959752673",
   "results": [
     {
       "name": "same_key_both_ok_or_one_ok",
@@ -55,7 +55,7 @@
     {
       "name": "replay_after_completion",
       "ok": true,
-      "detail": "{\"first\":\"ok\",\"again\":{\"ok\":true,\"collection_id\":\"aea70024-fbe0-4d12-90f1-4bcbde8a2793\",\"payment_status\":\"partially_collected\",\"idempotent_replay\":true,\"amount_collected_paisa\":1300},\"rows\":1}"
+      "detail": "{\"first\":\"ok\",\"again\":{\"ok\":true,\"collection_id\":\"e0a7e098-b3e0-457a-b082-650f02e873a9\",\"payment_status\":\"partially_collected\",\"idempotent_replay\":true,\"amount_collected_paisa\":1300},\"rows\":1}"
     },
     {
       "name": "same_key_different_amount_conflict",

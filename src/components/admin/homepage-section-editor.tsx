@@ -33,6 +33,7 @@ export function HomepageSectionEditor() {
   const [notice, setNotice] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [migrationRequired, setMigrationRequired] = useState(false);
 
   const dirty = useMemo(() => JSON.stringify(sections) !== savedSnapshot, [sections, savedSnapshot]);
@@ -58,6 +59,7 @@ export function HomepageSectionEditor() {
         setMigrationRequired(!!data.migrationRequired);
         setNotice(data.notice || null);
         setSelectedId(data.sections?.[0]?.id ?? null);
+        setLoaded(true);
       } catch {
         if (!cancelled) setErr("Network error loading theme draft");
       }
@@ -178,6 +180,10 @@ export function HomepageSectionEditor() {
   }
 
   async function publishDraft() {
+    if (!loaded || sections.length < 1) {
+      setErr("Theme draft is still loading. Wait a moment and try again.");
+      return;
+    }
     if (dirty && !window.confirm("You have unsaved changes. Save draft and publish?")) return;
     if (
       !window.confirm(
@@ -265,7 +271,8 @@ export function HomepageSectionEditor() {
 
   function openDraftPreview() {
     try {
-      sessionStorage.setItem(
+      // localStorage: popup opened with noopener cannot read the opener's sessionStorage.
+      localStorage.setItem(
         "lh-theme-draft-preview",
         JSON.stringify({ sections, viewport, savedAt: Date.now() }),
       );
@@ -318,6 +325,7 @@ export function HomepageSectionEditor() {
           <label className="mt-2 block text-xs">
             HTTPS image URL
             <input
+              data-testid={`theme-image-${f.key}`}
               className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-2 py-1.5 text-xs"
               value={url}
               onChange={(e) => updateSetting(f.key, e.target.value.trim())}
@@ -434,6 +442,7 @@ export function HomepageSectionEditor() {
                   {v.id !== livePublishedVersionId ? (
                     <button
                       type="button"
+                      data-testid={`theme-rollback-${v.id}`}
                       className="mt-1 font-semibold text-[var(--lh-action)]"
                       disabled={busy}
                       onClick={() => rollbackTo(v.id)}
@@ -567,7 +576,8 @@ export function HomepageSectionEditor() {
 
         <button
           type="button"
-          disabled={!hydrated || busy || migrationRequired}
+          data-testid="theme-save-draft"
+          disabled={!hydrated || !loaded || busy || migrationRequired || sections.length < 1}
           onClick={saveDraft}
           className="mt-5 w-full rounded-lg bg-[var(--lh-action)] px-3 py-2 text-sm font-semibold text-white disabled:opacity-50"
         >
@@ -575,7 +585,8 @@ export function HomepageSectionEditor() {
         </button>
         <button
           type="button"
-          disabled={!hydrated || busy || migrationRequired}
+          data-testid="theme-open-preview"
+          disabled={!hydrated || !loaded || busy || migrationRequired || sections.length < 1}
           onClick={openDraftPreview}
           className="mt-2 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2 text-sm font-semibold disabled:opacity-50"
         >
@@ -583,15 +594,20 @@ export function HomepageSectionEditor() {
         </button>
         <button
           type="button"
-          disabled={!hydrated || busy || migrationRequired}
+          data-testid="theme-publish"
+          disabled={!hydrated || !loaded || busy || migrationRequired || sections.length < 1}
           onClick={publishDraft}
           className="mt-2 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2 text-sm font-semibold disabled:opacity-50"
         >
           Publish (immutable snapshot)
         </button>
-        {notice ? <p className="mt-2 text-xs text-[var(--adm-success)]">{notice}</p> : null}
+        {notice ? (
+          <p data-testid="theme-notice" role="status" className="mt-2 text-xs text-[var(--adm-success)]">
+            {notice}
+          </p>
+        ) : null}
         {err ? (
-          <p className="mt-2 text-xs text-[var(--adm-danger)]" role="alert">
+          <p data-testid="theme-error" className="mt-2 text-xs text-[var(--adm-danger)]" role="alert">
             {err}
           </p>
         ) : null}

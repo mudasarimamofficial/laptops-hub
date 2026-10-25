@@ -39,32 +39,32 @@ ALTER TABLE public.theme_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.theme_versions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.theme_publications ENABLE ROW LEVEL SECURITY;
 
+-- Staff may SELECT only. Draft save / publish / rollback go through SECURITY DEFINER RPCs
+-- (see 20261025140000 + 20261025150000). No authenticated table DML.
 DROP POLICY IF EXISTS theme_templates_staff ON public.theme_templates;
-CREATE POLICY theme_templates_staff ON public.theme_templates
-  FOR ALL TO authenticated
-  USING (public.is_staff())
-  WITH CHECK (public.is_staff());
+DROP POLICY IF EXISTS theme_templates_staff_select ON public.theme_templates;
+CREATE POLICY theme_templates_staff_select ON public.theme_templates
+  FOR SELECT TO authenticated
+  USING (public.is_staff());
 
 DROP POLICY IF EXISTS theme_versions_staff ON public.theme_versions;
-CREATE POLICY theme_versions_staff ON public.theme_versions
-  FOR ALL TO authenticated
-  USING (public.is_staff())
-  WITH CHECK (public.is_staff());
+DROP POLICY IF EXISTS theme_versions_staff_select ON public.theme_versions;
+CREATE POLICY theme_versions_staff_select ON public.theme_versions
+  FOR SELECT TO authenticated
+  USING (public.is_staff());
 
 DROP POLICY IF EXISTS theme_publications_staff ON public.theme_publications;
-CREATE POLICY theme_publications_staff ON public.theme_publications
-  FOR ALL TO authenticated
-  USING (public.is_staff())
-  WITH CHECK (public.is_staff());
+DROP POLICY IF EXISTS theme_publications_staff_select ON public.theme_publications;
+CREATE POLICY theme_publications_staff_select ON public.theme_publications
+  FOR SELECT TO authenticated
+  USING (public.is_staff());
 
--- Public may read publication pointers + published version payloads only via security definer later;
--- for now revoke anon access (storefront keeps hardcoded V5 until wired).
-REVOKE ALL ON public.theme_templates FROM anon;
-REVOKE ALL ON public.theme_versions FROM anon;
-REVOKE ALL ON public.theme_publications FROM anon;
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.theme_templates TO authenticated;
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.theme_versions TO authenticated;
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.theme_publications TO authenticated;
+REVOKE ALL ON public.theme_templates FROM anon, authenticated;
+REVOKE ALL ON public.theme_versions FROM anon, authenticated;
+REVOKE ALL ON public.theme_publications FROM anon, authenticated;
+GRANT SELECT ON public.theme_templates TO authenticated;
+GRANT SELECT ON public.theme_versions TO authenticated;
+GRANT SELECT ON public.theme_publications TO authenticated;
 GRANT ALL ON public.theme_templates TO service_role;
 GRANT ALL ON public.theme_versions TO service_role;
 GRANT ALL ON public.theme_publications TO service_role;

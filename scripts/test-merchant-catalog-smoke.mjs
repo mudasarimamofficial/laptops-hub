@@ -313,33 +313,45 @@ await check("order_items FK survives product soft-delete (no cascade wipe)", asy
 });
 
 await check("theme working-draft save/retrieve", async () => {
-  const { data: t } = await sb.from("theme_templates").select("id").eq("key", "homepage").single();
-  const sections = [
-    { id: "hero", type: "v5_cinematic_hero", enabled: true, label: "Hero", settings: { productHandles: [handle] } },
-  ];
-  const { data: existing } = await sb
-    .from("theme_versions")
-    .select("id")
-    .eq("template_id", t.id)
-    .eq("label", "working-draft")
+  const { data: ownerMem } = await sb
+    .from("admin_memberships")
+    .select("user_id")
+    .eq("role", "owner")
+    .eq("is_active", true)
+    .limit(1)
     .maybeSingle();
-  if (existing) {
-    const { error } = await sb.from("theme_versions").update({ sections }).eq("id", existing.id);
-    assert(!error, error?.message);
-  } else {
-    const { error } = await sb.from("theme_versions").insert({
-      template_id: t.id,
-      label: "working-draft",
-      status: "draft",
-      sections,
+  let actorId = ownerMem?.user_id;
+  if (!actorId) {
+    const email = `smoke-theme-owner-${Date.now()}@lh-test.local`;
+    const { data: u, error: uErr } = await sb.auth.admin.createUser({
+      email,
+      password: "SmokeThemeOwner1!",
+      email_confirm: true,
     });
-    assert(!error, error?.message);
+    assert(!uErr && u.user, uErr?.message || "owner create failed");
+    actorId = u.user.id;
+    await sb.from("admin_memberships").upsert({ user_id: actorId, role: "owner", is_active: true });
   }
+  const sections = [
+    {
+      id: "hero",
+      type: "v5_cinematic_hero",
+      enabled: true,
+      label: "Hero",
+      settings: {
+        productHandles: [handle],
+        mainImageUrl: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111",
+      },
+    },
+  ];
+  const { data: saved, error } = await sb.rpc("save_homepage_draft", {
+    payload: { actor_user_id: actorId, sections },
+  });
+  assert(!error && saved?.version_id, error?.message || "draft RPC failed");
   const { data: got } = await sb
     .from("theme_versions")
     .select("sections")
-    .eq("template_id", t.id)
-    .eq("label", "working-draft")
+    .eq("id", saved.version_id)
     .single();
   assert(got.sections[0].settings.productHandles[0] === handle);
 });

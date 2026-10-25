@@ -121,44 +121,26 @@ export async function PUT(request: Request) {
       .eq("label", "working-draft")
       .maybeSingle();
 
-    let versionId = existing?.id as string | undefined;
-    if (existing) {
-      const { error } = await supabase
-        .from("theme_versions")
-        .update({ sections: parsed.data.sections, status: "draft" })
-        .eq("id", existing.id);
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    } else {
-      const { data: created, error } = await supabase
-        .from("theme_versions")
-        .insert({
-          template_id: template.id,
-          label: "working-draft",
-          status: "draft",
-          sections: parsed.data.sections,
-          created_by: staff.userId,
-        })
-        .select("id")
-        .single();
-      if (error || !created) return NextResponse.json({ error: error?.message || "save_failed" }, { status: 500 });
-      versionId = created.id;
-    }
-
-    await supabase.from("audit_logs").insert({
-      actor_user_id: staff.userId,
-      action: "theme.homepage.draft_save",
-      entity_type: "theme_versions",
-      entity_id: versionId || null,
-      after: { sectionCount: parsed.data.sections.length },
+    const { data: saved, error: saveErr } = await supabase.rpc("save_homepage_draft", {
+      payload: {
+        actor_user_id: staff.userId,
+        sections: parsed.data.sections,
+      },
     });
+    if (saveErr) {
+      const msg = saveErr.message || "save_failed";
+      const status = /forbidden/i.test(msg) ? 403 : /invalid|unsafe|unsupported/i.test(msg) ? 400 : 500;
+      return NextResponse.json({ error: "draft_save_failed", message: msg }, { status });
+    }
+    const versionId = (saved as { version_id?: string } | null)?.version_id || existing?.id || null;
 
     return NextResponse.json(
       {
         ok: true,
         published: false,
-        versionId: versionId || null,
+        versionId,
         notice:
-          "Draft saved. Logged-out visitors still see the last published snapshot (or V5 code defaults). Publish creates a new immutable published version.",
+          "Draft saved via authorized RPC. Logged-out visitors still see the last published snapshot (or V5 code defaults). Publish creates a new immutable published version.",
       },
       { headers: { "Cache-Control": "no-store" } },
     );

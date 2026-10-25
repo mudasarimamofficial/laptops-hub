@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import {
   detectShopifyCsvProfile,
@@ -8,6 +8,7 @@ import {
   summarizeStaging,
   type CanonicalField,
 } from "@/lib/catalog/shopify-csv";
+import { ImportJobHistory } from "@/components/admin/import-job-history";
 
 type PreviewState = {
   profile: string;
@@ -73,6 +74,7 @@ function parseCsvClient(text: string): { headers: string[]; rows: Record<string,
 
 export function ShopifyImportWizard() {
   const hydrated = useHydrated();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [csvText, setCsvText] = useState<string | null>(null);
   const [preview, setPreview] = useState<PreviewState | null>(null);
@@ -80,6 +82,9 @@ export function ShopifyImportWizard() {
   const [strategy, setStrategy] = useState<"add_only" | "update_by_handle" | "skip_conflicts">("add_only");
   const [busy, setBusy] = useState(false);
   const [serverReport, setServerReport] = useState<ServerReport | null>(null);
+  const [historyKey, setHistoryKey] = useState(0);
+  const [retryHint, setRetryHint] = useState<string | null>(null);
+  const [expectedFingerprint, setExpectedFingerprint] = useState<string | null>(null);
 
   async function onFile(file: File | null) {
     setErr(null);
@@ -140,6 +145,12 @@ export function ShopifyImportWizard() {
         return;
       }
       setServerReport(data);
+      setHistoryKey((k) => k + 1);
+      if (expectedFingerprint && data.fingerprint && expectedFingerprint !== data.fingerprint) {
+        setErr(
+          `CSV fingerprint differs from the job you are retrying (expected ${expectedFingerprint.slice(0, 10)}…). Strategy was restored; verify you attached the same file.`,
+        );
+      }
     } catch {
       setErr("Network error — try again.");
     } finally {
@@ -153,6 +164,7 @@ export function ShopifyImportWizard() {
         <label className="block text-sm font-medium">
           Shopify product CSV
           <input
+            ref={fileInputRef}
             type="file"
             accept=".csv,text/csv"
             className="mt-2 block w-full text-sm"
@@ -161,6 +173,11 @@ export function ShopifyImportWizard() {
           />
         </label>
         {fileName ? <p className="mt-2 text-xs text-[var(--adm-ink-2)]">Selected: {fileName}</p> : null}
+        {retryHint ? (
+          <p className="mt-2 text-sm text-[var(--adm-ink)]" role="status" data-testid="import-retry-hint">
+            {retryHint}
+          </p>
+        ) : null}
         {err ? (
           <p className="mt-3 text-sm text-[var(--adm-danger)]" role="alert">
             {err}
@@ -286,6 +303,27 @@ export function ShopifyImportWizard() {
           ) : null}
         </div>
       ) : null}
+
+      <ImportJobHistory
+        key={historyKey}
+        onRetryJob={(job) => {
+          const nextStrategy =
+            job.strategy === "update_by_handle" || job.strategy === "skip_conflicts" || job.strategy === "add_only"
+              ? job.strategy
+              : "add_only";
+          setStrategy(nextStrategy);
+          setExpectedFingerprint(job.source_fingerprint || null);
+          setRetryHint(
+            `Retrying job ${job.id.slice(0, 8)}… with strategy “${nextStrategy}”. Re-attach ${job.source_filename || "the same CSV"}, then dry-run or commit.`,
+          );
+          setServerReport(null);
+          setPreview(null);
+          setCsvText(null);
+          setFileName(null);
+          fileInputRef.current?.focus();
+          fileInputRef.current?.click();
+        }}
+      />
     </div>
   );
 }

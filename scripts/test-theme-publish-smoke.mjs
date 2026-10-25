@@ -29,55 +29,34 @@ await admin.from("admin_memberships").upsert({
   is_active: true,
 });
 
-const { data: draft } = await admin
-  .from("theme_versions")
-  .select("id, sections")
-  .eq("label", "working-draft")
-  .maybeSingle();
-
-let sourceId = draft?.id;
-if (!sourceId) {
-  const { data: tpl } = await admin.from("theme_templates").select("id").eq("key", "homepage").single();
-  const sections = [
-    {
-      id: "hero",
-      type: "v5_cinematic_hero",
-      enabled: true,
-      label: "Cinematic hero",
-      settings: {
-        mainImageUrl: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111",
-        side1ImageUrl: "https://example.com/draft-only-hp.webp",
-        side2ImageUrl: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111",
-        productHandles: [
-          "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
-          "hp-probook-640-g2-core-i5-6th-gen-8gb-ram-256gb-storage",
-          "lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage",
-        ],
-      },
+const sections = [
+  {
+    id: "hero",
+    type: "v5_cinematic_hero",
+    enabled: true,
+    label: "Cinematic hero",
+    settings: {
+      mainImageUrl:
+        "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111",
+      side1ImageUrl: "https://example.com/draft-only-hp.webp",
+      side2ImageUrl:
+        "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111",
+      productHandles: [
+        "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+        "hp-probook-640-g2-core-i5-6th-gen-8gb-ram-256gb-storage",
+        "lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage",
+      ],
     },
-  ];
-  const { data: inserted, error } = await admin
-    .from("theme_versions")
-    .insert({
-      template_id: tpl.id,
-      label: "working-draft",
-      status: "draft",
-      sections,
-      created_by: userId,
-    })
-    .select("id")
-    .single();
-  if (error) throw error;
-  sourceId = inserted.id;
-} else {
-  // Mark a distinctive draft-only URL so we can prove publish copied it
-  const sections = Array.isArray(draft.sections) ? draft.sections : [];
-  const hero = sections.find((s) => s.type === "v5_cinematic_hero") || sections[0];
-  if (hero) {
-    hero.settings = { ...(hero.settings || {}), side1ImageUrl: "https://example.com/draft-only-hp.webp" };
-  }
-  await admin.from("theme_versions").update({ sections, status: "draft" }).eq("id", sourceId);
+  },
+];
+const { data: saved, error: saveErr } = await admin.rpc("save_homepage_draft", {
+  payload: { actor_user_id: userId, sections },
+});
+if (saveErr || !saved?.version_id) {
+  console.error("draft save failed", saveErr || saved);
+  process.exit(1);
 }
+const sourceId = saved.version_id;
 
 // Public must NOT see drafts via tables
 const { data: leaked, error: leakErr } = await publicClient.from("theme_versions").select("id").limit(1);

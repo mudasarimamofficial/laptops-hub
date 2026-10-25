@@ -18,12 +18,13 @@ export default function OnlineStoreDraftPreviewPage() {
 
   useEffect(() => {
     try {
-      const raw = sessionStorage.getItem("lh-theme-draft-preview");
+      const raw = localStorage.getItem("lh-theme-draft-preview");
       if (!raw) {
         setErr("No draft preview found. Open Customize and click “Open draft preview” again.");
         return;
       }
       setParsed(JSON.parse(raw) as DraftPayload);
+      localStorage.removeItem("lh-theme-draft-preview");
     } catch {
       setErr("Draft preview payload could not be read.");
     }

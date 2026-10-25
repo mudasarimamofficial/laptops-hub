@@ -11,6 +11,7 @@
 | Item | Value |
 |---|---|
 | Git branch | `feat/merchant-operating-system` (from `main`) |
+| Branch HEAD | see `git log -1` (includes admin shell + catalog ops commits) |
 | `main` HEAD at branch cut | `2b43236671983f22ed8766fc765addf4ea44a7d3` (PR #9) |
 | Supabase ref | `xvmmjkrkgznnakcobmww` |
 | Migration ledger (remote) | **14/14** applied through `20261024100000` — **no Production push of new migration yet** |
@@ -55,17 +56,26 @@
 
 ---
 
+### Phase 3 / 4 progress (continued)
+
+- [x] Collections create API + form (manual / automated rule JSON)
+- [x] Collection membership add/remove/reorder + product search API
+- [x] Shopify modern CSV **export** endpoint + Admin download links
+- [x] Inventory mode controls on product edit form
+- [x] `docs/SHOPIFY_CSV_COMPATIBILITY_MATRIX.md`
+
 ## NOT done (continue next)
 
-1. Apply `20261025120000` on **local** Supabase; regenerate types if used; never `db push --linked` without owner approval  
-2. Full product edit: options matrix, multi-variant create, SEO fields, inventory mode on form  
-3. Collections create/edit API + smart rules + drag membership  
-4. CSV dry-run/commit job runner on isolated DB + export endpoints  
-5. Site builder schema + customize UI (Phase 5)  
-6. Orders/settings modular redesign (Phase 6)  
-7. E2E Playwright for admin shell + product create + media  
-8. Docs: design system, data model, CSV matrix, media policy, handbook (stubs → fill)  
-9. Protected Preview on feature branch (no Production merge)
+1. Apply `20261025120000` on **local** Supabase only; never `db push --linked` without owner approval  
+2. Options/variant matrix UI; SEO fields on product form; compare-at  
+3. Smart-collection rule evaluator for storefront counts  
+4. CSV dry-run/commit job runner on isolated DB (import commit still gated)  
+5. Legacy CSV export + LH extended / inventory / membership sidecars  
+6. Site builder schema + customize UI (Phase 5)  
+7. Orders/settings modular redesign (Phase 6)  
+8. E2E Playwright for admin shell + product create + media + export  
+9. Push branch for protected Preview (owner/agent may push when ready)  
+10. Merchant handbook screenshots from real Admin
 
 ---
 
@@ -83,18 +93,16 @@
 git checkout feat/merchant-operating-system
 git status
 npm run test:unit
-# local migration only, when local stack is up:
-npx supabase start
-npx supabase db reset   # isolated — NEVER against linked Production
-# or: npx supabase migration up --local
 npm run build
 npm run dev
+# local migration only:
+npx supabase start
+npx supabase db reset   # isolated — NEVER against linked Production
 ```
 
 ## NEXT ACTION
 
-1. Run unit tests + `next build` to catch type/route errors  
-2. Start/apply migration on local Supabase  
-3. Extend `ProductEditForm` with inventory mode, SEO, compare-at  
-4. Implement `POST /api/admin/collections` + membership editor  
-5. Server-side CSV dry-run against local DB
+1. Local Supabase: apply `20261025120000` and smoke product soft-delete columns  
+2. CSV dry-run API writing to `import_jobs` on isolated DB  
+3. Phase 5: seed V5 homepage section schema (draft only, no Production publish)  
+4. Optional: `git push -u origin feat/merchant-operating-system` for Vercel Preview

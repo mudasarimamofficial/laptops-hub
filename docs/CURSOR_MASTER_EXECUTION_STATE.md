@@ -10,7 +10,7 @@
 
 | Item | Value |
 |---|---|
-| Branch HEAD | `ff408a3` |
+| Branch HEAD | `2b6cecc` |
 | `main` cut | `2b43236` |
 | Supabase Production | `xvmmjkrkgznnakcobmww` — **14 migrations only** (no 20261025\* applied) |
 | Local Supabase | Docker · **16** migrations incl. `20261025120000` + `20261025130000` |

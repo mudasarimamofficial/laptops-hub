@@ -64,6 +64,15 @@
 - [x] Inventory mode controls on product edit form
 - [x] `docs/SHOPIFY_CSV_COMPATIBILITY_MATRIX.md`
 
+### Phase 5 start
+
+- [x] `theme_templates` / `theme_versions` / `theme_publications` migration draft (`20261025130000`)
+- [x] Section registry + V5 homepage defaults (`site-builder-schema.ts`)
+- [x] Admin Customize UI (draft tree / inspector) + `GET/PUT /api/admin/theme/homepage`
+- [x] `docs/SITE_BUILDER_SCHEMA.md`
+- [ ] Storefront read of published pointer (not wired — V5 code path preserved)
+- [ ] Publish / rollback / accurate iframe preview
+
 ## NOT done (continue next)
 
 1. Apply `20261025120000` on **local** Supabase only; never `db push --linked` without owner approval  

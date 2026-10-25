@@ -1,98 +1,78 @@
 # CURSOR MASTER EXECUTION STATE
 
-**Updated:** 2026-10-25 (PKT)  
+**Updated:** 2026-10-25 (PKT) — post local migration smoke + CSV commit  
 **Mandate:** Enterprise merchant admin · Shopify CSV · site editor · COD-only  
-**Bible:** session-ingested `LAPTOPS_HUB_CURSOR_ULTIMATE_ENTERPRISE_ADMIN_COD_MASTER_BIBLE_2026-10-25` (authoritative brief)
+**Branch:** `feat/merchant-operating-system`
 
 ---
 
-## Verified baseline (read-only)
+## Verified baseline
 
 | Item | Value |
 |---|---|
-| Git branch | `feat/merchant-operating-system` (from `main`) |
-| Branch HEAD | see `git log -1` (includes admin shell + catalog ops commits) |
-| `main` HEAD at branch cut | `2b43236671983f22ed8766fc765addf4ea44a7d3` (PR #9) |
-| Supabase ref | `xvmmjkrkgznnakcobmww` |
-| Migration ledger (remote) | **14/14** applied through `20261024100000` — **no Production push of new migration yet** |
-| Catalog | 232 products · 226 active · 6 draft · 964 media · 16 collections · **0** shipping zones |
-| COD | DB `cod_checkout.enabled=false` · keep env gate OFF |
-| Production | Vercel project `laptops-hub` Ready; do not merge/deploy without owner approval |
+| Branch HEAD | see `git log -1` |
+| `main` cut | `2b43236` |
+| Supabase Production | `xvmmjkrkgznnakcobmww` — **14 migrations only** (no 20261025\* applied) |
+| Local Supabase | Docker up · `supabase db reset` applied **all 16** migrations incl. `20261025120000` + `20261025130000` |
+| COD | OFF everywhere for Production |
 
 ---
 
-## Completed this session
+## Local migration smoke (2026-10-25)
 
-### Phase 0
-- [x] Confirm GitHub `main` HEAD matches Bible baseline
-- [x] Read-only Supabase migration list + catalog counts
-- [x] Capability gap matrix started (`docs/ENTERPRISE_ADMIN_EXECUTION_MATRIX.md`)
-- [x] Feature branch created
+```
+npx supabase db reset   # LOCAL ONLY — succeeded
+npm run test:merchant:smoke   # 25/25
+npm run test:merchant:csv     # dry-run + commit + idempotent reimport OK
+npm run test:unit             # all green incl. collection-rule-eval + shopify csv/export
+npm run build                 # green
+```
 
-### Phase 1 — Admin shell
-- [x] Premium sidebar + mobile nav (`src/components/admin/shell/*`)
-- [x] Admin design tokens (`src/styles/admin.css`) — storefront V5 tokens untouched
-- [x] Shared UI: page header, status badge, empty state, module status panel
-- [x] Overview dashboard with live operational counts + COD readiness strip
-- [x] Nav IA wired for all merchant sections
-
-### Phase 2 — Product / media foundations
-- [x] Additive migration draft `supabase/migrations/20261025120000_merchant_catalog_extensions.sql` (**local only**)
-- [x] Product list: thumbnails, inventory badge, media counts, rights pending
-- [x] Create product UI + `POST /api/admin/products`
-- [x] Soft-delete / archive / restore via `DELETE`/`PATCH` on `/api/admin/products/[handle]`
-- [x] Media URL add / reorder / remove API + product media manager (external HTTPS; rights stay pending)
-- [x] Shopify CSV detect/stage helpers + import **preview** wizard (commit gated)
-- [x] Unit test `tests/unit/shopify-csv.test.ts`
-
-### Scaffolded with real reads (honest incomplete UX)
-- Collections list + detail read
-- Inventory counts by mode
-- Customers from orders
-- Media library grid
-- Analytics (orders / COD collected / inquiries)
-- Activity log
-- Online store / navigation / SEO / bulk / export status panels
+Defects found & fixed during smoke:
+1. PostgREST bulk insert nulls `health_status` (bypasses DEFAULT) → always set in API/smoke  
+2. Media reorder unique `(product_id, position)` collisions → two-phase reorder  
 
 ---
 
-### Phase 3 / 4 progress (continued)
+## Completed capabilities
 
-- [x] Collections create API + form (manual / automated rule JSON)
-- [x] Collection membership add/remove/reorder + product search API
-- [x] Shopify modern CSV **export** endpoint + Admin download links
-- [x] Inventory mode controls on product edit form
-- [x] `docs/SHOPIFY_CSV_COMPATIBILITY_MATRIX.md`
+### Admin / catalog
+- Premium admin shell + IA routes  
+- Product create/edit/SEO/inventory/media/archive/soft-delete/restore/duplicate  
+- Collections create + membership + **automated rule evaluator** wired into `resolveCollection` (`db-rule`)  
+- Shopify CSV: client preview · **server dry-run** · **local commit** (Production host blocked) · modern export  
+- Theme: draft editor · local publish API · `THEME_PUBLISHED_ENABLED=1` gate for storefront read (default off = V5 code path)
 
-### Phase 5 start
+### Migrations (local only — NOT Production)
+- `20261025120000_merchant_catalog_extensions.sql`  
+- `20261025130000_site_builder_sections.sql`
 
-- [x] `theme_templates` / `theme_versions` / `theme_publications` migration draft (`20261025130000`)
-- [x] Section registry + V5 homepage defaults (`site-builder-schema.ts`)
-- [x] Admin Customize UI (draft tree / inspector) + `GET/PUT /api/admin/theme/homepage`
-- [x] `docs/SITE_BUILDER_SCHEMA.md`
-- [ ] Storefront read of published pointer (not wired — V5 code path preserved)
-- [ ] Publish / rollback / accurate iframe preview
-
-## NOT done (continue next)
-
-1. Apply `20261025120000` on **local** Supabase only; never `db push --linked` without owner approval  
-2. Options/variant matrix UI; SEO fields on product form; compare-at  
-3. Smart-collection rule evaluator for storefront counts  
-4. CSV dry-run/commit job runner on isolated DB (import commit still gated)  
-5. Legacy CSV export + LH extended / inventory / membership sidecars  
-6. Site builder schema + customize UI (Phase 5)  
-7. Orders/settings modular redesign (Phase 6)  
-8. E2E Playwright for admin shell + product create + media + export  
-9. Push branch for protected Preview (owner/agent may push when ready)  
-10. Merchant handbook screenshots from real Admin
+### Docs
+- Execution matrix, media policy, data model, CSV matrix, site builder schema, this file  
 
 ---
 
-## COD / Production guards
+## NOT done / next
 
-- Keep `COD_CHECKOUT_ENABLED` off and DB `cod_checkout.enabled=false`
-- No Production schema mutation, catalog import commit, content publish, or live COD
-- Do not run `scripts/import-catalog.mjs` against Production
+1. Bulk editor grid + hard-delete eligibility UI  
+2. Full variant options matrix builder  
+3. Legacy + LH sidecar CSV exports  
+4. Wire homepage `page.tsx` to published sections behind env flag (code helper ready)  
+5. Accurate iframe preview + rollback UI  
+6. Orders/settings enterprise redesign  
+7. Playwright admin E2E against local stack  
+8. Protected Preview after push (mutating admin needs isolated DB — Production schema lacks new columns)
+
+---
+
+## Production boundaries (unchanged)
+
+Never: Production migrate · Production CSV commit · theme publish to Prod · COD on · merge `main`
+
+### Owner approval package (when ready)
+1. Review SQL diffs for both 20261025 migrations  
+2. Approve Preview with isolated DB or read-only Preview against Prod (limited)  
+3. Later: Production migrate + controlled launch sequence  
 
 ---
 
@@ -100,18 +80,19 @@
 
 ```bash
 git checkout feat/merchant-operating-system
-git status
+# Docker Desktop running:
+npx supabase start
+$env:NEXT_PUBLIC_SUPABASE_URL="http://127.0.0.1:54321"
+# + local ANON + SERVICE_ROLE from `npx supabase status`
+npm run test:merchant:smoke
+npm run test:merchant:csv
 npm run test:unit
 npm run build
-npm run dev
-# local migration only:
-npx supabase start
-npx supabase db reset   # isolated — NEVER against linked Production
+git push -u origin feat/merchant-operating-system   # Preview
 ```
 
 ## NEXT ACTION
 
-1. Local Supabase: apply `20261025120000` and smoke product soft-delete columns  
-2. CSV dry-run API writing to `import_jobs` on isolated DB  
-3. Phase 5: seed V5 homepage section schema (draft only, no Production publish)  
-4. Optional: `git push -u origin feat/merchant-operating-system` for Vercel Preview
+1. Push feature branch for Vercel Preview (read-only/smoke safe; mutating admin against Prod schema incomplete)  
+2. Continue bulk editor + variant matrix + storefront theme wire behind flag  
+3. Playwright local admin journeys

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import {
   detectShopifyCsvProfile,
@@ -18,8 +18,16 @@ type PreviewState = {
   sampleHandles: string[];
 };
 
+type ServerReport = {
+  dryRun: boolean;
+  jobId?: string | null;
+  summary?: Record<string, number>;
+  results?: { handle: string; action: string; message?: string }[];
+  error?: string;
+  message?: string;
+};
+
 function parseCsvClient(text: string): { headers: string[]; rows: Record<string, string>[] } {
-  // Minimal RFC4180-ish parser for browser preview (server commit path will re-parse with csv-parse).
   const rows: string[][] = [];
   let cell = "";
   let row: string[] = [];
@@ -32,14 +40,10 @@ function parseCsvClient(text: string): { headers: string[]; rows: Record<string,
       if (c === '"' && next === '"') {
         cell += '"';
         i++;
-      } else if (c === '"') {
-        inQuotes = false;
-      } else {
-        cell += c;
-      }
-    } else if (c === '"') {
-      inQuotes = true;
-    } else if (c === ",") {
+      } else if (c === '"') inQuotes = false;
+      else cell += c;
+    } else if (c === '"') inQuotes = true;
+    else if (c === ",") {
       row.push(cell);
       cell = "";
     } else if (c === "\n") {
@@ -47,39 +51,41 @@ function parseCsvClient(text: string): { headers: string[]; rows: Record<string,
       rows.push(row);
       row = [];
       cell = "";
-    } else if (c === "\r") {
-      // skip; handle CRLF via \n
-    } else {
-      cell += c;
-    }
+    } else if (c !== "\r") cell += c;
   }
   if (cell.length || row.length) {
     row.push(cell);
     rows.push(row);
   }
-
   const headers = (rows[0] || []).map((h) => h.trim());
   const dataRows = rows.slice(1).filter((r) => r.some((c) => c.trim() !== ""));
-  const mapped = dataRows.map((r) => {
-    const obj: Record<string, string> = {};
-    headers.forEach((h, i) => {
-      obj[h] = r[i] ?? "";
-    });
-    return obj;
-  });
-  return { headers, rows: mapped };
+  return {
+    headers,
+    rows: dataRows.map((r) => {
+      const obj: Record<string, string> = {};
+      headers.forEach((h, i) => {
+        obj[h] = r[i] ?? "";
+      });
+      return obj;
+    }),
+  };
 }
 
 export function ShopifyImportWizard() {
   const hydrated = useHydrated();
   const [fileName, setFileName] = useState<string | null>(null);
+  const [csvText, setCsvText] = useState<string | null>(null);
   const [preview, setPreview] = useState<PreviewState | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [strategy, setStrategy] = useState<"add_only" | "update_by_handle" | "skip_conflicts">("add_only");
+  const [busy, setBusy] = useState(false);
+  const [serverReport, setServerReport] = useState<ServerReport | null>(null);
 
   async function onFile(file: File | null) {
     setErr(null);
     setPreview(null);
+    setServerReport(null);
+    setCsvText(null);
     if (!file) return;
     if (!file.name.toLowerCase().endsWith(".csv")) {
       setErr("Please upload a .csv file.");
@@ -91,6 +97,7 @@ export function ShopifyImportWizard() {
     }
     setFileName(file.name);
     const text = await file.text();
+    setCsvText(text);
     const { headers, rows } = parseCsvClient(text);
     const detected = detectShopifyCsvProfile(headers);
     if (detected.profile === "unknown") {
@@ -109,10 +116,36 @@ export function ShopifyImportWizard() {
     });
   }
 
-  const canCommitHint = useMemo(() => {
-    if (!preview) return null;
-    return "Dry-run and commit against Production are blocked until owner approval. Use an isolated Supabase stack for mutation tests.";
-  }, [preview]);
+  async function runServer(dryRun: boolean) {
+    if (!csvText) return;
+    setBusy(true);
+    setErr(null);
+    setServerReport(null);
+    try {
+      const res = await fetch("/api/admin/products/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          csvText,
+          filename: fileName,
+          strategy,
+          dryRun,
+          confirmCommit: dryRun ? undefined : true,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setErr(data.message || data.error || `Import failed (${res.status})`);
+        setServerReport({ dryRun, error: data.error, message: data.message });
+        return;
+      }
+      setServerReport(data);
+    } catch {
+      setErr("Network error — try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -137,7 +170,7 @@ export function ShopifyImportWizard() {
 
       {preview ? (
         <div className="rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-6 shadow-[var(--adm-shadow)]">
-          <h2 className="font-[family-name:var(--font-display)] text-lg font-bold">Preview</h2>
+          <h2 className="font-[family-name:var(--font-display)] text-lg font-bold">Client preview</h2>
           <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-sm">
             <div>
               <dt className="text-[var(--adm-ink-2)]">Detected profile</dt>
@@ -189,7 +222,7 @@ export function ShopifyImportWizard() {
           ) : null}
 
           <label className="mt-5 block text-sm">
-            <span className="font-medium">Import strategy (for future commit)</span>
+            <span className="font-medium">Import strategy</span>
             <select
               className="mt-1 w-full max-w-md rounded-lg border border-[var(--adm-border)] px-3 py-2"
               value={strategy}
@@ -202,18 +235,55 @@ export function ShopifyImportWizard() {
           </label>
 
           <p className="mt-4 rounded-lg border border-[var(--adm-border)] bg-[var(--adm-surface-2)] px-3 py-2 text-sm text-[var(--adm-ink-2)]">
-            {canCommitHint} Missing products from a CSV are never deleted. Image URLs stay as remote references with
-            pending rights.
+            Missing products from a CSV are never deleted. Image URLs stay as remote references with pending rights.
+            Server dry-run writes an import_jobs report. Commit is allowed only against local Supabase.
           </p>
 
-          <button
-            type="button"
-            disabled
-            className="mt-4 rounded-lg bg-[var(--lh-action)] px-4 py-2.5 text-sm font-semibold text-white opacity-50"
-            title="Requires isolated DB + owner approval for Production"
-          >
-            Commit import (gated)
-          </button>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <button
+              type="button"
+              disabled={!hydrated || busy || !csvText}
+              onClick={() => runServer(true)}
+              className="rounded-lg border border-[var(--adm-border)] px-4 py-2.5 text-sm font-semibold disabled:opacity-50"
+            >
+              {busy ? "Working…" : "Server dry-run"}
+            </button>
+            <button
+              type="button"
+              disabled={!hydrated || busy || !csvText}
+              onClick={() => {
+                if (!confirm("Commit this import to the connected database? Blocked on Production hosts.")) return;
+                runServer(false);
+              }}
+              className="rounded-lg bg-[var(--lh-action)] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+            >
+              Commit (local DB only)
+            </button>
+          </div>
+
+          {serverReport ? (
+            <div className="mt-5 rounded-lg border border-[var(--adm-border)] bg-[var(--adm-surface-2)] p-4 text-sm">
+              <p className="font-semibold">
+                Server {serverReport.dryRun ? "dry-run" : "commit"} report
+                {serverReport.jobId ? ` · job ${serverReport.jobId.slice(0, 8)}…` : ""}
+              </p>
+              {serverReport.summary ? (
+                <pre className="mt-2 overflow-x-auto font-[family-name:var(--font-mono)] text-xs">
+                  {JSON.stringify(serverReport.summary, null, 2)}
+                </pre>
+              ) : null}
+              {serverReport.results?.length ? (
+                <ul className="mt-2 max-h-48 overflow-y-auto font-[family-name:var(--font-mono)] text-xs">
+                  {serverReport.results.slice(0, 40).map((r) => (
+                    <li key={`${r.handle}-${r.action}`}>
+                      {r.handle}: {r.action}
+                      {r.message ? ` (${r.message})` : ""}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>

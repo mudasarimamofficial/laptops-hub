@@ -20,7 +20,7 @@ export default async function AdminProductEditPage({ params }: Props) {
   const { data } = await supabase
     .from("products")
     .select(
-      "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, product_variants(id, title, sku, price_paisa, inventory_mode, quantity_on_hand), product_media(id, url, alt, position, approval)",
+      "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, seo_title, seo_description, product_variants(id, title, sku, price_paisa, inventory_mode, quantity_on_hand), product_media(id, url, alt, position, approval)",
     )
     .eq("handle", handle)
     .maybeSingle();
@@ -85,6 +85,8 @@ export default async function AdminProductEditPage({ params }: Props) {
         manufacturer={data.manufacturer}
         productType={data.product_type}
         category={data.category}
+        seoTitle={data.seo_title}
+        seoDescription={data.seo_description}
         variants={variants}
       />
 

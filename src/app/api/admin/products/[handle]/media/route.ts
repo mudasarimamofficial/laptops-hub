@@ -139,6 +139,8 @@ export async function POST(request: Request, ctx: Ctx) {
       source_provider: url.hostname.includes("shopify") ? "shopify_cdn" : null,
       variant_id: parsed.data.variantId ?? null,
       is_primary: parsed.data.isPrimary ?? nextPos === 1,
+      // PostgREST bulk/partial inserts can send NULL for omitted keys and bypass DEFAULT
+      health_status: "unknown",
     };
 
     let { data: row, error } = await supabase.from("product_media").insert(insert).select("id, url, alt, position").single();
@@ -190,6 +192,15 @@ export async function PATCH(request: Request, ctx: Ctx) {
       const parsed = reorderSchema.safeParse(body);
       if (!parsed.success) {
         return NextResponse.json({ error: "validation_failed" }, { status: 400 });
+      }
+      // Two-phase reorder avoids UNIQUE(product_id, position) collisions mid-swap
+      for (let i = 0; i < parsed.data.orderedIds.length; i++) {
+        const id = parsed.data.orderedIds[i];
+        await supabase
+          .from("product_media")
+          .update({ position: 10_000 + i })
+          .eq("id", id)
+          .eq("product_id", product.id);
       }
       for (let i = 0; i < parsed.data.orderedIds.length; i++) {
         const id = parsed.data.orderedIds[i];

@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import { CollectionMembershipEditor, type MemberRow } from "@/components/admin/collection-membership";
+import { CollectionRuleBuilder } from "@/components/admin/collection-rule-builder";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { StatusBadge } from "@/components/admin/ui/status-badge";
 import { requireStaffPage } from "@/lib/auth/staff";
+import { isAutomatedRule, type CollectionRule } from "@/lib/collections/rule-eval";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -40,7 +42,8 @@ export default async function AdminCollectionDetailPage({ params }: Props) {
     })
     .sort((a, b) => a.position - b.position);
 
-  const automated = data.rule && typeof data.rule === "object" && Object.keys(data.rule as object).length > 0;
+  const automated = isAutomatedRule(data.rule);
+  const rule = (data.rule && typeof data.rule === "object" ? data.rule : null) as CollectionRule | null;
 
   return (
     <>
@@ -57,20 +60,15 @@ export default async function AdminCollectionDetailPage({ params }: Props) {
       <div className="mb-6 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 text-sm">
         <p className="text-[var(--adm-ink-2)]">Description</p>
         <p className="mt-1 whitespace-pre-wrap">{data.description || "—"}</p>
-        {automated ? (
-          <>
-            <p className="mt-4 text-[var(--adm-ink-2)]">Rule JSON</p>
-            <pre className="mt-1 overflow-x-auto rounded-lg bg-[var(--adm-surface-2)] p-3 font-[family-name:var(--font-mono)] text-xs">
-              {JSON.stringify(data.rule ?? {}, null, 2)}
-            </pre>
-          </>
-        ) : null}
+      </div>
+      <div className="mb-6">
+        <CollectionRuleBuilder slug={data.slug} initialRule={automated ? rule : null} />
       </div>
       {!automated ? <CollectionMembershipEditor slug={data.slug} members={members} /> : null}
       {automated ? (
-        <p className="text-sm text-[var(--adm-ink-2)]">
-          Automated collections do not use manual membership. Rule evaluation against the catalog index is the next
-          Phase 3 slice.
+        <p className="mt-4 text-sm text-[var(--adm-ink-2)]">
+          Automated collections use rule matching for storefront membership. Clear rules above to switch back to manual
+          product assignment.
         </p>
       ) : null}
     </>

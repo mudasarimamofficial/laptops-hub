@@ -1,6 +1,6 @@
 # CURSOR MASTER EXECUTION STATE
 
-**Updated:** 2026-10-25 (PKT) — P0 Preview write guard + homepage image presets  
+**Updated:** 2026-10-25 (PKT) — write guard · homepage presets · variant matrix · rule builder  
 **Mandate:** Enterprise merchant admin · Shopify CSV · site editor · COD-only  
 **Branch:** `feat/merchant-operating-system`
 
@@ -10,7 +10,7 @@
 
 | Item | Value |
 |---|---|
-| Branch HEAD | see `git log -1` (was `3280964` before this session’s commits) |
+| Branch HEAD | `e61a011`+ (variant/rule commits may follow) |
 | `main` cut | `2b43236` |
 | Supabase Production | `xvmmjkrkgznnakcobmww` — **14 migrations only** (no 20261025\* applied) |
 | Local Supabase | Docker · **16** migrations incl. `20261025120000` + `20261025130000` |
@@ -66,15 +66,18 @@ CDN HEAD checks: all seven return **200**.
 
 ---
 
+## Also shipped after e61a011
+
+- Product **variant options matrix** (`ProductVariantMatrix` + `/api/admin/products/[handle]/variants`) — cartesian generate, SKU/price/inventory edit, ordered-variant safe removal  
+- Collections **visual rule builder** (AND/OR conditions) — replaces raw JSON as the only editor  
+
 ## NOT done / next
 
-1. Full variant options matrix builder  
-2. Legacy + LH sidecar CSV exports + durable import retry UX  
-3. Collections visual rule builder (non-JSON)  
-4. Accurate iframe preview + rollback UI in Customize  
-5. Orders/settings enterprise redesign  
-6. Playwright admin E2E against local stack  
-7. Owner-approved Production migration package  
+1. Legacy + LH sidecar CSV exports + durable import retry UX  
+2. Accurate iframe preview + rollback UI in Customize  
+3. Orders/settings enterprise redesign  
+4. Playwright admin E2E against local stack  
+5. Owner-approved Production migration package  
 
 ---
 

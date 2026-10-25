@@ -1,6 +1,6 @@
 # CURSOR MASTER EXECUTION STATE
 
-**Updated:** 2026-10-25 (PKT) — write guard · homepage presets · variant matrix · rule builder  
+**Updated:** 2026-10-25 (PKT) — theme publish/rollback verified · write-guard hardened · variant RPC  
 **Mandate:** Enterprise merchant admin · Shopify CSV · site editor · COD-only  
 **Branch:** `feat/merchant-operating-system`
 
@@ -10,74 +10,60 @@
 
 | Item | Value |
 |---|---|
-| Branch HEAD | `2b6cecc` |
+| Branch HEAD | see `git log -1` (target after this push) |
+| Prior GitHub HEAD at prompt | `baabd46` |
 | `main` cut | `2b43236` |
-| Supabase Production | `xvmmjkrkgznnakcobmww` — **14 migrations only** (no 20261025\* applied) |
-| Local Supabase | Docker · **16** migrations incl. `20261025120000` + `20261025130000` |
+| Supabase Production | `xvmmjkrkgznnakcobmww` — **14 migrations only** |
+| Local Supabase | **17 migrations** incl. `20261025140000_theme_publish_variant_rpc.sql` |
 | COD | OFF everywhere for Production |
 
 ---
 
-## Session deliverables (this checkpoint)
+## This milestone (P0 fixes)
 
-### P0 — Preview → Production write guard
-- `src/lib/security/merchant-write-guard.ts` — fail-closed policy
-- `createAuthorizedStaffWriter()` — all merchant mutating admin APIs
-- CSV import dry-run on Preview **does not** insert `import_jobs` / `audit_logs` when writes blocked
-- Local Supabase + Vercel Production still allowed for writes; Preview+Prod ref blocked
+### Theme publishing (FIXED)
+- Publish **always** creates an immutable `published` snapshot via `publish_homepage_theme` RPC — draft IDs are never used as the live pointer
+- Consistency check before success response
+- Public logged-out read via `get_published_homepage_sections()` SECURITY DEFINER (no anon SELECT on theme_*)
+- Rollback via `rollback_homepage_theme` + Customize UI history
+- Draft preview page + unsaved warnings + viewport toggles
+- Smoke: `npm run test:theme:publish` → **ok** (publish → second publish → rollback)
 
-### Homepage presentation images (7 approved CDN WebPs)
-- `src/lib/content/homepage-image-presets.ts` — defaults + resolve priority:  
-  **merchant override → approved preset (handle match) → catalog fallback**
-- `src/app/page.tsx` — no longer prefers `cutoutUrl` over approved presets
-- Schema + Customize editor: per-slot image URL, alt, reset, draft save, local publish
-- **Does not** mutate `product_media` / PDP galleries / CSV mappings
+### Merchant write guard (HARDENED)
+- Ports `local-only.mjs` identity checks (loopback URL + non-hosted JWT keys)
+- Async endpoint probe rejects localhost tunnels (`sb-project-ref` header)
+- `MERCHANT_WRITES_ALLOW_REMOTE` cannot target Production
 
-| Slot | Before | After |
-|---|---|---|
-| Hero HP | `01-main_70e4489b-…jpg` | `laptop-hub-hero-hp-lap.webp?v=1792934111` |
-| Hero Dell | `01-main_c562a7e7-…jpg` | `laptop-hub-hero-dell-lap.webp?v=1792934111` |
-| Hero Lenovo | `01-main_1f07e66c-…jpg` | `laptop-hub-hero-lenovo-lap.webp?v=1792934111` |
-| Story front | `01-main_c562a7e7-…jpg` | `dell-second_-home-sec-front.webp?v=1792935242` |
-| Story left | `02-alt02_11a68162-…jpg` | `dell-second_-home-sec-left.webp?v=1792935243` |
-| Story right | `03-alt03_df3f7a78-…jpg` | `dell-second_-home-sec-right.webp?v=1792935242` |
-| Story rear | `04-alt04_328bc2fc-…jpg` | `dell-second_-home-sec-rear.webp?v=1792935243` |
+### Variant sync (ATOMIC)
+- `sync_product_variants` RPC — all-or-nothing; ordered variants disabled not deleted; cross-product IDs rejected
 
-CDN HEAD checks: all seven return **200**.
-
-### Tests
-- `tests/unit/merchant-write-guard.test.ts`
-- `tests/unit/homepage-image-presets.test.ts`
-
----
-
-## Completed capabilities (cumulative)
-
-### Admin / catalog
-- Premium admin shell + IA routes  
-- Product create/edit/SEO/inventory/media/archive/soft-delete/restore/duplicate  
-- Collections create + membership + automated rule evaluator  
-- Shopify CSV: preview · dry-run (no Prod side-effects from Preview) · local commit · modern export  
-- Theme: draft editor with image controls · local publish API · `THEME_PUBLISHED_ENABLED=1` gate  
+### CSV / Orders / Settings (P1 progress)
+- Export formats: modern, legacy, LH extended, inventory sidecar, collection membership
+- Orders: search + filters + admin shell styling
+- Settings: business identity / inventory defaults / SEO form (no raw JSON as primary UI)
 
 ### Migrations (local only — NOT Production)
-- `20261025120000_merchant_catalog_extensions.sql`  
-- `20261025130000_site_builder_sections.sql`
+1. `20261025120000_merchant_catalog_extensions.sql`
+2. `20261025130000_site_builder_sections.sql`
+3. `20261025140000_theme_publish_variant_rpc.sql` ← new
 
 ---
 
-## Also shipped after e61a011
+## Honest completion status
 
-- Product **variant options matrix** (`ProductVariantMatrix` + `/api/admin/products/[handle]/variants`) — cartesian generate, SKU/price/inventory edit, ordered-variant safe removal  
-- Collections **visual rule builder** (AND/OR conditions) — replaces raw JSON as the only editor  
-
-## NOT done / next
-
-1. Legacy + LH sidecar CSV exports + durable import retry UX  
-2. Accurate iframe preview + rollback UI in Customize  
-3. Orders/settings enterprise redesign  
-4. Playwright admin E2E against local stack  
-5. Owner-approved Production migration package  
+| Capability | Status |
+|---|---|
+| Homepage 7 image presets + editor controls | Done (storefront + Customize) |
+| Theme draft → preview → publish → public RPC → rollback | Done locally; needs `THEME_PUBLISHED_ENABLED=1` for visitor override |
+| Preview→Prod write guard | Done (hardened) |
+| Variant matrix atomic sync | Done (RPC) |
+| Collections visual rules | Done |
+| CSV modern/legacy/extended/inventory/collections export | Done |
+| CSV import durable retry UX | Partial (local commit + dry-run; Production commit still blocked) |
+| Orders merchant workflow | Improved list/search; detail actions already existed |
+| Settings merchant form | Done for identity/inventory/SEO + shipping zones |
+| Full authenticated Playwright admin suite | Chromium installed; homepage presets covered; full admin E2E still expanding |
+| Production release package | Migrations listed; owner approval still required |
 
 ---
 
@@ -92,22 +78,22 @@ Never: Production migrate · Production CSV commit · theme publish to Prod · C
 ```bash
 git checkout feat/merchant-operating-system
 npx supabase start
+npx supabase db reset   # LOCAL ONLY — applies all 17 migrations
 $env:NEXT_PUBLIC_SUPABASE_URL="http://127.0.0.1:54321"
+# + local ANON + SERVICE_ROLE from `npx supabase status`
+$env:THEME_PUBLISHED_ENABLED="1"   # when verifying published theme on storefront
+npm run test:theme:publish
 npm run test:unit
 npm run test:merchant:smoke
+npx playwright install chromium
+npx playwright test tests/e2e/homepage-presets.spec.ts
 npm run build
 git push -u origin feat/merchant-operating-system
 ```
 
-## Preview notes
-
-- Mutating admin against Production Supabase from Preview is **server-blocked**.
-- Theme draft/publish tables missing on Prod until migrations approved — Customize falls back to code defaults.
-- Homepage hero/story images render approved CDN presets from code without requiring theme publish.
-
 ## NEXT ACTION
 
-1. Push feature branch → verify Vercel Preview Ready  
-2. Playwright: Customize image edit → draft → (local) publish → storefront  
-3. Variant options matrix + inventory defaults UI  
-4. Owner package for Production migrations  
+1. Authenticated Playwright: Customize publish/rollback with THEME_PUBLISHED_ENABLED=1 + logged-out assert  
+2. Expand admin E2E (product create, CSV round-trip, COD isolated)  
+3. Import job history / retry UI polish  
+4. Owner package: review 3 additive migrations for Production  

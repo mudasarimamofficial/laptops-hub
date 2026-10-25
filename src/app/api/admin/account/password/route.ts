@@ -48,9 +48,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "update_failed", message }, { status: 400, headers });
   }
 
-  await createServiceClient()
-    .from("audit_logs")
-    .insert({ actor_user_id: user.id, action: "auth.password_reset", entity_type: "auth_user", entity_id: user.id, after: { via: "recovery_email" } });
+  // Audit only when merchant side-effects are allowed (never Preview→Production).
+  const { canPersistMerchantSideEffects } = await import("@/lib/security/merchant-write-guard");
+  if (canPersistMerchantSideEffects()) {
+    await createServiceClient()
+      .from("audit_logs")
+      .insert({
+        actor_user_id: user.id,
+        action: "auth.password_reset",
+        entity_type: "auth_user",
+        entity_id: user.id,
+        after: { via: "recovery_email" },
+      });
+  }
   await supabase.auth.signOut({ scope: "global" });
   return NextResponse.json({ ok: true }, { headers });
 }

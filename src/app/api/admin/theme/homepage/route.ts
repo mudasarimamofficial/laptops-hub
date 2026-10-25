@@ -54,6 +54,20 @@ export async function GET() {
       .limit(1)
       .maybeSingle();
 
+    const { data: publishedList } = await supabase
+      .from("theme_versions")
+      .select("id, label, status, published_at, created_at")
+      .eq("template_id", template.id)
+      .eq("status", "published")
+      .order("published_at", { ascending: false })
+      .limit(20);
+
+    const { data: publication } = await supabase
+      .from("theme_publications")
+      .select("published_version_id, updated_at")
+      .eq("template_key", "homepage")
+      .maybeSingle();
+
     const sections = (version?.sections as SectionInstance[] | undefined) || V5_HOMEPAGE_SECTIONS;
 
     return NextResponse.json(
@@ -64,6 +78,8 @@ export async function GET() {
         label: version?.label ?? null,
         sections,
         themeSettings: version?.theme_settings ?? {},
+        livePublishedVersionId: publication?.published_version_id ?? null,
+        publishedVersions: publishedList || [],
       },
       { headers: { "Cache-Control": "no-store" } },
     );
@@ -105,6 +121,7 @@ export async function PUT(request: Request) {
       .eq("label", "working-draft")
       .maybeSingle();
 
+    let versionId = existing?.id as string | undefined;
     if (existing) {
       const { error } = await supabase
         .from("theme_versions")
@@ -112,20 +129,26 @@ export async function PUT(request: Request) {
         .eq("id", existing.id);
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     } else {
-      const { error } = await supabase.from("theme_versions").insert({
-        template_id: template.id,
-        label: "working-draft",
-        status: "draft",
-        sections: parsed.data.sections,
-        created_by: staff.userId,
-      });
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      const { data: created, error } = await supabase
+        .from("theme_versions")
+        .insert({
+          template_id: template.id,
+          label: "working-draft",
+          status: "draft",
+          sections: parsed.data.sections,
+          created_by: staff.userId,
+        })
+        .select("id")
+        .single();
+      if (error || !created) return NextResponse.json({ error: error?.message || "save_failed" }, { status: 500 });
+      versionId = created.id;
     }
 
     await supabase.from("audit_logs").insert({
       actor_user_id: staff.userId,
       action: "theme.homepage.draft_save",
       entity_type: "theme_versions",
+      entity_id: versionId || null,
       after: { sectionCount: parsed.data.sections.length },
     });
 
@@ -133,7 +156,9 @@ export async function PUT(request: Request) {
       {
         ok: true,
         published: false,
-        notice: "Draft saved. Live storefront still uses approved V5 code until an owner-approved publish.",
+        versionId: versionId || null,
+        notice:
+          "Draft saved. Logged-out visitors still see the last published snapshot (or V5 code defaults). Publish creates a new immutable published version.",
       },
       { headers: { "Cache-Control": "no-store" } },
     );

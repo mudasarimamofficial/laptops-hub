@@ -3,6 +3,8 @@ import { V5_HOMEPAGE_SECTIONS, type SectionInstance } from "./site-builder-schem
 
 /**
  * Load published homepage sections when explicitly enabled.
+ * Uses SECURITY DEFINER RPC `get_published_homepage_sections` so anon/logged-out
+ * customers never need SELECT on theme_* tables (drafts stay private).
  * Default: return null so callers keep the approved V5 hardcoded composition.
  */
 export async function getPublishedHomepageSections(): Promise<SectionInstance[] | null> {
@@ -10,22 +12,23 @@ export async function getPublishedHomepageSections(): Promise<SectionInstance[] 
 
   try {
     const supabase = await createClient();
-    const { data: pub } = await supabase
-      .from("theme_publications")
-      .select("published_version_id")
-      .eq("template_key", "homepage")
-      .maybeSingle();
-    if (!pub?.published_version_id) return null;
+    const { data, error } = await supabase.rpc("get_published_homepage_sections");
+    if (error || data == null) return null;
 
-    const { data: version } = await supabase
-      .from("theme_versions")
-      .select("sections, status")
-      .eq("id", pub.published_version_id)
-      .maybeSingle();
-    if (!version || version.status !== "published") return null;
-    const sections = version.sections as SectionInstance[];
+    const sections = data as SectionInstance[];
     if (!Array.isArray(sections) || !sections.length) return null;
-    return sections;
+
+    // Defense in depth: only accept known section shapes (no scriptable payload execution)
+    return sections.filter(
+      (s) =>
+        s &&
+        typeof s === "object" &&
+        typeof s.id === "string" &&
+        typeof s.type === "string" &&
+        typeof s.enabled === "boolean" &&
+        s.settings &&
+        typeof s.settings === "object",
+    );
   } catch {
     return null;
   }

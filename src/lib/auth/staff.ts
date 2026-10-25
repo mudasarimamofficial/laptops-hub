@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import {
-  assertMerchantMutationAllowed,
+  assertMerchantMutationAllowedAsync,
   MerchantWriteBlockedError,
 } from "@/lib/security/merchant-write-guard";
 
@@ -113,10 +113,10 @@ export async function createAuthorizedStaffClient(allowedRoles?: StaffRole[]) {
 
 /**
  * Staff client for routes that INSERT/UPDATE/DELETE merchant data.
- * Fail-closed against Preview→Production Supabase mutations.
+ * Fail-closed against Preview→Production and localhost→hosted tunnels.
  */
 export async function createAuthorizedStaffWriter(allowedRoles?: StaffRole[]) {
-  assertMerchantMutationAllowed("admin_write");
+  await assertMerchantMutationAllowedAsync("admin_write");
   return createAuthorizedStaffClient(allowedRoles);
 }
 

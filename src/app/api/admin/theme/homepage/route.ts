@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import {
+  createAuthorizedStaffClient,
+  createAuthorizedStaffWriter,
+  staffErrorResponse,
+} from "@/lib/auth/staff";
 import { V5_HOMEPAGE_SECTIONS, type SectionInstance } from "@/lib/content/site-builder-schema";
 
 const saveSchema = z.object({
@@ -71,7 +75,7 @@ export async function GET() {
 /** Save draft only — never publishes to the storefront. */
 export async function PUT(request: Request) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "editor"]);
     const body = await request.json().catch(() => null);
     const parsed = saveSchema.safeParse(body);
     if (!parsed.success) {

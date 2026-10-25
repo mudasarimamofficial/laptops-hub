@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
 import { ZONE_COLUMNS, zoneInputProblem, zoneInputSchema } from "@/lib/commerce/zone-input";
 
 /** Create a shipping zone. Answers with the stored row, so staff see exactly what was saved. */
 export async function POST(request: Request) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager"]);
     const body = await request.json().catch(() => null);
     const parsed = zoneInputSchema.safeParse(body);
     if (!parsed.success) {

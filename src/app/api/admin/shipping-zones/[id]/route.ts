@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
 import { ZONE_COLUMNS, zoneInputProblem, zoneInputSchema } from "@/lib/commerce/zone-input";
 
@@ -8,7 +8,7 @@ type Ctx = { params: Promise<{ id: string }> };
 /** Edit or (de)activate a zone. Zones are never deleted: past orders reference them. Answers with the stored row. */
 export async function PATCH(request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager"]);
     const { id } = await ctx.params;
     if (!/^[0-9a-f-]{36}$/i.test(id)) return NextResponse.json({ error: "not_found", message: "This zone no longer exists." }, { status: 404 });
     const parsed = zoneInputSchema.safeParse(await request.json().catch(() => null));

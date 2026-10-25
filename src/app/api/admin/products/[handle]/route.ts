@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
 
 const patchSchema = z
@@ -52,7 +52,7 @@ type Ctx = { params: Promise<{ handle: string }> };
 
 export async function PATCH(request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
     const body = await request.json().catch(() => null);
     const parsed = patchSchema.safeParse(body);
@@ -187,7 +187,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
  */
 export async function DELETE(request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager"]);
     const { handle } = await ctx.params;
     const body = await request.json().catch(() => ({}));
     const parsed = deleteSchema.safeParse(body);

@@ -1,6 +1,6 @@
 # CURSOR MASTER EXECUTION STATE
 
-**Updated:** 2026-10-25 (PKT) — post local migration smoke + CSV commit  
+**Updated:** 2026-10-25 (PKT) — P0 Preview write guard + homepage image presets  
 **Mandate:** Enterprise merchant admin · Shopify CSV · site editor · COD-only  
 **Branch:** `feat/merchant-operating-system`
 
@@ -10,58 +10,71 @@
 
 | Item | Value |
 |---|---|
-| Branch HEAD | see `git log -1` |
+| Branch HEAD | see `git log -1` (was `3280964` before this session’s commits) |
 | `main` cut | `2b43236` |
 | Supabase Production | `xvmmjkrkgznnakcobmww` — **14 migrations only** (no 20261025\* applied) |
-| Local Supabase | Docker up · `supabase db reset` applied **all 16** migrations incl. `20261025120000` + `20261025130000` |
+| Local Supabase | Docker · **16** migrations incl. `20261025120000` + `20261025130000` |
 | COD | OFF everywhere for Production |
 
 ---
 
-## Local migration smoke (2026-10-25)
+## Session deliverables (this checkpoint)
 
-```
-npx supabase db reset   # LOCAL ONLY — succeeded
-npm run test:merchant:smoke   # 25/25
-npm run test:merchant:csv     # dry-run + commit + idempotent reimport OK
-npm run test:unit             # all green incl. collection-rule-eval + shopify csv/export
-npm run build                 # green
-```
+### P0 — Preview → Production write guard
+- `src/lib/security/merchant-write-guard.ts` — fail-closed policy
+- `createAuthorizedStaffWriter()` — all merchant mutating admin APIs
+- CSV import dry-run on Preview **does not** insert `import_jobs` / `audit_logs` when writes blocked
+- Local Supabase + Vercel Production still allowed for writes; Preview+Prod ref blocked
 
-Defects found & fixed during smoke:
-1. PostgREST bulk insert nulls `health_status` (bypasses DEFAULT) → always set in API/smoke  
-2. Media reorder unique `(product_id, position)` collisions → two-phase reorder  
+### Homepage presentation images (7 approved CDN WebPs)
+- `src/lib/content/homepage-image-presets.ts` — defaults + resolve priority:  
+  **merchant override → approved preset (handle match) → catalog fallback**
+- `src/app/page.tsx` — no longer prefers `cutoutUrl` over approved presets
+- Schema + Customize editor: per-slot image URL, alt, reset, draft save, local publish
+- **Does not** mutate `product_media` / PDP galleries / CSV mappings
+
+| Slot | Before | After |
+|---|---|---|
+| Hero HP | `01-main_70e4489b-…jpg` | `laptop-hub-hero-hp-lap.webp?v=1792934111` |
+| Hero Dell | `01-main_c562a7e7-…jpg` | `laptop-hub-hero-dell-lap.webp?v=1792934111` |
+| Hero Lenovo | `01-main_1f07e66c-…jpg` | `laptop-hub-hero-lenovo-lap.webp?v=1792934111` |
+| Story front | `01-main_c562a7e7-…jpg` | `dell-second_-home-sec-front.webp?v=1792935242` |
+| Story left | `02-alt02_11a68162-…jpg` | `dell-second_-home-sec-left.webp?v=1792935243` |
+| Story right | `03-alt03_df3f7a78-…jpg` | `dell-second_-home-sec-right.webp?v=1792935242` |
+| Story rear | `04-alt04_328bc2fc-…jpg` | `dell-second_-home-sec-rear.webp?v=1792935243` |
+
+CDN HEAD checks: all seven return **200**.
+
+### Tests
+- `tests/unit/merchant-write-guard.test.ts`
+- `tests/unit/homepage-image-presets.test.ts`
 
 ---
 
-## Completed capabilities
+## Completed capabilities (cumulative)
 
 ### Admin / catalog
 - Premium admin shell + IA routes  
 - Product create/edit/SEO/inventory/media/archive/soft-delete/restore/duplicate  
-- Collections create + membership + **automated rule evaluator** wired into `resolveCollection` (`db-rule`)  
-- Shopify CSV: client preview · **server dry-run** · **local commit** (Production host blocked) · modern export  
-- Theme: draft editor · local publish API · `THEME_PUBLISHED_ENABLED=1` gate for storefront read (default off = V5 code path)
+- Collections create + membership + automated rule evaluator  
+- Shopify CSV: preview · dry-run (no Prod side-effects from Preview) · local commit · modern export  
+- Theme: draft editor with image controls · local publish API · `THEME_PUBLISHED_ENABLED=1` gate  
 
 ### Migrations (local only — NOT Production)
 - `20261025120000_merchant_catalog_extensions.sql`  
 - `20261025130000_site_builder_sections.sql`
 
-### Docs
-- Execution matrix, media policy, data model, CSV matrix, site builder schema, this file  
-
 ---
 
 ## NOT done / next
 
-1. Bulk editor grid + hard-delete eligibility UI  
-2. Full variant options matrix builder  
-3. Legacy + LH sidecar CSV exports  
-4. Wire homepage `page.tsx` to published sections behind env flag (code helper ready)  
-5. Accurate iframe preview + rollback UI  
-6. Orders/settings enterprise redesign  
-7. Playwright admin E2E against local stack  
-8. Protected Preview after push (mutating admin needs isolated DB — Production schema lacks new columns)
+1. Full variant options matrix builder  
+2. Legacy + LH sidecar CSV exports + durable import retry UX  
+3. Collections visual rule builder (non-JSON)  
+4. Accurate iframe preview + rollback UI in Customize  
+5. Orders/settings enterprise redesign  
+6. Playwright admin E2E against local stack  
+7. Owner-approved Production migration package  
 
 ---
 
@@ -69,37 +82,29 @@ Defects found & fixed during smoke:
 
 Never: Production migrate · Production CSV commit · theme publish to Prod · COD on · merge `main`
 
-### Owner approval package (when ready)
-1. Review SQL diffs for both 20261025 migrations  
-2. Approve Preview with isolated DB or read-only Preview against Prod (limited)  
-3. Later: Production migrate + controlled launch sequence  
-
 ---
 
 ## Resume commands
 
 ```bash
 git checkout feat/merchant-operating-system
-# Docker Desktop running:
 npx supabase start
 $env:NEXT_PUBLIC_SUPABASE_URL="http://127.0.0.1:54321"
-# + local ANON + SERVICE_ROLE from `npx supabase status`
-npm run test:merchant:smoke
-npm run test:merchant:csv
 npm run test:unit
+npm run test:merchant:smoke
 npm run build
-git push -u origin feat/merchant-operating-system   # Preview
+git push -u origin feat/merchant-operating-system
 ```
 
-## Preview
+## Preview notes
 
-- Branch pushed: `origin/feat/merchant-operating-system`
-- Mutating admin features that need new columns (soft-delete, theme tables, media origin) **will error against Production DB** until migrations are approved.
-- Safe on Preview today: shell navigation, product list/edit of existing columns, CSV export, import dry-run (commit blocked on non-local), collections list (create may fail if `collection_type` missing — API has fallback), overview KPIs.
+- Mutating admin against Production Supabase from Preview is **server-blocked**.
+- Theme draft/publish tables missing on Prod until migrations approved — Customize falls back to code defaults.
+- Homepage hero/story images render approved CDN presets from code without requiring theme publish.
 
 ## NEXT ACTION
 
-1. Confirm Vercel Preview Ready for latest commit `8c678f7`  
-2. Playwright admin journeys on local stack (`NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321`)  
-3. Variant options matrix UI + inventory settings form  
-4. Owner package: Production migration approval for `20261025120000` + `20261025130000`
+1. Push feature branch → verify Vercel Preview Ready  
+2. Playwright: Customize image edit → draft → (local) publish → storefront  
+3. Variant options matrix + inventory defaults UI  
+4. Owner package for Production migrations  

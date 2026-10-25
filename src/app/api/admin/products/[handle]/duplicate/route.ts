@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 
 type Ctx = { params: Promise<{ handle: string }> };
 
 export async function POST(_request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
 
     let source: Record<string, unknown> | null = null;

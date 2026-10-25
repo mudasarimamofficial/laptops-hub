@@ -8,6 +8,10 @@ import {
   summarizeStaging,
   type CanonicalField,
 } from "@/lib/catalog/shopify-csv";
+import {
+  canPersistMerchantSideEffects,
+  evaluateMerchantWritePolicy,
+} from "@/lib/security/merchant-write-guard";
 import { createHash } from "crypto";
 
 export const dynamic = "force-dynamic";
@@ -30,8 +34,7 @@ function parseCsv(text: string): { headers: string[]; rows: Record<string, strin
         i++;
       } else if (c === '"') inQuotes = false;
       else cell += c;
-    } else if (c === '"') inQuotes = true;
-    else if (c === ",") {
+    } else if (c === ",") {
       row.push(cell);
       cell = "";
     } else if (c === "\n") {
@@ -70,8 +73,9 @@ const bodySchema = z.object({
 
 /**
  * Preview (dryRun=true, default) or commit (dryRun=false + confirmCommit=true).
- * Production catalog commits still require owner ops approval — this endpoint is
- * intended for isolated stacks and Preview-with-isolated-DB only.
+ *
+ * Dry-run against Production from Preview must NOT insert import_jobs / audit_logs.
+ * Commits remain blocked unless local (or future owner-approved staging) DB.
  */
 export async function POST(request: Request) {
   try {
@@ -94,9 +98,23 @@ export async function POST(request: Request) {
       );
     }
 
-    // Refuse mutating against Production host unless explicitly overridden by local URL
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-    const isLocal = /127\.0\.0\.1|localhost|\[::1\]/.test(supabaseUrl);
+    const writePolicy = evaluateMerchantWritePolicy();
+    const mayPersist = canPersistMerchantSideEffects();
+
+    // Refuse mutating commits when Preview→Production or non-local remote
+    if (!dryRun && !mayPersist) {
+      return NextResponse.json(
+        {
+          error: "merchant_writes_blocked",
+          message: `CSV commit refused: ${writePolicy.reason}`,
+          writePolicy,
+        },
+        { status: 403 },
+      );
+    }
+
+    // Extra belt: even if policy allows remote, CSV commit stays local-only until owner release path
+    const isLocal = writePolicy.isLocalSupabase;
     if (!dryRun && !isLocal) {
       return NextResponse.json(
         {
@@ -121,37 +139,41 @@ export async function POST(request: Request) {
     const stagingSummary = summarizeStaging(staged.products, detected.unknown);
     const fingerprint = createHash("sha256").update(parsed.data.csvText).digest("hex").slice(0, 40);
 
-    const { data: job, error: jobErr } = await supabase
-      .from("import_jobs")
-      .insert({
-        source: "shopify_csv",
-        status: dryRun ? "dry_run" : "running",
-        dry_run: dryRun,
-        profile: detected.profile,
-        strategy: parsed.data.strategy,
-        source_filename: parsed.data.filename || null,
-        source_fingerprint: fingerprint,
-        actor_user_id: staff.userId,
-        progress: { phase: dryRun ? "preview" : "commit", productCount: stagingSummary.productCount },
-        report: { stagingSummary, unknownHeaders: detected.unknown },
-      })
-      .select("id")
-      .single();
+    let jobId: string | undefined;
 
-    // If extended columns missing, insert minimal job
-    let jobId = job?.id as string | undefined;
-    if (jobErr) {
-      const retry = await supabase
+    // Persist job + audit only when merchant side-effects are allowed (never Preview→Production).
+    if (mayPersist) {
+      const { data: job, error: jobErr } = await supabase
         .from("import_jobs")
         .insert({
           source: "shopify_csv",
           status: dryRun ? "dry_run" : "running",
           dry_run: dryRun,
-          report: { stagingSummary },
+          profile: detected.profile,
+          strategy: parsed.data.strategy,
+          source_filename: parsed.data.filename || null,
+          source_fingerprint: fingerprint,
+          actor_user_id: staff.userId,
+          progress: { phase: dryRun ? "preview" : "commit", productCount: stagingSummary.productCount },
+          report: { stagingSummary, unknownHeaders: detected.unknown },
         })
         .select("id")
         .single();
-      jobId = retry.data?.id;
+
+      jobId = job?.id as string | undefined;
+      if (jobErr) {
+        const retry = await supabase
+          .from("import_jobs")
+          .insert({
+            source: "shopify_csv",
+            status: dryRun ? "dry_run" : "running",
+            dry_run: dryRun,
+            report: { stagingSummary },
+          })
+          .select("id")
+          .single();
+        jobId = retry.data?.id;
+      }
     }
 
     const { results, summary } = await commitStagedProducts(supabase, staged.products, {
@@ -159,9 +181,11 @@ export async function POST(request: Request) {
       actorUserId: staff.userId,
       dryRun,
       defaultInventoryMode: "untracked",
+      // When Preview shares Production schema, force dry-run semantics even if caller lied
+      ...(mayPersist ? {} : { dryRun: true }),
     });
 
-    if (jobId) {
+    if (mayPersist && jobId) {
       await supabase
         .from("import_jobs")
         .update({
@@ -171,21 +195,25 @@ export async function POST(request: Request) {
           progress: { phase: "done" },
         })
         .eq("id", jobId);
-    }
 
-    await supabase.from("audit_logs").insert({
-      actor_user_id: staff.userId,
-      action: dryRun ? "products.import.dry_run" : "products.import.commit",
-      entity_type: "import_jobs",
-      entity_id: jobId || null,
-      after: { summary, fingerprint, strategy: parsed.data.strategy },
-    });
+      await supabase.from("audit_logs").insert({
+        actor_user_id: staff.userId,
+        action: dryRun ? "products.import.dry_run" : "products.import.commit",
+        entity_type: "import_jobs",
+        entity_id: jobId || null,
+        after: { summary, fingerprint, strategy: parsed.data.strategy },
+      });
+    }
 
     return NextResponse.json(
       {
         ok: true,
         dryRun,
         jobId: jobId || null,
+        persisted: mayPersist,
+        writePolicy: mayPersist
+          ? { allowed: true, reason: writePolicy.reason }
+          : { allowed: false, reason: writePolicy.reason },
         profile: detected.profile,
         fingerprint,
         stagingSummary,
@@ -193,6 +221,9 @@ export async function POST(request: Request) {
         rowErrors: staged.errors.slice(0, 100),
         summary,
         results: results.slice(0, 200),
+        notice: mayPersist
+          ? undefined
+          : "In-memory preview only — no import_jobs or audit_logs were written (Preview must not mutate Production).",
       },
       { headers: { "Cache-Control": "no-store" } },
     );

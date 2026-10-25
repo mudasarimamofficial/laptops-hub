@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
 
 const createSchema = z.object({
@@ -40,7 +40,7 @@ function slugifyHandle(title: string): string {
 
 export async function POST(request: Request) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const body = await request.json().catch(() => null);
     const parsed = createSchema.safeParse(body);
     if (!parsed.success) {

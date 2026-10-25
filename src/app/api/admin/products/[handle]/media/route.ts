@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import {
+  createAuthorizedStaffClient,
+  createAuthorizedStaffWriter,
+  staffErrorResponse,
+} from "@/lib/auth/staff";
 
 const ALLOWED_HOST_SUFFIXES = [
   "cdn.shopify.com",
@@ -100,7 +104,7 @@ export async function GET(_request: Request, ctx: Ctx) {
 
 export async function POST(request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
     const product = await loadProduct(supabase, handle);
     if (!product) return NextResponse.json({ error: "not_found" }, { status: 404 });
@@ -182,7 +186,7 @@ export async function POST(request: Request, ctx: Ctx) {
 
 export async function PATCH(request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
     const product = await loadProduct(supabase, handle);
     if (!product) return NextResponse.json({ error: "not_found" }, { status: 404 });
@@ -267,7 +271,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
 
 export async function DELETE(request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
     const product = await loadProduct(supabase, handle);
     if (!product) return NextResponse.json({ error: "not_found" }, { status: 404 });

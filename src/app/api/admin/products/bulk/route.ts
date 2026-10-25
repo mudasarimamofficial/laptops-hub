@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
 
 const itemSchema = z.object({
@@ -20,7 +20,7 @@ const bodySchema = z.object({
 /** Bulk patch by handle. Price/inventory apply to the first variant of each product. */
 export async function POST(request: Request) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const parsed = bodySchema.safeParse(await request.json().catch(() => null));
     if (!parsed.success) {
       return NextResponse.json({ error: "validation_failed", message: "Provide 1–100 items with handles." }, { status: 400 });

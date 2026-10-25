@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import {
+  createAuthorizedStaffClient,
+  createAuthorizedStaffWriter,
+  staffErrorResponse,
+} from "@/lib/auth/staff";
 
 const patchSchema = z.object({
   title: z.string().trim().min(2).max(160).optional(),
@@ -44,7 +48,7 @@ export async function GET(_request: Request, ctx: Ctx) {
 
 export async function PATCH(request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { slug } = await ctx.params;
     const body = await request.json().catch(() => null);
 

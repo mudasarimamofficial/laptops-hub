@@ -1,5 +1,9 @@
 import { redirect } from "next/navigation";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
+import {
+  assertMerchantMutationAllowed,
+  MerchantWriteBlockedError,
+} from "@/lib/security/merchant-write-guard";
 
 export type StaffRole = "owner" | "admin" | "manager" | "editor" | "fulfillment";
 
@@ -100,14 +104,30 @@ export async function requireStaffPage(allowedRoles?: StaffRole[]): Promise<Staf
 /**
  * Elevated client ONLY after requireStaff has succeeded.
  * Prefer createClient() + RLS when possible; use this for narrow staff ops.
+ * Read-only admin routes should use this (no Production Preview write guard).
  */
 export async function createAuthorizedStaffClient(allowedRoles?: StaffRole[]) {
   const staff = await requireStaff(allowedRoles);
   return { staff, supabase: createServiceClient() };
 }
 
+/**
+ * Staff client for routes that INSERT/UPDATE/DELETE merchant data.
+ * Fail-closed against Preview→Production Supabase mutations.
+ */
+export async function createAuthorizedStaffWriter(allowedRoles?: StaffRole[]) {
+  assertMerchantMutationAllowed("admin_write");
+  return createAuthorizedStaffClient(allowedRoles);
+}
+
 export function staffErrorResponse(error: unknown) {
   if (error instanceof StaffAuthError) {
+    return Response.json(
+      { error: error.code, message: error.message },
+      { status: error.status, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+  if (error instanceof MerchantWriteBlockedError) {
     return Response.json(
       { error: error.code, message: error.message },
       { status: error.status, headers: { "Cache-Control": "no-store" } },

@@ -17,20 +17,41 @@ import { confirmedPhones, telHref } from "@/lib/business";
 import { contentVisibility } from "@/lib/content/pages";
 import { getPublishedHomepageSections } from "@/lib/content/published-homepage";
 import { cpuFmt, fmtPkr, getV5Catalog, ord, stoFmt, v5Card, v5Link, type V5Product } from "@/lib/catalog/v5";
-import { cutoutUrl } from "@/lib/catalog/v5-media";
+import {
+  HERO_IMAGE_PRESETS,
+  HOMEPAGE_DEFAULT_HANDLES,
+  mergeHomepageImageDefaults,
+  resolveHeroPresentationImage,
+  resolveStoryAngleImage,
+  type StoryAngle,
+} from "@/lib/content/homepage-image-presets";
 
 export const revalidate = 60;
 
 /** V5 hero / story products — defaults; may be overridden by published theme when THEME_PUBLISHED_ENABLED=1. */
-const DEFAULT_HM = "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage";
-const DEFAULT_H1 = "hp-probook-640-g2-core-i5-6th-gen-8gb-ram-256gb-storage";
-const DEFAULT_H2 = "lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage";
+const DEFAULT_HM = HOMEPAGE_DEFAULT_HANDLES.dell;
+const DEFAULT_H1 = HOMEPAGE_DEFAULT_HANDLES.hp;
+const DEFAULT_H2 = HOMEPAGE_DEFAULT_HANDLES.lenovo;
 
 const href = (p: V5Product) => "/products/" + encodeURIComponent(p.h);
 
-function shot(p: V5Product, cutHandle: string, file: string): HeroShot {
-  const cut = p.h === cutHandle ? cutoutUrl(file) : null;
-  return { href: href(p), label: p.model, src: cut || p.imgs[0]?.u || null, cutout: !!cut };
+function heroShot(
+  p: V5Product,
+  slot: keyof typeof HERO_IMAGE_PRESETS,
+  settings?: Record<string, unknown> | null,
+): HeroShot {
+  const resolved = resolveHeroPresentationImage({
+    slot,
+    productHandle: p.h,
+    settings,
+    catalogImageUrl: p.imgs[0]?.u || null,
+  });
+  return {
+    href: href(p),
+    label: resolved.alt || p.model,
+    src: resolved.src,
+    cutout: resolved.cutout,
+  };
 }
 
 export default async function HomePage() {
@@ -52,14 +73,20 @@ export default async function HomePage() {
   const published = await getPublishedHomepageSections();
   const heroSec = published?.find((s) => s.type === "v5_cinematic_hero" && s.enabled);
   const storySec = published?.find((s) => s.type === "v5_product_story" && s.enabled);
-  const heroHandles = Array.isArray(heroSec?.settings?.productHandles)
-    ? (heroSec!.settings.productHandles as string[])
+  const heroSettings = heroSec?.settings
+    ? mergeHomepageImageDefaults(heroSec.settings as Record<string, unknown>, "v5_cinematic_hero")
+    : null;
+  const storySettings = storySec?.settings
+    ? mergeHomepageImageDefaults(storySec.settings as Record<string, unknown>, "v5_product_story")
+    : null;
+  const heroHandles = Array.isArray(heroSettings?.productHandles)
+    ? (heroSettings!.productHandles as string[])
     : [];
   const HM_HANDLE = heroHandles[0] || DEFAULT_HM;
   const H1_HANDLE = heroHandles[1] || DEFAULT_H1;
   const H2_HANDLE = heroHandles[2] || DEFAULT_H2;
   const storyHandle =
-    typeof storySec?.settings?.productHandle === "string" ? storySec.settings.productHandle : HM_HANDLE;
+    typeof storySettings?.productHandle === "string" ? String(storySettings.productHandle) : HM_HANDLE;
 
   // Ported from V5 renderVals() (home branch).
   const get = (h: string) => P.find((p) => p.h === h);
@@ -174,9 +201,17 @@ export default async function HomePage() {
           chromebookCount={P.filter((p) => p.cat === "chromebook").length}
           laptopCount={lapN}
           accCount={accN}
-          main={{ ...shot(HM, DEFAULT_HM, "dell7420-0.png"), priceText: fmtPkr(HM.pricePaisa), stockText: stockText(HM), chips: HM.chips }}
-          side1={H1 ? shot(H1, DEFAULT_H1, "hp640g2-0.png") : null}
-          side2={H2 ? shot(H2, DEFAULT_H2, "t580-0.png") : null}
+          main={(() => {
+            const heroMain = get(HM_HANDLE) || HM;
+            return {
+              ...heroShot(heroMain, "main", heroSettings),
+              priceText: fmtPkr(heroMain.pricePaisa),
+              stockText: stockText(heroMain),
+              chips: heroMain.chips,
+            };
+          })()}
+          side1={H1 ? heroShot(H1, "side1", heroSettings) : null}
+          side2={H2 ? heroShot(H2, "side2", heroSettings) : null}
         />
       ) : null}
       {sectionOn("v5_product_story") ? (
@@ -191,9 +226,14 @@ export default async function HomePage() {
           variantId={HM.variantId}
           maxPerOrder={HM.maxPerOrder}
           available={HM.avail}
-          angles={[0, 1, 2, 3].map((i) => {
-            const cut = HM.h === DEFAULT_HM ? cutoutUrl(`dell7420-${i}.png`) : null;
-            return { src: cut || HM.imgs[i]?.u || null, cutout: !!cut };
+          angles={(["front", "left", "right", "rear"] as StoryAngle[]).map((angle, i) => {
+            const resolved = resolveStoryAngleImage({
+              angle,
+              productHandle: HM.h,
+              settings: storySettings,
+              catalogImageUrl: HM.imgs[i]?.u || null,
+            });
+            return { src: resolved.src, cutout: resolved.cutout };
           })}
           rows={storyRows}
         />

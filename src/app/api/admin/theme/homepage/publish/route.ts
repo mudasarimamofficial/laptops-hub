@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 
 const schema = z.object({
   /** Explicit confirmation — publish changes public storefront when wired. */
@@ -14,7 +14,7 @@ const schema = z.object({
  */
 export async function POST(request: Request) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin"]);
     const body = await request.json().catch(() => null);
     const parsed = schema.safeParse(body);
     if (!parsed.success) {

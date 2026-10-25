@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 
 const schema = z.object({
   toStatus: z.string().trim().min(2),
@@ -15,7 +15,7 @@ type Ctx = { params: Promise<{ orderNumber: string }> };
 
 export async function POST(request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient([
+    const { staff, supabase } = await createAuthorizedStaffWriter([
       "owner",
       "admin",
       "manager",

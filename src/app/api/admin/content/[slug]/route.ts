@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
-import { createAuthorizedStaffClient, staffErrorResponse, type StaffRole } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse, type StaffRole } from "@/lib/auth/staff";
 import { LEGAL_CONTENT_SLUGS, sanitizeCmsHtml } from "@/lib/security/sanitize-html";
 import { templateHasPending } from "@/lib/content/resolve";
 import { V5_CONTENT } from "@/lib/content/v5-content";
@@ -23,7 +23,7 @@ const LEGAL_APPROVERS: StaffRole[] = ["owner", "admin", "manager"];
 
 export async function PATCH(request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { slug } = await ctx.params;
     const parsed = schema.safeParse(await request.json().catch(() => null));
     if (!parsed.success) {

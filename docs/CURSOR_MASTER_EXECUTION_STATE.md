@@ -10,7 +10,7 @@
 
 | Item | Value |
 |---|---|
-| Branch HEAD | see `git log -1` (target after this push) |
+| Branch HEAD | `834abbe` |
 | Prior GitHub HEAD at prompt | `baabd46` |
 | `main` cut | `2b43236` |
 | Supabase Production | `xvmmjkrkgznnakcobmww` — **14 migrations only** |

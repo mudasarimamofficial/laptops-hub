@@ -15,15 +15,16 @@ import { PendingBlock } from "@/components/ui/pending-block";
 import { HomeInquirySection } from "@/components/storefront/home/home-inquiry";
 import { confirmedPhones, telHref } from "@/lib/business";
 import { contentVisibility } from "@/lib/content/pages";
+import { getPublishedHomepageSections } from "@/lib/content/published-homepage";
 import { cpuFmt, fmtPkr, getV5Catalog, ord, stoFmt, v5Card, v5Link, type V5Product } from "@/lib/catalog/v5";
 import { cutoutUrl } from "@/lib/catalog/v5-media";
 
 export const revalidate = 60;
 
-/** V5 hero / story products. */
-const HM_HANDLE = "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage";
-const H1_HANDLE = "hp-probook-640-g2-core-i5-6th-gen-8gb-ram-256gb-storage";
-const H2_HANDLE = "lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage";
+/** V5 hero / story products — defaults; may be overridden by published theme when THEME_PUBLISHED_ENABLED=1. */
+const DEFAULT_HM = "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage";
+const DEFAULT_H1 = "hp-probook-640-g2-core-i5-6th-gen-8gb-ram-256gb-storage";
+const DEFAULT_H2 = "lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage";
 
 const href = (p: V5Product) => "/products/" + encodeURIComponent(p.h);
 
@@ -47,15 +48,34 @@ export default async function HomePage() {
     );
   }
 
+  // Optional published theme overrides (safe fallback to approved V5 defaults).
+  const published = await getPublishedHomepageSections();
+  const heroSec = published?.find((s) => s.type === "v5_cinematic_hero" && s.enabled);
+  const storySec = published?.find((s) => s.type === "v5_product_story" && s.enabled);
+  const heroHandles = Array.isArray(heroSec?.settings?.productHandles)
+    ? (heroSec!.settings.productHandles as string[])
+    : [];
+  const HM_HANDLE = heroHandles[0] || DEFAULT_HM;
+  const H1_HANDLE = heroHandles[1] || DEFAULT_H1;
+  const H2_HANDLE = heroHandles[2] || DEFAULT_H2;
+  const storyHandle =
+    typeof storySec?.settings?.productHandle === "string" ? storySec.settings.productHandle : HM_HANDLE;
+
   // Ported from V5 renderVals() (home branch).
   const get = (h: string) => P.find((p) => p.h === h);
   const stock = P.filter((p) => p.comp && p.cat !== "tablet" && p.avail);
   const lapN = stock.length;
   const accN = P.filter((p) => p.cat === "accessory").length;
   const brandN = new Set(stock.map((p) => p.brand)).size;
-  const HM = get(HM_HANDLE) || stock[0];
+  const HM = get(storyHandle) || get(HM_HANDLE) || stock[0];
   const H1 = get(H1_HANDLE) || stock[1];
   const H2 = get(H2_HANDLE) || stock[2];
+  /** When no published theme is loaded, all sections render (V5 default). */
+  const sectionOn = (type: string) => {
+    if (!published) return true;
+    const sec = published.find((s) => s.type === type);
+    return !sec || sec.enabled;
+  };
   const hs = HM.specs;
   const os = hs["Operating system"];
   const storyRows = [
@@ -148,41 +168,59 @@ export default async function HomePage() {
 
   return (
     <>
-      <CinematicHero
-        totalCount={P.length}
-        chromebookCount={P.filter((p) => p.cat === "chromebook").length}
-        laptopCount={lapN}
-        accCount={accN}
-        main={{ ...shot(HM, HM_HANDLE, "dell7420-0.png"), priceText: fmtPkr(HM.pricePaisa), stockText: stockText(HM), chips: HM.chips }}
-        side1={H1 ? shot(H1, H1_HANDLE, "hp640g2-0.png") : null}
-        side2={H2 ? shot(H2, H2_HANDLE, "t580-0.png") : null}
-      />
-      <ProductStory
-        handle={HM.h}
-        title={HM.t}
-        model={HM.model}
-        config={HM.config}
-        priceText={fmtPkr(HM.pricePaisa)}
-        stockText={stockText(HM)}
-        pricePaisa={HM.pricePaisa}
-        variantId={HM.variantId}
-        maxPerOrder={HM.maxPerOrder}
-        available={HM.avail}
-        angles={[0, 1, 2, 3].map((i) => {
-          const cut = HM.h === HM_HANDLE ? cutoutUrl(`dell7420-${i}.png`) : null;
-          return { src: cut || HM.imgs[i]?.u || null, cutout: !!cut };
-        })}
-        rows={storyRows}
-      />
-      <ChromebookSection cb={cb} />
-      <BrandSection tiles={brandTiles} />
-      <FeaturedSection cards={stock.slice(0, 8).map(v5Card)} laptopCount={lapN} brandTotal={brandN} accCount={accN} />
-      <PromoSection promo={promo} />
-      <SpecSection links={quickLinks} />
-      <NewGenSection cards={[...newGen].sort((x, y) => (y.gen ?? 0) - (x.gen ?? 0) || x.i - y.i).slice(0, 10).map(v5Card)} count={newGen.length} />
-      <BudgetSection tiles={["under-40k", "40k-60k", "over-60k"].map((id) => v5Link(P, id))} />
-      <CompareDemoSection demo={cmpDemo} />
-      <HomeInquirySection phones={confirmedPhones().map((p) => ({ display: p.display, href: telHref(p) }))} privacyHref={(await contentVisibility()).pages.privacy ? "/pages/privacy" : null} />
+      {sectionOn("v5_cinematic_hero") ? (
+        <CinematicHero
+          totalCount={P.length}
+          chromebookCount={P.filter((p) => p.cat === "chromebook").length}
+          laptopCount={lapN}
+          accCount={accN}
+          main={{ ...shot(HM, DEFAULT_HM, "dell7420-0.png"), priceText: fmtPkr(HM.pricePaisa), stockText: stockText(HM), chips: HM.chips }}
+          side1={H1 ? shot(H1, DEFAULT_H1, "hp640g2-0.png") : null}
+          side2={H2 ? shot(H2, DEFAULT_H2, "t580-0.png") : null}
+        />
+      ) : null}
+      {sectionOn("v5_product_story") ? (
+        <ProductStory
+          handle={HM.h}
+          title={HM.t}
+          model={HM.model}
+          config={HM.config}
+          priceText={fmtPkr(HM.pricePaisa)}
+          stockText={stockText(HM)}
+          pricePaisa={HM.pricePaisa}
+          variantId={HM.variantId}
+          maxPerOrder={HM.maxPerOrder}
+          available={HM.avail}
+          angles={[0, 1, 2, 3].map((i) => {
+            const cut = HM.h === DEFAULT_HM ? cutoutUrl(`dell7420-${i}.png`) : null;
+            return { src: cut || HM.imgs[i]?.u || null, cutout: !!cut };
+          })}
+          rows={storyRows}
+        />
+      ) : null}
+      {sectionOn("v5_chromebook") ? <ChromebookSection cb={cb} /> : null}
+      {sectionOn("v5_brand_grid") ? <BrandSection tiles={brandTiles} /> : null}
+      {sectionOn("v5_featured_products") ? (
+        <FeaturedSection cards={stock.slice(0, 8).map(v5Card)} laptopCount={lapN} brandTotal={brandN} accCount={accN} />
+      ) : null}
+      {sectionOn("v5_promo") ? <PromoSection promo={promo} /> : null}
+      {sectionOn("v5_spec_filters") ? <SpecSection links={quickLinks} /> : null}
+      {sectionOn("v5_new_gen") ? (
+        <NewGenSection
+          cards={[...newGen].sort((x, y) => (y.gen ?? 0) - (x.gen ?? 0) || x.i - y.i).slice(0, 10).map(v5Card)}
+          count={newGen.length}
+        />
+      ) : null}
+      {sectionOn("v5_budget_bands") ? (
+        <BudgetSection tiles={["under-40k", "40k-60k", "over-60k"].map((id) => v5Link(P, id))} />
+      ) : null}
+      {sectionOn("v5_compare_demo") ? <CompareDemoSection demo={cmpDemo} /> : null}
+      {sectionOn("v5_home_inquiry") ? (
+        <HomeInquirySection
+          phones={confirmedPhones().map((p) => ({ display: p.display, href: telHref(p) }))}
+          privacyHref={(await contentVisibility()).pages.privacy ? "/pages/privacy" : null}
+        />
+      ) : null}
     </>
   );
 }

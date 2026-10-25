@@ -30,9 +30,17 @@ export const metadata: Metadata = {
   robots: isPrelaunch() ? { index: false, follow: true } : { index: true, follow: true },
 };
 
+import {
+  getPublishedNavigation,
+  sanitizePublicFooterColumns,
+  sanitizePublicNavLinks,
+  type NavigationConfig,
+} from "@/lib/content/navigation";
+
 /** Header/footer data: V5 menu counts, the mega-menu feature (first listed laptop), public content links. */
-async function loadChrome(vis: Visibility): Promise<ChromeData> {
+async function loadChrome(vis: Visibility, navConfig: NavigationConfig): Promise<ChromeData> {
   const support = supportHref(vis);
+  const publicNav = sanitizePublicNavLinks(navConfig.headerNav, vis);
   try {
     const P = await getV5Catalog();
     const p = P.find((x) => x.comp && x.cat !== "tablet" && x.avail);
@@ -43,6 +51,7 @@ async function loadChrome(vis: Visibility): Promise<ChromeData> {
       supportHref: support,
       guidesPublic: Object.values(vis.articles).some(Boolean),
       totalCount: P.length,
+      navLinks: publicNav,
       megaFeat: p
         ? {
             href: "/products/" + encodeURIComponent(p.h),
@@ -54,7 +63,14 @@ async function loadChrome(vis: Visibility): Promise<ChromeData> {
         : null,
     };
   } catch {
-    return { menu: [], megaFeat: null, totalCount: 0, supportHref: support, guidesPublic: Object.values(vis.articles).some(Boolean) };
+    return {
+      menu: [],
+      megaFeat: null,
+      totalCount: 0,
+      supportHref: support,
+      guidesPublic: Object.values(vis.articles).some(Boolean),
+      navLinks: publicNav,
+    };
   }
 }
 
@@ -73,7 +89,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     );
   }
   const vis = await contentVisibility();
-  const chrome = await loadChrome(vis);
+  const navConfig = await getPublishedNavigation();
+  const chrome = await loadChrome(vis, navConfig);
+  const publicFooterCols = sanitizePublicFooterColumns(navConfig.footerColumns, vis);
   return (
     <html lang="en-PK" className={`${hanken.variable} ${sora.variable} ${jetbrains.variable}`}>
       <body className="flex min-h-screen flex-col antialiased">
@@ -88,7 +106,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <main id="main" className="flex-1">
           {children}
         </main>
-        <SiteFooter totalCount={chrome.totalCount} vis={vis} />
+        <SiteFooter totalCount={chrome.totalCount} vis={vis} footerCols={publicFooterCols} />
         <CompareTray />
         <CartDrawer />
         <Toast />

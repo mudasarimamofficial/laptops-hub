@@ -4,12 +4,21 @@ import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staf
 import { evaluateMerchantWritePolicy } from "@/lib/security/merchant-write-guard";
 import { revalidatePath } from "next/cache";
 
+export const dynamic = "force-dynamic";
+
 const schema = z.object({
   confirmRollback: z.literal(true),
   targetVersionId: z.string().uuid(),
 });
 
-/** Point homepage publication at a previously published immutable snapshot. */
+/**
+ * Point homepage publication at a previously published immutable snapshot.
+ *
+ * Rules:
+ * - Blocked if Preview deployment shares Production Supabase.
+ * - Allowed in Production and local/staging for authorized owner/admin.
+ * - Bounded by THEME_PUBLISH_DISABLED=1 emergency kill switch.
+ */
 export async function POST(request: Request) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin"]);
@@ -23,11 +32,22 @@ export async function POST(request: Request) {
     }
 
     const policy = evaluateMerchantWritePolicy();
-    if (!policy.isLocalSupabase && policy.reason !== "MERCHANT_WRITES_ALLOW_REMOTE=1") {
+    if (!policy.allowed) {
       return NextResponse.json(
         {
-          error: "production_rollback_blocked",
-          message: "Theme rollback is blocked on non-local stacks until owner-approved go-live.",
+          error: "theme_rollback_blocked",
+          message: `Theme rollback refused: ${policy.reason}. Preview deployments sharing Production Supabase are read-only.`,
+          writePolicy: { reason: policy.reason },
+        },
+        { status: 403 },
+      );
+    }
+
+    if (process.env.THEME_PUBLISH_DISABLED === "1") {
+      return NextResponse.json(
+        {
+          error: "theme_rollback_disabled",
+          message: "Theme rollback is disabled by environment configuration (THEME_PUBLISH_DISABLED=1).",
         },
         { status: 403 },
       );
@@ -51,6 +71,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "rollback_inconsistent" }, { status: 500 });
     }
 
+    await supabase.from("audit_logs").insert({
+      actor_user_id: staff.userId,
+      action: "theme.homepage.rollback",
+      entity_type: "theme_publications",
+      entity_id: result.published_version_id,
+      after: {
+        published_version_id: result.published_version_id,
+        previous_version_id: result.previous_version_id,
+        target_version_id: parsed.data.targetVersionId,
+      },
+    });
+
     revalidatePath("/");
     revalidatePath("/admin/online-store");
 
@@ -59,7 +91,6 @@ export async function POST(request: Request) {
         ok: true,
         publishedVersionId: result.published_version_id,
         previousVersionId: result.previous_version_id ?? null,
-        notice: "Rolled back to the selected published snapshot.",
       },
       { headers: { "Cache-Control": "no-store" } },
     );

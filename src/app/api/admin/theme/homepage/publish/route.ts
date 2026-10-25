@@ -4,6 +4,8 @@ import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staf
 import { evaluateMerchantWritePolicy } from "@/lib/security/merchant-write-guard";
 import { revalidatePath } from "next/cache";
 
+export const dynamic = "force-dynamic";
+
 const schema = z.object({
   confirmPublish: z.literal(true),
   /** Source draft (or prior published) to snapshot — never pointed at directly. */
@@ -15,6 +17,11 @@ const schema = z.object({
 /**
  * Publish homepage: always creates an immutable `published` snapshot, then
  * updates theme_publications to that new row (never points at a draft).
+ *
+ * Rules:
+ * - Blocked if Preview deployment shares Production Supabase.
+ * - Allowed in Production and local/staging for authorized owner/admin.
+ * - Bounded by THEME_PUBLISH_DISABLED=1 emergency kill switch.
  */
 export async function POST(request: Request) {
   try {
@@ -29,13 +36,22 @@ export async function POST(request: Request) {
     }
 
     const policy = evaluateMerchantWritePolicy();
-    if (!policy.isLocalSupabase && policy.reason !== "MERCHANT_WRITES_ALLOW_REMOTE=1") {
+    if (!policy.allowed) {
       return NextResponse.json(
         {
-          error: "production_publish_blocked",
-          message:
-            "Theme publish is blocked until owner-approved go-live on an authorized environment. Local verified Supabase only for now.",
+          error: "theme_publish_blocked",
+          message: `Theme publish refused: ${policy.reason}. Preview deployments sharing Production Supabase are read-only.`,
           writePolicy: { reason: policy.reason },
+        },
+        { status: 403 },
+      );
+    }
+
+    if (process.env.THEME_PUBLISH_DISABLED === "1") {
+      return NextResponse.json(
+        {
+          error: "theme_publish_disabled",
+          message: "Theme publishing is disabled by environment configuration (THEME_PUBLISH_DISABLED=1).",
         },
         { status: 403 },
       );
@@ -99,6 +115,19 @@ export async function POST(request: Request) {
         { status: 500 },
       );
     }
+
+    await supabase.from("audit_logs").insert({
+      actor_user_id: staff.userId,
+      action: "theme.homepage.publish",
+      entity_type: "theme_publications",
+      entity_id: result.published_version_id,
+      after: {
+        published_version_id: result.published_version_id,
+        previous_version_id: result.previous_version_id,
+        label: result.label,
+        section_count: result.section_count,
+      },
+    });
 
     revalidatePath("/");
     revalidatePath("/admin/online-store");

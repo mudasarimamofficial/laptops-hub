@@ -5,7 +5,7 @@
 **Project:** Laptops HUB (`mudasarimamofficial/laptops-hub`)  
 **Workspace:** `d:\Laptops Hub Vercel Development`  
 **Current Branch:** `feat/merchant-operating-system`  
-**Latest Remote Git SHA:** `b92391476b64ae44b7b9ea7513be643b6cd67e24`  
+**Base Commit SHA:** `c902d03`  
 **Production Branch:** `main` (`2b43236671983f22ed8766fc765addf4ea44a7d3`)  
 **Public Storefront:** `https://laptops-hub.vercel.app`  
 **Production Supabase Reference:** `xvmmjkrkgznnakcobmww` (strictly 14 migrations; untouched)  
@@ -29,7 +29,7 @@ All enterprise merchant operating system requirements are now complete on `feat/
 |---|---|---|
 | **Git Repository** | `mudasarimamofficial/laptops-hub` | Local workspace clean; tracked on `origin/feat/merchant-operating-system` |
 | **Production Branch** | `main` | SHA `2b43236671983f22ed8766fc765addf4ea44a7d3` |
-| **Feature Branch** | `feat/merchant-operating-system` | Base SHA `b92391476b64ae44b7b9ea7513be643b6cd67e24` |
+| **Feature Branch** | `feat/merchant-operating-system` | Current head on `feat/merchant-operating-system` |
 | **Production Supabase** | `xvmmjkrkgznnakcobmww` | Strictly 14 migrations (`20261021120000` to `20261024100000`). Zero mutations. |
 | **Local Supabase** | Docker stack on port 54321/54322 | 19 migrations fully applied (including 5 new enterprise migrations). |
 | **Local Web Server** | Next.js 16.0.0 App Router on port 3001 | Running with `THEME_PUBLISHED_ENABLED=1` for isolated E2E testing. |
@@ -40,77 +40,79 @@ All enterprise merchant operating system requirements are now complete on `feat/
 
 ## 3. Work Completed by Antigravity IDE
 
-1. **Reproduction & Verification of Prior Work:**
-   - Ran `npm run test:unit`: 22/22 tests passed cleanly.
-   - Ran `scripts/test-theme-rls-matrix.mjs`: All 7 security gates passed (anon denied; staff SELECT only; direct write denied; editor draft save allowed; owner publish allowed; immutable published snapshot even against service_role; anon public RPC returns published sections only; admin rollback verified; revoked staff blocked; actor spoofing blocked).
-   - Ran `scripts/test-inventory-ledger-sync.mjs`: Verified delta ledger calculations (`delta: 7, after: 12`) and negative stock rejection.
-   - Ran `scripts/test-theme-publish-smoke.mjs`: Verified draft save, publication pointer update, and rollback pointer.
-   - Ran `npm run test:merchant:csv`: Staged 2, dry-run 2, commit 2, media rows 3, idempotent reimport skip 2 verified.
-   - Ran `npm run test:merchant:smoke`: 25/25 checks passed.
-   - Ran `scripts/test-cod-concurrency.mjs`: 16/16 passed (burst same-key, replay after completion, cross-order race, distinct keys no over-collection).
-   - Ran `scripts/security-role-matrix.mjs`: 15/15 passed across all roles and write endpoints.
-   - Ran `scripts/test-cod-checkout-isolated.mjs`: 23/23 passed.
-   - Ran Playwright E2E suites: `theme-publish-workflow.spec.ts` 8/8 passed; `merchant-admin-workflows.spec.ts` & `homepage-presets.spec.ts` 10/10 passed.
-2. **Defect Remediation & Stability Hardening:**
-   - Fixed Windows Node.js libuv event loop exit assertion in `scripts/test-inventory-ledger-sync.mjs` by switching from immediate `process.exit(0)` to `process.exitCode = 0`.
-   - Added direct "Bulk edit" link to `/admin/products` header (`src/app/admin/products/page.tsx`) ensuring frictionless merchant access to the bulk product catalog editor.
-   - Implemented a complete `/admin/navigation` management interface (`src/app/admin/navigation/page.tsx`) enabling merchants to inspect all storefront menus, live URL statuses, and legal approval badges.
-   - Updated `merchant-admin-workflows.spec.ts` to assert `/admin/navigation` accessibility and verified 9/9 passed.
-3. **Live Storefront Audit:**
-   - Crawled live production storefront (`https://laptops-hub.vercel.app`) using `scripts/check-public-copy.mjs`: 289 paths crawled, 0 unfinished/banned copy strings found, 0 broken links.
-4. **Production Build Validation:**
-   - Executed `npm run build` using Next.js Turbopack: completed TypeScript compilation with 0 errors and generated all 37 static routes in 102 seconds.
-5. **Documentation & Knowledge Base:**
-   - Created `docs/MERCHANT_HANDBOOK.md`: 14-section merchant manual explaining products, variants, bulk editing, CSV import/export, media URLs, visual editor, navigation, orders, cash collection, and shipping.
-   - Updated `docs/ENTERPRISE_ADMIN_EXECUTION_MATRIX.md` with verified statuses.
-   - Updated `docs/SITE_BUILDER_SCHEMA.md` with full RPC, immutability, and presets documentation.
-   - Updated `docs/SHOPIFY_CSV_COMPATIBILITY_MATRIX.md` with import conflict strategies and 5 export formats.
-   - Updated `docs/PRODUCTION_RELEASE_CANDIDATE.md` with machine-verified test evidence and the 5 enterprise migrations.
+1. **P0 Fix 1 — Production-Capable Shopify CSV Import Path:**
+   - Modified `src/app/api/admin/products/import/route.ts` to allow authorized `owner` and `admin` roles to commit imports on Production.
+   - Enforced explicit confirmation (`confirmCommit: true`) and dry-run preview validation (`previewFingerprint` verification).
+   - Preserved `canPersistMerchantSideEffects()`: Preview deployments sharing Production Supabase remain strictly read-only.
+   - Updated `src/components/admin/shopify-import-wizard.tsx` with a dry-run reconciliation summary and modal confirmation detailing additions/updates before committing.
+2. **P0 Fix 2 — Production-Compatible Theme Publication & Rollback:**
+   - Modified `src/app/api/admin/theme/homepage/publish/route.ts` and `src/app/api/admin/theme/homepage/rollback/route.ts` to enable owner/admin publishing in Production.
+   - Preserved Preview-to-Production isolation (Preview remains read-only).
+   - Added emergency kill switch `THEME_PUBLISH_DISABLED=1`.
+   - Wired Next.js path revalidation (`revalidatePath("/")`, `revalidatePath("/admin/online-store")`) and durable `audit_logs` tracking.
+3. **P0 Fix 3 — Full No-Code Navigation Management:**
+   - Created `src/lib/content/navigation.ts` defining `NavigationConfig`, canonical V5 defaults, URL sanitization (`isSafeDestinationUrl` blocking `/admin/*`, `/api/*`, `javascript:`), and public policy gating (`isLinkPublic`).
+   - Created `src/app/api/admin/navigation/route.ts` supporting `GET` (fetch config and available collections/pages), `PUT` (save & publish with verification), and `POST` (restore defaults).
+   - Built interactive client editor `src/components/admin/navigation-editor.tsx` in `src/app/admin/navigation/page.tsx` supporting menu item creation, destination picker, item reordering (Move Up / Down), deletion, footer column management, and live publication badges.
+   - Wired dynamic published navigation into `src/app/layout.tsx`, `src/components/storefront/site-header.tsx` (header + mobile drawer), and `src/components/storefront/site-footer.tsx`, seamlessly falling back to approved V5 defaults.
+4. **P0 Fix 4 — Store Settings Persistence & Atomicity:**
+   - Rewrote `src/app/api/admin/store-settings/route.ts` to fetch existing setting keys before writing and deep merge incoming changes, strictly preventing partial updates from wiping unmentioned fields (e.g. support contacts).
+   - Checked every Supabase database result: immediately returns actionable 500 error on any failure.
+   - Executed a fresh database readback to confirm persistence before returning success.
+   - Added `GET` endpoint for store settings.
+   - Updated `src/lib/auth/staff.ts` to support both Bearer tokens and cookie authentication via `extractAuthUser(supabase)` querying the authoritative `admin_memberships` table.
+5. **P1 — Strengthened Merchant Tests:**
+   - Created and passed `scripts/test-settings-navigation-persistence.mjs`: verified initial settings save, partial update preservation, validation error (400), anonymous rejection (401), custom navigation save, unsafe link rejection (400), restore defaults, and public storefront rendering.
+   - Created and passed `tests/unit/navigation.test.ts`: verified defaults, URL safety, link gating, and column sanitization.
+   - Added `navigation.test.ts` to `npm run test:unit` (now 23/23 tests passing).
+   - Verified Playwright E2E suites: `theme-publish-workflow.spec.ts` (8/8 passed) and `merchant-admin-workflows.spec.ts` + `homepage-presets.spec.ts` (10/10 passed).
 
 ---
 
-## 4. Source-of-Truth Hierarchy
+## 4. Reconciled Technical Facts & Source-of-Truth
 
-1. **Current Git Code & Database Schema:** The active repository code and database constraints represent the authoritative truth.
-2. **Reproducible Machine Test Evidence:** Direct CLI and browser test outputs take precedence over documentation claims.
-3. **This Document (`ANTIGRAVITY_HANDOVER_AND_EXECUTION_STATE.md`):** Current baseline, active SHAs, and verified facts.
-4. **Historical Handover Documents:**
-   - `docs/CURSOR_MASTER_EXECUTION_STATE.md`: Preserved as historical evidence of the Cursor IDE phase.
-   - `docs/FINAL_COMPLETION_REPORT.md` / `docs/RESUME.md`: Historical records from Phase B (Claude Code).
-
----
-
-## 5. Security & Isolation Boundaries
-
-- **Zero Production Mutations:** Antigravity IDE has not run any migrations, DML statements, or test orders against the hosted Production Supabase instance (`xvmmjkrkgznnakcobmww`).
-- **Dry-Run Mutation Guard:** `src/app/api/admin/products/import/route.ts` skips writing to `import_jobs` or `audit_logs` during CSV dry-runs in preview environments (`mayPersist = false`).
-- **Async Write Guard:** `src/lib/security/merchant-write-guard.ts` uses `assertMerchantMutationAllowedAsync` to inspect endpoint identity and fail closed on non-local databases.
-- **Cash on Delivery Gated:** Production COD remains strictly turned off (`COD_CHECKOUT_ENABLED=false` and `app_config.cod_enabled=false`).
+| Concept / Field | Correct Technical Reality | Historical Inaccuracy in Prior Docs |
+|---|---|---|
+| **Staff Role Table** | `public.admin_memberships` (`user_id`, `role`, `is_active`) | Some older docs referred to `staff_memberships`. The PostgreSQL table is strictly `admin_memberships`. |
+| **COD Database Gate** | `store_settings` with key `'cod_checkout'` (`{ enabled: boolean }`) | Some older docs referred to `app_config.cod_enabled`. The table is `store_settings`. |
+| **COD Env Gate** | `process.env.COD_CHECKOUT_ENABLED === "true"` | Unchanged; must remain `false` for Production until final approval. |
+| **Navigation State** | Merchant-editable via `/admin/navigation` and stored in `store_settings` (`key = 'navigation'`) | Prior version was a read-only inspection interface. |
+| **Shopify CSV Staging** | Full dry-run preview, conflict strategies (`update_matching`, `skip_existing`, `create_only`), idempotent fingerprint skip | Prior API unconditionally blocked all non-local commits. |
+| **Theme Publishing** | Owner/Admin RPC execution with immutable snapshots, rollback, audit logs, and preview protection | Prior API unconditionally blocked all non-local publish calls. |
 
 ---
 
-## 6. How to Resume Work (Next Steps)
+## 5. Review of the Five Enterprise Migrations
 
-If continuing in a future session:
-1. Ensure Docker Desktop is running and verify local Supabase:
+1. `supabase/migrations/20261025120000_merchant_catalog_extensions.sql`
+   - **Scope:** Adds `deleted_at`, `deleted_by`, `option_names`, `template_key`, `updated_by` to `products`; adds `barcode`, `allow_oversell`, `cost_paisa` to `product_variants`; adds `origin`, `source_provider`, `health_status`, `is_primary` to `product_media`; adds `collection_type` to `collections`; creates `inventory_ledger` table; adds import tracking to `import_jobs`; creates `catalog_products_public` view.
+   - **Safety:** Strictly additive. Existing products, variants, and orders are 100% preserved. Existing production application functions normally if applied first.
+2. `supabase/migrations/20261025130000_site_builder_sections.sql`
+   - **Scope:** Creates `theme_templates`, `theme_versions`, `theme_publications`; seeds initial V5 homepage sections.
+   - **Safety:** Granted only to authenticated staff; anon revoked. No impact on existing storefront until `THEME_PUBLISHED_ENABLED=1`.
+3. `supabase/migrations/20261025140000_theme_publish_variant_rpc.sql`
+   - **Scope:** Creates `get_published_homepage_sections` public reader; creates `publish_homepage_theme`, `rollback_homepage_theme`, `sync_product_variants` RPCs.
+   - **Safety:** SECURITY DEFINER functions check `admin_memberships`. Actor spoofing prevented.
+4. `supabase/migrations/20261025150000_theme_rls_inventory_hardening.sql`
+   - **Scope:** Creates `save_homepage_draft` RPC with HTTPS image URL validation; revokes direct table writes to theme tables; attaches `theme_immutability_guard` trigger; synchronizes variant stock changes directly to `inventory_ledger`.
+   - **Safety:** Enforces role-based access control and ledger integrity.
+5. `supabase/migrations/20261025160000_theme_immutability_service_role.sql`
+   - **Scope:** Hardens `theme_immutability_guard` trigger so even `service_role` cannot alter published/archived theme versions unless `app.theme_mutation = 'authorized'` is set.
+   - **Safety:** Prevents bypass of theme immutability.
+
+---
+
+## 6. How to Resume Work
+
+To run tests or continue work:
+1. Ensure Docker Desktop is active and verify local Supabase:
    ```powershell
    npx supabase status
    ```
-2. Start the local test server if not running:
-   ```powershell
-   $env:NEXT_PUBLIC_SUPABASE_URL='http://127.0.0.1:54321'
-   $env:NEXT_PUBLIC_SUPABASE_ANON_KEY='<anon_key>'
-   $env:SUPABASE_SERVICE_ROLE_KEY='<service_role_key>'
-   $env:THEME_PUBLISHED_ENABLED='1'
-   $env:PORT='3001'
-   npm run dev
-   ```
-3. Run test suites on demand:
+2. Run test suites:
    ```powershell
    npm run test:unit
-   node scripts/test-theme-rls-matrix.mjs
-   $env:PLAYWRIGHT_BASE_URL='http://127.0.0.1:3001'
-   npx playwright test tests/e2e/theme-publish-workflow.spec.ts
-   npx playwright test tests/e2e/merchant-admin-workflows.spec.ts tests/e2e/homepage-presets.spec.ts
+   node scripts/test-settings-navigation-persistence.mjs
+   $env:PLAYWRIGHT_BASE_URL='http://127.0.0.1:3001'; $env:NEXT_PUBLIC_SUPABASE_URL='http://127.0.0.1:54321'; $env:NEXT_PUBLIC_SUPABASE_ANON_KEY='...'; $env:SUPABASE_SERVICE_ROLE_KEY='...'; $env:THEME_PUBLISHED_ENABLED='1'; npx playwright test tests/e2e/merchant-admin-workflows.spec.ts tests/e2e/homepage-presets.spec.ts tests/e2e/theme-publish-workflow.spec.ts
    ```
-4. Await owner approvals for Production rollout stages (Approval A through F in `docs/PRODUCTION_RELEASE_CANDIDATE.md`).
+3. Await owner approvals for Production rollout stages (Approval A through E).

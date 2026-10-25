@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import {
   assertMerchantMutationAllowedAsync,
@@ -24,15 +25,32 @@ export class StaffAuthError extends Error {
   }
 }
 
-/** Read membership for the current user (user-scoped client; RLS applies). */
+async function extractAuthUser(supabase: Awaited<ReturnType<typeof createClient>>) {
+  try {
+    const reqHeaders = await headers();
+    const authHeader = reqHeaders.get("authorization");
+    if (authHeader && /^Bearer\s+/i.test(authHeader)) {
+      const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+      if (token) {
+        const res = await supabase.auth.getUser(token);
+        if (res.data?.user) return res.data.user;
+      }
+    }
+  } catch {
+    // headers() might not be available in non-request contexts
+  }
+  const { data: { user } } = await supabase.auth.getUser();
+  return user ?? null;
+}
+
+/** Read membership for the current user. */
 export async function getStaffMembership(): Promise<StaffSession | null> {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await extractAuthUser(supabase);
   if (!user) return null;
 
-  const { data, error } = await supabase
+  const serviceClient = createServiceClient();
+  const { data, error } = await serviceClient
     .from("admin_memberships")
     .select("role, is_active")
     .eq("user_id", user.id)
@@ -59,15 +77,14 @@ function roleAllowed(actual: StaffRole, allowed?: StaffRole[]): boolean {
  */
 export async function requireStaff(allowedRoles?: StaffRole[]): Promise<StaffSession> {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await extractAuthUser(supabase);
 
   if (!user) {
     throw new StaffAuthError("unauthenticated", "Sign in required", 401);
   }
 
-  const { data, error } = await supabase
+  const serviceClient = createServiceClient();
+  const { data, error } = await serviceClient
     .from("admin_memberships")
     .select("role, is_active")
     .eq("user_id", user.id)

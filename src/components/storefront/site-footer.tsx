@@ -60,9 +60,20 @@ const FOOTER_COLS = [
   },
 ];
 
+import type { FooterNavColumn } from "@/lib/content/navigation";
+
 /** Content links (help, policies, company pages) appear only once that page is public. */
-export function SiteFooter({ totalCount, vis }: { totalCount: number; vis: Visibility }) {
-  const cols = FOOTER_COLS.map((c) => ({ ...c, links: publicLinks(c.links, vis) })).filter((c) => c.links.length > 0);
+export function SiteFooter({
+  totalCount,
+  vis,
+  footerCols,
+}: {
+  totalCount: number;
+  vis: Visibility;
+  footerCols?: FooterNavColumn[];
+}) {
+  const source = footerCols && footerCols.length > 0 ? footerCols : FOOTER_COLS;
+  const cols = source.map((c) => ({ ...c, links: publicLinks(c.links, vis) })).filter((c) => c.links.length > 0);
   return (
     <footer
       style={{

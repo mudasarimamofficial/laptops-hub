@@ -121,6 +121,8 @@ export function ShopifyImportWizard() {
     });
   }
 
+  const [validatedFingerprint, setValidatedFingerprint] = useState<string | null>(null);
+
   async function runServer(dryRun: boolean) {
     if (!csvText) return;
     setBusy(true);
@@ -136,6 +138,7 @@ export function ShopifyImportWizard() {
           strategy,
           dryRun,
           confirmCommit: dryRun ? undefined : true,
+          previewFingerprint: dryRun ? undefined : (validatedFingerprint || undefined),
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -145,6 +148,9 @@ export function ShopifyImportWizard() {
         return;
       }
       setServerReport(data);
+      if (dryRun && data.fingerprint) {
+        setValidatedFingerprint(data.fingerprint);
+      }
       setHistoryKey((k) => k + 1);
       if (expectedFingerprint && data.fingerprint && expectedFingerprint !== data.fingerprint) {
         setErr(
@@ -252,8 +258,7 @@ export function ShopifyImportWizard() {
           </label>
 
           <p className="mt-4 rounded-lg border border-[var(--adm-border)] bg-[var(--adm-surface-2)] px-3 py-2 text-sm text-[var(--adm-ink-2)]">
-            Missing products from a CSV are never deleted. Image URLs stay as remote references with pending rights.
-            Server dry-run writes an import_jobs report. Commit is allowed only against local Supabase.
+            Products absent from the CSV are never deleted. Image URLs remain valid external Shopify CDN references with pending rights. Run a server dry-run to validate row changes before committing. Preview deployments sharing Production Supabase remain read-only.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-3">
@@ -267,14 +272,22 @@ export function ShopifyImportWizard() {
             </button>
             <button
               type="button"
-              disabled={!hydrated || busy || !csvText}
+              disabled={!hydrated || busy || !csvText || !validatedFingerprint}
               onClick={() => {
-                if (!confirm("Commit this import to the connected database? Blocked on Production hosts.")) return;
+                const addCount = serverReport?.summary?.created ?? preview.summary.productCount;
+                const updateCount = serverReport?.summary?.updated ?? 0;
+                if (
+                  !confirm(
+                    `Are you sure you want to commit this import to the database?\n\nStrategy: ${strategy}\nProducts to add: ${addCount}\nProducts to update: ${updateCount}\n\nExisting unlisted products will NOT be deleted.`,
+                  )
+                ) {
+                  return;
+                }
                 runServer(false);
               }}
               className="rounded-lg bg-[var(--lh-action)] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
             >
-              Commit (local DB only)
+              {busy ? "Processing…" : validatedFingerprint ? "Commit import" : "Run dry-run before commit"}
             </button>
           </div>
 

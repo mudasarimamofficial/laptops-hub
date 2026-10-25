@@ -179,12 +179,31 @@ The homepage features the frozen V5 cinema layout:
 
 ---
 
-## 9. Store Navigation & Link Gating
+## 9. Store Navigation & No-Code Menu Management
 
 Navigate to **Admin → Navigation** (`/admin/navigation`):
-- Inspect the **Header Primary Menu** (`Dell`, `HP`, `Lenovo`, `Chromebooks`, `Accessories`, `Guides`, `Support`).
-- Inspect the 5 **Footer Columns** (`Shop`, `By brand & spec`, `Help`, `Policies`, `Company`).
-- **Automatic Customer Protection:** Links to policy pages (`/pages/shipping`, `/pages/returns`, etc.) or buying guides only appear publicly when that page is marked **Published** and **Legally Approved**. If a policy is still a draft, its link is automatically hidden from visitors to prevent 404 errors.
+
+Laptops HUB provides complete no-code menu management connected directly to the live customer storefront.
+
+### 9.1 Header & Mobile Navigation
+- **Add Items:** Click **+ Add Menu Item** to create new navigation links.
+- **Label & Destination:** Enter human-readable titles (e.g., `Gaming Laptops`, `Clearance`, `Warranty Info`) and set the destination URL.
+- **Destination Picker:** Use the dropdown quick-picker to automatically select from published catalog collections (e.g., `/collections/dell-laptops`), product listings (`/products`), or CMS pages (`/pages/about`).
+- **Reorder & Organize:** Click **↑** (move up) or **↓** (move down) to adjust the sequence of items displayed across the desktop header and mobile slide-out drawer.
+- **Remove:** Click the trash icon to delete an item.
+
+### 9.2 Footer Columns Management
+- Customize up to 5 footer columns (`Shop`, `By brand & spec`, `Help`, `Policies`, `Company`).
+- Update column titles, reorder links, and insert custom links to collections, guides, or external resources.
+- Safe link gating automatically validates each link:
+  - Internal relative URLs (`/collections/...`, `/pages/...`) are allowed.
+  - Safe external HTTPS URLs are supported.
+  - Dangerous protocols (`javascript:`, `data:`, local network IPs) are strictly rejected.
+
+### 9.3 Publication & Safe Fallbacks
+- Click **Save Navigation Changes** to publish updates atomically. The storefront revalidates immediately.
+- If you ever need to restore the canonical V5 storefront structure, click **Restore V5 Defaults**.
+- **Automatic Customer Protection:** Links to policy pages (`/pages/shipping`, `/pages/returns`, etc.) only appear publicly when that page is marked **Published** and **Legally Approved**. If a policy is still a draft, its link is automatically hidden from visitors to prevent 404 errors.
 
 ---
 
@@ -268,13 +287,18 @@ Navigate to **Admin → Inquiries** (`/admin/inquiries`):
 
 ## 14. Store Settings & Emergency Controls
 
-### 14.1 Business Information
+### 14.1 Business Information & Atomic Settings Persistence
 Under **Admin → Settings**:
 - Store Business Name: `Laptops HUB`
 - Support Phone: E.g., `0309 3372974`, `0313 6565663`, or `0339 9100199`
 - Support Email: E.g., `support@laptopshub.pk`
 - Physical Address: `1st Floor, Al Raheem Center Plaza, University Chowk, Bahawalpur, Pakistan`
 - SEO Title Suffix: E.g., `| Laptops HUB Bahawalpur`
+
+**Atomic Persistence & Data Protection:**
+- Settings updates use deep merging against existing database records. Saving an individual section (such as updating shipping zones or SEO title) will **never** unintentionally overwrite or erase previously saved contact phones, addresses, or operational policies.
+- Every database write is strictly validated and confirmed with a fresh readback before reporting success.
+- If a database write encounters an issue, the system returns a detailed error message and leaves the existing settings intact.
 
 ### 14.2 Emergency COD Kill Switch
 If courier operations are suspended (e.g., national holiday, courier strike, or inventory audit), the owner can disable COD checkout instantly:

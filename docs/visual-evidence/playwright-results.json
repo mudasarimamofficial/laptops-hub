@@ -4,8 +4,7 @@
       "C:\\nvm4w\\nodejs\\node.exe",
       "D:\\Laptops Hub Vercel Development\\node_modules\\@playwright\\test\\cli.js",
       "test",
-      "tests/e2e/merchant-admin-workflows.spec.ts",
-      "--config=playwright.config.ts"
+      "tests/e2e/theme-publish-workflow.spec.ts"
     ],
     "configFile": "D:\\Laptops Hub Vercel Development\\playwright.config.ts",
     "rootDir": "D:/Laptops Hub Vercel Development/tests/e2e",
@@ -95,20 +94,20 @@
   },
   "suites": [
     {
-      "title": "merchant-admin-workflows.spec.ts",
-      "file": "merchant-admin-workflows.spec.ts",
+      "title": "theme-publish-workflow.spec.ts",
+      "file": "theme-publish-workflow.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "merchant admin workflows",
-          "file": "merchant-admin-workflows.spec.ts",
-          "line": 46,
+          "title": "theme publish/rollback browser workflow",
+          "file": "theme-publish-workflow.spec.ts",
+          "line": 135,
           "column": 15,
           "specs": [
             {
-              "title": "seed staff roles",
+              "title": "seed published baseline A",
               "ok": true,
               "tags": [],
               "tests": [
@@ -118,8 +117,8 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                        "line": 46,
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
                         "column": 15
                       }
                     }
@@ -132,18 +131,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5415,
+                      "duration": 3321,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-25T20:36:59.467Z",
+                      "startTime": "2026-10-25T22:04:06.326Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                            "line": 46,
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
                             "column": 15
                           }
                         }
@@ -154,13 +153,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "f3213d8a8edd57ec3d33-794858d92a6576abd5ba",
-              "file": "merchant-admin-workflows.spec.ts",
-              "line": 52,
+              "id": "13543266674abcaf3d4f-e66a66b2e366ca2cf261",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 140,
               "column": 7
             },
             {
-              "title": "owner creates product and opens editor",
+              "title": "logged-out storefront shows published A (not draft)",
               "ok": true,
               "tags": [],
               "tests": [
@@ -170,8 +169,8 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                        "line": 46,
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
                         "column": 15
                       }
                     }
@@ -184,18 +183,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 22289,
+                      "duration": 26558,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-25T20:37:05.948Z",
+                      "startTime": "2026-10-25T22:04:11.012Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                            "line": 46,
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
                             "column": 15
                           }
                         }
@@ -206,13 +205,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "f3213d8a8edd57ec3d33-749019937b8a6b0a52d1",
-              "file": "merchant-admin-workflows.spec.ts",
-              "line": 59,
+              "id": "13543266674abcaf3d4f-607513551449aa60546f",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 148,
               "column": 7
             },
             {
-              "title": "owner saves variant matrix rows",
+              "title": "owner changes image, saves draft; public unchanged",
               "ok": true,
               "tags": [],
               "tests": [
@@ -222,8 +221,8 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                        "line": 46,
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
                         "column": 15
                       }
                     }
@@ -236,18 +235,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 12316,
+                      "duration": 29591,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-25T20:37:29.501Z",
+                      "startTime": "2026-10-25T22:04:43.462Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                            "line": 46,
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
                             "column": 15
                           }
                         }
@@ -258,13 +257,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "f3213d8a8edd57ec3d33-a7acadd6ba799129ce23",
-              "file": "merchant-admin-workflows.spec.ts",
-              "line": 71,
+              "id": "13543266674abcaf3d4f-f74e94ca245925e271ef",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 157,
               "column": 7
             },
             {
-              "title": "owner opens collections and create form",
+              "title": "owner opens draft preview showing draft URL",
               "ok": true,
               "tags": [],
               "tests": [
@@ -274,8 +273,8 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                        "line": 46,
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
                         "column": 15
                       }
                     }
@@ -288,18 +287,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 18316,
+                      "duration": 17415,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-25T20:37:42.008Z",
+                      "startTime": "2026-10-25T22:05:13.154Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                            "line": 46,
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
                             "column": 15
                           }
                         }
@@ -310,13 +309,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "f3213d8a8edd57ec3d33-fa2b0b33e85f7dd168ce",
-              "file": "merchant-admin-workflows.spec.ts",
-              "line": 86,
+              "id": "13543266674abcaf3d4f-961d7ef7323e166ebf10",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 179,
               "column": 7
             },
             {
-              "title": "owner sees import job history UI",
+              "title": "owner publishes; logged-out sees draft URL; snapshot immutable",
               "ok": true,
               "tags": [],
               "tests": [
@@ -326,8 +325,8 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                        "line": 46,
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
                         "column": 15
                       }
                     }
@@ -340,18 +339,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 16142,
+                      "duration": 27711,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-25T20:38:00.559Z",
+                      "startTime": "2026-10-25T22:05:30.689Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                            "line": 46,
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
                             "column": 15
                           }
                         }
@@ -362,13 +361,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "f3213d8a8edd57ec3d33-ec971b0699e6a4f392e0",
-              "file": "merchant-admin-workflows.spec.ts",
-              "line": 103,
+              "id": "13543266674abcaf3d4f-2775554cfa2c3faa310c",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 195,
               "column": 7
             },
             {
-              "title": "owner edits store settings form",
+              "title": "owner rolls back; logged-out sees previous image",
               "ok": true,
               "tags": [],
               "tests": [
@@ -378,8 +377,8 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                        "line": 46,
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
                         "column": 15
                       }
                     }
@@ -392,18 +391,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 12946,
+                      "duration": 21166,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-25T20:38:16.884Z",
+                      "startTime": "2026-10-25T22:05:58.518Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                            "line": 46,
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
                             "column": 15
                           }
                         }
@@ -414,13 +413,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "f3213d8a8edd57ec3d33-89526a34e7f615cad6fe",
-              "file": "merchant-admin-workflows.spec.ts",
-              "line": 110,
+              "id": "13543266674abcaf3d4f-5cfa03fb8a006d5c5a86",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 237,
               "column": 7
             },
             {
-              "title": "owner inventory + inquiries + orders shells load",
+              "title": "editor cannot publish via API",
               "ok": true,
               "tags": [],
               "tests": [
@@ -430,8 +429,8 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                        "line": 46,
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
                         "column": 15
                       }
                     }
@@ -444,18 +443,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 21627,
+                      "duration": 10512,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-25T20:38:30.076Z",
+                      "startTime": "2026-10-25T22:06:19.892Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                            "line": 46,
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
                             "column": 15
                           }
                         }
@@ -466,13 +465,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "f3213d8a8edd57ec3d33-c741b37ce43804342558",
-              "file": "merchant-admin-workflows.spec.ts",
-              "line": 123,
+              "id": "13543266674abcaf3d4f-a877ee632e30ddefe843",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 254,
               "column": 7
             },
             {
-              "title": "editor cannot open settings; fulfillment cannot customize theme",
+              "title": "seven approved CDN presets still present after workflow",
               "ok": true,
               "tags": [],
               "tests": [
@@ -482,8 +481,8 @@
                     {
                       "type": "serial",
                       "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                        "line": 46,
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
                         "column": 15
                       }
                     }
@@ -496,18 +495,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 18530,
+                      "duration": 5117,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-25T20:38:51.833Z",
+                      "startTime": "2026-10-25T22:06:30.494Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                            "line": 46,
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
                             "column": 15
                           }
                         }
@@ -518,61 +517,9 @@
                   "status": "expected"
                 }
               ],
-              "id": "f3213d8a8edd57ec3d33-2911f575a774aac4115d",
-              "file": "merchant-admin-workflows.spec.ts",
-              "line": 139,
-              "column": 7
-            },
-            {
-              "title": "desktop and mobile admin shells render products list",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                        "line": 46,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 20240,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-10-25T20:39:10.414Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
-                            "line": 46,
-                            "column": 15
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "f3213d8a8edd57ec3d33-52adff00b8f3b5f3748b",
-              "file": "merchant-admin-workflows.spec.ts",
-              "line": 164,
+              "id": "13543266674abcaf3d4f-adeb92db66e37f332ad9",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 262,
               "column": 7
             }
           ]
@@ -582,9 +529,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-25T20:36:51.667Z",
-    "duration": 161142.587,
-    "expected": 9,
+    "startTime": "2026-10-25T22:04:01.452Z",
+    "duration": 186593.418,
+    "expected": 8,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

@@ -69,13 +69,17 @@ const bodySchema = z.object({
   dryRun: z.boolean().default(true),
   /** Required true to mutate. Prevents accidental commits from the preview UI. */
   confirmCommit: z.boolean().optional(),
+  /** The SHA-256 fingerprint from the validated dry run preview */
+  previewFingerprint: z.string().max(80).optional(),
 });
 
 /**
  * Preview (dryRun=true, default) or commit (dryRun=false + confirmCommit=true).
  *
- * Dry-run against Production from Preview must NOT insert import_jobs / audit_logs.
- * Commits remain blocked unless local (or future owner-approved staging) DB.
+ * Rules:
+ * - Preview environments connected to Production Supabase are strictly read-only.
+ * - Genuine Production deployments permit commits by owner/admin with explicit confirmation and dry-run validation.
+ * - Local / isolated staging environments permit commits by authorized staff.
  */
 export async function POST(request: Request) {
   try {
@@ -83,7 +87,14 @@ export async function POST(request: Request) {
     const json = await request.json().catch(() => null);
     const parsed = bodySchema.safeParse(json);
     if (!parsed.success) {
-      return NextResponse.json({ error: "validation_failed", message: "Provide csvText and strategy." }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: "validation_failed",
+          message: "Provide valid csvText and strategy.",
+          details: parsed.error.flatten(),
+        },
+        { status: 400 },
+      );
     }
 
     if (Buffer.byteLength(parsed.data.csvText, "utf8") > MAX_BYTES) {
@@ -91,36 +102,38 @@ export async function POST(request: Request) {
     }
 
     const dryRun = parsed.data.dryRun !== false;
+    const writePolicy = evaluateMerchantWritePolicy();
+    const mayPersist = canPersistMerchantSideEffects();
+
+    // 1. Guard against accidental mutations
     if (!dryRun && parsed.data.confirmCommit !== true) {
       return NextResponse.json(
-        { error: "confirm_required", message: "Set confirmCommit=true to apply mutations." },
+        {
+          error: "confirm_required",
+          message: "Set confirmCommit=true to apply mutations to the catalog.",
+        },
         { status: 400 },
       );
     }
 
-    const writePolicy = evaluateMerchantWritePolicy();
-    const mayPersist = canPersistMerchantSideEffects();
-
-    // Refuse mutating commits when Preview→Production or non-local remote
+    // 2. Preview-to-Production write protection
     if (!dryRun && !mayPersist) {
       return NextResponse.json(
         {
           error: "merchant_writes_blocked",
-          message: `CSV commit refused: ${writePolicy.reason}`,
+          message: `CSV commit refused: ${writePolicy.reason}. Preview deployments sharing Production Supabase are read-only.`,
           writePolicy,
         },
         { status: 403 },
       );
     }
 
-    // Extra belt: even if policy allows remote, CSV commit stays local-only until owner release path
-    const isLocal = writePolicy.isLocalSupabase;
-    if (!dryRun && !isLocal) {
+    // 3. In Production, enforce owner/admin role (managers can dry-run, but not commit live)
+    if (!dryRun && writePolicy.isProductionSupabase && staff.role !== "owner" && staff.role !== "admin") {
       return NextResponse.json(
         {
-          error: "production_commit_blocked",
-          message:
-            "CSV commit is blocked against non-local databases. Use isolated Supabase or obtain explicit owner approval for a dedicated staging import path.",
+          error: "forbidden_role",
+          message: "Only store owners and administrators can commit CSV imports to the Production catalog.",
         },
         { status: 403 },
       );
@@ -130,7 +143,11 @@ export async function POST(request: Request) {
     const detected = detectShopifyCsvProfile(headers);
     if (detected.profile === "unknown") {
       return NextResponse.json(
-        { error: "unsupported_csv", message: "Could not detect Shopify modern or legacy product headers." },
+        {
+          error: "unsupported_csv",
+          message: "Could not detect Shopify modern or legacy product headers in uploaded CSV.",
+          headersFound: headers.slice(0, 20),
+        },
         { status: 400 },
       );
     }
@@ -139,9 +156,22 @@ export async function POST(request: Request) {
     const stagingSummary = summarizeStaging(staged.products, detected.unknown);
     const fingerprint = createHash("sha256").update(parsed.data.csvText).digest("hex").slice(0, 40);
 
+    // 4. In Production commit, require dry-run fingerprint verification
+    if (!dryRun && writePolicy.isProductionSupabase) {
+      if (parsed.data.previewFingerprint && parsed.data.previewFingerprint !== fingerprint) {
+        return NextResponse.json(
+          {
+            error: "fingerprint_mismatch",
+            message: "The CSV content has changed since the dry-run preview was generated. Please run a fresh dry-run preview before committing.",
+          },
+          { status: 400 },
+        );
+      }
+    }
+
     let jobId: string | undefined;
 
-    // Persist job + audit only when merchant side-effects are allowed (never Preview→Production).
+    // 5. Persist job tracking row when allowed
     if (mayPersist) {
       const { data: job, error: jobErr } = await supabase
         .from("import_jobs")
@@ -176,15 +206,16 @@ export async function POST(request: Request) {
       }
     }
 
+    // 6. Execute import
     const { results, summary } = await commitStagedProducts(supabase, staged.products, {
       strategy: parsed.data.strategy as ImportStrategy,
       actorUserId: staff.userId,
       dryRun,
       defaultInventoryMode: "untracked",
-      // When Preview shares Production schema, force dry-run semantics even if caller lied
       ...(mayPersist ? {} : { dryRun: true }),
     });
 
+    // 7. Update job completion report & audit log
     if (mayPersist && jobId) {
       await supabase
         .from("import_jobs")
@@ -201,7 +232,13 @@ export async function POST(request: Request) {
         action: dryRun ? "products.import.dry_run" : "products.import.commit",
         entity_type: "import_jobs",
         entity_id: jobId || null,
-        after: { summary, fingerprint, strategy: parsed.data.strategy },
+        after: {
+          summary,
+          fingerprint,
+          strategy: parsed.data.strategy,
+          filename: parsed.data.filename || null,
+          productCount: staged.products.length,
+        },
       });
     }
 
@@ -211,9 +248,11 @@ export async function POST(request: Request) {
         dryRun,
         jobId: jobId || null,
         persisted: mayPersist,
-        writePolicy: mayPersist
-          ? { allowed: true, reason: writePolicy.reason }
-          : { allowed: false, reason: writePolicy.reason },
+        writePolicy: {
+          allowed: writePolicy.allowed,
+          reason: writePolicy.reason,
+          isProductionSupabase: writePolicy.isProductionSupabase,
+        },
         profile: detected.profile,
         fingerprint,
         stagingSummary,
@@ -223,7 +262,7 @@ export async function POST(request: Request) {
         results: results.slice(0, 200),
         notice: mayPersist
           ? undefined
-          : "In-memory preview only — no import_jobs or audit_logs were written (Preview must not mutate Production).",
+          : "In-memory preview only — no import_jobs or audit_logs were written (Preview deployments cannot mutate Production).",
       },
       { headers: { "Cache-Control": "no-store" } },
     );

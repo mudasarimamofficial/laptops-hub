@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
-import { StatusBadge } from "@/components/admin/ui/status-badge";
+import { CheckoutReadinessPanel } from "@/components/admin/checkout-readiness-panel";
+import { loadCheckoutReadiness } from "@/lib/commerce/checkout-readiness-server";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 
@@ -9,59 +10,28 @@ export const metadata = { robots: { index: false, follow: false } };
 
 async function operationalSnapshot() {
   const supabase = createServiceClient();
-  const { count: total } = await supabase.from("products").select("id", { count: "exact", head: true });
-  const { count: active } = await supabase
-    .from("products")
-    .select("id", { count: "exact", head: true })
-    .eq("status", "active");
-  const { count: draft } = await supabase
-    .from("products")
-    .select("id", { count: "exact", head: true })
-    .eq("status", "draft");
-  const { count: archived } = await supabase
-    .from("products")
-    .select("id", { count: "exact", head: true })
-    .eq("status", "archived");
-  const { count: media } = await supabase.from("product_media").select("id", { count: "exact", head: true });
-  const { count: mediaPending } = await supabase
-    .from("product_media")
-    .select("id", { count: "exact", head: true })
-    .eq("approval", "pending");
-  const { count: toConfirm } = await supabase
-    .from("orders")
-    .select("id", { count: "exact", head: true })
-    .in("status", ["placed", "pending_confirmation"]);
-  const { count: notifyProblems } = await supabase
-    .from("notification_outbox")
-    .select("id", { count: "exact", head: true })
-    .in("status", ["pending", "failed", "sending"]);
-  const { count: inquiryOpen } = await supabase
-    .from("contact_inquiries")
-    .select("id", { count: "exact", head: true })
-    .in("status", ["new", "handling"]);
-  const { count: zones } = await supabase
-    .from("shipping_zones")
-    .select("id", { count: "exact", head: true })
-    .eq("is_active", true);
-  const { data: codRow } = await supabase.from("store_settings").select("value").eq("key", "cod_checkout").maybeSingle();
-  const codEnabled =
-    codRow?.value && typeof codRow.value === "object" && !Array.isArray(codRow.value)
-      ? Boolean((codRow.value as { enabled?: boolean }).enabled)
-      : false;
-
-  return {
-    toConfirm: toConfirm ?? 0,
-    notifyProblems: notifyProblems ?? 0,
-    inquiryOpen: inquiryOpen ?? 0,
-    total: total ?? 0,
-    active: active ?? 0,
-    draft: draft ?? 0,
-    archived: archived ?? 0,
-    media: media ?? 0,
-    mediaPending: mediaPending ?? 0,
-    zones: zones ?? 0,
-    codEnabled,
-  };
+  const count = (q: PromiseLike<{ count: number | null }>) => Promise.resolve(q).then((r) => r.count ?? 0);
+  const products = () => supabase.from("products").select("id", { count: "exact", head: true });
+  // Independent counts run in parallel (previously 12 sequential round trips).
+  const [total, active, draft, archived, media, mediaPending, toConfirm, notifyProblems, inquiryOpen] = await Promise.all([
+    count(products()),
+    count(products().eq("status", "active")),
+    count(products().eq("status", "draft")),
+    count(products().eq("status", "archived")),
+    count(supabase.from("product_media").select("id", { count: "exact", head: true })),
+    count(supabase.from("product_media").select("id", { count: "exact", head: true }).eq("approval", "pending")),
+    count(
+      supabase.from("orders").select("id", { count: "exact", head: true }).in("status", ["placed", "pending_confirmation"]),
+    ),
+    count(
+      supabase
+        .from("notification_outbox")
+        .select("id", { count: "exact", head: true })
+        .in("status", ["pending", "failed", "sending"]),
+    ),
+    count(supabase.from("contact_inquiries").select("id", { count: "exact", head: true }).in("status", ["new", "handling"])),
+  ]);
+  return { toConfirm, notifyProblems, inquiryOpen, total, active, draft, archived, media, mediaPending };
 }
 
 function StatCard({
@@ -98,8 +68,7 @@ function StatCard({
 
 export default async function AdminHomePage() {
   const staff = await requireStaffPage();
-  const counts = await operationalSnapshot();
-  const envCod = process.env.COD_CHECKOUT_ENABLED === "true";
+  const [counts, readiness] = await Promise.all([operationalSnapshot(), loadCheckoutReadiness()]);
 
   return (
     <>
@@ -108,15 +77,8 @@ export default async function AdminHomePage() {
         description={`${staff.email ?? "Staff"} · role ${staff.role}. Figures are live database counts in PKR store context — unpaid COD orders are not counted as collected revenue.`}
       />
 
-      <div className="mb-6 flex flex-wrap items-center gap-3 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] px-4 py-3 text-sm">
-        <span className="font-medium">Store readiness</span>
-        <StatusBadge status={counts.codEnabled && envCod ? "active" : "draft"}>
-          {counts.codEnabled && envCod ? "COD live" : "COD off"}
-        </StatusBadge>
-        <span className="text-[var(--adm-ink-2)]">
-          Env gate {envCod ? "on" : "off"} · DB setting {counts.codEnabled ? "on" : "off"} · Active shipping zones{" "}
-          {counts.zones}
-        </span>
+      <div className="mb-6">
+        <CheckoutReadinessPanel readiness={readiness} />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

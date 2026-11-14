@@ -20,11 +20,14 @@ export function AdminShell({ staff, children }: Props) {
   const pathname = usePathname() || "/admin";
   const guest = isAdminGuestPath(pathname);
   const [open, setOpen] = useState(false);
+  const [openPath, setOpenPath] = useState(pathname);
   const navId = useId();
 
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  // Close the mobile drawer on navigation (state adjusted during render, not in an effect).
+  if (openPath !== pathname) {
+    setOpenPath(pathname);
+    if (open) setOpen(false);
+  }
 
   useEffect(() => {
     if (!open) return;

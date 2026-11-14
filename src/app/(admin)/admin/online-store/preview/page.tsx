@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useHydrated } from "@/lib/ui/use-hydrated";
 import {
   HERO_IMAGE_PRESETS,
   STORY_ANGLE_PRESETS,
@@ -12,23 +13,37 @@ type DraftPayload = {
   viewport?: string;
 };
 
-export default function OnlineStoreDraftPreviewPage() {
-  const [parsed, setParsed] = useState<DraftPayload | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+type DraftRead = { parsed: DraftPayload | null; err: string | null };
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem("lh-theme-draft-preview");
-      if (!raw) {
-        setErr("No draft preview found. Open Customize and click “Open draft preview” again.");
-        return;
-      }
-      setParsed(JSON.parse(raw) as DraftPayload);
-      localStorage.removeItem("lh-theme-draft-preview");
-    } catch {
-      setErr("Draft preview payload could not be read.");
-    }
-  }, []);
+/** One-shot read of the draft handed over by the Customize editor (then cleared so it cannot be replayed). */
+let draftCache: DraftRead | null = null; // StrictMode may invoke the initializer twice; read storage once.
+function readDraftOnce(): DraftRead {
+  if (typeof window === "undefined") return { parsed: null, err: null };
+  if (draftCache) return draftCache;
+  draftCache = readDraftFromStorage();
+  return draftCache;
+}
+function readDraftFromStorage(): DraftRead {
+  try {
+    const raw = localStorage.getItem("lh-theme-draft-preview");
+    if (!raw) return { parsed: null, err: "No draft preview found. Open Customize and click “Open draft preview” again." };
+    localStorage.removeItem("lh-theme-draft-preview");
+    return { parsed: JSON.parse(raw) as DraftPayload, err: null };
+  } catch {
+    return { parsed: null, err: "Draft preview payload could not be read." };
+  }
+}
+
+export default function OnlineStoreDraftPreviewPage() {
+  const hydrated = useHydrated();
+  if (!hydrated) {
+    return <p className="p-6 text-sm text-[var(--adm-ink-2,#667)]">Loading draft preview…</p>;
+  }
+  return <DraftPreview />;
+}
+
+function DraftPreview() {
+  const [{ parsed, err }] = useState(readDraftOnce);
 
   const hero = parsed?.sections?.find((s) => s.type === "v5_cinematic_hero");
   const story = parsed?.sections?.find((s) => s.type === "v5_product_story");

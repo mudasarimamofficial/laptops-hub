@@ -8,8 +8,8 @@ import { formatPkr } from "@/lib/money";
 import { PendingBlock } from "@/components/ui/pending-block";
 import { PK_PROVINCES } from "@/lib/commerce/pk-places";
 import { useHydrated } from "@/lib/ui/use-hydrated";
+import { deliveryFeeLabel } from "@/lib/commerce/checkout-readiness";
 
-const checkoutEnabled = process.env.NEXT_PUBLIC_COD_CHECKOUT_ENABLED === "true";
 
 type ShipOption = {
   id: string;
@@ -19,7 +19,12 @@ type ShipOption = {
   notes: string;
 };
 
-export default function CheckoutPage() {
+/**
+ * `orderingOpen` is decided on the server from every gate (build flag, server flag, store setting, active zones,
+ * published+approved policies, purchasable catalog) so the button is never clickable when the API would refuse.
+ */
+export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
+  const checkoutEnabled = orderingOpen;
   const router = useRouter();
   // Before hydration the submit stays disabled (and forms post): a click can never become a GET page reload.
   const hydrated = useHydrated();
@@ -64,8 +69,15 @@ export default function CheckoutPage() {
         });
         const json = await res.json();
         if (!res.ok || json.ok === false) {
-          setOptions(json.options || []);
+          const opts: ShipOption[] = json.options || [];
+          setOptions(opts);
           setServerQuote(null);
+          // The address changed and the previously chosen zone no longer serves it: fall back to a matching zone.
+          if (json.error === "zone_mismatch") {
+            setZoneId(opts[0]?.id ?? "");
+            return;
+          }
+          if (json.error === "unserviceable") setZoneId("");
           setError(
             json.error === "product_not_purchasable" || json.error === "variant_not_found"
               ? "An item in your cart is no longer available. Remove it from your cart and try again."
@@ -73,8 +85,9 @@ export default function CheckoutPage() {
           );
           return;
         }
-        setOptions(json.options || []);
-        if (!zoneId && json.options?.[0]?.id) setZoneId(json.options[0].id);
+        const opts: ShipOption[] = json.options || [];
+        setOptions(opts);
+        if (!zoneId && opts[0]?.id) setZoneId(opts[0].id);
         setServerQuote(json.quote);
       } catch {
         setError("Could not calculate delivery");
@@ -241,8 +254,8 @@ export default function CheckoutPage() {
                 <span>
                   <span className="font-semibold">{o.name}</span>
                   <span className="mt-1 block text-sm text-[var(--lh-ink-2)]">
-                    Delivery {formatPkr(o.flatFeePaisa)}
-                    {o.codFeePaisa > 0 ? ` · COD fee ${formatPkr(o.codFeePaisa)}` : ""}
+                    {deliveryFeeLabel(o.flatFeePaisa, formatPkr)}
+                    {o.codFeePaisa > 0 ? ` · COD fee ${formatPkr(o.codFeePaisa)}` : " · No COD fee"}
                     {o.notes ? ` · ${o.notes}` : ""}
                   </span>
                 </span>
@@ -262,8 +275,8 @@ export default function CheckoutPage() {
           </p>
           <ul className="mt-3 space-y-1 text-sm">
             <li>Items: {formatPkr(serverQuote ? serverQuote.subtotalPaisa : localSubtotal)}</li>
-            <li>Delivery: {serverQuote ? formatPkr(serverQuote.shippingPaisa) : "—"}</li>
-            <li>COD fee: {serverQuote ? formatPkr(serverQuote.codFeePaisa) : "—"}</li>
+            <li>Delivery: {serverQuote ? (serverQuote.shippingPaisa === 0 ? "Free" : formatPkr(serverQuote.shippingPaisa)) : "—"}</li>
+            <li>COD fee: {serverQuote ? (serverQuote.codFeePaisa === 0 ? "None" : formatPkr(serverQuote.codFeePaisa)) : "—"}</li>
             <li className="pt-2 font-[family-name:var(--font-display)] text-lg font-bold">
               Cash due: {serverQuote ? formatPkr(serverQuote.totalDuePaisa) : "—"}
             </li>

@@ -147,8 +147,9 @@ export async function POST(request: Request, ctx: Ctx) {
       health_status: "unknown",
     };
 
-    let { data: row, error } = await supabase.from("product_media").insert(insert).select("id, url, alt, position").single();
-    if (error) {
+    const first = await supabase.from("product_media").insert(insert).select("id, url, alt, position").single();
+    let row = first.data;
+    if (first.error) {
       const base = {
         product_id: product.id,
         url: url.toString(),

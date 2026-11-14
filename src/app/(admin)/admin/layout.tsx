@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { AdminShell } from "@/components/admin/shell/admin-shell";
 import { getStaffMembership } from "@/lib/auth/staff";
-import "../../styles/admin.css";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 

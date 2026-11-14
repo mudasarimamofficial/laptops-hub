@@ -47,8 +47,10 @@ export async function POST(request: Request) {
   });
 
   if (error) {
+    // Never echo raw database messages to the public; map known RPC exceptions to stable codes.
+    const code = /address_incomplete/.test(error.message || "") ? "address_incomplete" : "quote_unavailable";
     return NextResponse.json(
-      { error: error.message },
+      { ok: false, error: code, message: "Delivery could not be calculated for this address.", options: [] },
       { status: 400, headers: { "Cache-Control": "no-store" } },
     );
   }

@@ -31,9 +31,8 @@ export function ImportJobHistory({ onRetryJob }: Props) {
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setErr(null);
+  // Fetch only; all state updates happen after the first await (safe to call from an effect).
+  const fetchJobs = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/products/import/jobs");
       const data = await res.json().catch(() => ({}));
@@ -50,10 +49,18 @@ export function ImportJobHistory({ onRetryJob }: Props) {
     }
   }, []);
 
+  const load = useCallback(() => {
+    setLoading(true);
+    setErr(null);
+    return fetchJobs();
+  }, [fetchJobs]);
+
   useEffect(() => {
     if (!hydrated) return;
-    void load();
-  }, [hydrated, load]);
+    // All setState calls in fetchJobs run after its first await (async data fetch, not a synchronous cascade).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchJobs();
+  }, [hydrated, fetchJobs]);
 
   return (
     <div

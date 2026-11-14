@@ -373,6 +373,7 @@ export function NavigationEditor({
       {/* Add Header Item Form */}
       {showAddHeaderModal ? (
         <form
+          method="post"
           onSubmit={addHeaderItem}
           className="rounded-[var(--adm-radius-lg)] border border-[var(--lh-action)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)] space-y-4"
         >
@@ -461,7 +462,7 @@ export function NavigationEditor({
               checked={newIsNew}
               onChange={(e) => setNewIsNew(e.target.checked)}
             />
-            Display "NEW" badge on menu
+            Display “NEW” badge on menu
           </label>
 
           <button
@@ -497,6 +498,7 @@ export function NavigationEditor({
         {/* Add column modal */}
         {showAddColModal ? (
           <form
+            method="post"
             onSubmit={addFooterColumn}
             className="mb-6 rounded-[var(--adm-radius-lg)] border border-[var(--lh-action)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)] space-y-3"
           >
@@ -529,6 +531,7 @@ export function NavigationEditor({
         {/* Add link to specific column form */}
         {targetColId ? (
           <form
+            method="post"
             onSubmit={addFooterLink}
             className="mb-6 rounded-[var(--adm-radius-lg)] border border-[var(--lh-action)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)] space-y-3"
           >

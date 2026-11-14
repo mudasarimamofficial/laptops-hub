@@ -17,7 +17,10 @@ export type ZoneRow = {
   notes: string;
 };
 
-const field = "rounded-xl border border-[var(--lh-border)] px-3 py-2";
+const field = "w-full min-w-0 rounded-xl border border-[var(--lh-border)] px-3 py-2";
+
+/** Blank must not silently become PKR 0 (free delivery): only an explicit 0 is a deliberate free-delivery fee. */
+const feeValue = (v: FormDataEntryValue | null) => (typeof v === "string" && v.trim() !== "" ? Number(v) : null);
 
 /** What staff see after a save: the stored row, never the values that were typed. */
 function savedText(z: ZoneRow) {
@@ -64,8 +67,8 @@ export function ShippingZoneForm({ zone }: { zone?: ZoneRow }) {
             .split(",")
             .map((s) => s.trim())
             .filter(Boolean),
-          flatFeePkr: Number(fd.get("flatFeePkr") || 0),
-          codFeePkr: Number(fd.get("codFeePkr") || 0),
+          flatFeePkr: feeValue(fd.get("flatFeePkr")),
+          codFeePkr: feeValue(fd.get("codFeePkr")),
           isActive: fd.get("isActive") === "on",
           notes: fd.get("notes") || "",
         }),
@@ -108,14 +111,18 @@ export function ShippingZoneForm({ zone }: { zone?: ZoneRow }) {
         Cities (comma-separated; leave empty to serve the whole selected provinces)
         <input name="cities" defaultValue={zone?.cities.join(", ")} placeholder="e.g. Lahore, Rawalpindi" className={field} />
       </label>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <p id={`${idp}-fee-help`} className="text-xs text-[var(--lh-ink-2)] sm:col-span-2">
+          Enter 0 only for a deliberate free-delivery or no-COD-fee offer; customers then see “Free delivery”. Courier
+          tariffs must be confirmed by the owner.
+        </p>
         <label className="grid gap-1 text-sm" htmlFor={`${idp}-fee`}>
           Delivery fee (PKR)
-          <input id={`${idp}-fee`} name="flatFeePkr" type="number" min={0} step={1} required defaultValue={zone ? zone.flat_fee_paisa / 100 : ""} className={field} />
+          <input id={`${idp}-fee`} name="flatFeePkr" type="number" min={0} step={1} required aria-describedby={`${idp}-fee-help`} defaultValue={zone ? zone.flat_fee_paisa / 100 : ""} className={field} />
         </label>
         <label className="grid gap-1 text-sm" htmlFor={`${idp}-cod`}>
           COD fee (PKR)
-          <input id={`${idp}-cod`} name="codFeePkr" type="number" min={0} step={1} required defaultValue={zone ? zone.cod_fee_paisa / 100 : ""} className={field} />
+          <input id={`${idp}-cod`} name="codFeePkr" type="number" min={0} step={1} required aria-describedby={`${idp}-fee-help`} defaultValue={zone ? zone.cod_fee_paisa / 100 : ""} className={field} />
         </label>
       </div>
       <label className="grid gap-1 text-sm">

@@ -61,7 +61,7 @@ export function StoreSettingsForm({ initial }: Props) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]">
+    <form method="post" onSubmit={onSubmit} className="space-y-4 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]">
       <h2 className="font-[family-name:var(--font-display)] text-lg font-bold">Business identity</h2>
       <p className="text-sm text-[var(--adm-ink-2)]">
         Ordinary merchant settings. Production COD release switches and infrastructure secrets stay outside this form.

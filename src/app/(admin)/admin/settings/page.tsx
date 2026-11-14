@@ -1,10 +1,11 @@
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
-import { PendingBlock } from "@/components/ui/pending-block";
 import { ShippingZoneForm, type ZoneRow } from "./shipping-form";
 import { formatPkr } from "@/lib/money";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { StoreSettingsForm } from "@/components/admin/store-settings-form";
+import { CheckoutReadinessPanel } from "@/components/admin/checkout-readiness-panel";
+import { loadCheckoutReadiness } from "@/lib/commerce/checkout-readiness-server";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -24,11 +25,7 @@ export default async function AdminSettingsPage() {
     .from("shipping_zones")
     .select("id, name, provinces, cities, flat_fee_paisa, cod_fee_paisa, is_active, notes")
     .order("name");
-  const activeZones = (zones || []).filter((z) => z.is_active).length;
-  const codSetting = (settings || []).some(
-    (r) => r.key === "cod_checkout" && (r.value as { enabled?: boolean })?.enabled === true,
-  );
-  const codEnv = process.env.COD_CHECKOUT_ENABLED === "true";
+  const readiness = await loadCheckoutReadiness();
 
   const identity = readJson(settings, "business_identity");
   const inventory = readJson(settings, "inventory_defaults");
@@ -46,12 +43,7 @@ export default async function AdminSettingsPage() {
       />
 
       <div className="mb-6">
-        <PendingBlock title="Checkout readiness" label="Before going live">
-          Online checkout opens only when all three are true: at least one active shipping zone ({activeZones} now),
-          store setting <code>cod_checkout.enabled</code> ({codSetting ? "on" : "off"}), and the Production switch{" "}
-          <code>COD_CHECKOUT_ENABLED</code> ({codEnv ? "on" : "off"}). Production COD must stay off until owner
-          approval.
-        </PendingBlock>
+        <CheckoutReadinessPanel readiness={readiness} />
       </div>
 
       <StoreSettingsForm

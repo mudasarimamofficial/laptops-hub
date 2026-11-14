@@ -136,6 +136,7 @@ export function InquiryDialog({ open, onClose, productTitle, productHandle }: Pr
           </>
         ) : (
           <form
+            method="post"
             noValidate
             className="flex flex-col gap-4"
             onSubmit={(e) => {

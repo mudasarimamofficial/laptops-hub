@@ -1,0 +1,645 @@
+{
+  "config": {
+    "argv": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "D:\\Laptops Hub Vercel Development\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.isolated.config.ts",
+      "p0-admin"
+    ],
+    "configFile": "D:\\Laptops Hub Vercel Development\\playwright.isolated.config.ts",
+    "rootDir": "D:/Laptops Hub Vercel Development/tests/e2e-isolated",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Laptops Hub Vercel Development/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/Laptops Hub Vercel Development/tests/e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Laptops Hub Vercel Development\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "snapshotDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3001",
+          "trace": "off",
+          "launchOptions": {
+            "executablePath": "C:\\Users\\mudas\\AppData\\Local\\ms-playwright\\chromium-1248\\chrome-win64\\chrome.exe"
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/isolated-journeys.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "P0: admin isolation and checkout gates (isolated)",
+          "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+          "line": 42,
+          "column": 15,
+          "specs": [
+            {
+              "title": "admin has no storefront chrome at 360px",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                        "line": 42,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 9957,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T13:18:24.658Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                            "line": 42,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "39a8e84bc08af481dfa4-9030a14b0970c8ab1ed9",
+              "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+              "line": 49,
+              "column": 9
+            },
+            {
+              "title": "admin has no storefront chrome at 390px",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                        "line": 42,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8978,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T13:18:35.544Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                            "line": 42,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "39a8e84bc08af481dfa4-b2bab217f94080b2eee1",
+              "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+              "line": 49,
+              "column": 9
+            },
+            {
+              "title": "admin has no storefront chrome at 768px",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                        "line": 42,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8465,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T13:18:44.614Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                            "line": 42,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "39a8e84bc08af481dfa4-39c0fdf30548a578c43c",
+              "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+              "line": 49,
+              "column": 9
+            },
+            {
+              "title": "admin has no storefront chrome at 1280px",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                        "line": 42,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7652,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T13:18:53.229Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                            "line": 42,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "39a8e84bc08af481dfa4-3dc31553c40e441ff61f",
+              "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+              "line": 49,
+              "column": 9
+            },
+            {
+              "title": "admin has no storefront chrome at 1440px",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                        "line": 42,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7096,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T13:19:00.967Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                            "line": 42,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "39a8e84bc08af481dfa4-ea0fe2c6b03a6fd3a463",
+              "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+              "line": 49,
+              "column": 9
+            },
+            {
+              "title": "storefront keeps its chrome (home, collection, checkout)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                        "line": 42,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2394,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T13:19:08.133Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                            "line": 42,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "39a8e84bc08af481dfa4-321fbcb34cc33264b425",
+              "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+              "line": 72,
+              "column": 7
+            },
+            {
+              "title": "admin overview shows the server-side readiness matrix",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                        "line": 42,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3376,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T13:19:10.573Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                            "line": 42,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "39a8e84bc08af481dfa4-34bea43eadee27890aed",
+              "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+              "line": 81,
+              "column": 7
+            },
+            {
+              "title": "PKR 0 + 0 zone: 'Free delivery', total equals subtotal; restored afterwards",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                        "line": 42,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3980,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T13:19:14.001Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                            "line": 42,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "39a8e84bc08af481dfa4-34cd87c5cf349d22b6ed",
+              "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+              "line": 97,
+              "column": 7
+            },
+            {
+              "title": "nonzero fees render exactly; unserved city gives no clickable order",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                        "line": 42,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3410,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T13:19:18.038Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                            "line": 42,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "39a8e84bc08af481dfa4-5b836f9a57e6252f20d0",
+              "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+              "line": 121,
+              "column": 7
+            },
+            {
+              "title": "a failing blocking gate (store setting off) makes storefront checkout non-clickable",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                        "line": 42,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4723,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-14T13:19:21.479Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\p0-admin-isolation-and-checkout-gates.spec.ts",
+                            "line": 42,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "39a8e84bc08af481dfa4-af8a04daa243ca9290b7",
+              "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+              "line": 138,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-14T13:18:23.647Z",
+    "duration": 63425.02,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

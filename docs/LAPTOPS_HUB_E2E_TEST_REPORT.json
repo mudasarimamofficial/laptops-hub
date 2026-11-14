@@ -1,0 +1,333 @@
+{
+  "date": "2026-11-14",
+  "stack": "isolated (local Supabase, next start :3001, fake-resend :4599)",
+  "head": "a534b18",
+  "summary": {
+    "total": 48,
+    "passed": 48
+  },
+  "byFile": {
+    "content-pages.spec.ts": {
+      "p": 8,
+      "f": 0
+    },
+    "home-inquiry.spec.ts": {
+      "p": 7,
+      "f": 0
+    },
+    "launch-journey.spec.ts": {
+      "p": 10,
+      "f": 0
+    },
+    "p0-admin-isolation-and-checkout-gates.spec.ts": {
+      "p": 10,
+      "f": 0
+    },
+    "p1-storefront-labels.spec.ts": {
+      "p": 2,
+      "f": 0
+    },
+    "password-recovery.spec.ts": {
+      "p": 5,
+      "f": 0
+    },
+    "prehydration.spec.ts": {
+      "p": 2,
+      "f": 0
+    },
+    "shipping-zones.spec.ts": {
+      "p": 4,
+      "f": 0
+    }
+  },
+  "tests": [
+    {
+      "file": "content-pages.spec.ts",
+      "title": "/pages/about renders complete copy",
+      "status": "passed",
+      "ms": 1808
+    },
+    {
+      "file": "content-pages.spec.ts",
+      "title": "/pages/why-laptops-hub renders complete copy",
+      "status": "passed",
+      "ms": 1490
+    },
+    {
+      "file": "content-pages.spec.ts",
+      "title": "/pages/contact renders complete copy",
+      "status": "passed",
+      "ms": 1592
+    },
+    {
+      "file": "content-pages.spec.ts",
+      "title": "/pages/faq renders complete copy",
+      "status": "passed",
+      "ms": 1293
+    },
+    {
+      "file": "content-pages.spec.ts",
+      "title": "/pages/condition-guide renders complete copy",
+      "status": "passed",
+      "ms": 919
+    },
+    {
+      "file": "content-pages.spec.ts",
+      "title": "/pages/order-inquiries renders complete copy",
+      "status": "passed",
+      "ms": 1032
+    },
+    {
+      "file": "content-pages.spec.ts",
+      "title": "FAQ accordion works with the keyboard",
+      "status": "passed",
+      "ms": 1053
+    },
+    {
+      "file": "content-pages.spec.ts",
+      "title": "published contact page keeps the working contact form",
+      "status": "passed",
+      "ms": 1257
+    },
+    {
+      "file": "home-inquiry.spec.ts",
+      "title": "section is visible before the footer at 375px, no horizontal scroll",
+      "status": "passed",
+      "ms": 2672
+    },
+    {
+      "file": "home-inquiry.spec.ts",
+      "title": "section is visible before the footer at 820px, no horizontal scroll",
+      "status": "passed",
+      "ms": 1813
+    },
+    {
+      "file": "home-inquiry.spec.ts",
+      "title": "section is visible before the footer at 1440px, no horizontal scroll",
+      "status": "passed",
+      "ms": 1856
+    },
+    {
+      "file": "home-inquiry.spec.ts",
+      "title": "invalid input is refused in the browser and nothing is stored",
+      "status": "passed",
+      "ms": 2061
+    },
+    {
+      "file": "home-inquiry.spec.ts",
+      "title": "valid inquiry is saved once (double click), staff see it and update its status",
+      "status": "passed",
+      "ms": 14053
+    },
+    {
+      "file": "home-inquiry.spec.ts",
+      "title": "product inquiry dialog (inquiry-only listing) is saved once and reaches staff",
+      "status": "passed",
+      "ms": 4343
+    },
+    {
+      "file": "home-inquiry.spec.ts",
+      "title": "bots, cross-site posts, server errors and offline submissions are handled truthfully",
+      "status": "passed",
+      "ms": 2280
+    },
+    {
+      "file": "launch-journey.spec.ts",
+      "title": "customer: product → cart → checkout → confirmation",
+      "status": "passed",
+      "ms": 4807
+    },
+    {
+      "file": "launch-journey.spec.ts",
+      "title": "notifications: business alert + customer confirmation delivered once",
+      "status": "passed",
+      "ms": 39
+    },
+    {
+      "file": "launch-journey.spec.ts",
+      "title": "customer: track order by number + phone; wrong phone refused",
+      "status": "passed",
+      "ms": 1627
+    },
+    {
+      "file": "launch-journey.spec.ts",
+      "title": "checkout: unserved address and invalid phone are refused",
+      "status": "passed",
+      "ms": 2181
+    },
+    {
+      "file": "launch-journey.spec.ts",
+      "title": "duplicate submit: one order, one notification",
+      "status": "passed",
+      "ms": 2576
+    },
+    {
+      "file": "launch-journey.spec.ts",
+      "title": "admin: editor cannot open orders",
+      "status": "passed",
+      "ms": 3711
+    },
+    {
+      "file": "launch-journey.spec.ts",
+      "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
+      "status": "passed",
+      "ms": 15491
+    },
+    {
+      "file": "launch-journey.spec.ts",
+      "title": "admin: cancellation by fulfillment staff",
+      "status": "passed",
+      "ms": 7602
+    },
+    {
+      "file": "launch-journey.spec.ts",
+      "title": "notifications: provider outage → failed, staff retry → sent once",
+      "status": "passed",
+      "ms": 7942
+    },
+    {
+      "file": "launch-journey.spec.ts",
+      "title": "cron endpoint requires the secret",
+      "status": "passed",
+      "ms": 156
+    },
+    {
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "title": "admin has no storefront chrome at 360px",
+      "status": "passed",
+      "ms": 8960
+    },
+    {
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "title": "admin has no storefront chrome at 390px",
+      "status": "passed",
+      "ms": 9533
+    },
+    {
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "title": "admin has no storefront chrome at 768px",
+      "status": "passed",
+      "ms": 8945
+    },
+    {
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "title": "admin has no storefront chrome at 1280px",
+      "status": "passed",
+      "ms": 9115
+    },
+    {
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "title": "admin has no storefront chrome at 1440px",
+      "status": "passed",
+      "ms": 11989
+    },
+    {
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "title": "storefront keeps its chrome (home, collection, checkout)",
+      "status": "passed",
+      "ms": 2269
+    },
+    {
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "title": "admin overview shows the server-side readiness matrix",
+      "status": "passed",
+      "ms": 3688
+    },
+    {
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "title": "PKR 0 + 0 zone: 'Free delivery', total equals subtotal; restored afterwards",
+      "status": "passed",
+      "ms": 3155
+    },
+    {
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "title": "nonzero fees render exactly; unserved city gives no clickable order",
+      "status": "passed",
+      "ms": 4120
+    },
+    {
+      "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
+      "title": "a failing blocking gate (store setting off) makes storefront checkout non-clickable",
+      "status": "passed",
+      "ms": 5911
+    },
+    {
+      "file": "p1-storefront-labels.spec.ts",
+      "title": "default: no counts, no section numbers, no angle counter, no alt-text captions",
+      "status": "passed",
+      "ms": 3991
+    },
+    {
+      "file": "p1-storefront-labels.spec.ts",
+      "title": "owner turns catalog counts back on in Admin; persisted and shown publicly",
+      "status": "passed",
+      "ms": 12694
+    },
+    {
+      "file": "password-recovery.spec.ts",
+      "title": "full recovery: email link → new password → all sessions ended; UID, role and status unchanged",
+      "status": "passed",
+      "ms": 11070
+    },
+    {
+      "file": "password-recovery.spec.ts",
+      "title": "token_hash link (recommended email template) works on another device",
+      "status": "passed",
+      "ms": 1608
+    },
+    {
+      "file": "password-recovery.spec.ts",
+      "title": "recovery never grants access: deactivated and non-staff users stay forbidden",
+      "status": "passed",
+      "ms": 6068
+    },
+    {
+      "file": "password-recovery.spec.ts",
+      "title": "password API requires a fresh recovery session; a normal sign-in cannot use it",
+      "status": "passed",
+      "ms": 2165
+    },
+    {
+      "file": "password-recovery.spec.ts",
+      "title": "request endpoint: generic answer, no mail for unknown addresses, rate limits, cross-site and bad links refused",
+      "status": "passed",
+      "ms": 3677
+    },
+    {
+      "file": "prehydration.spec.ts",
+      "title": "customer forms: track order and homepage inquiry cannot submit and post when they do",
+      "status": "passed",
+      "ms": 1912
+    },
+    {
+      "file": "prehydration.spec.ts",
+      "title": "admin forms: shipping zone, product and content edits cannot submit",
+      "status": "passed",
+      "ms": 4514
+    },
+    {
+      "file": "shipping-zones.spec.ts",
+      "title": "before hydration the form cannot submit (no silent page reload, nothing lost)",
+      "status": "passed",
+      "ms": 2941
+    },
+    {
+      "file": "shipping-zones.spec.ts",
+      "title": "create: validation message, stored values in paisa, saved details shown, audit entry",
+      "status": "passed",
+      "ms": 6094
+    },
+    {
+      "file": "shipping-zones.spec.ts",
+      "title": "checkout quote: served city gets the zone fees, unserved city is refused",
+      "status": "passed",
+      "ms": 199
+    },
+    {
+      "file": "shipping-zones.spec.ts",
+      "title": "edit: deactivate shows the stored state; server rejects bad input with a clear message; editors are refused",
+      "status": "passed",
+      "ms": 8969
+    }
+  ]
+}

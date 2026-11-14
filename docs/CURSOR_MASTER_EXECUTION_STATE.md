@@ -1,5 +1,14 @@
 # CURSOR MASTER EXECUTION STATE
 
+> **2026-11-14 release-candidate pass (Claude):** HEAD on `feat/merchant-operating-system` after `a534b18` + docs. Admin/storefront
+> separated by route groups; server-side checkout readiness gates; deliberate Rs 0 + Rs 0 = "Free delivery", blank fee rejected;
+> storefront counts/section numbers/angle counters hidden by default (owner toggle); fonts self-hosted (fixes fresh builds);
+> local-only migration `20261114100000_function_search_path_hardening.sql` (6 migrations now pending for production).
+> Status: **READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED.** Production unchanged; Supabase production not
+> re-verified this pass. Start with `docs/LAPTOPS_HUB_CLIENT_REQUESTS_ACCEPTANCE_MATRIX.md`, then
+> `docs/LAPTOPS_HUB_MIGRATION_AND_RELEASE_RUNBOOK.md`. Baseline dirty tree preserved in `stash@{0}`.
+
+
 **Updated:** 2026-10-25 (PKT) — theme RLS hardened · Playwright theme workflow 8/8 · inventory ledger · merchant E2E  
 **Mandate:** Enterprise merchant admin · Shopify CSV · site editor · COD-only  
 **Branch:** `feat/merchant-operating-system`

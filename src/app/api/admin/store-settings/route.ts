@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { parseStorefrontPresentation, STOREFRONT_PRESENTATION_KEY } from "@/lib/content/storefront-presentation";
 import { z } from "zod";
 import { createAuthorizedStaffClient, createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 
@@ -11,6 +13,9 @@ const settingsSchema = z.object({
   inventoryDefaultTracked: z.boolean().optional(),
   lowStockDefault: z.number().int().min(0).max(1_000_000).optional(),
   seoTitleSuffix: z.string().trim().max(80).optional(),
+  showCatalogCounts: z.boolean().optional(),
+  showStoryAngleLabels: z.boolean().optional(),
+  showSectionNumbers: z.boolean().optional(),
 });
 
 type SettingsSchema = z.infer<typeof settingsSchema>;
@@ -72,6 +77,9 @@ export async function PUT(request: Request) {
     }
     if (d.seoTitleSuffix !== undefined) {
       keysToTouch.push("seo_defaults");
+    }
+    if (d.showCatalogCounts !== undefined || d.showStoryAngleLabels !== undefined || d.showSectionNumbers !== undefined) {
+      keysToTouch.push(STOREFRONT_PRESENTATION_KEY);
     }
 
     if (keysToTouch.length === 0) {
@@ -144,6 +152,21 @@ export async function PUT(request: Request) {
       });
     }
 
+    // Storefront labels (presentation only; untouched switches keep their stored value)
+    if (keysToTouch.includes(STOREFRONT_PRESENTATION_KEY)) {
+      const existing = parseStorefrontPresentation(currentMap.get(STOREFRONT_PRESENTATION_KEY));
+      upsertPayloads.push({
+        key: STOREFRONT_PRESENTATION_KEY,
+        value: {
+          showCatalogCounts: d.showCatalogCounts ?? existing.showCatalogCounts,
+          showStoryAngleLabels: d.showStoryAngleLabels ?? existing.showStoryAngleLabels,
+          showSectionNumbers: d.showSectionNumbers ?? existing.showSectionNumbers,
+        },
+        updated_at: now,
+        updated_by: staff.userId,
+      });
+    }
+
     // 2. Perform database upserts with strict error checking
     for (const item of upsertPayloads) {
       const { error: upsertErr } = await supabase
@@ -193,6 +216,11 @@ export async function PUT(request: Request) {
           { status: 500 },
         );
       }
+    }
+
+    if (keysToTouch.includes(STOREFRONT_PRESENTATION_KEY)) {
+      revalidateTag("settings", { expire: 0 });
+      revalidatePath("/", "layout");
     }
 
     // 4. Audit successful changes

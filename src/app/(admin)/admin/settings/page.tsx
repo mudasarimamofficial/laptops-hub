@@ -6,6 +6,7 @@ import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { StoreSettingsForm } from "@/components/admin/store-settings-form";
 import { CheckoutReadinessPanel } from "@/components/admin/checkout-readiness-panel";
 import { loadCheckoutReadiness } from "@/lib/commerce/checkout-readiness-server";
+import { parseStorefrontPresentation, STOREFRONT_PRESENTATION_KEY } from "@/lib/content/storefront-presentation";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -54,6 +55,7 @@ export default async function AdminSettingsPage() {
           inventoryDefaultTracked: Boolean(inventory.tracked),
           lowStockDefault: Number(inventory.low_stock_threshold || 0),
           seoTitleSuffix: String(seo.title_suffix || ""),
+          ...parseStorefrontPresentation((settings || []).find((r) => r.key === STOREFRONT_PRESENTATION_KEY)?.value),
         }}
       />
 

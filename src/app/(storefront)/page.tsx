@@ -16,6 +16,7 @@ import { HomeInquirySection } from "@/components/storefront/home/home-inquiry";
 import { confirmedPhones, telHref } from "@/lib/business";
 import { contentVisibility } from "@/lib/content/pages";
 import { getPublishedHomepageSections } from "@/lib/content/published-homepage";
+import { getStorefrontPresentation } from "@/lib/content/storefront-presentation-server";
 import { cpuFmt, fmtPkr, getV5Catalog, ord, stoFmt, v5Card, v5Link, type V5Product } from "@/lib/catalog/v5";
 import {
   HERO_IMAGE_PRESETS,
@@ -49,6 +50,7 @@ function heroShot(
   return {
     href: href(p),
     label: resolved.alt || p.model,
+    name: p.model,
     src: resolved.src,
     cutout: resolved.cutout,
   };
@@ -70,7 +72,7 @@ export default async function HomePage() {
   }
 
   // Optional published theme overrides (safe fallback to approved V5 defaults).
-  const published = await getPublishedHomepageSections();
+  const [published, pres] = await Promise.all([getPublishedHomepageSections(), getStorefrontPresentation()]);
   const heroSec = published?.find((s) => s.type === "v5_cinematic_hero" && s.enabled);
   const storySec = published?.find((s) => s.type === "v5_product_story" && s.enabled);
   const heroSettings = heroSec?.settings
@@ -197,6 +199,7 @@ export default async function HomePage() {
     <>
       {sectionOn("v5_cinematic_hero") ? (
         <CinematicHero
+          pres={pres}
           totalCount={P.length}
           chromebookCount={P.filter((p) => p.cat === "chromebook").length}
           laptopCount={lapN}
@@ -216,6 +219,7 @@ export default async function HomePage() {
       ) : null}
       {sectionOn("v5_product_story") ? (
         <ProductStory
+          pres={pres}
           handle={HM.h}
           title={HM.t}
           model={HM.model}
@@ -238,27 +242,29 @@ export default async function HomePage() {
           rows={storyRows}
         />
       ) : null}
-      {sectionOn("v5_chromebook") ? <ChromebookSection cb={cb} /> : null}
-      {sectionOn("v5_brand_grid") ? <BrandSection tiles={brandTiles} /> : null}
+      {sectionOn("v5_chromebook") ? <ChromebookSection cb={cb} pres={pres} /> : null}
+      {sectionOn("v5_brand_grid") ? <BrandSection tiles={brandTiles} pres={pres} /> : null}
       {sectionOn("v5_featured_products") ? (
-        <FeaturedSection cards={stock.slice(0, 8).map(v5Card)} laptopCount={lapN} brandTotal={brandN} accCount={accN} />
+        <FeaturedSection cards={stock.slice(0, 8).map(v5Card)} laptopCount={lapN} brandTotal={brandN} accCount={accN} pres={pres} />
       ) : null}
-      {sectionOn("v5_promo") ? <PromoSection promo={promo} /> : null}
-      {sectionOn("v5_spec_filters") ? <SpecSection links={quickLinks} /> : null}
+      {sectionOn("v5_promo") ? <PromoSection promo={promo} pres={pres} /> : null}
+      {sectionOn("v5_spec_filters") ? <SpecSection links={quickLinks} pres={pres} /> : null}
       {sectionOn("v5_new_gen") ? (
         <NewGenSection
+          pres={pres}
           cards={[...newGen].sort((x, y) => (y.gen ?? 0) - (x.gen ?? 0) || x.i - y.i).slice(0, 10).map(v5Card)}
           count={newGen.length}
         />
       ) : null}
       {sectionOn("v5_budget_bands") ? (
-        <BudgetSection tiles={["under-40k", "40k-60k", "over-60k"].map((id) => v5Link(P, id))} />
+        <BudgetSection tiles={["under-40k", "40k-60k", "over-60k"].map((id) => v5Link(P, id))} pres={pres} />
       ) : null}
-      {sectionOn("v5_compare_demo") ? <CompareDemoSection demo={cmpDemo} /> : null}
+      {sectionOn("v5_compare_demo") ? <CompareDemoSection demo={cmpDemo} pres={pres} /> : null}
       {sectionOn("v5_home_inquiry") ? (
         <HomeInquirySection
           phones={confirmedPhones().map((p) => ({ display: p.display, href: telHref(p) }))}
           privacyHref={(await contentVisibility()).pages.privacy ? "/pages/privacy" : null}
+          showSectionNumbers={pres.showSectionNumbers}
         />
       ) : null}
     </>

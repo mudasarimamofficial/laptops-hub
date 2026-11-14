@@ -12,6 +12,9 @@ type Props = {
     inventoryDefaultTracked: boolean;
     lowStockDefault: number;
     seoTitleSuffix: string;
+    showCatalogCounts: boolean;
+    showStoryAngleLabels: boolean;
+    showSectionNumbers: boolean;
   };
 };
 
@@ -24,6 +27,9 @@ export function StoreSettingsForm({ initial }: Props) {
   const [inventoryDefaultTracked, setInventoryDefaultTracked] = useState(initial.inventoryDefaultTracked);
   const [lowStockDefault, setLowStockDefault] = useState(String(initial.lowStockDefault));
   const [seoTitleSuffix, setSeoTitleSuffix] = useState(initial.seoTitleSuffix);
+  const [showCatalogCounts, setShowCatalogCounts] = useState(initial.showCatalogCounts);
+  const [showStoryAngleLabels, setShowStoryAngleLabels] = useState(initial.showStoryAngleLabels);
+  const [showSectionNumbers, setShowSectionNumbers] = useState(initial.showSectionNumbers);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -44,6 +50,9 @@ export function StoreSettingsForm({ initial }: Props) {
           inventoryDefaultTracked,
           lowStockDefault: Number(lowStockDefault) || 0,
           seoTitleSuffix,
+          showCatalogCounts,
+          showStoryAngleLabels,
+          showSectionNumbers,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -121,6 +130,24 @@ export function StoreSettingsForm({ initial }: Props) {
           placeholder=" | Laptops HUB"
         />
       </label>
+      <fieldset className="space-y-2 border-t border-[var(--adm-divider)] pt-4">
+        <legend className="font-semibold">Storefront labels</legend>
+        <p className="text-sm text-[var(--adm-ink-2)]">
+          Presentation only — products and categories are not changed. Off by default at the owner’s request.
+        </p>
+        <label className="flex items-start gap-2 text-sm">
+          <input type="checkbox" className="mt-1" checked={showCatalogCounts} onChange={(e) => setShowCatalogCounts(e.target.checked)} />
+          <span>Show catalog counts (e.g. “226 listings”, “View all 170”, footer product count)</span>
+        </label>
+        <label className="flex items-start gap-2 text-sm">
+          <input type="checkbox" className="mt-1" checked={showStoryAngleLabels} onChange={(e) => setShowStoryAngleLabels(e.target.checked)} />
+          <span>Show product-story angle labels (e.g. “Front view · 1/4”)</span>
+        </label>
+        <label className="flex items-start gap-2 text-sm">
+          <input type="checkbox" className="mt-1" checked={showSectionNumbers} onChange={(e) => setShowSectionNumbers(e.target.checked)} />
+          <span>Show homepage section numbers (e.g. “02 — Product story”)</span>
+        </label>
+      </fieldset>
       <button
         type="submit"
         disabled={!hydrated || busy}

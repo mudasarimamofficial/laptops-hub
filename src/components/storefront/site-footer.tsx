@@ -65,10 +65,13 @@ import type { FooterNavColumn } from "@/lib/content/navigation";
 /** Content links (help, policies, company pages) appear only once that page is public. */
 export function SiteFooter({
   totalCount,
+  showCounts = false,
   vis,
   footerCols,
 }: {
   totalCount: number;
+  /** Catalog count in the footer (hidden by default at the owner's request). */
+  showCounts?: boolean;
   vis: Visibility;
   footerCols?: FooterNavColumn[];
 }) {
@@ -110,7 +113,7 @@ export function SiteFooter({
       </div>
       <div style={{ maxWidth: 1360, margin: "0 auto", padding: "20px clamp(16px,3vw,32px) 32px", borderTop: "1px solid rgba(255,255,255,.08)", fontSize: 12, color: "var(--lh-on-dark-3)", display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <span>© Laptops HUB</span>
-        <span style={{ fontFamily: "var(--font-mono)" }}>{totalCount} products in the catalog</span>
+        {showCounts ? <span style={{ fontFamily: "var(--font-mono)" }}>{totalCount} products in the catalog</span> : null}
       </div>
     </footer>
   );

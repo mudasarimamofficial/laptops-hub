@@ -3,6 +3,7 @@ import { SiteFooter } from "@/components/storefront/site-footer";
 import { SiteHeader, type ChromeData } from "@/components/storefront/site-header";
 import { fmtPkr, getV5Catalog, v5Menu } from "@/lib/catalog/v5";
 import { contentVisibility } from "@/lib/content/pages";
+import { getStorefrontPresentation } from "@/lib/content/storefront-presentation-server";
 import { publicLinks, supportHref, type Visibility } from "@/lib/content/links";
 import { isPrelaunch, siteMode } from "@/lib/site-url";
 import { PrelaunchNotice } from "@/components/storefront/prelaunch-notice";
@@ -78,8 +79,8 @@ export default async function StorefrontLayout({ children }: Readonly<{ children
       </main>
     );
   }
-  const [vis, navConfig] = await Promise.all([contentVisibility(), getPublishedNavigation()]);
-  const chrome = await loadChrome(vis, navConfig);
+  const [vis, navConfig, pres] = await Promise.all([contentVisibility(), getPublishedNavigation(), getStorefrontPresentation()]);
+  const chrome = { ...(await loadChrome(vis, navConfig)), showCounts: pres.showCatalogCounts };
   const publicFooterCols = sanitizePublicFooterColumns(navConfig.footerColumns, vis);
   return (
     <>
@@ -94,7 +95,7 @@ export default async function StorefrontLayout({ children }: Readonly<{ children
       <main id="main" className="flex-1">
         {children}
       </main>
-      <SiteFooter totalCount={chrome.totalCount} vis={vis} footerCols={publicFooterCols} />
+      <SiteFooter totalCount={chrome.totalCount} showCounts={pres.showCatalogCounts} vis={vis} footerCols={publicFooterCols} />
       <CompareTray />
       <CartDrawer />
       <Toast />

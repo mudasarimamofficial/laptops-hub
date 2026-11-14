@@ -107,7 +107,13 @@ test.describe.serial("staff password recovery (isolated)", () => {
     const { data: u } = await sb.auth.admin.getUserById(manager.id);
     expect(u.user?.email).toBe(manager.email);
     expect(await membership(manager.id)).toEqual(before);
-    const { count } = await sb.from("audit_logs").select("id", { count: "exact", head: true }).eq("action", "auth.password_reset").eq("entity_id", manager.id);
+    // Exactly one audit entry for THIS reset (the local DB keeps entries from earlier runs).
+    const { count } = await sb
+      .from("audit_logs")
+      .select("id", { count: "exact", head: true })
+      .eq("action", "auth.password_reset")
+      .eq("entity_id", manager.id)
+      .gte("created_at", new Date(t0).toISOString());
     expect(count).toBe(1);
 
     // The used link cannot be reused.

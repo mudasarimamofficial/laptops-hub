@@ -17,6 +17,8 @@ export type ChromeData = {
   menu: V5MenuGroup[];
   megaFeat: MegaFeature | null;
   totalCount: number;
+  /** Show catalog counts (Admin → Settings → Storefront labels; hidden by default at the owner's request). */
+  showCounts?: boolean;
   supportHref: string;
   guidesPublic: boolean;
   navLinks?: { id?: string; label: string; href: string; isNew?: boolean }[];
@@ -234,7 +236,7 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
                       style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, padding: "8px 10px", margin: "0 -10px", borderRadius: 8, color: "var(--lh-ink)", fontSize: 15, transition: "background .18s ease" }}
                     >
                       <span>{it.label}</span>
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-ink-2)" }}>{countFor(it.count)}</span>
+                      {chrome.showCounts ? <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-ink-2)" }}>{countFor(it.count)}</span> : null}
                     </Link>
                   ))}
                 </div>
@@ -256,7 +258,7 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
             </div>
             <div style={{ maxWidth: 1360, margin: "0 auto", padding: "0 clamp(16px,3vw,32px) 24px", display: "flex", gap: 24, flexWrap: "wrap" }}>
               <Link href="/collections/all" style={{ display: "inline-flex", alignItems: "center", minHeight: 44, gap: 8, fontWeight: 600, fontSize: 14, color: "var(--lh-action)" }}>
-                <span>View all {chrome.totalCount} products →</span>
+                <span>{chrome.showCounts ? `View all ${chrome.totalCount} products →` : "View all products →"}</span>
               </Link>
               <Link href="/collections/chromebooks" style={{ display: "inline-flex", alignItems: "center", minHeight: 44, gap: 8, fontWeight: 600, fontSize: 14, color: "var(--lh-ink)" }}>
                 Chromebooks →
@@ -297,7 +299,7 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
               Search laptops
             </button>
             <Link href="/collections/all" style={{ padding: 16, fontSize: 16, fontWeight: 700, color: "var(--lh-ink)", borderBottom: "1px solid var(--lh-border)" }}>
-              All products <span style={{ color: "var(--lh-action)", fontFamily: "var(--font-mono)", fontSize: 13 }}>{chrome.totalCount}</span>
+              All products{chrome.showCounts ? <> <span style={{ color: "var(--lh-action)", fontFamily: "var(--font-mono)", fontSize: 13 }}>{chrome.totalCount}</span></> : null}
             </Link>
             <Link href="/collections/chromebooks" style={{ padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, fontSize: 16, fontWeight: 700, color: "var(--lh-ink)", borderBottom: "1px solid var(--lh-border)" }}>
               Chromebooks
@@ -321,7 +323,7 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
                       {g.items.map((it) => (
                         <Link key={it.href} href={it.href} style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", fontSize: 15, color: "var(--lh-ink)" }}>
                           {it.label}
-                          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-ink-2)" }}>{countFor(it.count)}</span>
+                          {chrome.showCounts ? <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-ink-2)" }}>{countFor(it.count)}</span> : null}
                         </Link>
                       ))}
                     </div>

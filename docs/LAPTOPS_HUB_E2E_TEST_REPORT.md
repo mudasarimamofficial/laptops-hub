@@ -1,13 +1,40 @@
-# Laptops HUB — E2E Test Report (2026-11-14)
+# Laptops HUB — E2E Test Report (2026-11-15)
 
 **Code under test:** `feat/merchant-operating-system` — third pass (social proof, badges, reel autoplay) on top of `3dae91a`; the commit that contains this report. **Stack:** isolated only. **Browser:** Playwright Chromium 1.64.1 (headless). WebKit/real devices not run.
-- Local Supabase seeded by `scripts/test-fixtures/seed-isolated.mjs`, plus a local owner account
+- Local Supabase reset (`supabase db reset --local`) and seeded by `scripts/test-fixtures/seed-isolated.mjs` (owner, manager, fulfillment, editor) immediately before the run
 - `next build` + `next start -p 3001`
 - Fake Resend on `:4599`
 
 **Machine-readable results:** `docs/LAPTOPS_HUB_E2E_TEST_REPORT.json` (per-test status and duration).
 
 No test touched production. Every isolated spec refuses to run unless Supabase is on 127.0.0.1/localhost (`assertLocalOnly`).
+
+## Fourth pass: Preview read-only gate (2026-11-15)
+
+**Code under test:** the Preview hardening commit on top of `8430f56`.
+
+**Result: 57/57** on a clean run (reset, seed, build, start, full suite). The unit suite has 28 files.
+
+The new file `tests/unit/preview-read-only.test.ts` runs 23 checks:
+- It calls the real handlers for contact, reviews, COD, staff recovery, staff password and cron.
+- Scenarios:
+  - Vercel Preview with the Production Supabase ref
+  - the same with `MERCHANT_MUTATIONS_DISABLED=1`
+  - `MERCHANT_MUTATIONS_DISABLED=1` on a genuine local stack
+- Every call returns `503 preview_read_only` with `no-store`.
+- Zero outbound requests: a global `fetch` trap would fail the test.
+- The rate limiter stays in memory and still enforces limits.
+- Production and local stacks remain writable.
+
+Failures seen during this pass, and their causes:
+- **Before the clean reset, each full run had one different failure:**
+  - blog publish, notification retry, shipping zone save
+  - each passed when re-run alone
+  - same-run durations varied up to 3x (machine load, and data accumulated across six runs)
+  - the clean-reset run passed 57/57
+- **password-recovery:** the fixture staff are reused, so `password:`/`recover:` counters from a run 11 minutes earlier tripped the (correct) limits. The spec now clears those **local** counters in `beforeAll`.
+- **Seed gap:** the seed did not create the `owner` that three specs need. It now does.
+- **Reels component fix:** a missing video could reject `play()` without the error event reaching React. That left a dead player. The rejection now also sets the "not available" state.
 
 ## Results
 

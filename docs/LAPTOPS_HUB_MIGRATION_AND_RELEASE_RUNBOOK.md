@@ -42,7 +42,20 @@ Apply one at a time through the reviewed migration path (`docs/MIGRATION_PRODUCT
 ## 4. Merge and deploy
 
 1. Open a PR from `feat/merchant-operating-system` to `main`. CI must pass: `npm run build`, `npm run test:unit`, lint.
-2. Deploy a Preview, then smoke-test it:
+2. Deploy a Preview, then smoke-test it.
+   **Read-only Preview gate (verified 2026-11-15).** The project's Preview `NEXT_PUBLIC_SUPABASE_URL` points at the
+   **Production** Supabase project, and there is no staging project. Every Preview therefore runs read-only:
+   - `evaluateMerchantWritePolicy` refuses Preview + Production ref.
+   - `MERCHANT_MUTATIONS_DISABLED=1` is passed per deployment (`--env`), not added to project env.
+   - Refused routes return `503 {error:"preview_read_only"}` before any network call:
+     - all staff writes
+     - contact, reviews, COD order creation
+     - staff recovery email and password change
+     - the cron notification sweep
+   - Export audit rows are skipped.
+   - Rate limiting stays in memory, so no `consume_rate_limit` rows are written.
+   - Proof: `tests/unit/preview-read-only.test.ts`, which runs the real handlers with all outbound network trapped.
+   - Functional admin writes on a hosted stack need a separate staging Supabase project (owner decision).
    ```bash
    node scripts/visual/check-routes.mjs --base <preview>
    ```

@@ -1,4 +1,5 @@
 import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import { publicWritesAllowed } from "@/lib/security/public-write-guard";
 import {
   collectionMembershipToCsv,
   productsToInventoryCsv,
@@ -53,7 +54,7 @@ export async function GET(request: Request) {
         };
       });
       const csv = collectionMembershipToCsv(rows);
-      await supabase.from("audit_logs").insert({
+      if (publicWritesAllowed()) await supabase.from("audit_logs").insert({
         actor_user_id: staff.userId,
         action: "products.export",
         entity_type: "collections",
@@ -134,7 +135,7 @@ async function buildCsvResponse(
       suffix = "shopify";
   }
 
-  await supabase.from("audit_logs").insert({
+  if (publicWritesAllowed()) await supabase.from("audit_logs").insert({
     actor_user_id: actorUserId,
     action: "products.export",
     entity_type: "products",

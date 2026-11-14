@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
+import { publicWriteBlockedResponse } from "@/lib/security/public-write-guard";
 import { createServiceClient } from "@/lib/supabase/server";
 import { clientIp, rateLimit } from "@/lib/security/rate-limit";
 import { processReview } from "@/lib/validation/review";
@@ -9,6 +10,8 @@ import { processReview } from "@/lib/validation/review";
  * staff approval. Rate limited per hashed IP (3 per hour); the raw IP is never stored.
  */
 export async function POST(request: Request) {
+  const blocked = publicWriteBlockedResponse();
+  if (blocked) return blocked;
   const supabase = createServiceClient();
   const result = await processReview(
     {

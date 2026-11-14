@@ -1,5 +1,5 @@
 /**
- * P0 acceptance on the ISOLATED stack (local Supabase seeded by scripts/test-fixtures/seed-isolated.mjs + owner):
+ * P0 acceptance on the ISOLATED stack (local Supabase seeded by scripts/test-fixtures/seed-isolated.mjs, incl. owner):
  *  1. /admin never renders storefront chrome (header, footer, compare tray, cart drawer), signed in, at 5 widths,
  *     with no horizontal overflow; the storefront keeps its chrome.
  *  2. Admin shows the server-side checkout readiness matrix.

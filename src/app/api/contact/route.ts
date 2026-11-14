@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
+import { publicWriteBlockedResponse } from "@/lib/security/public-write-guard";
 import { createClient } from "@/lib/supabase/server";
 import { clientIp, rateLimit } from "@/lib/security/rate-limit";
 import { processContact } from "@/lib/validation/contact";
 
 export async function POST(request: Request) {
+  const blocked = publicWriteBlockedResponse();
+  if (blocked) return blocked;
   const result = await processContact(
     {
       origin: request.headers.get("origin"),

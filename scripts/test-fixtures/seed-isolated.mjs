@@ -1,7 +1,7 @@
 /**
  * Seeds a LOCAL Supabase with realistic, non-customer launch fixtures for the isolated browser journeys
  * (tests/e2e-isolated): two products, a Lahore/Punjab COD zone, checkout enabled in local store_settings, and staff
- * accounts (manager, fulfillment, editor). Refuses any non-local URL. Writes .isolated/fixture.json
+ * accounts (owner, manager, fulfillment, editor). Refuses any non-local URL. Writes .isolated/fixture.json
  * (gitignored; contains only local test passwords).
  *
  *   NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SERVICE_ROLE_KEY=… node scripts/test-fixtures/seed-isolated.mjs
@@ -62,7 +62,7 @@ const zone = must(
 out.zone = { id: zone.id, city: "Lahore", province: "Punjab", flatFeePaisa: 30_000, codFeePaisa: 15_000 };
 must(await sb.from("store_settings").upsert({ key: "cod_checkout", value: { enabled: true } }), "cod setting");
 
-for (const role of ["manager", "fulfillment", "editor"]) {
+for (const role of ["owner", "manager", "fulfillment", "editor"]) {
   const email = `iso-${role}-${Date.now()}@lh-test.local`;
   const password = `T3st-${randomUUID()}`;
   const u = must(await sb.auth.admin.createUser({ email, password, email_confirm: true }), "user");

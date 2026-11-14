@@ -43,7 +43,15 @@ export function ReelsSection({ reels, heading = "Generation Laptops HUB", autopl
     el.muted = !sound; // set the property directly: autoplay is only permitted while muted
     el.play().then(
       () => setPlaying(id),
-      () => setPlaying(null), // autoplay refused by the browser: the play button remains
+      (err: unknown) => {
+        setPlaying(null); // autoplay refused by the browser (NotAllowedError): the play button remains
+        // A missing/unsupported source can reject play() without the error event reaching React (it may fire before
+        // hydration, and never again for a retry): show the unavailable state rather than a dead player.
+        const name = err instanceof DOMException ? err.name : "";
+        if (name === "NotSupportedError" || el.error || el.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+          setFailed((s) => (s.has(id) ? s : new Set(s).add(id)));
+        }
+      },
     );
   }, []);
 

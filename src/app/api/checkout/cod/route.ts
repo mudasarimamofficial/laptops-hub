@@ -1,5 +1,6 @@
 import { createHash } from "crypto";
 import { after, NextResponse } from "next/server";
+import { publicWriteBlockedResponse } from "@/lib/security/public-write-guard";
 import { processOutbox } from "@/lib/notify/outbox";
 import { createServiceClient } from "@/lib/supabase/server";
 import { normalizePakistanMobile } from "@/lib/phone";
@@ -15,6 +16,9 @@ function hashIp(ip: string | null): string | undefined {
 }
 
 export async function POST(request: Request) {
+  // Never create an order from a Preview (or read-only) deployment, whatever the COD flags say.
+  const blocked = publicWriteBlockedResponse();
+  if (blocked) return blocked;
   if (process.env.COD_CHECKOUT_ENABLED !== "true") {
     return NextResponse.json(
       {

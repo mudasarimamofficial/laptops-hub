@@ -1,4 +1,5 @@
 import { createServiceClient } from "@/lib/supabase/server";
+import { publicWritesAllowed } from "./public-write-guard";
 
 /** In-memory fallback when DB rate limit is unavailable (dev / cold start). */
 const memory = new Map<string, { timestamps: number[] }>();
@@ -21,7 +22,8 @@ export async function rateLimit(
 ): Promise<{ ok: true; remaining?: number } | { ok: false; retryAfterSec: number }> {
   const windowSeconds = Math.max(1, Math.ceil(windowMs / 1000));
 
-  try {
+  // Read-only deployments (Preview against Production) keep counters in memory: no rate-limit rows are written.
+  if (publicWritesAllowed()) try {
     const supabase = createServiceClient();
     const { data, error } = await supabase.rpc("consume_rate_limit", {
       p_key: key,

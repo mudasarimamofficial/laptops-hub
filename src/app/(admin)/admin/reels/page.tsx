@@ -14,7 +14,7 @@ export default async function AdminReelsPage() {
   const sb = createServiceClient();
   const { data } = await sb
     .from("reels")
-    .select("id, title, caption, video_url, poster_url, rights_status, rights_note, status, sort_order, products(handle)")
+    .select("id, title, caption, video_url, poster_url, rights_status, rights_note, status, sort_order, creator_name, creator_consent, tag, products(handle)")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false })
     .limit(200);
@@ -49,6 +49,9 @@ export default async function AdminReelsPage() {
               rightsNote: r.rights_note,
               status: r.status as ReelFormValues["status"],
               sortOrder: r.sort_order,
+              creatorName: r.creator_name ?? "",
+              creatorConsent: r.creator_consent === true,
+              tag: r.tag ?? "",
             };
             return (
               <li key={r.id} data-testid="reel-row" className="rounded-xl border border-[var(--lh-border)] bg-white p-4">

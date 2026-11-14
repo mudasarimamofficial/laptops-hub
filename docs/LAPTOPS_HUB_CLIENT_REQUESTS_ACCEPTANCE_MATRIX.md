@@ -35,12 +35,12 @@ All evidence comes from the isolated stack: a local Supabase seeded by `scripts/
 | 15 | Remove “Rear view”, “Front view · 1/4” (the “n/4” angle counter; the audit's “4x4”), “Product story 0” chapter numbers, “02 — PRODUCT STORY”, “11 — NEED HELP CHOOSING?” | **PASS** | Same spec; image alt text kept for accessibility. The literal string “4x4” does not occur in `src/` or `data/` |
 | 16 | Hero price tag showed image alt text (“… — Laptops HUB hero”) | **PASS** | Tag now shows the product model |
 | 17 | “SSDs” category label | **NOT TESTED** | Category names are merchant data; editable in Admin → Collections/Navigation. Not changed in code (no data invented) |
-| 18 | Truthful purchase toast (zero orders ⇒ none) | **PASS** | No fabricated “someone bought” toast exists anywhere in `src/` (the only toast is cart/quantity feedback). A real-order toast is not built |
-| 19 | Fire / top-selling badges only from real data | **PASS (none shown)** | No such badges exist in `src/`. Real-data badges are not built (needs order history; production has no COD orders) |
-| 20 | “Generation Laptops HUB” reels carousel | **PASS (local)** | `reels` table + Admin → Reels + homepage row. Publishing needs rights “owned”/“licensed” (form, API and DB constraint); ronin.pk refused at every layer; https direct files only, `preload="none"`, no autoplay or embeds. Row hidden when nothing is published. `p1-reels-reviews-blog.spec.ts` + SQL matrix 17/17. Needs migration approval + owner videos |
+| 18 | Truthful recent-order notice (“A customer ordered …”) | **PASS (local)** | Built: `PurchaseActivity` + `/api/activity/recent` from real orders with status confirmed+ (or delivered only); anonymous (no name, phone, address, order number, quantity or exact time; city only if the owner opts in); “ordered”, never “paid”; dismissible, ≤N per visit, never on cart/checkout/order pages, reduced-motion safe; **off by default**, no demo mode. `p1-social-proof.spec.ts` (zero qualifying orders ⇒ no notice; real delivered orders ⇒ notice with no PII in the payload) + `tests/unit/social-proof.test.ts` |
+| 19 | Fire / top-selling badges only from real data; editorial labels separate | **PASS (local)** | “Top seller” (flame) computed from real qualifying order units over a window with a minimum (default 3 units / 30 days, cap 8); cannot be set by hand (API 400, DB check refuses `top_seller`). Editorial “Featured / Popular pick / Staff pick” (star, different colour) with optional schedule in Admin → Badges & social proof; audited. Off by default for the data badge. Unit tests + SQL matrix `merchandising-matrix.sql` 15/15 + browser spec. Needs migration 22 approval |
+| 20 | “Generation Laptops HUB” reels carousel | **PASS (local)** | `reels` table + Admin → Reels + homepage row. Publishing needs rights “owned”/“licensed” (form, API and DB constraint); ronin.pk refused at every layer; https direct files only. Player: the most visible reel plays **muted and looping, one at a time**, only while on screen and the tab is visible; nothing downloads before that (`preload="none"`); sound only via the sound button; reduced motion / data saver / Admin switch ⇒ play button only; failed file ⇒ “not available” card. Optional creator name (only with recorded consent, DB-enforced) and tag; heading editable. Row hidden when nothing is published. Browser-verified with an original synthetic WebM (`tests/fixtures/reel-synthetic.webm`), not third-party footage. Needs migration approval + owner videos |
 | 21 | Moderated real reviews (no fabrication) | **PASS (local)** | `product_reviews` + `/api/reviews` (origin check, 3/h per hashed IP, honeypot) → always `pending`; Admin → Reviews approve/reject (audited; text never editable). PDP shows approved only; rating and JSON-LD `aggregateRating` only with ≥1 approved review; reviewer email/IP hash not readable by anon (column grants). Needs migration approval |
 | 22 | Real blog system | **PASS (local)** | Admin → Blog (create/edit/delete, address, summary, sanitised HTML, draft/published, audited) on the existing `articles` table — **no migration needed**. New posts appear at `/guides/<slug>`, in the guides list, side navigation and sitemap; drafts 404; publishing an empty body is refused (no implicit template publishing) |
-| 23 | Settings / order desk polish | **PARTIAL** | Readiness panel replaced the misleading pending block; responsive fee grid; `method="post"` on settings and navigation forms (no-JS safety) |
+| 23 | Settings / order desk polish | **PARTIAL** (order status changes now also refresh notices/badges) | Readiness panel replaced the misleading pending block; responsive fee grid; `method="post"` on settings and navigation forms (no-JS safety) |
 | 24 | 964 media rows reviewed | **BLOCKED** | Owner must review rights; not auto-approved |
 
 ## Owner decisions still required
@@ -50,8 +50,9 @@ All evidence comes from the isolated stack: a local Supabase seeded by `scripts/
 3. Real stock levels (variants are currently untracked)
 4. Media rights for the 964 media rows and any reel videos
 5. Staff invitations
-6. Approval of the 7 pending migrations (runbook below)
+6. Approval of the 8 pending migrations (runbook below)
 7. Merge, deploy and COD activation
-8. Reel videos Laptops HUB owns or has licensed, and where they are hosted
+8. Reel videos Laptops HUB owns or has licensed, where they are hosted, and written consent for any creator named on a reel
+9. Whether to switch on recent-order notices and the “Top seller” badge after launch (privacy policy must cover them)
 
 See `LAPTOPS_HUB_MIGRATION_AND_RELEASE_RUNBOOK.md`.

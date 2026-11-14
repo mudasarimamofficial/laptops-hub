@@ -9,6 +9,7 @@ import { useCompare } from "@/lib/commerce/compare-store";
 import { canPurchase } from "@/lib/catalog/availability";
 import { toV5, v5Card, type V5Card } from "@/lib/catalog/v5-model";
 import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
+import { MerchBadgeFor } from "@/components/storefront/merch-badges";
 
 /** Port of `ProductCard v5.dc.html`. Category badge only (no stock wording by design). */
 export function V5ProductCard({ item }: { item: V5Card }) {
@@ -51,6 +52,7 @@ export function V5ProductCard({ item }: { item: V5Card }) {
             <span style={{ flexShrink: 0, width: 6, height: 6, borderRadius: "50%", background: "#2159D4" }} />
             {item.badge}
           </span>
+          <MerchBadgeFor handle={item.h} />
         </div>
       </Link>
       <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "16px 18px 18px", flex: 1, borderTop: "1px solid var(--lh-border,#DAE5F2)" }}>

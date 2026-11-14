@@ -12,7 +12,7 @@ export const getPublishedReels = unstable_cache(
     try {
       const { data, error } = await createPublicClient()
         .from("reels")
-        .select("id, title, caption, video_url, poster_url, products(handle)")
+        .select("id, title, caption, video_url, poster_url, creator_name, tag, products(handle)")
         .eq("status", "published")
         .in("rights_status", ["owned", "licensed"])
         .order("sort_order", { ascending: true })
@@ -27,6 +27,8 @@ export const getPublishedReels = unstable_cache(
           videoUrl: r.video_url,
           posterUrl: r.poster_url,
           productHandle: (r.products as { handle?: string } | null)?.handle ?? null,
+          creatorName: r.creator_name ?? "",
+          tag: r.tag ?? "",
         }))
         .filter(isRenderableReel);
     } catch {

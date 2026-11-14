@@ -2,3 +2,11 @@
 @import "../styles/tokens.css";
 @import "../styles/v5.css";
 @import "../styles/base.css";
+
+/* Social proof (Nov 2026): restrained motion, off for reduced-motion users. */
+@media (prefers-reduced-motion: no-preference) {
+  .lh-flame { transform-origin: 50% 90%; animation: lh-flicker 1.8s ease-in-out infinite; }
+  .lh-activity { animation: lh-activity-in .32s ease-out both; }
+}
+@keyframes lh-flicker { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.08) rotate(-3deg); } }
+@keyframes lh-activity-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }

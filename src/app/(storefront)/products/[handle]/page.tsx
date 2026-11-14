@@ -9,6 +9,7 @@ import { contentVisibility } from "@/lib/content/pages";
 import { publicLinks } from "@/lib/content/links";
 import { getApprovedReviews } from "@/lib/catalog/reviews-server";
 import { ProductReviews } from "@/components/commerce/product-reviews";
+import { MerchBadgeFor } from "@/components/storefront/merch-badges";
 
 export const revalidate = 60;
 
@@ -105,6 +106,7 @@ export default async function ProductPage({ params }: Props) {
               <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "var(--lh-action)" }}>{p.brand}</span>
               <span style={{ fontSize: 12, fontWeight: 600, padding: "3px 9px", borderRadius: 999, background: "var(--lh-divider)", color: "var(--lh-ink)" }}>{p.cond || "Condition not listed"}</span>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-ink-2)" }}>{p.sku}</span>
+              <MerchBadgeFor handle={p.h} />
             </div>
             <h1 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(30px,3.4vw,48px)", lineHeight: 1.04, letterSpacing: "-.04em", fontWeight: 700, textWrap: "balance" }}>{p.model}</h1>
             <p style={{ margin: 0, fontSize: 17, color: "var(--lh-ink-2)", lineHeight: 1.45 }}>{p.config}</p>

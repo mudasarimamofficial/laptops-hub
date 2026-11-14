@@ -11,6 +11,9 @@ export type ReelRow = {
   rights_note: string;
   status: "draft" | "published" | "archived";
   sort_order: number;
+  creator_name: string;
+  creator_consent: boolean;
+  tag: string;
 };
 
 type Built = { ok: true; row: ReelRow } | { ok: false; status: number; body: Record<string, unknown> };
@@ -47,6 +50,9 @@ export async function reelRowFromInput(supabase: SupabaseClient, body: unknown):
       rights_note: v.rightsNote,
       status: v.status,
       sort_order: v.sortOrder,
+      creator_name: v.creatorName,
+      creator_consent: v.creatorName ? v.creatorConsent : false,
+      tag: v.tag.replace(/^#/, ""),
     },
   };
 }

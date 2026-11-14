@@ -49,7 +49,7 @@ test.describe.serial("P0: admin isolation and checkout gates (isolated)", () => 
     test(`admin has no storefront chrome at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await signIn(page, "owner");
-      for (const path of ["/admin", "/admin/settings", "/admin/products", "/admin/orders"]) {
+      for (const path of ["/admin", "/admin/settings", "/admin/products", "/admin/orders", "/admin/merchandising", "/admin/reels", "/admin/reviews", "/admin/blog"]) {
         await page.goto(path);
         await expect(page.locator(".admin-app")).toBeVisible();
         const c = await storefrontChrome(page);

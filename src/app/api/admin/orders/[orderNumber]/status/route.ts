@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { revalidateTag } from "next/cache";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 
 const schema = z.object({
@@ -58,6 +59,9 @@ export async function POST(request: Request, ctx: Ctx) {
       return NextResponse.json({ error: "server_error", message: "Could not update status." }, { status: 500 });
     }
 
+    // A status change can make an order count (or stop counting) for recent-order notices and the top-seller badge.
+    revalidateTag("orders-activity", { expire: 0 });
+    revalidateTag("product-badges", { expire: 0 });
     return NextResponse.json({ ok: true, ...(data as object) }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     return staffErrorResponse(e);

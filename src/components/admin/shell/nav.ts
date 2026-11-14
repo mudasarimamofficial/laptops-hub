@@ -103,6 +103,11 @@ export const ADMIN_NAV: AdminNavSection[] = [
         roles: ["owner", "admin", "editor"],
       },
       {
+        href: "/admin/merchandising",
+        label: "Badges & social proof",
+        roles: ["owner", "admin", "manager", "editor"],
+      },
+      {
         href: "/admin/navigation",
         label: "Navigation",
         roles: ["owner", "admin", "editor"],

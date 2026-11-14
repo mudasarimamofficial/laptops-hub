@@ -1,6 +1,6 @@
 # Laptops HUB — E2E Test Report (2026-11-14)
 
-**Code under test:** `feat/merchant-operating-system` after `55a27a2` plus the P1 reels/reviews/blog commit. **Stack:** isolated only.
+**Code under test:** `feat/merchant-operating-system` — third pass (social proof, badges, reel autoplay) on top of `3dae91a`; the commit that contains this report. **Stack:** isolated only. **Browser:** Playwright Chromium 1.64.1 (headless). WebKit/real devices not run.
 - Local Supabase seeded by `scripts/test-fixtures/seed-isolated.mjs`, plus a local owner account
 - `next build` + `next start -p 3001`
 - Fake Resend on `:4599`
@@ -13,8 +13,9 @@ No test touched production. Every isolated spec refuses to run unless Supabase i
 
 | Suite | Command | Result |
 |---|---|---|
-| Isolated Playwright journeys (9 spec files) | `npx playwright test --config=playwright.isolated.config.ts` | **52/52 PASS** (4.3 min) |
-| P0 admin isolation + checkout gates | `p0-admin-isolation-and-checkout-gates.spec.ts` | 10/10 |
+| Isolated Playwright journeys (10 spec files) | `npx playwright test --config=playwright.isolated.config.ts` | **57/57 PASS** (~7 min) |
+| P0 admin isolation + checkout gates (now 8 admin routes × 5 widths) | `p0-admin-isolation-and-checkout-gates.spec.ts` | 10/10 |
+| P1 social proof, badges, reel playback | `p1-social-proof.spec.ts` | 5/5 |
 | P1 storefront labels | `p1-storefront-labels.spec.ts` | 2/2 |
 | P1 reels, reviews, blog | `p1-reels-reviews-blog.spec.ts` | 4/4 |
 | Launch journeys (COD order, notifications, retry) | `launch-journey.spec.ts` | 10/10 |
@@ -23,9 +24,10 @@ No test touched production. Every isolated spec refuses to run unless Supabase i
 | Staff password recovery | `password-recovery.spec.ts` | 5/5 |
 | Shipping zones admin | `shipping-zones.spec.ts` | 4/4 |
 | Pre-hydration form safety | `prehydration.spec.ts` | 2/2 |
-| Unit tests (26 files) | `npm run test:unit` | **PASS** |
+| Unit tests (27 files, incl. `social-proof.test.ts`, run under UTC and America/New_York too) | `npm run test:unit` | **PASS** |
 | Shipping/COD SQL matrix | `scripts/db-tests/shipping-cod-matrix.sql` (local, ROLLBACK) | **26/26 PASS** |
 | Reels/reviews SQL matrix | `scripts/db-tests/reels-reviews-matrix.sql` (local, ROLLBACK) | **17/17 PASS** |
+| Merchandising SQL matrix | `scripts/db-tests/merchandising-matrix.sql` (local, ROLLBACK) | **15/15 PASS** |
 | Typecheck / lint | `npx tsc --noEmit -p .` / `npx eslint src tests --quiet` | **0 errors** |
 | Production build | `npx next build` | **PASS** (fonts self-hosted) |
 
@@ -51,6 +53,10 @@ No test touched production. Every isolated spec refuses to run unless Supabase i
 - **Reviews.** The product page shows "No reviews yet" and no `aggregateRating`. Cross-site posts get 403. A submitted review is stored `pending` with a 32-hex IP hash and is not shown. After approval it appears with "4.0 out of 5 · 1 review" and `aggregateRating`, without the reviewer's email. Rejecting hides it again.
 - **Blog.** Publishing an empty post is refused. A published post renders at `/guides/<slug>`, is listed on `/guides` and in the sitemap, and has `<script>` and `javascript:` links stripped. Back to draft gives 404.
 - **Roles.** Fulfillment staff get 403 on the post, reel and review-moderation APIs.
+- **Social proof (zero baseline).** With notices and "Top seller" switched on but only placed/cancelled/shipped orders (threshold: delivered), `/api/activity/recent` returns `[]`, Admin shows 0 qualifying orders / 0 top sellers, and no notice or badge appears on the PDP within 9.5 s.
+- **Social proof (real orders).** After 3 delivered sandbox orders, the API returns 2 items with only `city/handle/imageUrl/title/when` keys; the raw response contains no customer name, phone, order number, street or city. The PDP shows the flame "Top seller" badge and the notice "A customer ordered … today" (never "paid/bought"). Dismissing stops notices for the session; `/checkout` never shows one.
+- **Editorial labels.** An editor sets "Popular pick" (audited, star style on the PDP); forging `top_seller` through the API gives 400; editors get 403 on the settings API and do not see the settings form.
+- **Reel playback.** With an original synthetic WebM served to the test: exactly one video plays, muted; `preload="none"`; pressing sound on the second reel plays it unmuted and stops the first. Under `prefers-reduced-motion` nothing plays until the play button is pressed. A 404 video shows "This video is not available right now." Creator name and tag render only for the consented row.
 
 ## Notes for re-runners
 

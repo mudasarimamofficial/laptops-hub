@@ -7,7 +7,7 @@
 
 - The working tree held uncommitted edits whose content matched `main` (`2b43236`). Those edits would have silently reverted branch work, so they were saved to `stash@{0}`, not discarded, and HEAD was restored.
 - Live checks:
-  - Vercel deployments: listed read-only.
+  - Vercel deployments: listed read-only. Re-checked in the third pass: Production `dpl_6cDJvMYH3FJvc8FgW9LrEpWWDotu` (commit `cb638b7`, branch `feat/merchant-operating-system`), env names include both COD flags (values not decrypted); no `THEME_PUBLISHED_ENABLED`.
   - Supabase production: **not re-verified**, because MCP access was denied in this session. Production facts below come from the 2026-10-23 records (14 migrations applied, COD off).
 - No production write, migration, deploy, merge, env change or notification happened in this pass.
 
@@ -28,6 +28,9 @@
 | P2 | Recovery E2E asserted a cumulative audit count | Test not idempotent | Count scoped to this run | `a534b18` |
 | P1 | Reels, moderated reviews and an editable blog were missing | Not built | Rights-gated reels, pending-first reviews, Admin → Blog on `articles`; migration `20261115100000` (local) | P1 features commit |
 | P1 | A blog post with an empty body on a V5 guide slug would have published unreviewed template copy | Gap found while building the editor | Publishing always requires a written body | P1 features commit |
+| P1 | No truthful recent-order notice or top-seller badge; client asked for both | Not built | Server-computed from real confirmed/delivered orders only, anonymous payload, off by default; editorial labels separate and scheduled; migration `20261116100000` (local) | third-pass commit |
+| P1 | Reels never played by themselves (client wanted muted autoplay) | Earlier pass chose click-to-play | Visible reel plays muted, one at a time, pauses off-screen/hidden tab; sound by button; reduced motion / data saver / Admin switch ⇒ click-to-play; failed file ⇒ unavailable card | third-pass commit |
+| P2 | Social-proof caches would lag order status changes | No invalidation path | Order status route expires `orders-activity` and `product-badges` tags | third-pass commit |
 | P2 | Shipping SQL matrix assumed no other active zone | Test isolation | Deactivates other zones inside its rolled-back transaction | P1 features commit |
 
 ## 3. Security review notes

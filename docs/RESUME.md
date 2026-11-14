@@ -1,5 +1,13 @@
 # Resume here
 
+> **2026-11-14 third pass (Claude):** adds truthful social proof and reel playback on top of `3dae91a`: recent-order notices
+> and a data-backed "Top seller" badge computed only from real confirmed/delivered orders (both OFF by default, no demo mode,
+> no PII in the public payload); editorial "Featured / Popular pick / Staff pick" labels with schedules (Admin → Badges & social
+> proof); reels now play the visible clip muted, one at a time, with explicit sound, reduced-motion/data-saver fallbacks and a
+> consent-gated creator name. New local-only migration `20261116100000_merchandising_badges_and_reel_details.sql` (**8 pending**
+> for production). Evidence: isolated Playwright 57/57, unit 27 files, SQL matrices 26/26 + 17/17 + 15/15. Vercel production
+> re-verified read-only (still `cb638b7`); Supabase production still NOT re-verified (MCP denied, CLI unlinked).
+
 > **2026-11-14 release-candidate pass (Claude):** HEAD on `feat/merchant-operating-system` after `a534b18` + docs. Admin/storefront
 > separated by route groups; server-side checkout readiness gates; deliberate Rs 0 + Rs 0 = "Free delivery", blank fee rejected;
 > storefront counts/section numbers/angle counters hidden by default (owner toggle); fonts self-hosted (fixes fresh builds);

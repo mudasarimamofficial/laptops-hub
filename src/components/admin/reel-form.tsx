@@ -14,6 +14,9 @@ export type ReelFormValues = {
   rightsNote: string;
   status: "draft" | "published" | "archived";
   sortOrder: number;
+  creatorName: string;
+  creatorConsent: boolean;
+  tag: string;
 };
 
 export const EMPTY_REEL: ReelFormValues = {
@@ -26,6 +29,9 @@ export const EMPTY_REEL: ReelFormValues = {
   rightsNote: "",
   status: "draft",
   sortOrder: 0,
+  creatorName: "",
+  creatorConsent: false,
+  tag: "",
 };
 
 const input = "mt-1 w-full min-w-0 rounded-xl border border-[var(--lh-border)] px-3 py-2";
@@ -127,6 +133,24 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
         <span className="font-medium">Rights note</span>
         <input className={input} value={v.rightsNote} onChange={(e) => set("rightsNote", e.target.value)} maxLength={500} placeholder="Who licensed it, date, terms" />
         {fieldErr("rightsNote")}
+      </label>
+      <label className="block">
+        <span className="font-medium">Creator name (optional)</span>
+        <input className={input} value={v.creatorName} onChange={(e) => set("creatorName", e.target.value)} maxLength={80} placeholder="Shown on the reel" />
+        {fieldErr("creatorName")}
+      </label>
+      <label className="block">
+        <span className="font-medium">Tag (optional)</span>
+        <input className={input} value={v.tag} onChange={(e) => set("tag", e.target.value.trim())} maxLength={40} placeholder="#Productivity" />
+        {fieldErr("tag")}
+      </label>
+      <label className="flex items-start gap-2 sm:col-span-2">
+        <input type="checkbox" className="mt-1" checked={v.creatorConsent} onChange={(e) => set("creatorConsent", e.target.checked)} />
+        <span>
+          The person named above agreed in writing to be shown on the Laptops HUB website. Never name a creator or public figure without their
+          permission, and never suggest an endorsement they did not give.
+          {fieldErr("creatorConsent")}
+        </span>
       </label>
       <label className="block">
         <span className="font-medium">Order (lower shows first)</span>

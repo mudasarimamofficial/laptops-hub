@@ -44,6 +44,10 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
   test.afterAll(cleanup);
 
   test("reels: no row by default; reference and unlicensed videos refused; published owned reel shows", async ({ page }) => {
+    // The local stack has no storage service: serve the original synthetic clip for the test URL.
+    await page.route(/\/reels\/qa-[^/]*\.mp4/, (route) =>
+      route.fulfill({ status: 200, contentType: "video/webm", body: fs.readFileSync("tests/fixtures/reel-synthetic.webm") }),
+    );
     await page.goto("/");
     await expect(page.getByTestId("reels-section")).toHaveCount(0);
 

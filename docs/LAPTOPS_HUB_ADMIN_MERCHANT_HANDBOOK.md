@@ -48,7 +48,8 @@ Short videos for the homepage "Generation Laptops HUB" row. The row appears only
 - Link a **direct video file** (.mp4, .webm or .mov) on an https address you control, plus an optional cover image.
 - Set **Video rights** to *Owned* (we filmed it) or *Licensed* (written permission; note who gave it and the terms). A reel cannot be published while rights are *Not confirmed*.
 - Videos from other shops (for example the ronin.pk references) are refused.
-- Videos never play by themselves; they load only when a shopper presses play.
+- **Creator name and tag** (optional): a name is shown only if you tick that the person agreed in writing. Never name a creator or public figure without permission.
+- Playback: the reel a shopper is looking at plays **without sound**, one at a time, and stops when scrolled away. Sound starts only when the shopper presses the speaker button. Shoppers who prefer reduced motion or save data get a play button instead. You can turn automatic playback off, and change the row's heading, in **Badges & social proof → Reels row**.
 
 ## Reviews (Catalog → Reviews)
 
@@ -65,9 +66,13 @@ Write guides that appear at /guides/your-address, in the guides list and in the 
 - Title, address (filled in from the title), summary and body (safe HTML: headings, paragraphs, lists, links). Scripts and unsafe links are removed when you save.
 - A post needs a body before it can be published. Switch it back to Draft to take it off the site.
 
-## What is not in this release
+## Badges & social proof (Online store → Badges & social proof)
 
-- "Best seller" badges
-- "Someone just bought" pop-ups
+The top box always tells you how many real qualifying orders exist and which products qualify, so you can see why nothing shows yet.
 
-Neither is shown on the shop, so nothing is invented. Both need real order history first.
+- **Editorial labels** — "Featured", "Popular pick" or "Staff pick" on one product, with an optional start and end date. They show a star and a blue outline. Editors can set them.
+- **"Top seller" badge** — a small flame, calculated automatically from real orders (default: 3 or more units confirmed in the last 30 days, at most 8 products). You cannot give it to a product by hand. Cancelled, failed and returned orders never count. It is **off** until you switch it on.
+- **Recent order notices** — a small corner card such as "A customer ordered HP EliteBook 840 G8 today". Only real confirmed (or delivered) orders; never a name, phone, address or order number; the city only if you allow it; never on the cart or checkout. It is **off** until you switch it on, and with no qualifying orders nothing appears. There is no demo mode.
+- Owner, admin and manager can change these settings; editors can manage labels only. Every change is in the Activity log.
+
+Switch the notices and "Top seller" on only after your privacy policy is published and covers them.

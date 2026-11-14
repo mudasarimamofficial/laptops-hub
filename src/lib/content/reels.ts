@@ -58,10 +58,21 @@ export const reelInputSchema = z
     rightsNote: z.string().trim().max(500).optional().default(""),
     status: z.enum(["draft", "published", "archived"]),
     sortOrder: z.number().int().min(-1000).max(1000).optional().default(0),
+    creatorName: z.string().trim().max(80).optional().default(""),
+    creatorConsent: z.boolean().optional().default(false),
+    tag: z
+      .string()
+      .trim()
+      .regex(/^(#?[A-Za-z0-9_]{1,39})?$/, "Use one tag of letters, numbers or _ (for example #Productivity).")
+      .optional()
+      .default(""),
   })
   .superRefine((v, ctx) => {
     if (v.status === "published" && v.rightsStatus === "pending") {
       ctx.addIssue({ code: "custom", path: ["rightsStatus"], message: "Confirm the video is owned or licensed before publishing." });
+    }
+    if (v.creatorName && !v.creatorConsent) {
+      ctx.addIssue({ code: "custom", path: ["creatorConsent"], message: "Confirm the person agreed to be named, or leave the name blank." });
     }
     if (v.rightsStatus === "licensed" && !v.rightsNote) {
       ctx.addIssue({ code: "custom", path: ["rightsNote"], message: "Note who licensed the video and on what terms." });
@@ -70,7 +81,23 @@ export const reelInputSchema = z
 
 export type ReelInput = z.infer<typeof reelInputSchema>;
 
-export type PublicReel = { id: string; title: string; caption: string; videoUrl: string; posterUrl: string | null; productHandle: string | null };
+export type PublicReel = {
+  id: string;
+  title: string;
+  caption: string;
+  videoUrl: string;
+  posterUrl: string | null;
+  productHandle: string | null;
+  /** Shown only when the creator consented (DB constraint reels_creator_requires_consent). */
+  creatorName: string;
+  tag: string;
+};
+
+/** "productivity" → "#productivity"; blank stays blank. */
+export function displayTag(tag: string): string {
+  const t = tag.trim().replace(/^#/, "");
+  return t ? `#${t}` : "";
+}
 
 /** Defence in depth for public rendering: drop anything the rules above would refuse. */
 export function isRenderableReel(r: { videoUrl: string; posterUrl: string | null }): boolean {

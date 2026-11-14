@@ -10,6 +10,9 @@ import { PrelaunchNotice } from "@/components/storefront/prelaunch-notice";
 import { CompareTray } from "@/components/storefront/compare-tray";
 import { CartDrawer } from "@/components/storefront/cart-drawer";
 import { Toast } from "@/components/storefront/v5/toast";
+import { getMerchBadges, getSocialProofSettings } from "@/lib/content/social-proof-server";
+import { MerchBadgeProvider } from "@/components/storefront/merch-badges";
+import { PurchaseActivity } from "@/components/storefront/purchase-activity";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -79,11 +82,17 @@ export default async function StorefrontLayout({ children }: Readonly<{ children
       </main>
     );
   }
-  const [vis, navConfig, pres] = await Promise.all([contentVisibility(), getPublishedNavigation(), getStorefrontPresentation()]);
+  const [vis, navConfig, pres, social, badges] = await Promise.all([
+    contentVisibility(),
+    getPublishedNavigation(),
+    getStorefrontPresentation(),
+    getSocialProofSettings(),
+    getMerchBadges(),
+  ]);
   const chrome = { ...(await loadChrome(vis, navConfig)), showCounts: pres.showCatalogCounts };
   const publicFooterCols = sanitizePublicFooterColumns(navConfig.footerColumns, vis);
   return (
-    <>
+    <MerchBadgeProvider badges={badges}>
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-3 focus:py-2"
@@ -99,6 +108,7 @@ export default async function StorefrontLayout({ children }: Readonly<{ children
       <CompareTray />
       <CartDrawer />
       <Toast />
-    </>
+      {social.activity.enabled ? <PurchaseActivity config={social.activity} /> : null}
+    </MerchBadgeProvider>
   );
 }

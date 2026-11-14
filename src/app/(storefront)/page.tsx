@@ -17,6 +17,8 @@ import { confirmedPhones, telHref } from "@/lib/business";
 import { contentVisibility } from "@/lib/content/pages";
 import { getPublishedHomepageSections } from "@/lib/content/published-homepage";
 import { getStorefrontPresentation } from "@/lib/content/storefront-presentation-server";
+import { getPublishedReels } from "@/lib/content/reels-server";
+import { ReelsSection } from "@/components/storefront/home/reels-section";
 import { cpuFmt, fmtPkr, getV5Catalog, ord, stoFmt, v5Card, v5Link, type V5Product } from "@/lib/catalog/v5";
 import {
   HERO_IMAGE_PRESETS,
@@ -72,7 +74,7 @@ export default async function HomePage() {
   }
 
   // Optional published theme overrides (safe fallback to approved V5 defaults).
-  const [published, pres] = await Promise.all([getPublishedHomepageSections(), getStorefrontPresentation()]);
+  const [published, pres, reels] = await Promise.all([getPublishedHomepageSections(), getStorefrontPresentation(), getPublishedReels()]);
   const heroSec = published?.find((s) => s.type === "v5_cinematic_hero" && s.enabled);
   const storySec = published?.find((s) => s.type === "v5_product_story" && s.enabled);
   const heroSettings = heroSec?.settings
@@ -247,6 +249,8 @@ export default async function HomePage() {
       {sectionOn("v5_featured_products") ? (
         <FeaturedSection cards={stock.slice(0, 8).map(v5Card)} laptopCount={lapN} brandTotal={brandN} accCount={accN} pres={pres} />
       ) : null}
+      {/* Only when published, rights-cleared reels exist (admin → Reels). */}
+      <ReelsSection reels={reels} />
       {sectionOn("v5_promo") ? <PromoSection promo={promo} pres={pres} /> : null}
       {sectionOn("v5_spec_filters") ? <SpecSection links={quickLinks} pres={pres} /> : null}
       {sectionOn("v5_new_gen") ? (

@@ -20,7 +20,15 @@ export type ResolvedContent = {
   preview: boolean;
 };
 
-export type ContentRow = { slug: string; title: string; body_html: string | null; status: string; legal_approved?: boolean | null };
+export type ContentRow = {
+  slug: string;
+  title: string;
+  body_html: string | null;
+  status: string;
+  legal_approved?: boolean | null;
+  excerpt?: string | null;
+  published_at?: string | null;
+};
 
 export function previewAllContent() {
   return process.env.V5_CONTENT_PREVIEW === "1" && process.env.VERCEL_ENV !== "production";

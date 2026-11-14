@@ -15,7 +15,7 @@
 supabase migration list --linked
 ```
 
-Expected: the 14 migrations above are remote, and the 6 below are local-only.
+Expected: the 14 migrations above are remote, and the 7 below are local-only.
 
 ## 2. Pending migrations (apply in this order)
 
@@ -27,10 +27,11 @@ Expected: the 14 migrations above are remote, and the 6 below are local-only.
 | 18 | `20261025150000_theme_rls_inventory_hardening.sql` | Theme RLS select-only; draft RPC | Low |
 | 19 | `20261025160000_theme_immutability_service_role.sql` | Published/draft rows immutable without the mutation flag | Low |
 | 20 | `20261114100000_function_search_path_hardening.sql` | `SET search_path = ''` on `norm_place`, `zone_serves_address`, `set_updated_at` | Low: those functions already use qualified names; verified locally by the SQL matrix |
+| 21 | `20261115100000_reels_and_product_reviews.sql` | New `reels` and `product_reviews` tables with RLS (public: published + rights-cleared reels, approved reviews), column grants hiding reviewer email and IP hash, no anon write path, publish-requires-rights and ronin.pk-ban constraints | Low: additive, new tables only; `scripts/db-tests/reels-reviews-matrix.sql` 17/17 |
 
 Apply one at a time through the reviewed migration path (`docs/MIGRATION_PRODUCTION_APPROVAL.md`). After each one, re-run step 1 and the read-only advisors.
 
-**Rollback:** 15–19 are additive. `DATA_MODEL_AND_MIGRATIONS.md` → “Rollback sketch” is an outline, not tested scripts; prefer leaving new columns nullable and unused over dropping them. Writing and testing down-scripts is still to do before production. For 20, run `ALTER FUNCTION … RESET search_path`.
+**Rollback:** 15–19 and 21 are additive (21: export, then `drop table public.product_reviews, public.reels;`). `DATA_MODEL_AND_MIGRATIONS.md` → “Rollback sketch” is an outline, not tested scripts; prefer leaving new columns nullable and unused over dropping them. Writing and testing down-scripts is still to do before production. For 20, run `ALTER FUNCTION … RESET search_path`.
 
 ## 3. Owner dashboard actions (no code)
 
@@ -69,4 +70,4 @@ Then:
 - `create_cod_order` decrements tracked stock but writes no `inventory_ledger` row.
 - `/api/admin/media` returns raw error messages, though only to staff.
 - `notFound()` thrown inside dynamic product pages renders the Next error shell instead of the styled 404. This already happens in production; it is not a regression.
-- Reels, moderated reviews, a blog editor and real-data badges are not built (see the acceptance matrix).
+- Real-data “best seller” badges and a real-order toast are not built (no order history yet).

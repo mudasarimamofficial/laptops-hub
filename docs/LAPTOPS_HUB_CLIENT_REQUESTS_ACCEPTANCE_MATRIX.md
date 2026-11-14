@@ -37,9 +37,9 @@ All evidence comes from the isolated stack: a local Supabase seeded by `scripts/
 | 17 | “SSDs” category label | **NOT TESTED** | Category names are merchant data; editable in Admin → Collections/Navigation. Not changed in code (no data invented) |
 | 18 | Truthful purchase toast (zero orders ⇒ none) | **PASS** | No fabricated “someone bought” toast exists anywhere in `src/` (the only toast is cart/quantity feedback). A real-order toast is not built |
 | 19 | Fire / top-selling badges only from real data | **PASS (none shown)** | No such badges exist in `src/`. Real-data badges are not built (needs order history; production has no COD orders) |
-| 20 | “Generation Laptops HUB” reels carousel | **NOT BUILT** | Needs a rights-gated media model + owner-supplied videos. The ronin.pk reference URLs are **absent** from `src/`, `data/`, `public/` (grep verified) |
-| 21 | Moderated real reviews (no fabrication) | **NOT BUILT** | Needs a `product_reviews` table with moderation + migration approval. No reviews are shown today, so nothing is fabricated |
-| 22 | Real blog system | **NOT BUILT** | `/guides/[slug]` exists (content pages gated by owner approval); there is no editor-driven blog |
+| 20 | “Generation Laptops HUB” reels carousel | **PASS (local)** | `reels` table + Admin → Reels + homepage row. Publishing needs rights “owned”/“licensed” (form, API and DB constraint); ronin.pk refused at every layer; https direct files only, `preload="none"`, no autoplay or embeds. Row hidden when nothing is published. `p1-reels-reviews-blog.spec.ts` + SQL matrix 17/17. Needs migration approval + owner videos |
+| 21 | Moderated real reviews (no fabrication) | **PASS (local)** | `product_reviews` + `/api/reviews` (origin check, 3/h per hashed IP, honeypot) → always `pending`; Admin → Reviews approve/reject (audited; text never editable). PDP shows approved only; rating and JSON-LD `aggregateRating` only with ≥1 approved review; reviewer email/IP hash not readable by anon (column grants). Needs migration approval |
+| 22 | Real blog system | **PASS (local)** | Admin → Blog (create/edit/delete, address, summary, sanitised HTML, draft/published, audited) on the existing `articles` table — **no migration needed**. New posts appear at `/guides/<slug>`, in the guides list, side navigation and sitemap; drafts 404; publishing an empty body is refused (no implicit template publishing) |
 | 23 | Settings / order desk polish | **PARTIAL** | Readiness panel replaced the misleading pending block; responsive fee grid; `method="post"` on settings and navigation forms (no-JS safety) |
 | 24 | 964 media rows reviewed | **BLOCKED** | Owner must review rights; not auto-approved |
 
@@ -50,7 +50,8 @@ All evidence comes from the isolated stack: a local Supabase seeded by `scripts/
 3. Real stock levels (variants are currently untracked)
 4. Media rights for the 964 media rows and any reel videos
 5. Staff invitations
-6. Approval of the 6 pending migrations (runbook below)
+6. Approval of the 7 pending migrations (runbook below)
 7. Merge, deploy and COD activation
+8. Reel videos Laptops HUB owns or has licensed, and where they are hosted
 
 See `LAPTOPS_HUB_MIGRATION_AND_RELEASE_RUNBOOK.md`.

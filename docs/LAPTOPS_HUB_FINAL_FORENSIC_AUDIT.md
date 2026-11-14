@@ -26,6 +26,9 @@
 | P1 | 360 px overflow in the readiness panel and fee grid | Long tokens; fixed two-column grid | `overflow-wrap:anywhere`; responsive grid | `2e19797` |
 | P1 | Counts, angle counters, section numbers and alt text shown as captions on the storefront | Hard-coded V5 parity copy | Presentation switches, hidden by default and owner-toggleable | `a534b18` |
 | P2 | Recovery E2E asserted a cumulative audit count | Test not idempotent | Count scoped to this run | `a534b18` |
+| P1 | Reels, moderated reviews and an editable blog were missing | Not built | Rights-gated reels, pending-first reviews, Admin → Blog on `articles`; migration `20261115100000` (local) | P1 features commit |
+| P1 | A blog post with an empty body on a V5 guide slug would have published unreviewed template copy | Gap found while building the editor | Publishing always requires a written body | P1 features commit |
+| P2 | Shipping SQL matrix assumed no other active zone | Test isolation | Deactivates other zones inside its rolled-back transaction | P1 features commit |
 
 ## 3. Security review notes
 
@@ -42,5 +45,5 @@
 2. `create_cod_order` writes no `inventory_ledger` row on stock decrement, so stock-movement audits will be incomplete.
 3. The staff-only media API returns raw error text.
 4. `notFound()` inside dynamic PDPs shows the Next error shell. This already happens in production.
-5. Reels, reviews, blog and real-data badges are not built (see the acceptance matrix). Nothing fabricated is shown in their place.
-6. All six pending migrations need approval in order. Down-scripts are not written yet.
+5. Reels and reviews need migration `20261115100000` in production. Until then the homepage row is absent and product pages say "No reviews yet" (the loaders fail closed). Real-data badges are not built.
+6. All seven pending migrations need approval in order. Down-scripts are not written yet.

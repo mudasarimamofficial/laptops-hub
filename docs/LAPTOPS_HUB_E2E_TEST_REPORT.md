@@ -1,6 +1,6 @@
 # Laptops HUB — E2E Test Report (2026-11-14)
 
-**Code under test:** `a534b18`. **Stack:** isolated only.
+**Code under test:** `feat/merchant-operating-system` after `55a27a2` plus the P1 reels/reviews/blog commit. **Stack:** isolated only.
 - Local Supabase seeded by `scripts/test-fixtures/seed-isolated.mjs`, plus a local owner account
 - `next build` + `next start -p 3001`
 - Fake Resend on `:4599`
@@ -13,17 +13,19 @@ No test touched production. Every isolated spec refuses to run unless Supabase i
 
 | Suite | Command | Result |
 |---|---|---|
-| Isolated Playwright journeys (8 spec files) | `npx playwright test --config=playwright.isolated.config.ts` | **48/48 PASS** (3.8 min) |
+| Isolated Playwright journeys (9 spec files) | `npx playwright test --config=playwright.isolated.config.ts` | **52/52 PASS** (4.3 min) |
 | P0 admin isolation + checkout gates | `p0-admin-isolation-and-checkout-gates.spec.ts` | 10/10 |
 | P1 storefront labels | `p1-storefront-labels.spec.ts` | 2/2 |
+| P1 reels, reviews, blog | `p1-reels-reviews-blog.spec.ts` | 4/4 |
 | Launch journeys (COD order, notifications, retry) | `launch-journey.spec.ts` | 10/10 |
 | Content pages gating | `content-pages.spec.ts` | 8/8 |
 | Home inquiry | `home-inquiry.spec.ts` | 7/7 |
 | Staff password recovery | `password-recovery.spec.ts` | 5/5 |
 | Shipping zones admin | `shipping-zones.spec.ts` | 4/4 |
 | Pre-hydration form safety | `prehydration.spec.ts` | 2/2 |
-| Unit tests (25 files) | `npm run test:unit` | **PASS** |
+| Unit tests (26 files) | `npm run test:unit` | **PASS** |
 | Shipping/COD SQL matrix | `scripts/db-tests/shipping-cod-matrix.sql` (local, ROLLBACK) | **26/26 PASS** |
+| Reels/reviews SQL matrix | `scripts/db-tests/reels-reviews-matrix.sql` (local, ROLLBACK) | **17/17 PASS** |
 | Typecheck / lint | `npx tsc --noEmit -p .` / `npx eslint src tests --quiet` | **0 errors** |
 | Production build | `npx next build` | **PASS** (fonts self-hosted) |
 
@@ -44,6 +46,11 @@ No test touched production. Every isolated spec refuses to run unless Supabase i
   - "Laptops HUB hero" captions
 
   The owner toggles "Show catalog counts" in Admin, and the stored value reads back as `{showCatalogCounts:true, …false}`. The checkbox stays checked after reload, the public footer count appears, and section numbers stay hidden. The setting is removed afterwards.
+
+- **Reels.** No row on the homepage by default. Admin refuses a ronin.pk link and an unlicensed publish (the database refuses the latter too). A published, owned reel appears with `preload="none"` and a product link; unpublishing through the admin API removes the row.
+- **Reviews.** The product page shows "No reviews yet" and no `aggregateRating`. Cross-site posts get 403. A submitted review is stored `pending` with a 32-hex IP hash and is not shown. After approval it appears with "4.0 out of 5 · 1 review" and `aggregateRating`, without the reviewer's email. Rejecting hides it again.
+- **Blog.** Publishing an empty post is refused. A published post renders at `/guides/<slug>`, is listed on `/guides` and in the sitemap, and has `<script>` and `javascript:` links stripped. Back to draft gives 404.
+- **Roles.** Fulfillment staff get 403 on the post, reel and review-moderation APIs.
 
 ## Notes for re-runners
 

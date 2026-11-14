@@ -28,7 +28,7 @@ description: Release gate for Laptops HUB. Use before claiming any Laptops HUB w
 | Any TS | `npx tsc --noEmit -p .` and `npx eslint src tests --quiet` with 0 errors |
 | Logic | `npm run test:unit` (add the new test file to the script) |
 | UI / routes | `npx next build`, then `npx next start -p 3001 -H 127.0.0.1` and `npx playwright test --config=playwright.isolated.config.ts` (load `.env.local` first: `set -a; . ./.env.local; set +a`) |
-| SQL / RPC / fees | `scripts/db-tests/shipping-cod-matrix.sql` on the **local** DB (it ROLLBACKs) |
+| SQL / RPC / fees / reels / reviews | `scripts/db-tests/shipping-cod-matrix.sql` and `scripts/db-tests/reels-reviews-matrix.sql` on the **local** DB (both ROLLBACK) |
 | Layout | 360/390/768/1280/1440 with no horizontal overflow (p0 spec pattern) |
 
 Isolated reruns can hit the deliberate rate limits (recover: 3 per hour per email). Clear them **locally only** with:

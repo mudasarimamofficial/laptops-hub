@@ -41,12 +41,33 @@ As the client asked, these are hidden by default:
 
 Tick a box and save to bring a label back. The shop updates straight after saving. Image descriptions for screen readers are always kept.
 
+## Reels (Online store → Reels)
+
+Short videos for the homepage "Generation Laptops HUB" row. The row appears only when at least one reel is published.
+
+- Link a **direct video file** (.mp4, .webm or .mov) on an https address you control, plus an optional cover image.
+- Set **Video rights** to *Owned* (we filmed it) or *Licensed* (written permission; note who gave it and the terms). A reel cannot be published while rights are *Not confirmed*.
+- Videos from other shops (for example the ronin.pk references) are refused.
+- Videos never play by themselves; they load only when a shopper presses play.
+
+## Reviews (Catalog → Reviews)
+
+Shoppers can write a review on any product page. Every review waits under **Waiting** until you act:
+
+- **Approve** honest reviews, good or bad. **Reject** spam, abuse or personal data. Staff cannot edit or write reviews.
+- The star rating and review count on a product (and in search-engine data) come only from approved reviews. With none, the page says "No reviews yet".
+- The reviewer's email, if given, is visible only to staff.
+
+## Blog (Online store → Blog)
+
+Write guides that appear at /guides/your-address, in the guides list and in the sitemap.
+
+- Title, address (filled in from the title), summary and body (safe HTML: headings, paragraphs, lists, links). Scripts and unsafe links are removed when you save.
+- A post needs a body before it can be published. Switch it back to Draft to take it off the site.
+
 ## What is not in this release
 
-- Customer reviews
-- Video reels
-- A blog editor
 - "Best seller" badges
 - "Someone just bought" pop-ups
 
-None of these is shown on the shop, so nothing is invented. Each will be built from real data (moderated reviews, licensed videos, real order history) once approved.
+Neither is shown on the shop, so nothing is invented. Both need real order history first.

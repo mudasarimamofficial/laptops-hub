@@ -4,6 +4,8 @@ import { LEGAL_CONTENT_SLUGS } from "@/lib/security/sanitize-html";
 import { V5_CONTENT } from "@/lib/content/v5-content";
 import type { V5Page } from "@/lib/content/types";
 import { isContentPublic, previewAllContent, resolveContent as resolve, type ContentRow as Row, type ResolvedContent } from "@/lib/content/resolve";
+import { readMinutes } from "@/lib/content/blog";
+import { sanitizeCmsHtml } from "@/lib/security/sanitize-html";
 
 export { previewAllContent, type ResolvedContent };
 
@@ -24,6 +26,12 @@ export { previewAllContent, type ResolvedContent };
  */
 export const PAGE_SLUGS = Object.keys(V5_CONTENT.pages);
 export const ARTICLE_SLUGS = V5_CONTENT.articles.map((a) => a.slug);
+const TEMPLATE_ARTICLES = new Set(ARTICLE_SLUGS);
+
+/** Blog posts written in /admin/blog with their own slug (no V5 template): public when published with a body. */
+function isCmsPostPublic(r: Row): boolean {
+  return r.status === "published" && !!(r.body_html || "").replace(/<[^>]*>/g, "").trim();
+}
 
 type Rows = { pages: Row[]; articles: Row[] };
 
@@ -32,7 +40,7 @@ async function readVisibleRows(): Promise<Rows> {
   const sb = createPublicClient();
   const [p, a] = await Promise.all([
     sb.from("content_pages").select("slug, title, body_html, status, legal_approved").eq("status", "published"),
-    sb.from("articles").select("slug, title, body_html, status").eq("status", "published"),
+    sb.from("articles").select("slug, title, excerpt, body_html, status, published_at").eq("status", "published"),
   ]);
   if (p.error || a.error) throw new Error("content read failed");
   return { pages: (p.data as Row[] | null) || [], articles: (a.data as Row[] | null) || [] };
@@ -75,9 +83,41 @@ export async function getGuidesIndex(fresh = false): Promise<ResolvedContent> {
 
 export async function getArticle(slug: string, fresh = false): Promise<ResolvedContent | null> {
   const tpl = V5_CONTENT.articles.find((a) => a.slug === slug);
-  if (!tpl) return null;
   const rows = await rowsFor(fresh);
-  return resolve(slug, tpl, rows.articles.find((r) => r.slug === slug), false);
+  const row = rows.articles.find((r) => r.slug === slug);
+  if (tpl) return resolve(slug, tpl, row, false);
+  // A post with its own slug: public only when published with a body (RLS already hides unpublished rows).
+  if (!row || !isCmsPostPublic(row)) return null;
+  const html = sanitizeCmsHtml(row.body_html || "");
+  return {
+    slug,
+    title: row.title,
+    kicker: "Guide",
+    intro: (row.excerpt || "").trim(),
+    read: `${readMinutes(html)} min`,
+    mode: "cms",
+    v5Status: "ready",
+    blocks: [],
+    html,
+    isLegal: false,
+    preview: false,
+  };
+}
+
+export type PostCard = { slug: string; title: string; kicker: string; read: string; intro: string };
+
+/** Public guides for cards and side navigation: new posts (newest first), then the published V5 guides. */
+export async function publicPostCards(fresh = false): Promise<PostCard[]> {
+  const rows = await rowsFor(fresh);
+  const all = previewAllContent();
+  const posts = rows.articles
+    .filter((r) => !TEMPLATE_ARTICLES.has(r.slug) && isCmsPostPublic(r))
+    .sort((a, b) => String(b.published_at || "").localeCompare(String(a.published_at || "")))
+    .map((r) => ({ slug: r.slug, title: r.title, kicker: "Guide", read: `${readMinutes(r.body_html || "")} min`, intro: (r.excerpt || "").trim() }));
+  const templates = V5_CONTENT.articles
+    .filter((a) => all || isContentPublic(a, rows.articles.find((r) => r.slug === a.slug), false))
+    .map((a) => ({ slug: a.slug, title: a.title, kicker: a.kicker, read: a.read || "", intro: a.intro }));
+  return [...posts, ...templates];
 }
 
 export type ContentVisibility = { pages: Record<string, boolean>; articles: Record<string, boolean> };
@@ -90,8 +130,9 @@ export async function contentVisibility(fresh = false): Promise<ContentVisibilit
     pages: Object.fromEntries(
       PAGE_SLUGS.map((s) => [s, all || isContentPublic(V5_CONTENT.pages[s], rows.pages.find((r) => r.slug === s), LEGAL_CONTENT_SLUGS.has(s))]),
     ) as Record<string, boolean>,
-    articles: Object.fromEntries(
-      V5_CONTENT.articles.map((a) => [a.slug, all || isContentPublic(a, rows.articles.find((r) => r.slug === a.slug), false)]),
-    ) as Record<string, boolean>,
+    articles: Object.fromEntries([
+      ...V5_CONTENT.articles.map((a) => [a.slug, all || isContentPublic(a, rows.articles.find((r) => r.slug === a.slug), false)]),
+      ...rows.articles.filter((r) => !TEMPLATE_ARTICLES.has(r.slug) && isCmsPostPublic(r)).map((r) => [r.slug, true]),
+    ]) as Record<string, boolean>,
   };
 }

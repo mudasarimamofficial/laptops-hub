@@ -19,6 +19,8 @@ CREATE TEMP TABLE results (name text, ok boolean, detail text) ON COMMIT DROP;
 INSERT INTO store_settings(key, value) VALUES ('cod_checkout', '{"enabled": true}')
   ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
 
+-- Only this test's zone is active inside the transaction (fixture zones would otherwise also match; rolled back).
+UPDATE shipping_zones SET is_active = false;
 INSERT INTO shipping_zones (id, name, country, provinces, cities, flat_fee_paisa, cod_fee_paisa, is_active)
 VALUES ('00000000-0000-4000-8000-000000000001', 'All Over PK', 'PK',
   ARRAY['Punjab','Sindh','Khyber Pakhtunkhwa','Balochistan','Islamabad Capital Territory','Gilgit-Baltistan','Azad Jammu and Kashmir'],

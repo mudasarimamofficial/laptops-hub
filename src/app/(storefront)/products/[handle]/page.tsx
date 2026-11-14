@@ -7,6 +7,8 @@ import { fmtPkr, getV5Catalog, V5_COLS, v5Card, v5KeySpecs, v5Related, v5SpecRow
 import { canonicalFor } from "@/lib/site-url";
 import { contentVisibility } from "@/lib/content/pages";
 import { publicLinks } from "@/lib/content/links";
+import { getApprovedReviews } from "@/lib/catalog/reviews-server";
+import { ProductReviews } from "@/components/commerce/product-reviews";
 
 export const revalidate = 60;
 
@@ -54,8 +56,10 @@ export default async function ProductPage({ params }: Props) {
   const intro = p.intro.trim() || `${p.model}${p.config ? ", " + p.config : ""}. Listed in ${(p.sub || p.catLabel).toLowerCase()}s by ${p.brand}.`;
   const outro = p.intro.trim() ? "" : "Full specifications for this listing are being prepared. Ask us for any detail before you order.";
   const related = v5Related(P, p);
+  const reviews = await getApprovedReviews(p.h);
 
-  // Structured data from verified listing fields only (no stock, rating or delivery claims).
+  // Structured data from verified listing fields only (no stock or delivery claims). A rating is included only when
+  // approved customer reviews exist.
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -70,6 +74,10 @@ export default async function ProductPage({ params }: Props) {
       itemCondition: p.cond === "Used" ? "https://schema.org/UsedCondition" : undefined,
       url: `/products/${p.h}`,
     },
+    aggregateRating:
+      reviews.count && reviews.average !== null
+        ? { "@type": "AggregateRating", ratingValue: reviews.average, reviewCount: reviews.count, bestRating: 5, worstRating: 1 }
+        : undefined,
   };
 
   return (
@@ -150,6 +158,8 @@ export default async function ProductPage({ params }: Props) {
           <p style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: "var(--lh-on-dark-2)", textWrap: "pretty" }}>{outro}</p>
         </div>
       </div>
+
+      <ProductReviews handle={p.h} model={p.model} data={reviews} />
 
       <section aria-labelledby="pdp-related" style={{ marginTop: 64, display: "flex", flexDirection: "column", gap: 24 }}>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>

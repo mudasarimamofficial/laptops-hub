@@ -1,10 +1,13 @@
 {
   "date": "2026-11-14",
   "stack": "isolated (local Supabase, next start :3001, fake-resend :4599)",
-  "head": "a534b18",
   "summary": {
-    "total": 48,
-    "passed": 48
+    "total": 52,
+    "passed": 52
+  },
+  "sql": {
+    "shipping-cod-matrix": "26/26",
+    "reels-reviews-matrix": "17/17"
   },
   "byFile": {
     "content-pages.spec.ts": {
@@ -21,6 +24,10 @@
     },
     "p0-admin-isolation-and-checkout-gates.spec.ts": {
       "p": 10,
+      "f": 0
+    },
+    "p1-reels-reviews-blog.spec.ts": {
+      "p": 4,
       "f": 0
     },
     "p1-storefront-labels.spec.ts": {
@@ -45,289 +52,313 @@
       "file": "content-pages.spec.ts",
       "title": "/pages/about renders complete copy",
       "status": "passed",
-      "ms": 1808
+      "ms": 1552
     },
     {
       "file": "content-pages.spec.ts",
       "title": "/pages/why-laptops-hub renders complete copy",
       "status": "passed",
-      "ms": 1490
+      "ms": 1525
     },
     {
       "file": "content-pages.spec.ts",
       "title": "/pages/contact renders complete copy",
       "status": "passed",
-      "ms": 1592
+      "ms": 1100
     },
     {
       "file": "content-pages.spec.ts",
       "title": "/pages/faq renders complete copy",
       "status": "passed",
-      "ms": 1293
+      "ms": 917
     },
     {
       "file": "content-pages.spec.ts",
       "title": "/pages/condition-guide renders complete copy",
       "status": "passed",
-      "ms": 919
+      "ms": 1195
     },
     {
       "file": "content-pages.spec.ts",
       "title": "/pages/order-inquiries renders complete copy",
       "status": "passed",
-      "ms": 1032
+      "ms": 991
     },
     {
       "file": "content-pages.spec.ts",
       "title": "FAQ accordion works with the keyboard",
       "status": "passed",
-      "ms": 1053
+      "ms": 1541
     },
     {
       "file": "content-pages.spec.ts",
       "title": "published contact page keeps the working contact form",
       "status": "passed",
-      "ms": 1257
+      "ms": 1760
     },
     {
       "file": "home-inquiry.spec.ts",
       "title": "section is visible before the footer at 375px, no horizontal scroll",
       "status": "passed",
-      "ms": 2672
+      "ms": 2096
     },
     {
       "file": "home-inquiry.spec.ts",
       "title": "section is visible before the footer at 820px, no horizontal scroll",
       "status": "passed",
-      "ms": 1813
+      "ms": 1826
     },
     {
       "file": "home-inquiry.spec.ts",
       "title": "section is visible before the footer at 1440px, no horizontal scroll",
       "status": "passed",
-      "ms": 1856
+      "ms": 1731
     },
     {
       "file": "home-inquiry.spec.ts",
       "title": "invalid input is refused in the browser and nothing is stored",
       "status": "passed",
-      "ms": 2061
+      "ms": 1939
     },
     {
       "file": "home-inquiry.spec.ts",
       "title": "valid inquiry is saved once (double click), staff see it and update its status",
       "status": "passed",
-      "ms": 14053
+      "ms": 16486
     },
     {
       "file": "home-inquiry.spec.ts",
       "title": "product inquiry dialog (inquiry-only listing) is saved once and reaches staff",
       "status": "passed",
-      "ms": 4343
+      "ms": 4450
     },
     {
       "file": "home-inquiry.spec.ts",
       "title": "bots, cross-site posts, server errors and offline submissions are handled truthfully",
       "status": "passed",
-      "ms": 2280
+      "ms": 2759
     },
     {
       "file": "launch-journey.spec.ts",
-      "title": "customer: product → cart → checkout → confirmation",
+      "title": "customer: product \u2192 cart \u2192 checkout \u2192 confirmation",
       "status": "passed",
-      "ms": 4807
+      "ms": 4508
     },
     {
       "file": "launch-journey.spec.ts",
       "title": "notifications: business alert + customer confirmation delivered once",
       "status": "passed",
-      "ms": 39
+      "ms": 106
     },
     {
       "file": "launch-journey.spec.ts",
       "title": "customer: track order by number + phone; wrong phone refused",
       "status": "passed",
-      "ms": 1627
+      "ms": 1438
     },
     {
       "file": "launch-journey.spec.ts",
       "title": "checkout: unserved address and invalid phone are refused",
       "status": "passed",
-      "ms": 2181
+      "ms": 2825
     },
     {
       "file": "launch-journey.spec.ts",
       "title": "duplicate submit: one order, one notification",
       "status": "passed",
-      "ms": 2576
+      "ms": 1895
     },
     {
       "file": "launch-journey.spec.ts",
       "title": "admin: editor cannot open orders",
       "status": "passed",
-      "ms": 3711
+      "ms": 3946
     },
     {
       "file": "launch-journey.spec.ts",
-      "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
+      "title": "admin: confirm \u2192 pack \u2192 dispatch with tracking \u2192 collect COD; customer sees it",
       "status": "passed",
-      "ms": 15491
+      "ms": 10435
     },
     {
       "file": "launch-journey.spec.ts",
       "title": "admin: cancellation by fulfillment staff",
       "status": "passed",
-      "ms": 7602
+      "ms": 5361
     },
     {
       "file": "launch-journey.spec.ts",
-      "title": "notifications: provider outage → failed, staff retry → sent once",
+      "title": "notifications: provider outage \u2192 failed, staff retry \u2192 sent once",
       "status": "passed",
-      "ms": 7942
+      "ms": 5120
     },
     {
       "file": "launch-journey.spec.ts",
       "title": "cron endpoint requires the secret",
       "status": "passed",
-      "ms": 156
+      "ms": 128
     },
     {
       "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
       "title": "admin has no storefront chrome at 360px",
       "status": "passed",
-      "ms": 8960
+      "ms": 7622
     },
     {
       "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
       "title": "admin has no storefront chrome at 390px",
       "status": "passed",
-      "ms": 9533
+      "ms": 9612
     },
     {
       "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
       "title": "admin has no storefront chrome at 768px",
       "status": "passed",
-      "ms": 8945
+      "ms": 12696
     },
     {
       "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
       "title": "admin has no storefront chrome at 1280px",
       "status": "passed",
-      "ms": 9115
+      "ms": 7136
     },
     {
       "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
       "title": "admin has no storefront chrome at 1440px",
       "status": "passed",
-      "ms": 11989
+      "ms": 7800
     },
     {
       "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
       "title": "storefront keeps its chrome (home, collection, checkout)",
       "status": "passed",
-      "ms": 2269
+      "ms": 1655
     },
     {
       "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
       "title": "admin overview shows the server-side readiness matrix",
       "status": "passed",
-      "ms": 3688
+      "ms": 4471
     },
     {
       "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
       "title": "PKR 0 + 0 zone: 'Free delivery', total equals subtotal; restored afterwards",
       "status": "passed",
-      "ms": 3155
+      "ms": 2961
     },
     {
       "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
       "title": "nonzero fees render exactly; unserved city gives no clickable order",
       "status": "passed",
-      "ms": 4120
+      "ms": 3027
     },
     {
       "file": "p0-admin-isolation-and-checkout-gates.spec.ts",
       "title": "a failing blocking gate (store setting off) makes storefront checkout non-clickable",
       "status": "passed",
-      "ms": 5911
+      "ms": 4413
+    },
+    {
+      "file": "p1-reels-reviews-blog.spec.ts",
+      "title": "reels: no row by default; reference and unlicensed videos refused; published owned reel shows",
+      "status": "passed",
+      "ms": 9163
+    },
+    {
+      "file": "p1-reels-reviews-blog.spec.ts",
+      "title": "reviews: honest empty state; submission is pending until approved; then rating + JSON-LD",
+      "status": "passed",
+      "ms": 8894
+    },
+    {
+      "file": "p1-reels-reviews-blog.spec.ts",
+      "title": "blog: empty publish refused; published post is public and sanitised; draft is 404",
+      "status": "passed",
+      "ms": 10643
+    },
+    {
+      "file": "p1-reels-reviews-blog.spec.ts",
+      "title": "fulfillment staff cannot write posts or reels or moderate reviews",
+      "status": "passed",
+      "ms": 4047
     },
     {
       "file": "p1-storefront-labels.spec.ts",
       "title": "default: no counts, no section numbers, no angle counter, no alt-text captions",
       "status": "passed",
-      "ms": 3991
+      "ms": 3829
     },
     {
       "file": "p1-storefront-labels.spec.ts",
       "title": "owner turns catalog counts back on in Admin; persisted and shown publicly",
       "status": "passed",
-      "ms": 12694
+      "ms": 9515
     },
     {
       "file": "password-recovery.spec.ts",
-      "title": "full recovery: email link → new password → all sessions ended; UID, role and status unchanged",
+      "title": "full recovery: email link \u2192 new password \u2192 all sessions ended; UID, role and status unchanged",
       "status": "passed",
-      "ms": 11070
+      "ms": 10814
     },
     {
       "file": "password-recovery.spec.ts",
       "title": "token_hash link (recommended email template) works on another device",
       "status": "passed",
-      "ms": 1608
+      "ms": 1532
     },
     {
       "file": "password-recovery.spec.ts",
       "title": "recovery never grants access: deactivated and non-staff users stay forbidden",
       "status": "passed",
-      "ms": 6068
+      "ms": 10620
     },
     {
       "file": "password-recovery.spec.ts",
       "title": "password API requires a fresh recovery session; a normal sign-in cannot use it",
       "status": "passed",
-      "ms": 2165
+      "ms": 3135
     },
     {
       "file": "password-recovery.spec.ts",
       "title": "request endpoint: generic answer, no mail for unknown addresses, rate limits, cross-site and bad links refused",
       "status": "passed",
-      "ms": 3677
+      "ms": 4361
     },
     {
       "file": "prehydration.spec.ts",
       "title": "customer forms: track order and homepage inquiry cannot submit and post when they do",
       "status": "passed",
-      "ms": 1912
+      "ms": 946
     },
     {
       "file": "prehydration.spec.ts",
       "title": "admin forms: shipping zone, product and content edits cannot submit",
       "status": "passed",
-      "ms": 4514
+      "ms": 3569
     },
     {
       "file": "shipping-zones.spec.ts",
       "title": "before hydration the form cannot submit (no silent page reload, nothing lost)",
       "status": "passed",
-      "ms": 2941
+      "ms": 5285
     },
     {
       "file": "shipping-zones.spec.ts",
       "title": "create: validation message, stored values in paisa, saved details shown, audit entry",
       "status": "passed",
-      "ms": 6094
+      "ms": 10229
     },
     {
       "file": "shipping-zones.spec.ts",
       "title": "checkout quote: served city gets the zone fees, unserved city is refused",
       "status": "passed",
-      "ms": 199
+      "ms": 198
     },
     {
       "file": "shipping-zones.spec.ts",
       "title": "edit: deactivate shows the stored state; server rejects bad input with a clear message; editors are refused",
       "status": "passed",
-      "ms": 8969
+      "ms": 9483
     }
   ]
 }

@@ -118,7 +118,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
     }
 
     const { error } = await supabase.from("content_pages").update(patch).eq("slug", slug);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
 
     await supabase.from("audit_logs").insert({
       actor_user_id: staff.userId,

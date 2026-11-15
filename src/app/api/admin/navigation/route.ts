@@ -195,7 +195,7 @@ export async function POST(request: Request) {
       );
 
     if (resetErr) {
-      return NextResponse.json({ error: "reset_failed", message: resetErr.message }, { status: 500 });
+      return NextResponse.json({ error: "reset_failed", message: "Navigation could not be reset. Try again." }, { status: 500 });
     }
 
     await supabase.from("audit_logs").insert({

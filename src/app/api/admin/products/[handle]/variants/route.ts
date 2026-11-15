@@ -75,7 +75,7 @@ export async function GET(_request: Request, ctx: Ctx) {
       .order("position")
       .order("created_at");
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
 
     return NextResponse.json(
       {
@@ -198,7 +198,8 @@ async function handlePUT(request: Request, ctx: Ctx) {
       if (/forbidden/i.test(msg)) status = 403;
       else if (/not_found/i.test(msg)) status = 404;
       else if (/validation|duplicate|cross_product|invalid/i.test(msg)) status = 400;
-      return NextResponse.json({ error: "variant_sync_failed", message: msg }, { status });
+      // Validation messages (duplicate SKU, invalid option) help the merchant; unexpected failures stay generic.
+      return NextResponse.json({ error: "variant_sync_failed", message: status === 500 ? "Variants could not be saved. Try again." : msg }, { status });
     }
 
     const result = data as {

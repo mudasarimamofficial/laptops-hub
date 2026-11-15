@@ -41,7 +41,7 @@ export async function GET(request: Request) {
         .select("position, collections(slug, title), products(handle, title)")
         .order("position")
         .limit(10000);
-      if (error) return Response.json({ error: error.message }, { status: 500 });
+      if (error) return Response.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
       const rows = (data || []).map((row) => {
         const col = Array.isArray(row.collections) ? row.collections[0] : row.collections;
         const prod = Array.isArray(row.products) ? row.products[0] : row.products;
@@ -98,7 +98,7 @@ export async function GET(request: Request) {
         )
         .order("title")
         .limit(2000);
-      if (fallback.error) return Response.json({ error: fallback.error.message }, { status: 500 });
+      if (fallback.error) return Response.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
       return buildCsvResponse(format, (fallback.data || []) as unknown as ExportProduct[], staff.userId, supabase, status);
     }
 

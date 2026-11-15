@@ -52,7 +52,7 @@ async function handlePOST(request: Request) {
       if (Object.keys(patch).length) {
         const { error: uErr } = await supabase.from("products").update(patch).eq("id", product.id);
         if (uErr) {
-          results.push({ handle: item.handle, ok: false, message: uErr.message });
+          results.push({ handle: item.handle, ok: false, message: "Could not update this product." });
           continue;
         }
       }

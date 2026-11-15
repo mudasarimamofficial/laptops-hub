@@ -94,7 +94,7 @@ export async function GET(_request: Request, ctx: Ctx) {
         .select("id, url, alt, position, approval")
         .eq("product_id", product.id)
         .order("position");
-      if (fallback.error) return NextResponse.json({ error: fallback.error.message }, { status: 500 });
+      if (fallback.error) return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
       return NextResponse.json({ media: fallback.data || [] }, { headers: { "Cache-Control": "no-store" } });
     }
     return NextResponse.json({ media: data || [] }, { headers: { "Cache-Control": "no-store" } });
@@ -248,7 +248,7 @@ async function handlePATCH(request: Request, ctx: Ctx) {
         .update(base)
         .eq("id", parsed.data.mediaId)
         .eq("product_id", product.id);
-      if (e2) return NextResponse.json({ error: e2.message }, { status: 500 });
+      if (e2) return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
     }
 
     if (parsed.data.isPrimary) {
@@ -293,7 +293,7 @@ async function handleDELETE(request: Request, ctx: Ctx) {
     if (!row) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
     const { error } = await supabase.from("product_media").delete().eq("id", row.id).eq("product_id", product.id);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
 
     await supabase.from("audit_logs").insert({
       actor_user_id: staff.userId,

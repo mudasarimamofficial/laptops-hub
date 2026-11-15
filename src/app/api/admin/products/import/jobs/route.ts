@@ -23,7 +23,7 @@ export async function GET() {
         .order("created_at", { ascending: false })
         .limit(40);
       if (fallback.error) {
-        return NextResponse.json({ error: "list_failed", message: fallback.error.message }, { status: 500 });
+        return NextResponse.json({ error: "list_failed", message: "Import history could not be loaded." }, { status: 500 });
       }
       return NextResponse.json(
         { jobs: fallback.data || [], notice: "Extended import_jobs columns not available yet." },

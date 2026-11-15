@@ -28,7 +28,7 @@ export async function GET() {
     const { supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager"]);
     const { data, error } = await supabase.from("store_settings").select("key, value, updated_at, updated_by");
     if (error) {
-      return NextResponse.json({ error: "database_error", message: error.message }, { status: 500 });
+      return NextResponse.json({ error: "database_error", message: "Settings could not be loaded. Try again." }, { status: 500 });
     }
 
     const settingsMap: Record<string, unknown> = {};

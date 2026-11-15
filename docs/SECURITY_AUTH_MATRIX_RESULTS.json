@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:3001",
-  "at": "2026-11-15T12:44:28.222Z",
+  "at": "2026-11-15T14:33:14.433Z",
   "results": [
     {
       "name": "anon_patch__api_admin_products_dell_latitude_7420_core_i5_1",
@@ -120,7 +120,7 @@
     {
       "name": "public_catalog_readable",
       "ok": true,
-      "detail": "n=3"
+      "detail": "n=2"
     }
   ]
 }

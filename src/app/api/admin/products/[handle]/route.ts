@@ -82,7 +82,7 @@ async function handlePATCH(request: Request, ctx: Ctx) {
       if (error && error.message.includes("deleted_at")) {
         await supabase.from("products").update({ status: "draft" }).eq("id", existing.id);
       } else if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
       }
       await supabase.from("audit_logs").insert({
         actor_user_id: staff.userId,
@@ -116,7 +116,7 @@ async function handlePATCH(request: Request, ctx: Ctx) {
         delete retry.summary;
         delete retry.updated_by;
         const { error: e2 } = await supabase.from("products").update(retry).eq("id", existing.id);
-        if (e2) return NextResponse.json({ error: e2.message }, { status: 500 });
+        if (e2) return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
       }
     }
 
@@ -163,7 +163,7 @@ async function handlePATCH(request: Request, ctx: Ctx) {
           .update(variantPatch)
           .eq("id", variant.id)
           .eq("product_id", existing.id);
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+        if (error) return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
       }
     }
 
@@ -222,7 +222,7 @@ async function handleDELETE(request: Request, ctx: Ctx) {
       if (error && error.message.includes("updated_by")) {
         await supabase.from("products").update({ status: "archived" }).eq("id", existing.id);
       } else if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
       }
       await supabase.from("audit_logs").insert({
         actor_user_id: staff.userId,

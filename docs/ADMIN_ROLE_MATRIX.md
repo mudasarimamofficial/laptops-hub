@@ -8,7 +8,7 @@
 | Content pages CMS | ✓ | ✓ | ✓ | ✓ | — |
 | Settings / shipping | ✓ | ✓ | ✓ | — | — |
 | Inquiries (view, contact details, status) | ✓ | ✓ | ✓ | — | ✓ |
-| Staff invite / deactivate (planned) | ✓ | ✓ | — | — | — |
+| Staff invite / role / deactivate (Admin → Staff; admin cannot grant admin or change owner/admins) | ✓ | ✓ | — | — | — |
 
 Enforcement: `requireStaff` / `requireStaffPage([...roles])` on each route and API. Inactive membership → forbidden. No public self-elevation.
 

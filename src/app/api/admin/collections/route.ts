@@ -1,3 +1,4 @@
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import {
@@ -5,6 +6,13 @@ import {
   createAuthorizedStaffWriter,
   staffErrorResponse,
 } from "@/lib/auth/staff";
+
+/** Storefront collection pages and the sitemap read published collections through the "collections" cache tag. */
+function refreshStorefront(slug: string) {
+  revalidateTag("collections", { expire: 0 });
+  revalidatePath(`/collections/${slug}`);
+  revalidatePath("/sitemap.xml");
+}
 
 const createSchema = z.object({
   title: z.string().trim().min(2).max(160),
@@ -41,7 +49,7 @@ export async function GET() {
       .select("id, slug, title, published, featured, rule, sort_order, description")
       .order("sort_order")
       .order("title");
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "load_failed", message: "Could not load collections." }, { status: 500 });
     return NextResponse.json({ collections: data || [] }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     return staffErrorResponse(e);
@@ -102,7 +110,7 @@ export async function POST(request: Request) {
       error = retry.error;
     }
     if (error || !data) {
-      return NextResponse.json({ error: error?.message || "create_failed" }, { status: 500 });
+      return NextResponse.json({ error: "create_failed", message: "The collection could not be created. Try again." }, { status: 500 });
     }
 
     await supabase.from("audit_logs").insert({
@@ -113,6 +121,7 @@ export async function POST(request: Request) {
       after: { slug: data.slug, title: data.title, type: parsed.data.collectionType },
     });
 
+    refreshStorefront(data.slug);
     return NextResponse.json({ ok: true, slug: data.slug, id: data.id }, { status: 201, headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     return staffErrorResponse(e);

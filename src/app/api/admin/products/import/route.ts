@@ -13,6 +13,7 @@ import {
   evaluateMerchantWritePolicy,
 } from "@/lib/security/merchant-write-guard";
 import { createHash } from "crypto";
+import { withCatalogRefresh } from "@/lib/catalog/refresh";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -81,7 +82,7 @@ const bodySchema = z.object({
  * - Genuine Production deployments permit commits by owner/admin with explicit confirmation and dry-run validation.
  * - Local / isolated staging environments permit commits by authorized staff.
  */
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   try {
     const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager"]);
     const json = await request.json().catch(() => null);
@@ -270,3 +271,6 @@ export async function POST(request: Request) {
     return staffErrorResponse(e);
   }
 }
+
+// Every successful catalog write refreshes the storefront (src/lib/catalog/refresh.ts).
+export const POST = withCatalogRefresh(handlePOST);

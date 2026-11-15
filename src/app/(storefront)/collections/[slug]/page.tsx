@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { CollectionPage } from "@/components/storefront/collection-page";
 import { V5_COLS } from "@/lib/catalog/v5";
+import { getStorefrontCollection } from "@/lib/collections/storefront";
 import { canonicalFor, robotsFor } from "@/lib/site-url";
 
 export const revalidate = 60;
@@ -11,9 +12,18 @@ type Props = { params: Promise<{ slug: string }>; searchParams: Promise<Record<s
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { slug } = await params;
   const col = V5_COLS[slug];
-  if (!col) return { title: "Not found" };
   const sp = await searchParams;
   const filtered = Object.keys(sp).some((k) => k !== "page");
+  if (!col) {
+    const custom = await getStorefrontCollection(slug);
+    if (!custom) return { title: "Not found" };
+    return {
+      title: custom.seoTitle || custom.title,
+      description: custom.seoDescription || custom.description || undefined,
+      alternates: canonicalFor(`/collections/${slug}`),
+      robots: robotsFor(filtered),
+    };
+  }
   return {
     title: col.t,
     alternates: canonicalFor(`/collections/${col.hidden ? "all" : slug}`),
@@ -24,6 +34,9 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
 export default async function Page({ params, searchParams }: Props) {
   const { slug } = await params;
-  if (!V5_COLS[slug]) notFound();
-  return <CollectionPage id={slug} searchParams={await searchParams} />;
+  if (V5_COLS[slug]) return <CollectionPage id={slug} searchParams={await searchParams} />;
+  // Merchant-made collections (Admin → Collections) use the same V5 page.
+  const custom = await getStorefrontCollection(slug);
+  if (!custom) notFound();
+  return <CollectionPage custom={custom} searchParams={await searchParams} />;
 }

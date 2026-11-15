@@ -5,6 +5,7 @@ import {
   createAuthorizedStaffWriter,
   staffErrorResponse,
 } from "@/lib/auth/staff";
+import { withCatalogRefresh } from "@/lib/catalog/refresh";
 
 const ALLOWED_HOST_SUFFIXES = [
   "cdn.shopify.com",
@@ -102,7 +103,7 @@ export async function GET(_request: Request, ctx: Ctx) {
   }
 }
 
-export async function POST(request: Request, ctx: Ctx) {
+async function handlePOST(request: Request, ctx: Ctx) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
@@ -185,7 +186,7 @@ export async function POST(request: Request, ctx: Ctx) {
   }
 }
 
-export async function PATCH(request: Request, ctx: Ctx) {
+async function handlePATCH(request: Request, ctx: Ctx) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
@@ -270,7 +271,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
   }
 }
 
-export async function DELETE(request: Request, ctx: Ctx) {
+async function handleDELETE(request: Request, ctx: Ctx) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
@@ -307,3 +308,8 @@ export async function DELETE(request: Request, ctx: Ctx) {
     return staffErrorResponse(e);
   }
 }
+
+// Every successful catalog write refreshes the storefront (src/lib/catalog/refresh.ts).
+export const POST = withCatalogRefresh(handlePOST);
+export const PATCH = withCatalogRefresh(handlePATCH);
+export const DELETE = withCatalogRefresh(handleDELETE);

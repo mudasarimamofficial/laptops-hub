@@ -135,7 +135,43 @@ try {
     assert("cancel_after_failed_delivery_no_auto_restock", end === 4 && back.length === 0, `qoh=${end} restock_rows=${back.length}`);
   }
 
-  // 8. Ledger is not writable by anon/authenticated clients (service role / triggers only).
+  // 8. Manual adjustments (adjust_inventory, 20261117130000): reasoned, atomic, never below 0, stale counts refused,
+  //    only owner/admin/manager actors, tracked variants only, and safe against a concurrent checkout.
+  {
+    const adj = (o) => sb.rpc("adjust_inventory", { payload: { variant_id: five.id, actor_user_id: actor, reason: "stock_received", ...o } });
+    const before = await qoh(five.id);
+    const add = await adj({ mode: "delta", amount: 3 });
+    const rows = (await ledger(five.id)).filter((x) => x.reason === "stock_received");
+    assert("adjust_add_units_with_ledger", !add.error && (await qoh(five.id)) === before + 3 && rows.length === 1 && rows[0].delta === 3, add.error?.message || "");
+    const neg = await adj({ mode: "delta", amount: -1000, reason: "damaged_or_lost" });
+    assert("adjust_never_below_zero", (neg.error?.message || "").includes("negative_stock") && (await qoh(five.id)) === before + 3, neg.error?.message || "accepted");
+    const stale = await adj({ mode: "set", amount: 1, expected_quantity: before, reason: "count_correction" });
+    assert("adjust_set_with_stale_count_refused", (stale.error?.message || "").includes("stale_quantity"), stale.error?.message || "accepted");
+    const set = await adj({ mode: "set", amount: 2, expected_quantity: before + 3, reason: "count_correction" });
+    assert("adjust_set_counted_quantity", !set.error && (await qoh(five.id)) === 2, set.error?.message || "");
+    const ful = await sb.rpc("adjust_inventory", { payload: { variant_id: five.id, actor_user_id: fx.staff.fulfillment.id, reason: "other", mode: "delta", amount: 1 } });
+    assert("adjust_refused_for_fulfillment_actor", (ful.error?.message || "").includes("forbidden"), ful.error?.message || "accepted");
+    const un = await sb.rpc("adjust_inventory", { payload: { variant_id: untracked.id, actor_user_id: actor, reason: "other", mode: "delta", amount: 1 } });
+    assert("adjust_refused_for_untracked", (un.error?.message || "").includes("not_tracked"), un.error?.message || "accepted");
+    const bad = await adj({ mode: "delta", amount: 1, reason: "made_up" });
+    assert("adjust_requires_known_reason", (bad.error?.message || "").includes("invalid_reason"), bad.error?.message || "accepted");
+
+    // Race: 2 units left; 4 buyers of 1 unit and a staff "remove 1 damaged" at the same moment. Exactly 2 units leave.
+    const rs = await Promise.all([
+      ...Array.from({ length: 4 }, () => order(payload([{ variant_id: five.id, quantity: 1 }]))),
+      adj({ mode: "delta", amount: -1, reason: "damaged_or_lost" }),
+    ]);
+    const orders = rs.slice(0, 4).filter((r) => !r.error).length;
+    const adjusted = !rs[4].error ? 1 : 0;
+    const end = await qoh(five.id);
+    assert("adjust_vs_checkout_race_consistent", orders + adjusted === 2 && end === 0, `orders=${orders} adjusted=${adjusted} qoh=${end}`);
+
+    const anon = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+    const a = await anon.rpc("adjust_inventory", { payload: { variant_id: five.id, actor_user_id: actor, reason: "other", mode: "delta", amount: 50 } });
+    assert("anon_cannot_call_adjust_inventory", !!a.error && (await qoh(five.id)) === 0, a.error?.message || "executed");
+  }
+
+  // 9. Ledger is not writable by anon/authenticated clients (service role / triggers only).
   {
     const anon = createClient(url, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
     const w = await anon.from("inventory_ledger").insert({ variant_id: five.id, delta: 100, reason: "forged" });
@@ -144,6 +180,9 @@ try {
   }
 } finally {
   if (prevCod) await sb.from("store_settings").upsert({ key: "cod_checkout", value: prevCod });
+  // Its orders keep referencing the zone, so it is switched off rather than deleted (it covers all of Sindh and
+  // would otherwise serve addresses other suites expect to be unserved).
+  await sb.from("shipping_zones").update({ is_active: false }).eq("id", zone.id);
 }
 
 const failed = results.filter((r) => !r.ok).length;

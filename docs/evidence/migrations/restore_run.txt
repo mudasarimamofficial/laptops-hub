@@ -1,7 +1,9 @@
-dump: 360489 bytes, sha256 7bb9ffd3b901d9ac
+# bash scripts/rehearsal/backup-restore.sh — 2026-11-15T14:22Z
+dump: 380434 bytes, sha256 1704778dc2ecb49f
 restore: ok
-objects source:   45 policies, 9 triggers, 128 constraints, 61 indexes, auth.users=18
-objects restored: 45 policies, 9 triggers, 128 constraints, 61 indexes, auth.users=18
-tables: 29, rows: 522 source / 522 restored
+objects source:   45 policies, 9 triggers, 129 constraints, 77 indexes, auth.users=18
+objects restored: 45 policies, 9 triggers, 129 constraints, 77 indexes, auth.users=18
+tables: 29, rows: 663 source / 663 restored
 per-table counts + md5: IDENTICAL
 scratch databases dropped; dump removed
+RST_RC=0

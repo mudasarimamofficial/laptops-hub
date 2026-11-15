@@ -1,0 +1,4921 @@
+{
+  "config": {
+    "argv": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "D:\\Laptops Hub Vercel Development\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.crossbrowser.config.ts"
+    ],
+    "configFile": "D:\\Laptops Hub Vercel Development\\playwright.crossbrowser.config.ts",
+    "rootDir": "D:/Laptops Hub Vercel Development/tests/e2e-isolated",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Laptops Hub Vercel Development/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium-desktop",
+        "name": "chromium-desktop",
+        "testDir": "D:/Laptops Hub Vercel Development/tests/e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "cross-browser-storefront.spec.ts",
+          "launch-journey.spec.ts"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "D:/Laptops Hub Vercel Development/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium-mobile",
+        "name": "chromium-mobile",
+        "testDir": "D:/Laptops Hub Vercel Development/tests/e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "cross-browser-storefront.spec.ts",
+          "launch-journey.spec.ts"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "D:/Laptops Hub Vercel Development/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit-desktop",
+        "name": "webkit-desktop",
+        "testDir": "D:/Laptops Hub Vercel Development/tests/e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "cross-browser-storefront.spec.ts",
+          "launch-journey.spec.ts"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "D:/Laptops Hub Vercel Development/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit-mobile",
+        "name": "webkit-mobile",
+        "testDir": "D:/Laptops Hub Vercel Development/tests/e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "cross-browser-storefront.spec.ts",
+          "launch-journey.spec.ts"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "D:/Laptops Hub Vercel Development/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox-desktop",
+        "name": "firefox-desktop",
+        "testDir": "D:/Laptops Hub Vercel Development/tests/e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "cross-browser-storefront.spec.ts",
+          "launch-journey.spec.ts"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Laptops Hub Vercel Development\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium-desktop",
+        "testDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "snapshotDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "cross-browser-storefront.spec.ts",
+          "launch-journey.spec.ts"
+        ],
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3001",
+          "trace": "off",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium",
+          "launchOptions": {
+            "executablePath": "C:\\Users\\mudas\\AppData\\Local\\ms-playwright\\chromium-1248\\chrome-win64\\chrome.exe"
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium-desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Laptops Hub Vercel Development\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium-mobile",
+        "testDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "snapshotDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "cross-browser-storefront.spec.ts",
+          "launch-journey.spec.ts"
+        ],
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3001",
+          "trace": "off",
+          "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+          "viewport": {
+            "width": 412,
+            "height": 839
+          },
+          "screen": {
+            "width": 412,
+            "height": 915
+          },
+          "deviceScaleFactor": 2.625,
+          "isMobile": true,
+          "hasTouch": true,
+          "defaultBrowserType": "chromium",
+          "launchOptions": {
+            "executablePath": "C:\\Users\\mudas\\AppData\\Local\\ms-playwright\\chromium-1248\\chrome-win64\\chrome.exe"
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium-mobile"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Laptops Hub Vercel Development\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "webkit-desktop",
+        "testDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "snapshotDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "cross-browser-storefront.spec.ts",
+          "launch-journey.spec.ts"
+        ],
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3001",
+          "trace": "off",
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1792,
+            "height": 1120
+          },
+          "deviceScaleFactor": 2,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Laptops Hub Vercel Development\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "webkit-mobile",
+        "testDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "snapshotDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "cross-browser-storefront.spec.ts",
+          "launch-journey.spec.ts"
+        ],
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3001",
+          "trace": "off",
+          "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Mobile/15E148 Safari/604.1",
+          "viewport": {
+            "width": 390,
+            "height": 664
+          },
+          "screen": {
+            "width": 390,
+            "height": 844
+          },
+          "deviceScaleFactor": 3,
+          "isMobile": true,
+          "hasTouch": true,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-mobile"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Laptops Hub Vercel Development\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "firefox-desktop",
+        "testDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "snapshotDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated",
+        "testIgnore": [],
+        "testMatch": [
+          "cross-browser-storefront.spec.ts",
+          "launch-journey.spec.ts"
+        ],
+        "timeout": 90000,
+        "use": {
+          "baseURL": "http://127.0.0.1:3001",
+          "trace": "off",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "firefox"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "firefox-desktop"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "docs/evidence/cross-browser/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "cross-browser-storefront.spec.ts",
+      "file": "cross-browser-storefront.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "layout: home",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 90139,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts",
+                        "column": 30,
+                        "line": 40
+                      },
+                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/?vw=1440\", waiting until \"networkidle\"\u001b[22m\n\n\n  38 |       // Distinct URL per width + network idle: Firefox can otherwise race a repeat goto with the router's own\n  39 |       // same-URL history update from the previous load (the page itself renders correctly either way).\n> 40 |       const res = await page.goto(`${url}${url.includes(\"?\") ? \"&\" : \"?\"}vw=${w}`, { waitUntil: \"networkidle\" });\n     |                              ^\n  41 |       if (gated) expect([200, 404], `${url} status`).toContain(res?.status());\n  42 |       else expect(res?.status(), `${url} status`).toBeLessThan(400);\n  43 |       await expect(page.locator(\"main, form\").first()).toBeVisible({ timeout: 15_000 });\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts:40:30"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:14:17.074Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\cross-browser-storefront-layout-home-chromium-desktop\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-2f53a7305d1b7eb9c31b",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: collection",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 90132,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts",
+                        "column": 30,
+                        "line": 40
+                      },
+                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/collections/all?vw=1440\", waiting until \"networkidle\"\u001b[22m\n\n\n  38 |       // Distinct URL per width + network idle: Firefox can otherwise race a repeat goto with the router's own\n  39 |       // same-URL history update from the previous load (the page itself renders correctly either way).\n> 40 |       const res = await page.goto(`${url}${url.includes(\"?\") ? \"&\" : \"?\"}vw=${w}`, { waitUntil: \"networkidle\" });\n     |                              ^\n  41 |       if (gated) expect([200, 404], `${url} status`).toContain(res?.status());\n  42 |       else expect(res?.status(), `${url} status`).toBeLessThan(400);\n  43 |       await expect(page.locator(\"main, form\").first()).toBeVisible({ timeout: 15_000 });\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts:40:30"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:15:50.402Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\cross-browser-storefront-layout-collection-chromium-desktop\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-3c8dc9b85a4786879fb0",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: pdp",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 80369,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:17:23.178Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-ad059583da84f01078fc",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: search",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 90088,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts",
+                        "column": 30,
+                        "line": 40
+                      },
+                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/search?q=dell&vw=1440\", waiting until \"networkidle\"\u001b[22m\n\n\n  38 |       // Distinct URL per width + network idle: Firefox can otherwise race a repeat goto with the router's own\n  39 |       // same-URL history update from the previous load (the page itself renders correctly either way).\n> 40 |       const res = await page.goto(`${url}${url.includes(\"?\") ? \"&\" : \"?\"}vw=${w}`, { waitUntil: \"networkidle\" });\n     |                              ^\n  41 |       if (gated) expect([200, 404], `${url} status`).toContain(res?.status());\n  42 |       else expect(res?.status(), `${url} status`).toBeLessThan(400);\n  43 |       await expect(page.locator(\"main, form\").first()).toBeVisible({ timeout: 15_000 });\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts:40:30"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:18:44.375Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\cross-browser-storefront-layout-search-chromium-desktop\\error-context.md"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-354b18eee386c853a073",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: compare",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 71295,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:20:15.984Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-6b5ba5db74dafafd94ee",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: cart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 79484,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:21:28.294Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-b3496246bec945fab1fe",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: checkout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 79477,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:22:47.864Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-b342399043b661bfd48b",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: track",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 79331,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:24:07.366Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-c6ddd6e3ac90566c8206",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: guides",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 79693,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:25:26.723Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-dcb72f8f70ca56c02d87",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: contact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 80116,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:26:46.460Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-42298e010b35937941a1",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: admin-login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-desktop",
+              "projectName": "chromium-desktop",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5394,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:28:06.633Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-41bc600a15ed20c0cedc",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: home",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4777,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:09.548Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-34688ca2de12d7560adf",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: collection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1893,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:15.225Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-5e41947b5e84efae5716",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: pdp",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1776,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:17.150Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-1073c1d7b5667a95ba43",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: search",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1866,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:18.952Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-7d59886f0399b0d5d2c0",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: compare",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2098,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:20.842Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-1bf0be72ca40474b9dee",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: cart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2079,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:22.972Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-ae06f043aa6c1eaeb02b",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: checkout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1953,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:25.083Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-268f7cf7e9db94fc1feb",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: track",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2307,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:27.066Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-5705b8959f1e169306fb",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: guides",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1833,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:29.404Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-41bad5c2ba4654d52684",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: contact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1912,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:31.263Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-7c699e36471012d15f3e",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: admin-login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium-mobile",
+              "projectName": "chromium-mobile",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1729,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:29:33.206Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-ec00d4ab5eab2123d01a",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: home",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12023,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:30:19.560Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-3447cc7ccaa52fb81a42",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: collection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7608,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:30:32.583Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-8cc09da0ac7a24f38da0",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: pdp",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9585,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:30:40.230Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-5dadfe94ba81458c611a",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: search",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8343,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:30:49.864Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-2874e4b41923fca26f00",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: compare",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8142,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:30:58.252Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-46f437f55bcc4dc575f9",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: cart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8218,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:31:06.422Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-575611aed5e973cbf15c",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: checkout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9305,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:31:14.662Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-ed2884cd2e939d83d979",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: track",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10054,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:31:24.004Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-70ebd74cb2b8c5413d4d",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: guides",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 10256,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:31:34.109Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-6268e7a54e56e355b527",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: contact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 12098,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:31:44.476Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-742a2b6ba916ba76f136",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: admin-login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop",
+              "projectName": "webkit-desktop",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9207,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:31:56.617Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-19a0f798a8a406f9d99f",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: home",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4141,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:33:38.226Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-3956e5b85c1ae31534f7",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: collection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2743,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:33:42.656Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-4c0304ff4e03ea826fef",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: pdp",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2887,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:33:45.449Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-b524430da165079b0b67",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: search",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7575,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:33:48.373Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-6d1b8b3ec1a641652bea",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: compare",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11790,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:33:56.023Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-be37bf4c97298acb27af",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: cart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4573,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:34:08.263Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-ffa2366ab3d495667be9",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: checkout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4967,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:34:12.961Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-7fa92689c993d6f42248",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: track",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3531,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:34:18.028Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-e3f7fac02a1dc7548525",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: guides",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4227,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:34:21.680Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-42280be8d9ce18dfdf74",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: contact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5062,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:34:26.137Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-0395f03d733354821fc9",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: admin-login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-mobile",
+              "projectName": "webkit-mobile",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5551,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:34:31.308Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-ce0fcf90176d3e0cf087",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: home",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 18142,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:36:25.754Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-9928b83311f5eb371db4",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: collection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7429,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:36:45.364Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-607846142c2f93764c10",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: pdp",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7168,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:36:52.831Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-b31e803c21fcbacdd4de",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: search",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7268,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:37:00.023Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-3380e44b7e757675eb77",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: compare",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8368,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:37:07.324Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-75901c807d7d9b0dfad4",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: cart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7462,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:37:15.724Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-699620956f8b5dcbe259",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: checkout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8472,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:37:23.209Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-3f3668678a283d372e73",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: track",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7134,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:37:31.702Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-3605c3421a30125d4ef2",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: guides",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7581,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:37:38.857Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-f2a154baa861feebec87",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: contact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9966,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:37:46.488Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-5dfec1cdaf424558d3c2",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        },
+        {
+          "title": "layout: admin-login",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox-desktop",
+              "projectName": "firefox-desktop",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5496,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T13:37:56.489Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "960b38c616beb50fe6ef-8f976c79dfb709f8f957",
+          "file": "cross-browser-storefront.spec.ts",
+          "line": 28,
+          "column": 7
+        }
+      ]
+    },
+    {
+      "title": "launch-journey.spec.ts",
+      "file": "launch-journey.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "launch journeys (isolated)",
+          "file": "launch-journey.spec.ts",
+          "line": 59,
+          "column": 15,
+          "specs": [
+            {
+              "title": "customer: product → cart → checkout → confirmation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4281,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:28:12.221Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-fbb2d7132404adcae440",
+              "file": "launch-journey.spec.ts",
+              "line": 65,
+              "column": 7
+            },
+            {
+              "title": "notifications: business alert + customer confirmation delivered once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 44,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:28:16.860Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-c72db34156cccc832fa9",
+              "file": "launch-journey.spec.ts",
+              "line": 92,
+              "column": 7
+            },
+            {
+              "title": "customer: track order by number + phone; wrong phone refused",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2092,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:28:16.934Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-3b0c48422280413e374b",
+              "file": "launch-journey.spec.ts",
+              "line": 102,
+              "column": 7
+            },
+            {
+              "title": "checkout: unserved address and invalid phone are refused",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3372,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:28:19.080Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-acf9c5383a1147bad149",
+              "file": "launch-journey.spec.ts",
+              "line": 114,
+              "column": 7
+            },
+            {
+              "title": "duplicate submit: one order, one notification",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3091,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:28:22.494Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-86671fe89bd715d89629",
+              "file": "launch-journey.spec.ts",
+              "line": 133,
+              "column": 7
+            },
+            {
+              "title": "admin: editor cannot open orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5567,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:28:25.660Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-8681a17292badaf57096",
+              "file": "launch-journey.spec.ts",
+              "line": 148,
+              "column": 7
+            },
+            {
+              "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 21210,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:28:31.282Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-680447ae856ced466bd5",
+              "file": "launch-journey.spec.ts",
+              "line": 154,
+              "column": 7
+            },
+            {
+              "title": "admin: cancellation by fulfillment staff",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8184,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:28:52.548Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-e3f21140f6458121a7d5",
+              "file": "launch-journey.spec.ts",
+              "line": 185,
+              "column": 7
+            },
+            {
+              "title": "notifications: provider outage → failed, staff retry → sent once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6013,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:29:00.776Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-74dd7b4b67a6bf264f9a",
+              "file": "launch-journey.spec.ts",
+              "line": 198,
+              "column": 7
+            },
+            {
+              "title": "cron endpoint requires the secret",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-desktop",
+                  "projectName": "chromium-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1224,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:29:06.851Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-2895ce30692c80cc9e11",
+              "file": "launch-journey.spec.ts",
+              "line": 219,
+              "column": 7
+            },
+            {
+              "title": "customer: product → cart → checkout → confirmation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-mobile",
+                  "projectName": "chromium-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2831,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:29:35.121Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-b05dcb214587022f9def",
+              "file": "launch-journey.spec.ts",
+              "line": 65,
+              "column": 7
+            },
+            {
+              "title": "notifications: business alert + customer confirmation delivered once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-mobile",
+                  "projectName": "chromium-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 29,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:29:38.259Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-68fd02f4d4ea9f5f2114",
+              "file": "launch-journey.spec.ts",
+              "line": 92,
+              "column": 7
+            },
+            {
+              "title": "customer: track order by number + phone; wrong phone refused",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-mobile",
+                  "projectName": "chromium-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1327,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:29:38.332Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-867e5baafbb4baac05fd",
+              "file": "launch-journey.spec.ts",
+              "line": 102,
+              "column": 7
+            },
+            {
+              "title": "checkout: unserved address and invalid phone are refused",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-mobile",
+                  "projectName": "chromium-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2483,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:29:39.708Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-95a0cca529a392ad0965",
+              "file": "launch-journey.spec.ts",
+              "line": 114,
+              "column": 7
+            },
+            {
+              "title": "duplicate submit: one order, one notification",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-mobile",
+                  "projectName": "chromium-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1821,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:29:42.232Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-e5429077eae8af109c77",
+              "file": "launch-journey.spec.ts",
+              "line": 133,
+              "column": 7
+            },
+            {
+              "title": "admin: editor cannot open orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-mobile",
+                  "projectName": "chromium-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4569,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:29:44.098Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-32b991a520893fabf7d3",
+              "file": "launch-journey.spec.ts",
+              "line": 148,
+              "column": 7
+            },
+            {
+              "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-mobile",
+                  "projectName": "chromium-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 15007,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:29:48.757Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-7644daad283033e6ad42",
+              "file": "launch-journey.spec.ts",
+              "line": 154,
+              "column": 7
+            },
+            {
+              "title": "admin: cancellation by fulfillment staff",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-mobile",
+                  "projectName": "chromium-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6558,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:30:03.859Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-c5204ec208d736fa49ff",
+              "file": "launch-journey.spec.ts",
+              "line": 185,
+              "column": 7
+            },
+            {
+              "title": "notifications: provider outage → failed, staff retry → sent once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-mobile",
+                  "projectName": "chromium-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7420,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:30:10.497Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-8180912cdee9b571c94a",
+              "file": "launch-journey.spec.ts",
+              "line": 198,
+              "column": 7
+            },
+            {
+              "title": "cron endpoint requires the secret",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium-mobile",
+                  "projectName": "chromium-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 161,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:30:17.979Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-95cc355c176add22c10c",
+              "file": "launch-journey.spec.ts",
+              "line": 219,
+              "column": 7
+            },
+            {
+              "title": "customer: product → cart → checkout → confirmation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 20186,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:32:06.033Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-5f46d6b52ed19170debc",
+              "file": "launch-journey.spec.ts",
+              "line": 65,
+              "column": 7
+            },
+            {
+              "title": "notifications: business alert + customer confirmation delivered once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 44,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:32:26.549Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-e4baa16f29b56e517f76",
+              "file": "launch-journey.spec.ts",
+              "line": 92,
+              "column": 7
+            },
+            {
+              "title": "customer: track order by number + phone; wrong phone refused",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 14067,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:32:26.623Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-b590834c76bb0f809855",
+              "file": "launch-journey.spec.ts",
+              "line": 102,
+              "column": 7
+            },
+            {
+              "title": "checkout: unserved address and invalid phone are refused",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 15302,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:32:40.728Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-16bc4e8e4f95dcf2bf05",
+              "file": "launch-journey.spec.ts",
+              "line": 114,
+              "column": 7
+            },
+            {
+              "title": "duplicate submit: one order, one notification",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5977,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:32:56.110Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-586b8cb0369bc351d165",
+              "file": "launch-journey.spec.ts",
+              "line": 133,
+              "column": 7
+            },
+            {
+              "title": "admin: editor cannot open orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 14456,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:33:02.162Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-821c6e9e910cc2eb7962",
+              "file": "launch-journey.spec.ts",
+              "line": 148,
+              "column": 7
+            },
+            {
+              "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 19359,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('heading', { level: 1 })\nExpected: \u001b[32m\"LH-261115-CBC337\"\u001b[39m\nReceived: \u001b[31m\"Orders\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { level: 1 })\u001b[22m\n\u001b[2m    10 × locator resolved to <h1 class=\"font-[family-name:var(--font-display)] text-2xl font-bold tracking-[-0.03em] text-[var(--adm-ink)] sm:text-[1.75rem]\">Orders</h1>\u001b[22m\n\u001b[2m       - unexpected value \"Orders\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('heading', { level: 1 })\nExpected: \u001b[32m\"LH-261115-CBC337\"\u001b[39m\nReceived: \u001b[31m\"Orders\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { level: 1 })\u001b[22m\n\u001b[2m    10 × locator resolved to <h1 class=\"font-[family-name:var(--font-display)] text-2xl font-bold tracking-[-0.03em] text-[var(--adm-ink)] sm:text-[1.75rem]\">Orders</h1>\u001b[22m\n\u001b[2m       - unexpected value \"Orders\"\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:158:59",
+                        "location": {
+                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                          "column": 59,
+                          "line": 158
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 156 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m\"/admin/orders\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 157 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"link\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m orderNumber })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 158 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"heading\"\u001b[39m\u001b[33m,\u001b[39m { level\u001b[33m:\u001b[39m \u001b[35m1\u001b[39m }))\u001b[33m.\u001b[39mtoHaveText(orderNumber)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 159 |\u001b[39m     \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m to \u001b[36mof\u001b[39m [\u001b[32m\"confirmed\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"packing\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"shipped\"\u001b[39m]) {\n \u001b[90m 160 |\u001b[39m       \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Next status\"\u001b[39m)\u001b[33m.\u001b[39mselectOption(to)\u001b[33m;\u001b[39m\n \u001b[90m 161 |\u001b[39m       \u001b[36mif\u001b[39m (to \u001b[33m===\u001b[39m \u001b[32m\"shipped\"\u001b[39m) {\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "column": 59,
+                            "line": 158
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('heading', { level: 1 })\nExpected: \u001b[32m\"LH-261115-CBC337\"\u001b[39m\nReceived: \u001b[31m\"Orders\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { level: 1 })\u001b[22m\n\u001b[2m    10 × locator resolved to <h1 class=\"font-[family-name:var(--font-display)] text-2xl font-bold tracking-[-0.03em] text-[var(--adm-ink)] sm:text-[1.75rem]\">Orders</h1>\u001b[22m\n\u001b[2m       - unexpected value \"Orders\"\u001b[22m\n\n\n  156 |     await page.goto(\"/admin/orders\");\n  157 |     await page.getByRole(\"link\", { name: orderNumber }).click();\n> 158 |     await expect(page.getByRole(\"heading\", { level: 1 })).toHaveText(orderNumber);\n      |                                                           ^\n  159 |     for (const to of [\"confirmed\", \"packing\", \"shipped\"]) {\n  160 |       await page.getByLabel(\"Next status\").selectOption(to);\n  161 |       if (to === \"shipped\") {\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:158:59"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:33:16.766Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-97c54-ollect-COD-customer-sees-it-webkit-desktop\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "column": 59,
+                        "line": 158
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-78c1dc6bfbcb219c27c3",
+              "file": "launch-journey.spec.ts",
+              "line": 154,
+              "column": 7
+            },
+            {
+              "title": "admin: cancellation by fulfillment staff",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:33:36.501Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-fcb0191f4316b380939e",
+              "file": "launch-journey.spec.ts",
+              "line": 185,
+              "column": 7
+            },
+            {
+              "title": "notifications: provider outage → failed, staff retry → sent once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:33:36.502Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-04d67b8e79e1cd3e6764",
+              "file": "launch-journey.spec.ts",
+              "line": 198,
+              "column": 7
+            },
+            {
+              "title": "cron endpoint requires the secret",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:33:36.502Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-23fb3fc0d7df4ab4f496",
+              "file": "launch-journey.spec.ts",
+              "line": 219,
+              "column": 7
+            },
+            {
+              "title": "customer: product → cart → checkout → confirmation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 45168,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:34:38.318Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-80c3edf8388b141e5d8a",
+              "file": "launch-journey.spec.ts",
+              "line": 65,
+              "column": 7
+            },
+            {
+              "title": "notifications: business alert + customer confirmation delivered once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 185,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:35:24.853Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-127bd2339af78ee3fdee",
+              "file": "launch-journey.spec.ts",
+              "line": 92,
+              "column": 7
+            },
+            {
+              "title": "customer: track order by number + phone; wrong phone refused",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 16161,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:35:25.111Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-0c2a896f906673f35db4",
+              "file": "launch-journey.spec.ts",
+              "line": 102,
+              "column": 7
+            },
+            {
+              "title": "checkout: unserved address and invalid phone are refused",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6126,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:35:41.350Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-acca6c10e02352622a77",
+              "file": "launch-journey.spec.ts",
+              "line": 114,
+              "column": 7
+            },
+            {
+              "title": "duplicate submit: one order, one notification",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3093,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:35:47.627Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-ff0bc00b0fbf4dce1249",
+              "file": "launch-journey.spec.ts",
+              "line": 133,
+              "column": 7
+            },
+            {
+              "title": "admin: editor cannot open orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 9527,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:35:50.755Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-14f25b8fecfd4bc3dc6f",
+              "file": "launch-journey.spec.ts",
+              "line": 148,
+              "column": 7
+            },
+            {
+              "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 24274,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: packing')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: packing') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: packing')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: packing')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: packing') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: packing')\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:167:54",
+                        "location": {
+                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                          "column": 54,
+                          "line": 167
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 165 |\u001b[39m       \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Update status\"\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 166 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m`Status → ${to}`\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 167 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m`Current: ${to}`\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 168 |\u001b[39m     }\n \u001b[90m 169 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Collector reference\"\u001b[39m)\u001b[33m.\u001b[39mfill(\u001b[32m\"rider-1\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 170 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Record collection\"\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "column": 54,
+                            "line": 167
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: packing')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: packing') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: packing')\u001b[22m\n\n\n  165 |       await page.getByRole(\"button\", { name: \"Update status\" }).click();\n  166 |       await expect(page.getByText(`Status → ${to}`)).toBeVisible();\n> 167 |       await expect(page.getByText(`Current: ${to}`)).toBeVisible();\n      |                                                      ^\n  168 |     }\n  169 |     await page.getByLabel(\"Collector reference\").fill(\"rider-1\");\n  170 |     await page.getByRole(\"button\", { name: \"Record collection\" }).click();\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:167:54"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:36:00.374Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-97c54-ollect-COD-customer-sees-it-webkit-mobile\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "column": 54,
+                        "line": 167
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-604b737aff93575a2dd7",
+              "file": "launch-journey.spec.ts",
+              "line": 154,
+              "column": 7
+            },
+            {
+              "title": "admin: cancellation by fulfillment staff",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:36:24.852Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-3c7fbf0149174d572236",
+              "file": "launch-journey.spec.ts",
+              "line": 185,
+              "column": 7
+            },
+            {
+              "title": "notifications: provider outage → failed, staff retry → sent once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:36:24.852Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-1bccde5f3bcd19a89317",
+              "file": "launch-journey.spec.ts",
+              "line": 198,
+              "column": 7
+            },
+            {
+              "title": "cron endpoint requires the secret",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:36:24.852Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-2a604845711e7a23437b",
+              "file": "launch-journey.spec.ts",
+              "line": 219,
+              "column": 7
+            },
+            {
+              "title": "customer: product → cart → checkout → confirmation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox-desktop",
+                  "projectName": "firefox-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4887,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:38:02.121Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-23fdabb26dde995680a8",
+              "file": "launch-journey.spec.ts",
+              "line": 65,
+              "column": 7
+            },
+            {
+              "title": "notifications: business alert + customer confirmation delivered once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox-desktop",
+                  "projectName": "firefox-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 61,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:38:07.356Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-db25e319f2f75812069e",
+              "file": "launch-journey.spec.ts",
+              "line": 92,
+              "column": 7
+            },
+            {
+              "title": "customer: track order by number + phone; wrong phone refused",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox-desktop",
+                  "projectName": "firefox-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2057,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:38:07.501Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-329ade2ed6e3e953179a",
+              "file": "launch-journey.spec.ts",
+              "line": 102,
+              "column": 7
+            },
+            {
+              "title": "checkout: unserved address and invalid phone are refused",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox-desktop",
+                  "projectName": "firefox-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2314,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:38:09.611Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-3ab4ac318bf8e5359253",
+              "file": "launch-journey.spec.ts",
+              "line": 114,
+              "column": 7
+            },
+            {
+              "title": "duplicate submit: one order, one notification",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox-desktop",
+                  "projectName": "firefox-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2529,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:38:11.957Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-92ef35dd07eac99988ba",
+              "file": "launch-journey.spec.ts",
+              "line": 133,
+              "column": 7
+            },
+            {
+              "title": "admin: editor cannot open orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox-desktop",
+                  "projectName": "firefox-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5733,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:38:14.588Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-2f1304ac4271a83ea053",
+              "file": "launch-journey.spec.ts",
+              "line": 148,
+              "column": 7
+            },
+            {
+              "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox-desktop",
+                  "projectName": "firefox-desktop",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 13166,
+                      "error": {
+                        "message": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/81831373-6355-4f21-bf76-a81910406e6a\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/81831373-6355-4f21-bf76-a81910406e6a\", waiting until \"load\"\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:179:16",
+                        "location": {
+                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                          "column": 16,
+                          "line": 179
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 177 |\u001b[39m     expect(audits)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(\u001b[35m4\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 178 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 179 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(orderUrl)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 180 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"order-status\"\u001b[39m))\u001b[33m.\u001b[39mtoHaveText(\u001b[32m\"Dispatched\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 181 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Test Courier · TEST-123\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Paid — cash collected\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "column": 16,
+                            "line": 179
+                          },
+                          "message": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/81831373-6355-4f21-bf76-a81910406e6a\", waiting until \"load\"\u001b[22m\n\n\n  177 |     expect(audits).toBeGreaterThanOrEqual(4);\n  178 |\n> 179 |     await page.goto(orderUrl);\n      |                ^\n  180 |     await expect(page.getByTestId(\"order-status\")).toHaveText(\"Dispatched\");\n  181 |     await expect(page.getByText(\"Test Courier · TEST-123\")).toBeVisible();\n  182 |     await expect(page.getByText(\"Paid — cash collected\")).toBeVisible();\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:179:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:38:20.371Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-97c54-ollect-COD-customer-sees-it-firefox-desktop\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "column": 16,
+                        "line": 179
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-7eb082b077f9e2868125",
+              "file": "launch-journey.spec.ts",
+              "line": 154,
+              "column": 7
+            },
+            {
+              "title": "admin: cancellation by fulfillment staff",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox-desktop",
+                  "projectName": "firefox-desktop",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:38:35.169Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-d32634e2309e32e24b80",
+              "file": "launch-journey.spec.ts",
+              "line": 185,
+              "column": 7
+            },
+            {
+              "title": "notifications: provider outage → failed, staff retry → sent once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox-desktop",
+                  "projectName": "firefox-desktop",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:38:35.169Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-93f0b67412340f5a5be7",
+              "file": "launch-journey.spec.ts",
+              "line": 198,
+              "column": 7
+            },
+            {
+              "title": "cron endpoint requires the secret",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 90000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox-desktop",
+                  "projectName": "firefox-desktop",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T13:38:35.169Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-d18221f4e368ec766a46",
+              "file": "launch-journey.spec.ts",
+              "line": 219,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-15T13:14:14.656Z",
+    "duration": 1460600.704,
+    "expected": 90,
+    "skipped": 9,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

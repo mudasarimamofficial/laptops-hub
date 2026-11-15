@@ -155,6 +155,8 @@ test.describe.serial("launch journeys (isolated)", () => {
     await signIn(page, "manager");
     await page.goto("/admin/orders");
     await page.getByRole("link", { name: orderNumber }).click();
+    // Client navigation to a dynamic admin page can take a few seconds in WebKit/Firefox under a full run.
+    await page.waitForURL(new RegExp(`/admin/orders/${orderNumber}$`), { timeout: 30_000 });
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(orderNumber);
     for (const to of ["confirmed", "packing", "shipped"]) {
       await page.getByLabel("Next status").selectOption(to);

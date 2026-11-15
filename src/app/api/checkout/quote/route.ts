@@ -81,12 +81,16 @@ export async function POST(request: Request) {
     name: string;
     flat_fee_paisa: number;
     cod_fee_paisa: number;
+    free_shipping_min_paisa: number | null;
     notes: string;
   }[];
 
   const selectedId = parsed.data.shippingZoneId ?? options[0]?.id;
   const selected = options.find((o) => o.id === selectedId) ?? options[0];
-  const shippingPaisa = selected?.flat_fee_paisa ?? 0;
+  // Same rule as create_cod_order: a zone's free-delivery minimum applies to the server-priced subtotal only.
+  const freeMin = selected?.free_shipping_min_paisa ?? null;
+  const freeDelivery = freeMin !== null && subtotalPaisa > 0 && subtotalPaisa >= freeMin;
+  const shippingPaisa = freeDelivery ? 0 : (selected?.flat_fee_paisa ?? 0);
   const codFeePaisa = selected?.cod_fee_paisa ?? 0;
 
   return NextResponse.json(
@@ -99,6 +103,7 @@ export async function POST(request: Request) {
         name: o.name,
         flatFeePaisa: o.flat_fee_paisa,
         codFeePaisa: o.cod_fee_paisa,
+        freeShippingMinPaisa: o.free_shipping_min_paisa ?? null,
         notes: o.notes,
       })),
       quote:
@@ -107,6 +112,7 @@ export async function POST(request: Request) {
               shippingZoneId: selected.id,
               subtotalPaisa,
               shippingPaisa,
+              freeDeliveryApplied: freeDelivery,
               codFeePaisa,
               totalDuePaisa: subtotalPaisa + shippingPaisa + codFeePaisa,
               currency: "PKR",

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
+import { withCatalogRefresh } from "@/lib/catalog/refresh";
 
 const createSchema = z.object({
   title: z.string().trim().min(2).max(200),
@@ -38,7 +39,7 @@ function slugifyHandle(title: string): string {
     .slice(0, 180);
 }
 
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const body = await request.json().catch(() => null);
@@ -154,3 +155,6 @@ export async function POST(request: Request) {
     return staffErrorResponse(e);
   }
 }
+
+// Every successful catalog write refreshes the storefront (src/lib/catalog/refresh.ts).
+export const POST = withCatalogRefresh(handlePOST);

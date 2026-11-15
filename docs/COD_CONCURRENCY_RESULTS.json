@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-25T20:22:48.907Z",
-  "orderNumber": "LH-SANDBOX-1792959752673",
+  "at": "2026-11-15T12:05:04.643Z",
+  "orderNumber": "LH-SANDBOX-1794744303013",
   "results": [
     {
       "name": "same_key_both_ok_or_one_ok",
@@ -55,7 +55,7 @@
     {
       "name": "replay_after_completion",
       "ok": true,
-      "detail": "{\"first\":\"ok\",\"again\":{\"ok\":true,\"collection_id\":\"e0a7e098-b3e0-457a-b082-650f02e873a9\",\"payment_status\":\"partially_collected\",\"idempotent_replay\":true,\"amount_collected_paisa\":1300},\"rows\":1}"
+      "detail": "{\"first\":\"ok\",\"again\":{\"ok\":true,\"collection_id\":\"c72ecc24-f5cb-46c4-8218-c6c80f933248\",\"payment_status\":\"partially_collected\",\"idempotent_replay\":true,\"amount_collected_paisa\":1300},\"rows\":1}"
     },
     {
       "name": "same_key_different_amount_conflict",
@@ -70,7 +70,7 @@
     {
       "name": "cross_order_same_key_one_collection_one_conflict",
       "ok": true,
-      "detail": "bad rounds=0/10 outcomes=idempotency_conflict|fresh"
+      "detail": "bad rounds=0/10 outcomes=fresh|idempotency_conflict"
     },
     {
       "name": "same_order_different_amount_race_one_conflict",

@@ -18,7 +18,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
 
     const { data: before } = await supabase
       .from("shipping_zones")
-      .select("name, provinces, cities, flat_fee_paisa, cod_fee_paisa, is_active, notes")
+      .select("name, provinces, cities, excluded_cities, flat_fee_paisa, cod_fee_paisa, free_shipping_min_paisa, is_active, notes")
       .eq("id", id)
       .maybeSingle();
     if (!before) return NextResponse.json({ error: "not_found", message: "This zone no longer exists." }, { status: 404 });
@@ -27,6 +27,8 @@ export async function PATCH(request: Request, ctx: Ctx) {
       name: parsed.data.name,
       provinces: parsed.data.provinces,
       cities: parsed.data.cities,
+      excluded_cities: parsed.data.excludedCities,
+      free_shipping_min_paisa: parsed.data.freeShippingMinPkr === null ? null : pkrMajorToPaisa(parsed.data.freeShippingMinPkr),
       flat_fee_paisa: pkrMajorToPaisa(parsed.data.flatFeePkr),
       cod_fee_paisa: pkrMajorToPaisa(parsed.data.codFeePkr),
       is_active: parsed.data.isActive,

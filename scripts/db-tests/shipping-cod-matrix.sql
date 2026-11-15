@@ -47,7 +47,8 @@ SELECT 'quote ' || c.city || ' / ' || c.prov,
        q::text
 FROM (VALUES ('Lahore','Punjab'),('Karachi','Sindh'),('Islamabad','Islamabad Capital Territory'),('Peshawar','Khyber Pakhtunkhwa'),
              ('Quetta','Balochistan'),('Faisalabad','punjab'),('  Multan ','PUNJAB '),('Gilgit','Gilgit-Baltistan'),
-             ('Muzaffarabad','Azad Jammu and Kashmir'),('Hyderabad','Sindh'),('Abbottabad','khyber pakhtunkhwa')) c(city, prov),
+             ('Muzaffarabad','Azad Jammu and Kashmir'),('Hyderabad','Sindh'),('Abbottabad','khyber pakhtunkhwa'),
+             ('Rawalpindi','Punjab'),('Sialkot','Punjab'),('Sukkur','Sindh'),('Skardu','Gilgit-Baltistan'),('Mirpur','Azad Jammu and Kashmir')) c(city, prov),
 LATERAL (SELECT quote_cod_shipping(jsonb_build_object('address', jsonb_build_object('city', c.city, 'province', c.prov)))) x(q);
 
 -- 2. Unknown province is unserviceable (never a free order).
@@ -86,6 +87,33 @@ FROM pl, LATERAL (SELECT create_cod_order(pl.v || jsonb_build_object('idempotenc
   'address', jsonb_build_object('line1', '2 Test Rd', 'city', 'Karachi', 'province', 'Sindh'),
   'lines', jsonb_build_array(jsonb_build_object('variant_id', '00000000-0000-4000-8000-0000000000b2', 'quantity', 1))))) x(r)
 WHERE pl.k = 'base';
+
+-- 5b. Zone rules (20261117120000): free-delivery threshold from server prices; city exclusions.
+UPDATE shipping_zones SET flat_fee_paisa = 36000, cod_fee_paisa = 5000, free_shipping_min_paisa = 10000000
+  WHERE id = '00000000-0000-4000-8000-000000000001';
+INSERT INTO results SELECT 'quote returns free-delivery threshold', (q#>>'{options,0,free_shipping_min_paisa}')::bigint = 10000000, q::text
+FROM (SELECT quote_cod_shipping('{"address":{"city":"Lahore","province":"Punjab"}}')) x(q);
+INSERT INTO results SELECT 'order above threshold: total = subtotal + COD fee',
+  (r->>'total_due_paisa')::bigint = 12345600 + 0 + 5000, r::text
+FROM pl, LATERAL (SELECT create_cod_order(pl.v || jsonb_build_object('idempotency_key', 'qa-key-0008',
+  'address', jsonb_build_object('line1', '8 Test Rd', 'city', 'Lahore', 'province', 'Punjab'),
+  'lines', jsonb_build_array(jsonb_build_object('variant_id', '00000000-0000-4000-8000-0000000000b1', 'quantity', 1))))) x(r)
+WHERE pl.k = 'base';
+INSERT INTO results SELECT 'order above threshold: stored delivery 0, COD fee 50', shipping_paisa = 0 AND cod_fee_paisa = 5000,
+  shipping_paisa || '/' || cod_fee_paisa FROM orders WHERE idempotency_key = 'qa-key-0008';
+UPDATE shipping_zones SET free_shipping_min_paisa = 20000000 WHERE id = '00000000-0000-4000-8000-000000000001';
+INSERT INTO results SELECT 'order below threshold: full 360+50',
+  (r->>'total_due_paisa')::bigint = 12345600 + 36000 + 5000, r::text
+FROM pl, LATERAL (SELECT create_cod_order(pl.v || jsonb_build_object('idempotency_key', 'qa-key-0009',
+  'address', jsonb_build_object('line1', '9 Test Rd', 'city', 'Lahore', 'province', 'Punjab'),
+  'lines', jsonb_build_array(jsonb_build_object('variant_id', '00000000-0000-4000-8000-0000000000b1', 'quantity', 1))))) x(r)
+WHERE pl.k = 'base';
+UPDATE shipping_zones SET free_shipping_min_paisa = NULL, excluded_cities = ARRAY['  gwadar '] WHERE id = '00000000-0000-4000-8000-000000000001';
+INSERT INTO results SELECT 'excluded city (normalised) is unserviceable', q->>'error' = 'unserviceable', q::text
+FROM (SELECT quote_cod_shipping('{"address":{"city":"Gwadar","province":"Balochistan"}}')) x(q);
+INSERT INTO results SELECT 'other city in same province still served', (q->>'ok')::boolean, q::text
+FROM (SELECT quote_cod_shipping('{"address":{"city":"Quetta","province":"Balochistan"}}')) x(q);
+UPDATE shipping_zones SET excluded_cities = '{}', flat_fee_paisa = 0, cod_fee_paisa = 0 WHERE id = '00000000-0000-4000-8000-000000000001';
 
 -- 6. Tracked one-off laptop: decremented exactly once, second order refused.
 INSERT INTO results SELECT 'tracked stock decremented 1 -> 0', quantity_on_hand = 0, quantity_on_hand::text
@@ -147,6 +175,7 @@ EXCEPTION WHEN insufficient_privilege THEN
 END $$;
 RESET ROLE;
 
-SELECT CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END AS result, name, left(detail, 120) FROM results ORDER BY ok, name;
-SELECT 'TOTAL', count(*) FILTER (WHERE ok) || ' passed', count(*) FILTER (WHERE NOT ok) || ' failed' FROM results;
+-- A check that evaluates to NULL is a failure, never silently uncounted.
+SELECT CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END AS result, name, left(detail, 120) FROM results ORDER BY coalesce(ok, false), name;
+SELECT 'TOTAL', count(*) FILTER (WHERE ok) || ' passed', count(*) FILTER (WHERE ok IS NOT TRUE) || ' failed' FROM results;
 ROLLBACK;

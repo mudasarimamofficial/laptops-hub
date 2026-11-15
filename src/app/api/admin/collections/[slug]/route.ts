@@ -1,3 +1,4 @@
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import {
@@ -5,6 +6,13 @@ import {
   createAuthorizedStaffWriter,
   staffErrorResponse,
 } from "@/lib/auth/staff";
+
+/** Storefront collection pages and the sitemap read published collections through the "collections" cache tag. */
+function refreshStorefront(slug: string) {
+  revalidateTag("collections", { expire: 0 });
+  revalidatePath(`/collections/${slug}`);
+  revalidatePath("/sitemap.xml");
+}
 
 const patchSchema = z.object({
   title: z.string().trim().min(2).max(160).optional(),
@@ -38,7 +46,7 @@ export async function GET(_request: Request, ctx: Ctx) {
       )
       .eq("slug", slug)
       .maybeSingle();
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "save_failed", message: "Could not update the collection's products." }, { status: 500 });
     if (!data) return NextResponse.json({ error: "not_found" }, { status: 404 });
     return NextResponse.json({ collection: data }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
@@ -89,7 +97,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
           onConflict: "collection_id,product_id",
           ignoreDuplicates: true,
         });
-        if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+        if (error) return NextResponse.json({ error: "save_failed", message: "Could not update the collection's products." }, { status: 500 });
       }
 
       if (mem.data.orderedProductIds?.length) {
@@ -111,7 +119,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
         }));
         if (rows.length) {
           const { error } = await supabase.from("collection_products").insert(rows);
-          if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+          if (error) return NextResponse.json({ error: "save_failed", message: "Could not update the collection's products." }, { status: 500 });
         }
       }
 
@@ -122,6 +130,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
         entity_id: existing.id,
         after: mem.data,
       });
+      refreshStorefront(existing.slug);
       return NextResponse.json({ ok: true, membership: true }, { headers: { "Cache-Control": "no-store" } });
     }
 
@@ -148,7 +157,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
       delete fallback.seo_description;
       delete fallback.image_url;
       const { error: e2 } = await supabase.from("collections").update(fallback).eq("id", existing.id);
-      if (e2) return NextResponse.json({ error: e2.message }, { status: 500 });
+      if (e2) return NextResponse.json({ error: "save_failed", message: "Could not save the collection." }, { status: 500 });
     }
 
     await supabase.from("audit_logs").insert({
@@ -160,6 +169,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
       after: parsed.data,
     });
 
+    refreshStorefront(existing.slug);
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {
     return staffErrorResponse(e);

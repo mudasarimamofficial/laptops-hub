@@ -173,6 +173,7 @@ export function AdminShell({ staff, children }: Props) {
               href="/"
               target="_blank"
               rel="noopener noreferrer"
+              prefetch={false}
               className="hidden text-sm font-medium text-[var(--lh-action)] hover:underline sm:inline"
             >
               View storefront

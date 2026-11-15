@@ -19,6 +19,8 @@ export async function POST(request: Request) {
         name: parsed.data.name,
         provinces: parsed.data.provinces,
         cities: parsed.data.cities,
+        excluded_cities: parsed.data.excludedCities,
+        free_shipping_min_paisa: parsed.data.freeShippingMinPkr === null ? null : pkrMajorToPaisa(parsed.data.freeShippingMinPkr),
         flat_fee_paisa: pkrMajorToPaisa(parsed.data.flatFeePkr),
         cod_fee_paisa: pkrMajorToPaisa(parsed.data.codFeePkr),
         is_active: parsed.data.isActive,

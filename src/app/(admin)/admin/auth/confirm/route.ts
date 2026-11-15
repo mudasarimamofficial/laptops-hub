@@ -4,9 +4,10 @@ import { NextResponse, type NextRequest } from "next/server";
 import { RESET_PASSWORD_PATH } from "@/lib/auth/recovery";
 
 /**
- * Landing point of the password-recovery email. Accepts the recommended `token_hash` link (works on any device) and
- * the default-template PKCE `code` link (same browser that requested it). Only recovery links are accepted, and the
- * destination is fixed — query parameters cannot redirect elsewhere.
+ * Landing point of the password-recovery email and of staff invitations (Admin → Staff). Accepts the recommended
+ * `token_hash` link (works on any device) and the default-template PKCE `code` link (same browser that requested it).
+ * Only recovery and invite links are accepted, and the destination is fixed ("Set a new password") — query
+ * parameters cannot redirect elsewhere. Access to /admin still depends on an active admin_memberships row.
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
   });
 
   let ok = false;
-  if (tokenHash && type === "recovery") {
+  if (tokenHash && (type === "recovery" || type === "invite")) {
     ok = !(await supabase.auth.verifyOtp({ type, token_hash: tokenHash })).error;
   } else if (code) {
     ok = !(await supabase.auth.exchangeCodeForSession(code)).error;

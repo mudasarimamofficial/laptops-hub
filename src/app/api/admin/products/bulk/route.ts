@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
+import { withCatalogRefresh } from "@/lib/catalog/refresh";
 
 const itemSchema = z.object({
   handle: z.string().min(1),
@@ -18,7 +19,7 @@ const bodySchema = z.object({
 });
 
 /** Bulk patch by handle. Price/inventory apply to the first variant of each product. */
-export async function POST(request: Request) {
+async function handlePOST(request: Request) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const parsed = bodySchema.safeParse(await request.json().catch(() => null));
@@ -98,3 +99,6 @@ export async function POST(request: Request) {
     return staffErrorResponse(e);
   }
 }
+
+// Every successful catalog write refreshes the storefront (src/lib/catalog/refresh.ts).
+export const POST = withCatalogRefresh(handlePOST);

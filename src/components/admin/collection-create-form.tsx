@@ -130,7 +130,7 @@ export function CollectionCreateForm() {
             checked={collectionType === "automated"}
             onChange={() => setCollectionType("automated")}
           />
-          Automated — match conditions (storefront evaluation expands in Phase 3)
+          Automated — products that match the conditions join automatically
         </label>
       </fieldset>
       {collectionType === "automated" ? (

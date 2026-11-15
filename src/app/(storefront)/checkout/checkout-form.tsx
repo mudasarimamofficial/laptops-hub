@@ -16,6 +16,7 @@ type ShipOption = {
   name: string;
   flatFeePaisa: number;
   codFeePaisa: number;
+  freeShippingMinPaisa?: number | null;
   notes: string;
 };
 
@@ -256,6 +257,7 @@ export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
                   <span className="mt-1 block text-sm text-[var(--lh-ink-2)]">
                     {deliveryFeeLabel(o.flatFeePaisa, formatPkr)}
                     {o.codFeePaisa > 0 ? ` · COD fee ${formatPkr(o.codFeePaisa)}` : " · No COD fee"}
+                    {o.freeShippingMinPaisa != null && o.flatFeePaisa > 0 ? ` · Free delivery on items from ${formatPkr(o.freeShippingMinPaisa)}` : ""}
                     {o.notes ? ` · ${o.notes}` : ""}
                   </span>
                 </span>

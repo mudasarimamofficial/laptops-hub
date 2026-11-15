@@ -1,4 +1,4 @@
-# Laptops HUB: Admin Merchant Handbook (2026-11-14 additions)
+# Laptops HUB: Admin Merchant Handbook (2026-11-14 / 2026-11-15 additions)
 
 This page adds to `MERCHANT_HANDBOOK.md` (products, variants, collections, CSV, theme editor and navigation) and `STAFF_HANDBOOK.md` (roles). It covers only what changed in this release candidate.
 
@@ -30,6 +30,35 @@ Settings → Shipping zones. Enter fees in rupees.
 - **A blank field is not 0.** The form refuses to save until you enter a number. This stops a missed field from turning into free delivery by accident.
 - The current nationwide example is Rs 360 delivery + Rs 50 COD fee. The owner confirms the real amounts.
 - Customers in cities outside every active zone are told COD is not available there, and the order button stays disabled.
+- **Cities NOT served** (optional): list cities inside the selected provinces that this zone must not cover, for example
+  "whole Balochistan except Gwadar". Spelling and capitals do not matter.
+- **Free delivery from order subtotal** (optional): when the items in an order add up to this amount or more, delivery
+  is free for that order; the COD fee still applies. Leave it empty for no offer. Customers see the offer next to the
+  delivery option, and the order total is always calculated on the server from current prices.
+- **Note shown at checkout:** use it for the courier name and delivery time (for example "2–4 working days").
+- Every zone change is recorded in the Activity log with the values before and after.
+
+## Staff accounts (System → Staff; owner and admin only)
+
+Everyone who works in the admin gets **their own login**. Never share the owner's password.
+
+1. Enter the person's email address, choose a role and press **Send invitation**. They receive an email with a
+   one-time link (valid up to 24 hours). The link opens "Set a new password"; after that they sign in at `/admin/login`.
+2. Roles:
+   | Role | Can do |
+   |---|---|
+   | Admin | Everything except changing the owner (only the owner can add or change admins) |
+   | Manager | Products, stock, orders, settings, shipping, content |
+   | Editor | Content, blog, reviews, reels, theme drafts (cannot publish the theme or see orders) |
+   | Fulfillment | Orders: confirm, pack, dispatch, record cash collected, cancel |
+3. **Change role:** pick a new role in the list; it applies on their next click.
+4. **Deactivate:** removes access immediately and signs the person out on every device; they cannot sign in again.
+   **Reactivate** restores access with the same account and password.
+5. **Resend invitation** appears while someone has not signed in yet.
+6. Nobody can change their own access, and the owner account cannot be changed here. Transferring ownership is a
+   written owner instruction carried out by the database administrator.
+7. Invitations need email sending (Resend) to be set up; without it the page says so and nothing is changed.
+8. Every invitation and change is recorded in the Activity log.
 
 ## Storefront labels (Settings → Storefront labels)
 

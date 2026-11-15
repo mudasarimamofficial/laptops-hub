@@ -1,6 +1,6 @@
 # Laptops HUB — Migration and Release Runbook
 
-**Date:** 2026-11-14 (updated, third pass) · **Branch:** `feat/merchant-operating-system` (ahead of `main`; see `git rev-list --count main..HEAD`)
+**Date:** 2026-11-15 (final engineering pass) · **Branch:** `feat/merchant-operating-system` (ahead of `main`; see `git rev-list --count main..HEAD`)
 **Every step below needs explicit owner approval. Nothing in this document has been run against production.**
 
 ## 0. Before you start
@@ -15,7 +15,7 @@
 supabase migration list --linked
 ```
 
-Expected: the 14 migrations above are remote, and the 8 below are local-only.
+Expected: the 14 migrations above are remote, and the 12 below are local-only.
 
 ## 2. Pending migrations (apply in this order)
 
@@ -29,10 +29,23 @@ Expected: the 14 migrations above are remote, and the 8 below are local-only.
 | 20 | `20261114100000_function_search_path_hardening.sql` | `SET search_path = ''` on `norm_place`, `zone_serves_address`, `set_updated_at` | Low: those functions already use qualified names; verified locally by the SQL matrix |
 | 21 | `20261115100000_reels_and_product_reviews.sql` | New `reels` and `product_reviews` tables with RLS (public: published + rights-cleared reels, approved reviews), column grants hiding reviewer email and IP hash, no anon write path, publish-requires-rights and ronin.pk-ban constraints | Low: additive, new tables only; `scripts/db-tests/reels-reviews-matrix.sql` 17/17 |
 | 22 | `20261116100000_merchandising_badges_and_reel_details.sql` | New `product_badges` table (editorial kinds only: featured / popular_pick / staff_pick; schedule window; public sees in-window rows, never the note); `reels.creator_name` / `creator_consent` / `tag` with “name requires consent” and tag-format checks | Low: additive (new table; new columns have defaults); `scripts/db-tests/merchandising-matrix.sql` 15/15. Depends on 21 |
+| 23 | `20261117100000_order_inventory_integrity.sql` | `create_cod_order` honours the owner-set "continue selling when out of stock" (`allow_oversell`); every tracked order line writes an `inventory_ledger` row (trigger); cancelling before shipment restocks exactly once (trigger) | Medium: replaces `create_cod_order` (only the stock check changed) and adds two triggers; `scripts/test-inventory-orders.mjs` covers race/duplicate/rollback/cancel. Rollback: drop the two triggers/functions and re-apply the `create_cod_order` body from 20261023160000 |
+| 24 | `20261117110000_anon_write_revoke_and_fk_indexes.sql` | Revokes residual table INSERT/UPDATE/DELETE grants from `anon` (keeps `contact_inquiries` INSERT for the contact form); 16 foreign-key indexes | Low: RLS already denied these writes; indexes are small (`CREATE INDEX IF NOT EXISTS`, brief lock). Rollback: re-grant / drop index |
+| 25 | `20261117120000_shipping_zone_rules.sql` | `shipping_zones.excluded_cities`, `free_shipping_min_paisa`; `zone_serves_address` honours exclusions; `create_cod_order` applies the free-delivery minimum to the server-priced subtotal; quote returns the minimum | Medium: replaces `create_cod_order` (adds one block) and `quote_cod_shipping`/`zone_serves_address`; existing zones unchanged (defaults). SQL matrix 37/37. Depends on 23 |
+| 26 | `20261117130000_inventory_adjustments.sql` | `adjust_inventory(jsonb)` (service_role only): manual stock changes with reason, row lock, never below 0, stale-count protection, ledger row | Low: new function only. Rollback: `drop function public.adjust_inventory(jsonb);` |
 
 Apply one at a time through the reviewed migration path (`docs/MIGRATION_PRODUCTION_APPROVAL.md`). After each one, re-run step 1 and the read-only advisors.
 
-**Rollback:** 15–19, 21 and 22 are additive (22: `drop table public.product_badges; alter table public.reels drop column creator_name, drop column creator_consent, drop column tag;` — run before 21's rollback; 21: export, then `drop table public.product_reviews, public.reels;`). `DATA_MODEL_AND_MIGRATIONS.md` → “Rollback sketch” is an outline, not tested scripts; prefer leaving new columns nullable and unused over dropping them. Writing and testing down-scripts is still to do before production. For 20, run `ALTER FUNCTION … RESET search_path`.
+**Rehearsed locally (2026-11-15):** `bash scripts/rehearsal/migration-upgrade.sh` applies all 26 to an empty database and,
+separately, the 14 production migrations + data and then the 12 pending ones; the resulting public schemas and
+grants are byte-identical to each other and to the local stack, and data survives (`docs/evidence/migrations/`).
+`bash scripts/rehearsal/backup-restore.sh` dumps public+auth, restores into a scratch database and compares
+per-table row counts and content checksums (identical) plus policy/trigger/constraint/index counts.
+
+**Production backup before step 2:** Supabase Dashboard → Database → Backups: confirm a backup newer than one hour
+exists (or take a manual `pg_dump` of `public` and `auth` with the owner's database password, stored off-repo).
+
+**Rollback:** 15–19, 21, 22, 24 and 26 are additive; 23 and 25 replace function bodies (keep the previous bodies from the migration files to re-apply) (22: `drop table public.product_badges; alter table public.reels drop column creator_name, drop column creator_consent, drop column tag;` — run before 21's rollback; 21: export, then `drop table public.product_reviews, public.reels;`). `DATA_MODEL_AND_MIGRATIONS.md` → “Rollback sketch” is an outline, not tested scripts; prefer leaving new columns nullable and unused over dropping them. Writing and testing down-scripts is still to do before production. For 20, run `ALTER FUNCTION … RESET search_path`.
 
 ## 3. Owner dashboard actions (no code)
 
@@ -81,7 +94,6 @@ Then:
 
 ## 6. Known gaps to schedule
 
-- `create_cod_order` decrements tracked stock but writes no `inventory_ledger` row.
 - `/api/admin/media` returns raw error messages, though only to staff.
 - `notFound()` thrown inside dynamic product pages renders the Next error shell instead of the styled 404. This already happens in production; it is not a regression.
 - Social proof (built 2026-11-14, third pass) is OFF by default in `store_settings.social_proof`. After COD goes live, turn on recent-order notices / the “Top seller” badge in Admin → Badges & social proof only when the privacy policy covers it; with zero confirmed orders they show nothing.

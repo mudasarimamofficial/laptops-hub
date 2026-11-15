@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-23T18:39:25.720Z",
+  "at": "2026-11-15T12:44:26.753Z",
   "results": [
     {
       "name": "anon_cannot_read_orders",
@@ -29,7 +29,7 @@
     {
       "name": "anon_cannot_insert_admin_membership",
       "ok": true,
-      "detail": "new row violates row-level security policy for table \"admin_memberships\""
+      "detail": "permission denied for table admin_memberships"
     },
     {
       "name": "anon_can_read_public_prices",

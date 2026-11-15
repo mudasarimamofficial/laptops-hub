@@ -12,8 +12,8 @@ export const RECOVERY_WINDOW_SECONDS = 15 * 60;
 export const MIN_PASSWORD_LENGTH = 12;
 export const MAX_PASSWORD_LENGTH = 128;
 
-/** Auth methods that prove control of the mailbox (recovery link, email OTP). A password sign-in is not one. */
-const RECOVERY_METHODS = new Set(["recovery", "otp"]);
+/** Auth methods that prove control of the mailbox (recovery link, staff invitation link, email OTP). A password sign-in is not one. */
+const RECOVERY_METHODS = new Set(["recovery", "otp", "invite"]);
 
 type Amr = { method?: string; timestamp?: number };
 

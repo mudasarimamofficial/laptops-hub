@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
+import { withCatalogRefresh } from "@/lib/catalog/refresh";
 
 const patchSchema = z
   .object({
@@ -50,7 +51,7 @@ const deleteSchema = z.object({
 
 type Ctx = { params: Promise<{ handle: string }> };
 
-export async function PATCH(request: Request, ctx: Ctx) {
+async function handlePATCH(request: Request, ctx: Ctx) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
@@ -185,7 +186,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
  * Soft-delete / archive. Hard delete is refused when order_items reference the product.
  * Never cascade-deletes historical order line snapshots.
  */
-export async function DELETE(request: Request, ctx: Ctx) {
+async function handleDELETE(request: Request, ctx: Ctx) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager"]);
     const { handle } = await ctx.params;
@@ -275,3 +276,7 @@ export async function DELETE(request: Request, ctx: Ctx) {
     return staffErrorResponse(e);
   }
 }
+
+// Every successful catalog write refreshes the storefront (src/lib/catalog/refresh.ts).
+export const PATCH = withCatalogRefresh(handlePATCH);
+export const DELETE = withCatalogRefresh(handleDELETE);

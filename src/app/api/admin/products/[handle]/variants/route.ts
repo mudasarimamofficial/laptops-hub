@@ -11,6 +11,7 @@ import {
   normalizeOptionName,
   type OptionValuesMap,
 } from "@/lib/catalog/variant-matrix";
+import { withCatalogRefresh } from "@/lib/catalog/refresh";
 
 export const dynamic = "force-dynamic";
 
@@ -105,7 +106,7 @@ export async function GET(_request: Request, ctx: Ctx) {
 }
 
 /** Atomic variant sync via sync_product_variants RPC (all-or-nothing). */
-export async function PUT(request: Request, ctx: Ctx) {
+async function handlePUT(request: Request, ctx: Ctx) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
@@ -235,3 +236,6 @@ export async function PUT(request: Request, ctx: Ctx) {
     return staffErrorResponse(e);
   }
 }
+
+// Every successful catalog write refreshes the storefront (src/lib/catalog/refresh.ts).
+export const PUT = withCatalogRefresh(handlePUT);

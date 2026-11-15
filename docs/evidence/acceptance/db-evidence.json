@@ -1,0 +1,235 @@
+{
+  "run": "mwhx5b86",
+  "supabase": "http://127.0.0.1:54321",
+  "app": "http://127.0.0.1:3001",
+  "step_01": {
+    "role": "owner",
+    "email": "iso-owner-1794695332868@lh-test.local"
+  },
+  "step_02": {
+    "productId": "8e5f92f2-fc7b-4573-894f-06fe208b6dcc",
+    "handle": "qa-acceptance-laptop-mwhx5b86",
+    "status": "draft"
+  },
+  "step_03": {
+    "variants": [
+      {
+        "title": "16GB",
+        "sku": "QA-ACC-MWHX5B86-16GB"
+      },
+      {
+        "title": "8GB",
+        "sku": "QA-ACC-MWHX5B86-8GB"
+      }
+    ]
+  },
+  "step_04": {
+    "prices_paisa": {
+      "16GB": 9500000,
+      "8GB": 8500000
+    }
+  },
+  "step_05": {
+    "stock": {
+      "16GB": 2,
+      "8GB": 4
+    }
+  },
+  "step_06": {
+    "media": {
+      "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111",
+      "alt": "QA Acceptance Laptop mwhx5b86 front view",
+      "position": 1,
+      "approval": "pending"
+    },
+    "note": "Rights flag stays 'pending' until the owner approves it (never auto-approved)."
+  },
+  "step_07": {
+    "collection": "qa-acceptance-mwhx5b86"
+  },
+  "step_08": {
+    "status": "active"
+  },
+  "step_09": {
+    "pdp": "/products/qa-acceptance-laptop-mwhx5b86",
+    "collectionShows": [
+      "qa-acceptance-laptop-mwhx5b86"
+    ]
+  },
+  "step_12": {
+    "subtotal": 8500000,
+    "zone": {
+      "flat_fee_paisa": 30000,
+      "cod_fee_paisa": 15000,
+      "free_shipping_min_paisa": null
+    },
+    "totalDue": 8545000
+  },
+  "step_13": {
+    "orderNumber": "LH-261115-3993A4"
+  },
+  "step_14": {
+    "order": {
+      "id": "56cef953-e773-4253-bf7d-58017b0fa0dc",
+      "status": "placed",
+      "payment_status": "unpaid_cod",
+      "subtotal_paisa": 8500000,
+      "shipping_paisa": 30000,
+      "cod_fee_paisa": 15000,
+      "total_due_paisa": 8545000
+    },
+    "items": [
+      {
+        "variant_id": "399e7f25-e0d7-4f55-bf03-c89109d58f73",
+        "quantity": 1,
+        "unit_price_paisa": 8500000
+      }
+    ]
+  },
+  "step_15": {
+    "variant": "8GB",
+    "quantityAfter": 3,
+    "ledger": [
+      {
+        "delta": -1,
+        "quantity_after": 3,
+        "reason": "order_placed",
+        "reference_type": "order",
+        "reference_id": "56cef953-e773-4253-bf7d-58017b0fa0dc"
+      }
+    ],
+    "emails": [
+      {
+        "to": [
+          "owner@lh-test.local"
+        ],
+        "subject": "New COD order LH-261115-3993A4 — Rs 85,450"
+      },
+      {
+        "to": [
+          "acceptance-buyer@lh-test.local"
+        ],
+        "subject": "Laptops HUB order LH-261115-3993A4 received"
+      }
+    ]
+  },
+  "step_16": {
+    "visibleTo": "manager"
+  },
+  "step_20": {
+    "status": "delivered",
+    "payment_status": "unpaid_cod",
+    "amount_collected_paisa": 0
+  },
+  "step_21": {
+    "collections": [
+      {
+        "amount_paisa": 8545000,
+        "collector_ref": "rider-mwhx5b86"
+      }
+    ]
+  },
+  "step_22": {
+    "order": {
+      "status": "delivered",
+      "payment_status": "collected",
+      "amount_collected_paisa": 8545000,
+      "total_due_paisa": 8545000
+    },
+    "statusEvents": [
+      "placed",
+      "confirmed",
+      "packing",
+      "shipped",
+      "out_for_delivery",
+      "delivered"
+    ],
+    "auditRows": 6
+  },
+  "step_23": {
+    "status": "approved",
+    "rating": 5
+  },
+  "step_24": {
+    "guide": "/guides/qa-acceptance-guide-mwhx5b86",
+    "listed": true
+  },
+  "step_25": {
+    "reel": "QA acceptance reel mwhx5b86",
+    "rights": "owned (synthetic test pattern)"
+  },
+  "step_26": {
+    "label": "staff_pick"
+  },
+  "step_27": {
+    "secondOrder": "LH-261115-6A2ACB",
+    "badgesAfterTwoDeliveredUnits": [
+      "top_seller"
+    ],
+    "oneUnitBadge": false,
+    "recentActivity": [
+      {
+        "handle": "qa-acceptance-laptop-mwhx5b86",
+        "title": "QA Acceptance Laptop mwhx5b86",
+        "imageUrl": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111",
+        "when": "today",
+        "city": null
+      }
+    ]
+  },
+  "step_29": {
+    "draftHero": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111",
+    "publicStill": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111"
+  },
+  "step_30": {
+    "preview": "draft visible to staff only"
+  },
+  "step_31": {
+    "publishedVersion": "de7b5bf3-9963-4712-a6d5-cf189fb06f28"
+  },
+  "step_32": {
+    "rolledBackTo": "e40cb550-8602-4de5-99b2-08abc30fe509",
+    "baseline": "e40cb550-8602-4de5-99b2-08abc30fe509",
+    "publicHero": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111"
+  },
+  "step_33": {
+    "role": "fulfillment"
+  },
+  "step_34": {
+    "/admin/products": "forbidden",
+    "/admin/settings": "forbidden",
+    "/admin/online-store": "forbidden",
+    "/admin/staff": "forbidden",
+    "/admin/inventory": "forbidden",
+    "POST /api/admin/products": 403,
+    "PUT /api/admin/products/qa-acceptance-laptop-mwhx5b86/variants": 403,
+    "POST /api/admin/theme/homepage/publish": 403,
+    "PUT /api/admin/social-proof": 403,
+    "POST /api/admin/staff": 403,
+    "POST /api/admin/inventory/adjust": 403
+  },
+  "step_35": {
+    "viewport": "390x844",
+    "noHorizontalOverflow": {
+      "/": true,
+      "/products/qa-acceptance-laptop-mwhx5b86": true,
+      "/collections/qa-acceptance-mwhx5b86": true,
+      "/checkout": true,
+      "/order/success/baca587d-a2c4-41e7-8666-4e383a765901": true,
+      "/admin": true,
+      "/admin/orders": true,
+      "/admin/orders/LH-261115-3993A4": true,
+      "/admin/inventory": true,
+      "/admin/products/qa-acceptance-laptop-mwhx5b86": true
+    }
+  },
+  "step_36": {
+    "supabase": "http://127.0.0.1:54321",
+    "app": "http://127.0.0.1:3001",
+    "emailRecipients": [
+      "owner@lh-test.local",
+      "acceptance-buyer@lh-test.local"
+    ],
+    "production": "checked separately, read-only: see docs/LAPTOPS_HUB_STAGING_CERTIFICATION_REPORT.md §production-untouched"
+  }
+}

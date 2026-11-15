@@ -1,22 +1,22 @@
 {
-  "at": "2026-10-23T12:54:08.842Z",
-  "count": 226,
-  "lastOffset": 192,
+  "at": "2026-11-15T12:08:34.157Z",
+  "count": 2,
+  "lastOffset": 0,
   "results": [
     {
       "name": "catalog_count_available",
       "ok": true,
-      "detail": "count=226"
+      "detail": "count=2 (min 1)"
     },
     {
       "name": "last_page_fetchable",
       "ok": true,
-      "detail": "n=34"
+      "detail": "n=2"
     },
     {
       "name": "last_page_matches_tail_of_full_sort",
       "ok": true,
-      "detail": "expected=34 got=34"
+      "detail": "expected=2 got=2"
     },
     {
       "name": "drafts_hidden_from_anon_listing",
@@ -26,7 +26,7 @@
     {
       "name": "view_count_eq_public_active",
       "ok": true,
-      "detail": "count=226"
+      "detail": "count=2"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "app": null,
-  "at": "2026-10-25T20:25:37.143Z",
+  "at": "2026-11-15T12:05:02.026Z",
   "results": [
     {
       "name": "forged_price_ignored",
@@ -11,7 +11,7 @@
     {
       "name": "new_order_unpaid_cod",
       "ok": true,
-      "detail": "{\"id\":\"9d947cbf-4a5d-4ddc-85ad-d2de87572248\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
+      "detail": "{\"id\":\"b00c5d95-4183-4471-9861-baf0e1934878\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
     },
     {
       "name": "same_key_one_order",
@@ -86,7 +86,7 @@
     {
       "name": "anon_quote_served_address",
       "ok": true,
-      "detail": "{\"ok\":true,\"n\":1}"
+      "detail": "{\"ok\":true,\"n\":2}"
     },
     {
       "name": "anon_quote_with_zone_id",

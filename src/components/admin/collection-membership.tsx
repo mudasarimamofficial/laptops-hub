@@ -31,12 +31,9 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
     setBusy(true);
     setErr(null);
     try {
-      // Reuse products list page data via lightweight fetch of admin products API would be better;
-      // until dedicated search endpoint, hit storefront catalog search is wrong for drafts.
-      // Use a temporary client call to collections GET after mutations; for search, call products table via export of handles is overkill.
       const res = await fetch(`/api/admin/products/search?q=${encodeURIComponent(search.trim())}`);
-      if (res.status === 404) {
-        setErr("Product search endpoint not available yet — paste a product UUID below or open the product and assign later.");
+      if (!res.ok) {
+        setErr("Search failed — try again.");
         return;
       }
       const data = await res.json().catch(() => ({}));
@@ -168,7 +165,7 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
 
       <div className="mt-5 grid gap-3 sm:grid-cols-[1fr_auto]">
         <label className="block text-sm">
-          <span className="font-medium">Add by product UUID</span>
+          <span className="font-medium">Or add by product ID (advanced)</span>
           <input
             className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2 font-[family-name:var(--font-mono)] text-xs"
             value={pasteId}
@@ -191,7 +188,8 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
       <div className="mt-4 flex flex-wrap gap-2">
         <input
           className="min-w-[180px] flex-1 rounded-lg border border-[var(--adm-border)] px-3 py-2 text-sm"
-          placeholder="Search title (when search API is live)"
+          placeholder="Search by name, address or SKU"
+          aria-label="Search products to add"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

@@ -130,8 +130,8 @@ export const ADMIN_NAV: AdminNavSection[] = [
       },
       {
         href: "/admin/seo",
-        label: "SEO & redirects",
-        roles: ["owner", "admin", "editor"],
+        label: "SEO",
+        roles: ["owner", "admin", "manager", "editor"],
       },
     ],
   },
@@ -143,6 +143,11 @@ export const ADMIN_NAV: AdminNavSection[] = [
         href: "/admin/settings",
         label: "Settings",
         roles: ["owner", "admin", "manager"],
+      },
+      {
+        href: "/admin/staff",
+        label: "Staff",
+        roles: ["owner", "admin"],
       },
       {
         href: "/admin/activity",

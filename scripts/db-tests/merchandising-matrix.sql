@@ -102,5 +102,5 @@ DELETE FROM products WHERE id = '00000000-0000-4000-8000-0000000000f1';
 INSERT INTO results SELECT 'badge removed with its product', count(*) = 0, count(*)::text FROM product_badges WHERE product_id = '00000000-0000-4000-8000-0000000000f1';
 
 SELECT CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END AS result, name, left(detail, 110) FROM results ORDER BY ok, name;
-SELECT 'TOTAL', count(*) FILTER (WHERE ok) || ' passed', count(*) FILTER (WHERE NOT ok) || ' failed' FROM results;
+SELECT 'TOTAL', count(*) FILTER (WHERE ok) || ' passed', count(*) FILTER (WHERE ok IS NOT TRUE) || ' failed' FROM results;
 ROLLBACK;

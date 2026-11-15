@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
+import { withCatalogRefresh } from "@/lib/catalog/refresh";
 
 type Ctx = { params: Promise<{ handle: string }> };
 
-export async function POST(_request: Request, ctx: Ctx) {
+async function handlePOST(_request: Request, ctx: Ctx) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { handle } = await ctx.params;
@@ -138,3 +139,6 @@ export async function POST(_request: Request, ctx: Ctx) {
     return staffErrorResponse(e);
   }
 }
+
+// Every successful catalog write refreshes the storefront (src/lib/catalog/refresh.ts).
+export const POST = withCatalogRefresh(handlePOST);

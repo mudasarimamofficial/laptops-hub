@@ -328,6 +328,7 @@ service_role theme_versions SELECT
 service_role theme_versions TRIGGER
 service_role theme_versions TRUNCATE
 service_role theme_versions UPDATE
+adjust_inventory postgres=X/postgres,service_role=X/postgres
 claim_notifications postgres=X/postgres,service_role=X/postgres
 consume_rate_limit postgres=X/postgres,service_role=X/postgres
 create_cod_order postgres=X/postgres,service_role=X/postgres

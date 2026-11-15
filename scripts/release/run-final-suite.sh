@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# Full release-candidate test run against the ISOLATED stack only (local Supabase on 127.0.0.1:54321, the app built
+# with THEME_PUBLISHED_ENABLED=1 and started on 127.0.0.1:3001, the stand-in email provider on 127.0.0.1:4599).
+# Every script it calls refuses a non-local Supabase (scripts/lib/local-only.mjs).
+#
+# Usage:  bash scripts/release/run-final-suite.sh [label]
+# Output: docs/evidence/final-run/<suite>.log and docs/evidence/final-run/summary.json (+ HEAD, timestamps).
+set -u
+cd "$(dirname "$0")/../.."
+set -a; . ./.env.local; set +a
+case "${NEXT_PUBLIC_SUPABASE_URL:-}" in http://127.0.0.1:*|http://localhost:*) ;; *) echo "refusing: Supabase is not local"; exit 2 ;; esac
+export PLAYWRIGHT_BASE_URL=http://127.0.0.1:3001 TEST_BASE_URL=http://127.0.0.1:3001 FAKE_RESEND_URL=http://127.0.0.1:4599
+APP=http://127.0.0.1:3001
+OUT=docs/evidence/final-run
+mkdir -p "$OUT"
+DB=supabase_db_Laptops_Hub_Vercel_Development
+RESULTS=()
+
+# Windows/Node can report a spurious exit code after a clean run, so the verdict also reads each suite's own summary.
+run() {
+  local name="$1"; shift
+  local start=$(date +%s)
+  "$@" > "$OUT/$name.log" 2>&1
+  local rc=$?
+  local secs=$(( $(date +%s) - start ))
+  local last
+  last=$(grep -E "passed|failed|PASS|FAIL|ok:|[0-9]+/[0-9]+|error|Error" "$OUT/$name.log" | tail -2 | tr '\n' ' ' | sed 's/"/'"'"'/g' | cut -c1-300)
+  echo "[$name] rc=$rc ${secs}s :: $last"
+  RESULTS+=("{\"suite\":\"$name\",\"rc\":$rc,\"seconds\":$secs,\"summary\":\"$last\"}")
+}
+
+sql() { docker exec -i "$DB" psql -U postgres -v ON_ERROR_STOP=1 -At < "$1"; }
+
+run static-lint        npx eslint
+run static-tsc         npx tsc --noEmit
+run static-audit       npm audit --omit=dev
+run unit               npm run test:unit
+run sql-shipping-cod   sql scripts/db-tests/shipping-cod-matrix.sql
+run sql-merchandising  sql scripts/db-tests/merchandising-matrix.sql
+run sql-reels-reviews  sql scripts/db-tests/reels-reviews-matrix.sql
+run sec-p0-probe       node scripts/security-p0-probe.mjs
+run sec-auth-matrix    node scripts/security-auth-matrix.mjs "$APP"
+run sec-role-matrix    node scripts/security-role-matrix.mjs "$APP"
+run sec-role-http      node scripts/security-role-http-isolated.mjs "$APP"
+run theme-rls          node scripts/test-theme-rls-matrix.mjs
+run theme-publish      node scripts/test-theme-publish-smoke.mjs
+run cod-concurrency    node scripts/test-cod-concurrency.mjs
+run cod-checkout       node scripts/test-cod-checkout-isolated.mjs "$APP"
+run inventory-orders   node scripts/test-inventory-orders.mjs
+run inventory-ledger   node scripts/test-inventory-ledger-sync.mjs
+run settings-nav       node scripts/test-settings-navigation-persistence.mjs
+run merchant-smoke     node scripts/test-merchant-catalog-smoke.mjs
+run csv-commit         npx tsx scripts/test-shopify-csv-commit-smoke.mjs
+run catalog-pages      node scripts/test-catalog-pagination.mjs
+run e2e-isolated       npx playwright test -c playwright.isolated.config.ts --grep-invert "layout:"
+run e2e-legacy         npx playwright test -c playwright.config.ts tests/e2e/theme-publish-workflow.spec.ts tests/e2e/merchant-admin-workflows.spec.ts tests/e2e/homepage-presets.spec.ts tests/e2e/v5-correctness.spec.ts
+run e2e-crossbrowser   npx playwright test -c playwright.crossbrowser.config.ts
+
+{
+  echo "{"
+  echo "  \"label\": \"${1:-final}\","
+  echo "  \"head\": \"$(git rev-parse HEAD)\","
+  echo "  \"dirty\": $( [ -z "$(git status --porcelain)" ] && echo false || echo true ),"
+  echo "  \"finished\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\","
+  echo "  \"supabase\": \"$NEXT_PUBLIC_SUPABASE_URL\", \"app\": \"$APP\","
+  echo "  \"suites\": ["
+  local_sep=""
+  for r in "${RESULTS[@]}"; do echo "    $local_sep$r"; local_sep=","; done
+  echo "  ]"
+  echo "}"
+} > "$OUT/summary.json"
+echo "summary: $OUT/summary.json"

@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "base": "http://127.0.0.1:3001",
-  "at": "2026-10-23T18:30:11.295Z",
+  "at": "2026-11-15T12:08:33.052Z",
   "results": [
     {
       "name": "anon PATCH /api/admin/content/about",
@@ -35,6 +35,11 @@
     },
     {
       "name": "anon POST /api/admin/notifications/retry",
+      "ok": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "anon PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000",
       "ok": true,
       "detail": "status=401"
     },
@@ -99,6 +104,11 @@
       "detail": "status=400"
     },
     {
+      "name": "owner PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
       "name": "owner GET /admin/content → 200",
       "ok": true,
       "detail": "200 "
@@ -155,6 +165,11 @@
     },
     {
       "name": "admin POST /api/admin/notifications/retry → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "admin PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → allowed",
       "ok": true,
       "detail": "status=400"
     },
@@ -219,6 +234,11 @@
       "detail": "status=400"
     },
     {
+      "name": "manager PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
       "name": "manager GET /admin/content → 200",
       "ok": true,
       "detail": "200 "
@@ -279,6 +299,11 @@
       "detail": "status=403"
     },
     {
+      "name": "editor PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
       "name": "editor GET /admin/content → 200",
       "ok": true,
       "detail": "200 "
@@ -294,9 +319,9 @@
       "detail": "307 /admin/forbidden"
     },
     {
-      "name": "editor GET /admin/inquiries → 200",
+      "name": "editor GET /admin/inquiries → redirect",
       "ok": true,
-      "detail": "200 "
+      "detail": "307 /admin/forbidden"
     },
     {
       "name": "editor GET /admin/settings → redirect",
@@ -335,6 +360,11 @@
     },
     {
       "name": "fulfillment POST /api/admin/notifications/retry → allowed",
+      "ok": true,
+      "detail": "status=400"
+    },
+    {
+      "name": "fulfillment PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → allowed",
       "ok": true,
       "detail": "status=400"
     },
@@ -399,6 +429,11 @@
       "detail": "status=403"
     },
     {
+      "name": "manager(inactive) PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
       "name": "manager(inactive) GET /admin/content → redirect",
       "ok": true,
       "detail": "307 /admin/forbidden"
@@ -459,6 +494,11 @@
       "detail": "status=403"
     },
     {
+      "name": "nonstaff PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → denied",
+      "ok": true,
+      "detail": "status=403"
+    },
+    {
       "name": "nonstaff GET /admin/content → redirect",
       "ok": true,
       "detail": "307 /admin/forbidden"
@@ -501,10 +541,20 @@
     {
       "name": "owner can approve and publish a policy page",
       "ok": true,
-      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"1eeeae91-09c5-4542-af48-de7c54b132c8\"}"
+      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"2da11db2-adec-410b-a560-b30aa671982a\"}"
     },
     {
       "name": "published policy renders CMS body",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "product page: published delivery policy is linked, untagged",
+      "ok": true,
+      "detail": "<span style=\"font-size:14px;font-weight:700\">Delivery</span><span style=\"font-family:var(--font-mono);font-size:10px;let"
+    },
+    {
+      "name": "footer links a published policy",
       "ok": true,
       "detail": ""
     },
@@ -514,7 +564,17 @@
       "detail": "permission denied for table content_pages"
     },
     {
-      "name": "withdrawn policy is gated again immediately",
+      "name": "withdrawn policy is gone immediately (404, text not served)",
+      "ok": true,
+      "detail": "status=404"
+    },
+    {
+      "name": "product page: withdrawn delivery policy is no longer linked",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "footer no longer links the withdrawn policy",
       "ok": true,
       "detail": ""
     },
@@ -524,9 +584,14 @@
       "detail": "status=409"
     },
     {
-      "name": "about stays gated",
+      "name": "unpublished page answers 404 (no placeholder page)",
       "ok": true,
       "detail": ""
+    },
+    {
+      "name": "empty-body publish refused for a template with unanswered FAQ items",
+      "ok": true,
+      "detail": "status=409"
     },
     {
       "name": "empty-body publish needs explicit template approval",
@@ -534,29 +599,29 @@
       "detail": "status=409"
     },
     {
-      "name": "approved template publishes (faq)",
+      "name": "approved template publishes (comparison-guide)",
       "ok": true,
-      "detail": "status=200"
+      "detail": "status=200/200"
     },
     {
-      "name": "published template is in the sitemap, gated pages are not",
+      "name": "published template is in the sitemap, unpublished pages are not",
       "ok": true,
       "detail": ""
     },
     {
-      "name": "unpublished template is gated again",
+      "name": "unpublished template is gone again (404)",
       "ok": true,
       "detail": ""
     },
     {
       "name": "collection recorded once via route",
       "ok": true,
-      "detail": "200 {\"ok\":true,\"idempotentReplay\":false,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"85224927-a1db-4343-91bc-ae9637f1125f\"} collected=100000"
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":false,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"45a78245-635d-4827-b5ae-bb24e709b730\"} collected=100000"
     },
     {
       "name": "retry with same key replays",
       "ok": true,
-      "detail": "200 {\"ok\":true,\"idempotentReplay\":true,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"85224927-a1db-4343-91bc-ae9637f1125f\"}"
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":true,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"45a78245-635d-4827-b5ae-bb24e709b730\"}"
     },
     {
       "name": "same key, different amount → 409 conflict, no constraint leak",

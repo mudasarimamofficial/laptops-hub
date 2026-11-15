@@ -24,6 +24,10 @@ test.describe.serial("admin shipping zones (isolated)", () => {
   test.beforeAll(async () => {
     await assertLocalOnly("shipping zone journeys");
   });
+  // Even when a step fails, never leave this test zone serving addresses other suites rely on.
+  test.afterAll(async () => {
+    await sb.from("shipping_zones").update({ is_active: false }).like("name", "Zone test %");
+  });
 
   test("before hydration the form cannot submit (no silent page reload, nothing lost)", async ({ browser }) => {
     const ctx = await browser.newContext({ javaScriptEnabled: false });
@@ -82,6 +86,37 @@ test.describe.serial("admin shipping zones (isolated)", () => {
     const unserved = await (await quote("Sukkur", "Sindh")).json();
     expect(unserved.ok).toBe(false);
     expect(unserved.options.some((o: { id: string }) => o.id === z!.id)).toBe(false);
+  });
+
+  test("zone rules: excluded city and free-delivery minimum are saved, shown and applied by quote and order", async ({ page }) => {
+    await signIn(page, "manager");
+    await page.goto("/admin/settings");
+    const editForm = page.getByRole("form", { name: `Edit ${name}` });
+    await page.getByText("Edit zone").last().click();
+    await editForm.getByLabel("Cities NOT served").fill("Hyderabad");
+    await editForm.getByLabel("Free delivery from order subtotal (PKR, optional)").fill(String(fx.products[0].pricePaisa / 100));
+    await editForm.getByRole("button", { name: "Save changes" }).click();
+    await expect(editForm.getByRole("status")).toContainText("not served: Hyderabad");
+    await expect(editForm.getByRole("status")).toContainText(`free delivery from`);
+    const { data: z } = await sb.from("shipping_zones").select("id, excluded_cities, free_shipping_min_paisa").eq("name", name).single();
+    expect(z).toMatchObject({ excluded_cities: ["Hyderabad"], free_shipping_min_paisa: fx.products[0].pricePaisa });
+
+    const quote = (city: string, quantity = 1) =>
+      page.request.post("/api/checkout/quote", {
+        headers: { origin: "http://127.0.0.1:3001" },
+        data: { address: { city, province: "Sindh" }, shippingZoneId: z!.id, lines: [{ variantId: fx.products[0].variantId, quantity }] },
+      });
+    const free = await (await quote("Karachi")).json();
+    expect(free.quote).toMatchObject({ shippingPaisa: 0, freeDeliveryApplied: true, codFeePaisa: 10_000, totalDuePaisa: fx.products[0].pricePaisa + 10_000 });
+    const excluded = await (await quote("Hyderabad")).json();
+    expect(excluded.ok).toBe(false);
+
+    // Put the zone back the way the next test expects it.
+    await editForm.getByLabel("Cities NOT served").fill("");
+    await editForm.getByLabel("Free delivery from order subtotal (PKR, optional)").fill("");
+    await editForm.getByRole("button", { name: "Save changes" }).click();
+    await expect(editForm.getByRole("status")).not.toContainText("not served");
+    expect((await sb.from("shipping_zones").select("free_shipping_min_paisa").eq("id", z!.id).single()).data?.free_shipping_min_paisa).toBeNull();
   });
 
   test("edit: deactivate shows the stored state; server rejects bad input with a clear message; editors are refused", async ({ page, browser }) => {

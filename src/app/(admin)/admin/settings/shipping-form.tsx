@@ -11,7 +11,9 @@ export type ZoneRow = {
   name: string;
   provinces: string[];
   cities: string[];
+  excluded_cities?: string[];
   flat_fee_paisa: number;
+  free_shipping_min_paisa?: number | null;
   cod_fee_paisa: number;
   is_active: boolean;
   notes: string;
@@ -24,8 +26,15 @@ const feeValue = (v: FormDataEntryValue | null) => (typeof v === "string" && v.t
 
 /** What staff see after a save: the stored row, never the values that were typed. */
 function savedText(z: ZoneRow) {
-  const where = [z.provinces.join(", "), z.cities.length ? "cities: " + z.cities.join(", ") : "whole province"].join(" · ");
-  return `Saved: ${z.name} — ${where} — delivery ${formatPkr(z.flat_fee_paisa)}, COD fee ${formatPkr(z.cod_fee_paisa)} — ${z.is_active ? "active" : "not active"}.`;
+  const where = [
+    z.provinces.join(", "),
+    z.cities.length ? "cities: " + z.cities.join(", ") : "whole province",
+    z.excluded_cities?.length ? "not served: " + z.excluded_cities.join(", ") : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const free = z.free_shipping_min_paisa != null ? `, free delivery from ${formatPkr(z.free_shipping_min_paisa)}` : "";
+  return `Saved: ${z.name} — ${where} — delivery ${formatPkr(z.flat_fee_paisa)}, COD fee ${formatPkr(z.cod_fee_paisa)}${free} — ${z.is_active ? "active" : "not active"}.`;
 }
 
 function failureText(status: number, json: { error?: string; message?: string }) {
@@ -67,6 +76,11 @@ export function ShippingZoneForm({ zone }: { zone?: ZoneRow }) {
             .split(",")
             .map((s) => s.trim())
             .filter(Boolean),
+          excludedCities: String(fd.get("excludedCities") || "")
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean),
+          freeShippingMinPkr: feeValue(fd.get("freeShippingMinPkr")),
           flatFeePkr: feeValue(fd.get("flatFeePkr")),
           codFeePkr: feeValue(fd.get("codFeePkr")),
           isActive: fd.get("isActive") === "on",
@@ -111,6 +125,10 @@ export function ShippingZoneForm({ zone }: { zone?: ZoneRow }) {
         Cities (comma-separated; leave empty to serve the whole selected provinces)
         <input name="cities" defaultValue={zone?.cities.join(", ")} placeholder="e.g. Lahore, Rawalpindi" className={field} />
       </label>
+      <label className="grid gap-1 text-sm">
+        Cities NOT served (comma-separated; optional)
+        <input name="excludedCities" defaultValue={zone?.excluded_cities?.join(", ")} placeholder="e.g. Gwadar" className={field} />
+      </label>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <p id={`${idp}-fee-help`} className="text-xs text-[var(--lh-ink-2)] sm:col-span-2">
           Enter 0 only for a deliberate free-delivery or no-COD-fee offer; customers then see “Free delivery”. Courier
@@ -125,6 +143,13 @@ export function ShippingZoneForm({ zone }: { zone?: ZoneRow }) {
           <input id={`${idp}-cod`} name="codFeePkr" type="number" min={0} step={1} required aria-describedby={`${idp}-fee-help`} defaultValue={zone ? zone.cod_fee_paisa / 100 : ""} className={field} />
         </label>
       </div>
+      <label className="grid gap-1 text-sm" htmlFor={`${idp}-free`}>
+        Free delivery from order subtotal (PKR, optional)
+        <input id={`${idp}-free`} name="freeShippingMinPkr" type="number" min={0} step={1} aria-describedby={`${idp}-free-help`} defaultValue={zone?.free_shipping_min_paisa != null ? zone.free_shipping_min_paisa / 100 : ""} className={field} />
+        <span id={`${idp}-free-help`} className="text-xs text-[var(--lh-ink-2)]">
+          Leave empty for no offer. When an order&apos;s subtotal reaches this amount the delivery fee is 0; the COD fee still applies.
+        </span>
+      </label>
       <label className="grid gap-1 text-sm">
         Note shown at checkout (courier, delivery time)
         <input name="notes" defaultValue={zone?.notes} maxLength={500} className={field} />

@@ -44,6 +44,7 @@ const variant = must(await sb.from("product_variants").insert({ product_id: prod
 const tracked = must(await sb.from("product_variants").insert({ product_id: product.id, sku: `ISO-T-${tag}`, price_paisa: PRICE, max_per_order: 2, inventory_mode: "tracked", quantity_on_hand: 1 }).select("id").single(), "tracked");
 const draftVar = must(await sb.from("product_variants").insert({ product_id: draft.id, sku: `ISO-D-${tag}`, price_paisa: PRICE }).select("id").single(), "draftVar");
 const zone = must(await sb.from("shipping_zones").insert({ name: `ISO zone ${tag}`, provinces: ["Punjab"], cities: ["Lahore"], flat_fee_paisa: 25_000, cod_fee_paisa: 10_000, is_active: true }).select("id").single(), "zone");
+const prevCod = (await sb.from("store_settings").select("value").eq("key", "cod_checkout").maybeSingle()).data?.value ?? { enabled: false };
 must(await sb.from("store_settings").upsert({ key: "cod_checkout", value: { enabled: true } }), "enable checkout (local only)");
 
 const payload = (o = {}) => ({
@@ -194,8 +195,8 @@ try {
     }
   }
 } finally {
-  // Local stack only: remove fixtures and turn checkout back off.
-  await sb.from("store_settings").upsert({ key: "cod_checkout", value: { enabled: false } });
+  // Local stack only: remove fixtures and put the checkout setting back the way it was.
+  await sb.from("store_settings").upsert({ key: "cod_checkout", value: prevCod });
   const ids = ((await sb.from("orders").select("id").in("shipping_zone_id", [zone.id])).data || []).map((o) => o.id);
   if (ids.length) await sb.from("orders").delete().in("id", ids);
   await sb.from("shipping_zones").delete().eq("id", zone.id);

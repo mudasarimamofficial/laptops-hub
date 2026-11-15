@@ -24,7 +24,7 @@ export default async function AdminSettingsPage() {
   const { data: settings } = await supabase.from("store_settings").select("key, value");
   const { data: zones } = await supabase
     .from("shipping_zones")
-    .select("id, name, provinces, cities, flat_fee_paisa, cod_fee_paisa, is_active, notes")
+    .select("id, name, provinces, cities, excluded_cities, flat_fee_paisa, cod_fee_paisa, free_shipping_min_paisa, is_active, notes")
     .order("name");
   const readiness = await loadCheckoutReadiness();
 
@@ -79,9 +79,11 @@ export default async function AdminSettingsPage() {
               <p className="text-[var(--adm-ink-2)]">
                 Provinces: {(z.provinces || []).join(", ") || "—"} · Cities:{" "}
                 {(z.cities || []).join(", ") || "(all in province)"}
+                {z.excluded_cities?.length ? ` · Not served: ${z.excluded_cities.join(", ")}` : ""}
               </p>
               <p className="text-[var(--adm-ink-2)]">
                 Delivery {formatPkr(z.flat_fee_paisa)} · COD fee {formatPkr(z.cod_fee_paisa)}
+                {z.free_shipping_min_paisa != null ? ` · Free delivery from ${formatPkr(z.free_shipping_min_paisa)}` : ""}
               </p>
               <details className="mt-3">
                 <summary className="cursor-pointer text-[var(--lh-action)]">Edit zone</summary>

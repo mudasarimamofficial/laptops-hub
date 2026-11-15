@@ -107,5 +107,5 @@ END $$;
 RESET ROLE;
 
 SELECT CASE WHEN ok THEN 'PASS' ELSE 'FAIL' END AS result, name, left(detail, 110) FROM results ORDER BY ok, name;
-SELECT 'TOTAL', count(*) FILTER (WHERE ok) || ' passed', count(*) FILTER (WHERE NOT ok) || ' failed' FROM results;
+SELECT 'TOTAL', count(*) FILTER (WHERE ok) || ' passed', count(*) FILTER (WHERE ok IS NOT TRUE) || ' failed' FROM results;
 ROLLBACK;

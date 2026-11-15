@@ -1,0 +1,7 @@
+dump: 360489 bytes, sha256 7bb9ffd3b901d9ac
+restore: ok
+objects source:   45 policies, 9 triggers, 128 constraints, 61 indexes, auth.users=18
+objects restored: 45 policies, 9 triggers, 128 constraints, 61 indexes, auth.users=18
+tables: 29, rows: 522 source / 522 restored
+per-table counts + md5: IDENTICAL
+scratch databases dropped; dump removed

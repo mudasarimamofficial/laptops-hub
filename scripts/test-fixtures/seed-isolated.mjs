@@ -23,6 +23,8 @@ const must = ({ data, error }, what) => {
 };
 
 // Public catalog facts (the live catalog is public); prices here are test values on a local database.
+// Images: the approved homepage preset files (homepage-image-presets.ts) — the earlier per-product CDN file was deleted
+// upstream (404). They stay media approval "pending" like every catalog image.
 const PRODUCTS = [
   {
     handle: "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
@@ -30,7 +32,7 @@ const PRODUCTS = [
     manufacturer: "Dell",
     price: 7_000_000,
     max: 2,
-    img: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162.jpg",
+    img: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111",
   },
   {
     handle: "lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage",
@@ -38,7 +40,7 @@ const PRODUCTS = [
     manufacturer: "Lenovo",
     price: 5_500_000,
     max: 2,
-    img: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162.jpg",
+    img: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111",
   },
 ];
 

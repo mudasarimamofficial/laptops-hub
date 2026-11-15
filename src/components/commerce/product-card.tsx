@@ -19,7 +19,10 @@ export function V5ProductCard({ item }: { item: V5Card }) {
   const compared = useCompare((s) => s.handles.includes(item.h));
   const add = useCart((s) => s.add);
   const purchasable = canPurchase({ available: item.avail, pricePaisa: item.pricePaisa, variantId: item.variantId });
-  const img = hover && item.img2 ? item.img2 : item.img;
+  // Remote catalog images can disappear from the CDN: fall back to the main photo, then to the gallery's "No image".
+  const [failed, setFailed] = useState<string[]>([]);
+  const candidate = hover && item.img2 && !failed.includes(item.img2) ? item.img2 : item.img;
+  const img = candidate && !failed.includes(candidate) ? candidate : null;
   const cmp = compared
     ? { label: "Comparing", tick: "✓", bd: "#2159D4", bg: "#EAF3FE", color: "#1748B5", box: "#2159D4", fill: "#2159D4" }
     : { label: "Compare", tick: "", bd: "#DAE5F2", bg: "#FFFFFF", color: "#102039", box: "#9AA7BA", fill: "transparent" };
@@ -44,9 +47,21 @@ export function V5ProductCard({ item }: { item: V5Card }) {
             alt={item.alt}
             loading="lazy"
             decoding="async"
+            onError={() => setFailed((f) => (f.includes(img) ? f : [...f, img]))}
+            // A server-rendered image can fail before hydration attaches onError: check once React has the element.
+            ref={(el) => {
+              if (!el || !el.complete || el.naturalWidth > 0) return;
+              // complete+0 can also mean "lazy, not fetched yet" in some engines: confirm with a probe before hiding.
+              const probe = new Image();
+              probe.onerror = () => setFailed((f) => (f.includes(img) ? f : [...f, img]));
+              probe.src = img;
+            }}
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", padding: 18, mixBlendMode: "multiply", transform: hover ? "scale(1.03)" : "scale(1)", transition: "transform .35s ease" }}
           />
-        ) : null}
+        ) : (
+          // No photo yet (pending approval) or the CDN file is gone: the gallery's "No image" state, never an empty tile.
+          <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "var(--lh-ink-2,#52637B)" }}>No image</span>
+        )}
         <div style={{ position: "absolute", top: 12, left: 12, right: 12, display: "flex", gap: 6, justifyContent: "space-between", alignItems: "flex-start", minWidth: 0 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, letterSpacing: ".04em", textTransform: "uppercase", padding: "5px 10px", borderRadius: 999, background: "#FFFFFF", border: "1px solid #BCD0F2", color: "#1748B5", whiteSpace: "nowrap", flexShrink: 0 }}>
             <span style={{ flexShrink: 0, width: 6, height: 6, borderRadius: "50%", background: "#2159D4" }} />

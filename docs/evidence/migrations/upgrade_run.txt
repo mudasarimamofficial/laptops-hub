@@ -1,10 +1,10 @@
-== clean: all 23 on an empty database
-== upgrade: first 14 (production state), then the remaining 9
+== clean: all 24 on an empty database
+== upgrade: first 14 (production state), then the remaining 10
 data products/variants/stock before=2/2/6 after=2/2/6
 == re-apply the new migration (idempotence)
 schema clean == upgrade: IDENTICAL
 grants clean == upgrade: IDENTICAL
 schema clean == local stack: IDENTICAL
-6baf3d7d5218c85b26953da6b1504f8d28bd71698f66b9b501229ff5db0c0be9 *docs/evidence/migrations/schema_clean.sql
-6baf3d7d5218c85b26953da6b1504f8d28bd71698f66b9b501229ff5db0c0be9 *docs/evidence/migrations/schema_local.sql
-6baf3d7d5218c85b26953da6b1504f8d28bd71698f66b9b501229ff5db0c0be9 *docs/evidence/migrations/schema_upgrade.sql
+1c051386690dfae98e7ebeab5b5a9a2157804200822b872e0f6f3d0cba269ae9 *docs/evidence/migrations/schema_clean.sql
+1c051386690dfae98e7ebeab5b5a9a2157804200822b872e0f6f3d0cba269ae9 *docs/evidence/migrations/schema_local.sql
+1c051386690dfae98e7ebeab5b5a9a2157804200822b872e0f6f3d0cba269ae9 *docs/evidence/migrations/schema_upgrade.sql

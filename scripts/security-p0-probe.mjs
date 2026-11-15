@@ -8,6 +8,9 @@ import fs from "fs";
 import path from "path";
 import { createClient } from "@supabase/supabase-js";
 import { fileURLToPath } from "url";
+import { assertLocalOnly } from "./lib/local-only.mjs";
+
+await assertLocalOnly("security-p0-probe.mjs");
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 function loadEnv() {

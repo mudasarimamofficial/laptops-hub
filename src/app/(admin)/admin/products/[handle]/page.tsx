@@ -16,13 +16,13 @@ export const metadata = { robots: { index: false, follow: false } };
 type Props = { params: Promise<{ handle: string }> };
 
 export default async function AdminProductEditPage({ params }: Props) {
-  await requireStaffPage(["owner", "admin", "manager", "editor"]);
+  const staff = await requireStaffPage(["owner", "admin", "manager", "editor"]);
   const { handle } = await params;
   const supabase = createServiceClient();
   const full = await supabase
     .from("products")
     .select(
-      "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, seo_title, seo_description, option_names, product_variants(id, title, sku, barcode, price_paisa, compare_at_paisa, inventory_mode, quantity_on_hand, purchasable, option_values, position), product_media(id, url, alt, position, approval)",
+      "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, seo_title, seo_description, option_names, product_variants(id, title, sku, barcode, price_paisa, compare_at_paisa, inventory_mode, quantity_on_hand, purchasable, option_values, position, allow_oversell), product_media(id, url, alt, position, approval)",
     )
     .eq("handle", handle)
     .maybeSingle();
@@ -56,6 +56,7 @@ export default async function AdminProductEditPage({ params }: Props) {
       purchasable?: boolean;
       option_values?: OptionValuesMap;
       position?: number;
+      allow_oversell?: boolean;
     }[]) || []
   )
     .slice()
@@ -72,6 +73,7 @@ export default async function AdminProductEditPage({ params }: Props) {
       purchasable: v.purchasable !== false,
       optionValues: (v.option_values || {}) as OptionValuesMap,
       position: v.position,
+      allowOversell: v.allow_oversell === true,
     }));
 
   if (!variants.length) notFound();
@@ -123,7 +125,12 @@ export default async function AdminProductEditPage({ params }: Props) {
         variants={variants}
       />
 
-      <ProductVariantMatrix handle={data.handle} optionNames={optionNames} variants={variants} />
+      <ProductVariantMatrix
+        handle={data.handle}
+        optionNames={optionNames}
+        variants={variants}
+        canSetOversell={staff.role === "owner" || staff.role === "admin"}
+      />
 
       <ProductMediaManager handle={data.handle} initialMedia={media} />
 

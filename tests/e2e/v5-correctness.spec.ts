@@ -172,6 +172,9 @@ test("compare tray is keyboard operable", async ({ page }) => {
 });
 
 test("COD checkout stays disabled", async ({ request }) => {
+  // Asserts the production default (COD_CHECKOUT_ENABLED unset). The isolated stack deliberately runs with COD on to
+  // exercise real orders; there the gates are covered by p0-admin-isolation-and-checkout-gates and preview-read-only.
+  test.skip(process.env.COD_CHECKOUT_ENABLED === "true", "this run's app has COD_CHECKOUT_ENABLED=true by design");
   const res = await request.post(`${base}/api/checkout/cod`, { data: {} });
   expect(res.status()).toBe(403);
   expect((await res.json()).error).toBe("checkout_disabled");

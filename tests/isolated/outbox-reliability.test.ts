@@ -87,6 +87,11 @@ async function scenario(name: string, fn: () => Promise<void>) {
 
 async function main() {
 await assertLocalOnly("outbox-reliability");
+// Orders need checkout enabled in the LOCAL store_settings; restore the previous value afterwards (other suites, e.g.
+// test-cod-checkout-isolated, correctly leave it off when they finish).
+const prevCod = (await sb.from("store_settings").select("value").eq("key", "cod_checkout").maybeSingle()).data?.value ?? null;
+assert.ifError((await sb.from("store_settings").upsert({ key: "cod_checkout", value: { enabled: true } })).error);
+try {
 await scenario("concurrent workers claim a row once; each recipient delivered once", async () => {
   const { orderId, email } = await newOrder();
   await provider.mode({ delayMs: 300 });
@@ -322,6 +327,9 @@ if (ids.length) {
     .neq("status", "accepted");
 }
 console.log(`\n${results.length} outbox reliability scenarios passed`);
+} finally {
+  if (prevCod) await sb.from("store_settings").upsert({ key: "cod_checkout", value: prevCod });
+}
 }
 
 main().catch((e) => {

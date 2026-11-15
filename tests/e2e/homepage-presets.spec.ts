@@ -1,5 +1,11 @@
 import { test, expect } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
+import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
+
+// Writes test data with the service role: refuse anything but a verified LOCAL Supabase.
+test.beforeAll(async () => {
+  await assertLocalOnly("homepage-presets.spec.ts");
+});
 
 const HERO = [
   "laptop-hub-hero-hp-lap.webp",

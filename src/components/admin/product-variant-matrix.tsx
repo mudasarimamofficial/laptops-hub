@@ -24,6 +24,8 @@ export type MatrixVariant = {
   purchasable: boolean;
   optionValues: OptionValuesMap;
   position?: number;
+  /** Checkout may take tracked stock below zero. Owner/admin only. */
+  allowOversell?: boolean;
 };
 
 type EditableRow = {
@@ -37,6 +39,7 @@ type EditableRow = {
   inventoryMode: "tracked" | "untracked";
   quantityOnHand: string;
   purchasable: boolean;
+  allowOversell: boolean;
   optionValues: OptionValuesMap;
 };
 
@@ -44,6 +47,8 @@ type Props = {
   handle: string;
   optionNames: string[];
   variants: MatrixVariant[];
+  /** Owner/admin: may change "continue selling when out of stock". Others see it read-only. */
+  canSetOversell?: boolean;
 };
 
 function toEditable(v: MatrixVariant): EditableRow {
@@ -60,11 +65,12 @@ function toEditable(v: MatrixVariant): EditableRow {
     inventoryMode: v.inventoryMode === "tracked" ? "tracked" : "untracked",
     quantityOnHand: String(v.quantityOnHand ?? 0),
     purchasable: v.purchasable !== false,
+    allowOversell: v.allowOversell === true,
     optionValues: v.optionValues || {},
   };
 }
 
-export function ProductVariantMatrix({ handle, optionNames, variants }: Props) {
+export function ProductVariantMatrix({ handle, optionNames, variants, canSetOversell = false }: Props) {
   const router = useRouter();
   const hydrated = useHydrated();
   const inferred = inferOptionsFromVariants(
@@ -125,6 +131,7 @@ export function ProductVariantMatrix({ handle, optionNames, variants }: Props) {
           inventoryMode: existing?.inventoryMode || defaultMode,
           quantityOnHand: existing?.quantityOnHand || "0",
           purchasable: existing?.purchasable !== false,
+          allowOversell: existing?.allowOversell === true,
           optionValues: g.optionValues,
         };
       }),
@@ -158,6 +165,8 @@ export function ProductVariantMatrix({ handle, optionNames, variants }: Props) {
             inventoryMode: r.inventoryMode,
             quantityOnHand: r.inventoryMode === "tracked" ? Number(r.quantityOnHand) || 0 : null,
             purchasable: r.purchasable,
+            // Only owner/admin send it; for others the server keeps the stored value.
+            ...(canSetOversell ? { allowOversell: r.inventoryMode === "tracked" && r.allowOversell } : {}),
             optionValues: r.optionValues,
             position: i + 1,
           })),
@@ -254,6 +263,7 @@ export function ProductVariantMatrix({ handle, optionNames, variants }: Props) {
               <th className="px-2 py-2">Inventory</th>
               <th className="px-2 py-2">Qty</th>
               <th className="px-2 py-2">Sell</th>
+              <th className="px-2 py-2" title="Continue selling when out of stock (owner/admin)">Oversell</th>
             </tr>
           </thead>
           <tbody>
@@ -271,6 +281,7 @@ export function ProductVariantMatrix({ handle, optionNames, variants }: Props) {
                   <input
                     className="w-28 rounded border border-[var(--adm-border)] px-1.5 py-1 text-xs"
                     value={r.sku}
+                    aria-label={`SKU for ${r.title}`}
                     onChange={(e) => patchRow(i, { sku: e.target.value })}
                   />
                 </td>
@@ -280,6 +291,7 @@ export function ProductVariantMatrix({ handle, optionNames, variants }: Props) {
                     min={0}
                     className="w-24 rounded border border-[var(--adm-border)] px-1.5 py-1 text-xs"
                     value={r.pricePkr}
+                    aria-label={`Price in PKR for ${r.title}`}
                     onChange={(e) => patchRow(i, { pricePkr: e.target.value })}
                   />
                 </td>
@@ -289,6 +301,7 @@ export function ProductVariantMatrix({ handle, optionNames, variants }: Props) {
                     min={0}
                     className="w-24 rounded border border-[var(--adm-border)] px-1.5 py-1 text-xs"
                     value={r.compareAtPkr}
+                    aria-label={`Compare-at price in PKR for ${r.title}`}
                     onChange={(e) => patchRow(i, { compareAtPkr: e.target.value })}
                   />
                 </td>
@@ -296,6 +309,7 @@ export function ProductVariantMatrix({ handle, optionNames, variants }: Props) {
                   <select
                     className="rounded border border-[var(--adm-border)] px-1.5 py-1 text-xs"
                     value={r.inventoryMode}
+                    aria-label={`Inventory tracking for ${r.title}`}
                     onChange={(e) =>
                       patchRow(i, { inventoryMode: e.target.value as "tracked" | "untracked" })
                     }
@@ -311,6 +325,7 @@ export function ProductVariantMatrix({ handle, optionNames, variants }: Props) {
                     disabled={r.inventoryMode !== "tracked"}
                     className="w-16 rounded border border-[var(--adm-border)] px-1.5 py-1 text-xs disabled:opacity-40"
                     value={r.quantityOnHand}
+                    aria-label={`Quantity on hand for ${r.title}`}
                     onChange={(e) => patchRow(i, { quantityOnHand: e.target.value })}
                   />
                 </td>
@@ -319,7 +334,18 @@ export function ProductVariantMatrix({ handle, optionNames, variants }: Props) {
                     type="checkbox"
                     checked={r.purchasable}
                     onChange={(e) => patchRow(i, { purchasable: e.target.checked })}
-                    aria-label="Purchasable"
+                    aria-label={`Purchasable: ${r.title}`}
+                  />
+                </td>
+                <td className="px-2 py-2">
+                  <input
+                    type="checkbox"
+                    data-testid="variant-oversell"
+                    checked={r.inventoryMode === "tracked" && r.allowOversell}
+                    disabled={!canSetOversell || r.inventoryMode !== "tracked"}
+                    onChange={(e) => patchRow(i, { allowOversell: e.target.checked })}
+                    aria-label={`Continue selling ${r.title} when out of stock`}
+                    title={canSetOversell ? "Continue selling when out of stock" : "Only an owner or admin can change this"}
                   />
                 </td>
               </tr>

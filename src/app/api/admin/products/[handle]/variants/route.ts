@@ -31,6 +31,8 @@ const variantRowSchema = z.object({
   inventoryMode: z.enum(["tracked", "untracked"]).default("untracked"),
   quantityOnHand: z.number().int().min(0).max(1_000_000).nullable().optional(),
   purchasable: z.boolean().optional(),
+  /** "Continue selling when out of stock". Omitted → the stored value is kept. Only owner/admin may change it. */
+  allowOversell: z.boolean().optional(),
   optionValues: z.record(z.string(), z.string()).default({}),
   position: z.number().int().min(1).max(500).optional(),
 });
@@ -136,6 +138,25 @@ export async function PUT(request: Request, ctx: Ctx) {
       }
     }
 
+    // Oversell lets checkout take tracked stock below zero, so it is an owner/admin decision. Saving without the field
+    // keeps what is stored (it used to reset to false on every save).
+    const { data: storedRows } = await supabase
+      .from("product_variants")
+      .select("id, allow_oversell")
+      .eq("product_id", product.id);
+    const storedOversell = new Map((storedRows || []).map((r) => [r.id as string, r.allow_oversell === true]));
+    const canSetOversell = staff.role === "owner" || staff.role === "admin";
+    for (const row of parsed.data.variants) {
+      if (row.allowOversell === undefined) continue;
+      const current = row.id ? storedOversell.get(row.id) ?? false : false;
+      if (row.allowOversell !== current && !canSetOversell) {
+        return NextResponse.json(
+          { error: "forbidden", message: "Only an owner or admin can change \"continue selling when out of stock\"." },
+          { status: 403 },
+        );
+      }
+    }
+
     const rpcVariants = parsed.data.variants.map((row, i) => {
       const optionValues = row.optionValues || {};
       const title =
@@ -151,6 +172,10 @@ export async function PUT(request: Request, ctx: Ctx) {
         inventory_mode: row.inventoryMode,
         quantity_on_hand: row.inventoryMode === "tracked" ? (row.quantityOnHand ?? 0) : null,
         purchasable: row.purchasable !== false,
+        allow_oversell:
+          row.inventoryMode === "tracked"
+            ? (row.allowOversell ?? (row.id ? storedOversell.get(row.id) ?? false : false))
+            : false,
         option_values: optionValues,
         position: row.position ?? i + 1,
       };

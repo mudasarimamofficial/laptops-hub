@@ -6,6 +6,9 @@ import fs from "fs";
 import path from "path";
 import { createClient } from "@supabase/supabase-js";
 import { fileURLToPath } from "url";
+import { assertLocalOnly } from "./lib/local-only.mjs";
+
+await assertLocalOnly("test-catalog-pagination.mjs");
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 function loadEnv() {
@@ -34,7 +37,10 @@ function assert(name, ok, detail = "") {
 const { count, error: cErr } = await sb
   .from("public_catalog_listing")
   .select("id", { count: "exact", head: true });
-assert("catalog_count_available", !cErr && (count ?? 0) >= 200, cErr?.message || `count=${count}`);
+// Floor for an imported production-like catalog (200+); the 2-product isolated seed runs with CATALOG_MIN_COUNT=1.
+// Exactness is proven separately by view_count_eq_public_active.
+const minCount = Number(process.env.CATALOG_MIN_COUNT || 200);
+assert("catalog_count_available", !cErr && (count ?? 0) >= minCount, cErr?.message || `count=${count} (min ${minCount})`);
 
 const pageSize = 48;
 const lastOffset = Math.max(0, Math.floor(((count || 1) - 1) / pageSize) * pageSize);

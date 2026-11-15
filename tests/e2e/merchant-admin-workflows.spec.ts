@@ -4,6 +4,12 @@
  */
 import { expect, test, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
+import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
+
+// Writes test data with the service role: refuse anything but a verified LOCAL Supabase.
+test.beforeAll(async () => {
+  await assertLocalOnly("merchant-admin-workflows.spec.ts");
+});
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY || "";

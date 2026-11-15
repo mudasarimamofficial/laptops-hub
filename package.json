@@ -18,6 +18,7 @@
     "test:theme:publish": "node scripts/test-theme-publish-smoke.mjs",
     "test:theme:rls": "node scripts/test-theme-rls-matrix.mjs",
     "test:inventory:ledger": "node scripts/test-inventory-ledger-sync.mjs",
+    "test:inventory:orders": "node scripts/test-inventory-orders.mjs",
     "test:e2e:theme": "npx playwright test theme-publish-workflow --config=playwright.config.ts",
     "test:e2e:merchant": "npx playwright test merchant-admin-workflows homepage-presets --config=playwright.config.ts",
     "test:visual:v5": "npx playwright test tests/e2e/v5-visual.spec.ts",

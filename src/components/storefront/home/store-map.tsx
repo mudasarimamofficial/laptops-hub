@@ -47,6 +47,14 @@ export function StoreMap({ cfg }: { cfg: MapSettings }) {
     "--map-scale": revealed ? 1 : 1.06,
   } as React.CSSProperties;
 
+  // Keyboard users: the browser only scrolls a focused element "into view" geometrically, but while the reveal is
+  // partway the footer still covers the map, so focus would be hidden under it. The map is the last thing on the
+  // page, so moving focus into it scrolls to the end, where it is fully uncovered (WCAG 2.4.11 Focus Not Obscured).
+  const uncoverOnFocus = () => {
+    const end = document.documentElement.scrollHeight - window.innerHeight;
+    if (window.scrollY < end - 1) window.scrollTo({ top: end, behavior: "instant" });
+  };
+
   const iframe = (
     <iframe
       src={cfg.embedSrc}
@@ -67,6 +75,7 @@ export function StoreMap({ cfg }: { cfg: MapSettings }) {
       data-testid="store-map"
       aria-labelledby="store-map-title"
       style={style}
+      onFocus={uncoverOnFocus}
     >
       <div className={s.frameWrap}>
         <div className={s.frame}>

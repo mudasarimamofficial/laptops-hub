@@ -87,4 +87,24 @@ test.describe.serial("Homepage reviews + map across browsers (isolated)", () => 
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
     expect(errors).toEqual([]);
   });
+
+  // WCAG 2.4.11: keyboard focus moving into the map (from the footer, or from the top of the page) must not stay
+  // hidden under the footer that is still covering the pinned map.
+  test("map: keyboard focus is not hidden under the footer", async ({ page }) => {
+    await page.goto("/");
+    for (const start of ["top", "footer"] as const) {
+      if (start === "top") await page.evaluate(() => window.scrollTo(0, 0));
+      else await page.locator("footer a").last().focus();
+      await page.getByTestId("store-map-open").focus();
+      await expect
+        .poll(() =>
+          page.getByTestId("store-map-open").evaluate((el) => {
+            const r = el.getBoundingClientRect();
+            const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+            return r.top >= 0 && r.bottom <= window.innerHeight && !!hit && (hit === el || el.contains(hit));
+          }),
+        )
+        .toBe(true);
+    }
+  });
 });

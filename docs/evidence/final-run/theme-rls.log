@@ -1,0 +1,33 @@
+Seeding role users…
+1) Anon cannot SELECT theme tables
+  ok: anon blocked from theme_versions
+2) Authenticated staff can SELECT, cannot INSERT into publications
+  ok: owner SELECT templates
+  ok: owner cannot write theme_publications
+  ok: admin SELECT templates
+  ok: admin cannot write theme_publications
+  ok: editor SELECT templates
+  ok: editor cannot write theme_publications
+  ok: manager SELECT templates
+  ok: manager cannot write theme_publications
+  ok: fulfillment SELECT templates
+  ok: fulfillment cannot write theme_publications
+3) Editor can save draft RPC; cannot publish
+  ok: editor draft save
+  ok: editor publish forbidden
+4) Manager/fulfillment cannot draft-save or publish
+  ok: manager draft forbidden
+  ok: fulfillment draft forbidden
+5) Owner publish + immutable published row
+  ok: owner publish
+  ok: published row not directly mutable by authenticated
+  ok: published row not directly mutable by service_role without RPC flag
+  ok: theme_publications blocked without publish/rollback flag
+  ok: anon public RPC returns published sections only
+  ok: admin rollback
+6) Revoked staff and plain user blocked
+  ok: revoked draft forbidden
+  ok: plain draft forbidden
+7) Actor spoofing rejected (editor cannot act as owner)
+  ok: actor spoof blocked
+theme-rls-matrix: ok

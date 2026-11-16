@@ -1,0 +1,80 @@
+BEGIN
+DO
+CREATE TABLE
+INSERT 0 1
+UPDATE 1
+INSERT 0 1
+INSERT 0 3
+INSERT 0 3
+CREATE TABLE
+INSERT 0 1
+INSERT 0 16
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+UPDATE 1
+INSERT 0 1
+INSERT 0 1
+UPDATE 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+UPDATE 1
+INSERT 0 1
+UPDATE 1
+INSERT 0 1
+INSERT 0 1
+UPDATE 1
+INSERT 0 1
+CREATE TABLE
+INSERT 0 4
+DO
+UPDATE 1
+DO
+GRANT
+SET
+DO
+SET
+DO
+RESET
+PASS|anon cannot execute create_cod_order|permission denied for function create_cod_order
+PASS|authenticated cannot execute create_cod_order|permission denied for function create_cod_order
+PASS|db switch off refuses|checkout_disabled
+PASS|draft product refused|product_not_purchasable
+PASS|excluded city (normalised) is unserviceable|{"ok": false, "error": "unserviceable", "message": "We do not currently deliver COD to this city/province.", "options": 
+PASS|idempotent replay (no duplicate order)|{"ok": true, "order_id": "06c7dbaf-3aa1-47c0-855e-1d3106151e6c", "duplicate": true, "access_token": "79570a53-a76e-431b-
+PASS|missing zone refused (never free by default)|shipping_required
+PASS|order 0+0 total = subtotal|{"ok": true, "order_id": "4d1d6700-2eb5-429a-88fc-7948e940e2e7", "duplicate": false, "access_token": "60bd31ff-abbf-4486
+PASS|order 360+50 total = subtotal+360+50|{"ok": true, "order_id": "06c7dbaf-3aa1-47c0-855e-1d3106151e6c", "duplicate": false, "access_token": "79570a53-a76e-431b
+PASS|order above threshold: stored delivery 0, COD fee 50|0/5000
+PASS|order above threshold: total = subtotal + COD fee|{"ok": true, "order_id": "2e02e1ad-2312-4123-b9cd-7e835f874886", "duplicate": false, "access_token": "21837068-133e-4833
+PASS|order below threshold: full 360+50|{"ok": true, "order_id": "2a695688-b65b-4c29-8bee-21f48a6db71f", "duplicate": false, "access_token": "092fa776-c3d1-4a12
+PASS|order has item+address+event+outbox|
+PASS|order is unpaid COD (not collected)|unpaid_cod/cod
+PASS|other city in same province still served|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote   Multan  / PUNJAB |{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote 0+0|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Abbottabad / khyber pakhtunkhwa|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Faisalabad / punjab|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Gilgit / Gilgit-Baltistan|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Hyderabad / Sindh|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Islamabad / Islamabad Capital Territory|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Karachi / Sindh|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Lahore / Punjab|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Mirpur / Azad Jammu and Kashmir|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Muzaffarabad / Azad Jammu and Kashmir|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Peshawar / Khyber Pakhtunkhwa|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Quetta / Balochistan|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Rawalpindi / Punjab|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote returns free-delivery threshold|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Sialkot / Punjab|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Skardu / Gilgit-Baltistan|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|quote Sukkur / Sindh|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai
+PASS|sold-out tracked variant refused|insufficient_stock
+PASS|tracked stock decremented 1 -> 0|0
+PASS|unserviceable province refused|{"ok": false, "error": "unserviceable", "message": "We do not currently deliver COD to this city/province.", "options": 
+PASS|zone mismatch refused|zone_mismatch
+TOTAL|37 passed|0 failed
+ROLLBACK

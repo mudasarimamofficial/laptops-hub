@@ -1,11 +1,13 @@
 import { createHash } from "crypto";
 import { after, NextResponse } from "next/server";
+import { publicWriteBlockedResponse } from "@/lib/security/public-write-guard";
 import { processOutbox } from "@/lib/notify/outbox";
 import { createServiceClient } from "@/lib/supabase/server";
 import { normalizePakistanMobile } from "@/lib/phone";
 import { checkoutPayloadSchema } from "@/lib/validation/checkout";
 import { contentVisibility } from "@/lib/content/pages";
 import { mandatoryPoliciesPublic } from "@/lib/content/links";
+import { mapCheckoutError } from "@/lib/commerce/checkout-errors";
 
 export const runtime = "nodejs";
 
@@ -15,6 +17,9 @@ function hashIp(ip: string | null): string | undefined {
 }
 
 export async function POST(request: Request) {
+  // Never create an order from a Preview (or read-only) deployment, whatever the COD flags say.
+  const blocked = publicWriteBlockedResponse();
+  if (blocked) return blocked;
   if (process.env.COD_CHECKOUT_ENABLED !== "true") {
     return NextResponse.json(
       {
@@ -117,13 +122,10 @@ export async function POST(request: Request) {
         { status: 409 },
       );
     }
-    const status =
-      msg.includes("checkout_disabled") || msg.includes("shipping")
-        ? 403
-        : msg.includes("not_found") || msg.includes("purchasable") || msg.includes("quantity")
-          ? 409
-          : 400;
-    return NextResponse.json({ error: msg }, { status });
+    // Stable code + shopper message only; raw database text is logged, never returned.
+    const mapped = mapCheckoutError(msg);
+    if (mapped.error === "order_failed") console.error("[checkout] create_cod_order failed", error.code, msg.slice(0, 200));
+    return NextResponse.json({ error: mapped.error, message: mapped.message }, { status: mapped.status });
   }
 
   // New orders only (a replay returns duplicate: true and has no new outbox row): deliver the order alert after

@@ -1,8 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { modelName, publicDescription, publicTags, toPublicSpecs } from "@/lib/catalog/specs";
-import type { PublicProduct } from "@/types/catalog";
+import type { PublicProduct, PublicVariant } from "@/types/catalog";
 
-type Db = Pick<Awaited<ReturnType<typeof createClient>>, "from">;
+type Db = Pick<Awaited<ReturnType<typeof createClient>>, "from" | "rpc">;
 type MediaItem = { url: string; alt: string; position: number };
 
 type ProductRow = {
@@ -16,13 +16,18 @@ type ProductRow = {
   featured: boolean;
   tags: string[] | null;
   specs: Record<string, unknown> | null;
+  option_names: string[] | null;
   product_variants: {
     id: string;
     sku: string | null;
+    title: string;
+    option_values: Record<string, string> | null;
     price_paisa: number;
     compare_at_paisa: number | null;
     max_per_order: number;
     purchasable: boolean;
+    position: number;
+    media_id: string | null;
   }[];
   product_media: { url: string; alt: string; position: number }[];
 };
@@ -53,31 +58,80 @@ function sortMedia(list: { url: string; alt: string | null; position: number }[]
     .map((m) => ({ url: m.url, alt: m.alt || fallbackAlt, position: m.position }));
 }
 
-function mapProduct(row: ProductRow): PublicProduct | null {
-  const variant = row.product_variants?.find((v) => v.purchasable && v.price_paisa > 0);
-  if (!variant) return null;
+function mapVariants(rows: ProductRow["product_variants"]): PublicVariant[] {
+  return (rows || [])
+    .filter((v) => v.purchasable && v.price_paisa > 0)
+    .sort((a, b) => (a.position ?? 0) - (b.position ?? 0) || a.id.localeCompare(b.id))
+    .map((v) => ({
+      id: v.id,
+      sku: v.sku,
+      title: v.title || "Default",
+      optionValues: v.option_values || {},
+      pricePaisa: v.price_paisa,
+      compareAtPaisa: v.compare_at_paisa,
+      maxPerOrder: v.max_per_order,
+      // Real stock is applied by applyAvailability() (storefront_variant_availability); the server re-checks at commit.
+      available: true,
+      mediaId: v.media_id ?? null,
+    }));
+}
+
+/**
+ * Pick the product-level defaults from the variant list: the first AVAILABLE variant by position (else the first),
+ * so the PDP never opens on a sold-out option when another can be bought. Cards show the lowest purchasable price.
+ */
+function withDefaults(base: Omit<PublicProduct, "variantId" | "sku" | "pricePaisa" | "compareAtPaisa" | "maxPerOrder" | "available" | "variantCount" | "fromPricePaisa">, variants: PublicVariant[]): PublicProduct | null {
+  if (!variants.length) return null;
+  const def = variants.find((v) => v.available) ?? variants[0];
+  const buyable = variants.filter((v) => v.available);
   return {
-    id: row.id,
-    handle: row.handle,
-    title: row.title,
-    descriptionSafe: publicDescription(row.description_safe),
-    manufacturer: row.manufacturer,
-    productType: row.product_type,
-    category: row.category,
-    featured: row.featured,
-    tags: publicTags(row.tags),
-    specs: toPublicSpecs(row.specs),
-    variantId: variant.id,
-    sku: variant.sku,
-    pricePaisa: variant.price_paisa,
-    compareAtPaisa: variant.compare_at_paisa,
-    maxPerOrder: variant.max_per_order,
-    available: variant.purchasable === true,
-    images: sortMedia(row.product_media || [], row.title),
+    ...base,
+    variants,
+    variantId: def.id,
+    sku: def.sku,
+    pricePaisa: def.pricePaisa,
+    compareAtPaisa: def.compareAtPaisa,
+    maxPerOrder: def.maxPerOrder,
+    available: def.available,
+    variantCount: variants.length,
+    fromPricePaisa: Math.min(...(buyable.length ? buyable : variants).map((v) => v.pricePaisa)),
   };
 }
 
+function mapProduct(row: ProductRow): PublicProduct | null {
+  return withDefaults(
+    {
+      id: row.id,
+      handle: row.handle,
+      title: row.title,
+      descriptionSafe: publicDescription(row.description_safe),
+      manufacturer: row.manufacturer,
+      productType: row.product_type,
+      category: row.category,
+      featured: row.featured,
+      tags: publicTags(row.tags),
+      specs: toPublicSpecs(row.specs),
+      optionNames: row.option_names || [],
+      variants: [],
+      images: sortMedia(row.product_media || [], row.title),
+    },
+    mapVariants(row.product_variants),
+  );
+}
+
 function mapListing(row: ListingRow, media: { url: string; alt: string | null; position: number }[] = []): PublicProduct {
+  const singleVariant: PublicVariant = {
+    id: row.variant_id,
+    sku: row.sku,
+    title: "Default",
+    optionValues: {},
+    pricePaisa: row.price_paisa,
+    compareAtPaisa: row.compare_at_paisa,
+    maxPerOrder: row.max_per_order,
+    // public_catalog_listing only returns purchasable variants with a price; stock comes from applyAvailability().
+    available: true,
+    mediaId: null,
+  };
   return {
     id: row.id,
     handle: row.handle,
@@ -89,15 +143,70 @@ function mapListing(row: ListingRow, media: { url: string; alt: string | null; p
     featured: row.featured,
     tags: publicTags(row.tags),
     specs: toPublicSpecs(row.specs),
+    optionNames: [],
+    variants: [singleVariant],
     variantId: row.variant_id,
     sku: row.sku,
     pricePaisa: row.price_paisa,
     compareAtPaisa: row.compare_at_paisa,
     maxPerOrder: row.max_per_order,
-    // public_catalog_listing only returns variants with purchasable = true AND price_paisa > 0.
     available: true,
+    // Corrected by applyAvailability(): the listing view exposes one (cheapest) variant per product.
+    variantCount: 1,
+    fromPricePaisa: row.price_paisa,
     images: sortMedia(media, row.title),
   };
+}
+
+type AvailabilityRow = { product_id: string; variant_id: string; available: boolean };
+
+/**
+ * Boolean-only stock per purchasable variant (never quantities) from `storefront_variant_availability`.
+ * Returns null when the function is unavailable (database without migration 20261117150000): callers then keep the
+ * previous behaviour (every purchasable variant offered) — create_cod_order still refuses insufficient stock.
+ */
+async function loadAvailability(supabase: Db, ids: string[]): Promise<Map<string, AvailabilityRow[]> | null> {
+  const map = new Map<string, AvailabilityRow[]>();
+  for (let i = 0; i < ids.length; i += 200) {
+    const { data, error } = await supabase.rpc("storefront_variant_availability", { p_product_ids: ids.slice(i, i + 200) });
+    if (error || !Array.isArray(data)) return null;
+    // Unexpected shape (e.g. an older function definition): unknown is not "sold out" — keep the previous behaviour.
+    if (data.length && typeof (data[0] as Partial<AvailabilityRow>).product_id !== "string") return null;
+    for (const r of data as AvailabilityRow[]) {
+      const list = map.get(r.product_id) || [];
+      list.push(r);
+      map.set(r.product_id, list);
+    }
+  }
+  return map;
+}
+
+/**
+ * Apply real stock. "full": products loaded with all variants (PDP, catalog, collections) — every variant gets its
+ * own flag and the defaults move to the first available variant. "listing": public_catalog_listing rows that carry
+ * one representative variant — the card learns how many purchasable variants exist and whether any can be bought.
+ */
+async function applyAvailability(supabase: Db, products: PublicProduct[], mode: "full" | "listing"): Promise<PublicProduct[]> {
+  if (!products.length) return products;
+  const stock = await loadAvailability(supabase, products.map((p) => p.id));
+  if (!stock) return products;
+  return products.flatMap((p) => {
+    const rows = stock.get(p.id) || [];
+    const byVariant = new Map(rows.map((r) => [r.variant_id, r.available]));
+    if (mode === "full") {
+      // A variant absent from the result is not purchasable right now.
+      const next = withDefaults(p, p.variants.map((v) => ({ ...v, available: byVariant.get(v.id) === true })));
+      return next ? [next] : [];
+    }
+    const selfAvailable = byVariant.get(p.variantId) === true;
+    const variantCount = Math.max(rows.length, 1);
+    return [{
+      ...p,
+      variants: p.variants.map((v) => ({ ...v, available: selfAvailable })),
+      available: variantCount > 1 ? rows.some((r) => r.available) : selfAvailable,
+      variantCount,
+    }];
+  });
 }
 
 /**
@@ -123,10 +232,34 @@ async function loadMediaByProduct(supabase: Db, ids: string[]) {
 
 const productSelect = `
   id, handle, title, description_safe, manufacturer, product_type, category,
-  featured, tags, specs,
-  product_variants ( id, sku, price_paisa, compare_at_paisa, max_per_order, purchasable ),
+  featured, tags, specs, option_names,
+  product_variants ( id, sku, title, option_values, price_paisa, compare_at_paisa, max_per_order, purchasable, position, media_id ),
   product_media ( url, alt, position )
 `;
+
+/**
+ * Column set readable by public roles before migrations 20261025120000 (option_names/position/media_id) and
+ * 20261117140000 (their grants). Used only if the full select is refused, so a code deploy that lands ahead of the
+ * migrations degrades to single-default-variant pages instead of failing every product page with 500.
+ */
+const legacyProductSelect = `
+  id, handle, title, description_safe, manufacturer, product_type, category,
+  featured, tags, specs,
+  product_variants ( id, sku, title, option_values, price_paisa, compare_at_paisa, max_per_order, purchasable ),
+  product_media ( url, alt, position )
+`;
+
+/** 42703 undefined column (schema behind) · 42501 insufficient privilege (grants behind). */
+function isSchemaBehind(error: { code?: string } | null): boolean {
+  return error?.code === "42703" || error?.code === "42501";
+}
+
+async function selectProducts<T>(run: (columns: string) => PromiseLike<{ data: T | null; error: { code?: string; message: string } | null }>) {
+  const first = await run(productSelect);
+  if (!isSchemaBehind(first.error)) return first;
+  console.warn("[catalog] full product select refused (" + first.error?.code + "); using legacy columns until migrations are applied");
+  return run(legacyProductSelect);
+}
 
 const PAGE = 100;
 
@@ -136,46 +269,37 @@ export async function listAllPublicProducts(db?: Db): Promise<PublicProduct[]> {
   const out: PublicProduct[] = [];
   let offset = 0;
   for (;;) {
-    const { data, error } = await supabase
-      .from("products")
-      .select(productSelect)
-      .eq("status", "active")
-      .order("title")
-      .range(offset, offset + PAGE - 1);
+    const { data, error } = await selectProducts((cols) =>
+      supabase.from("products").select(cols).eq("status", "active").order("title").range(offset, offset + PAGE - 1),
+    );
     if (error) throw error;
     const batch = (data as ProductRow[] | null)?.map(mapProduct).filter(Boolean) as PublicProduct[];
     out.push(...(batch || []));
     if (!data || data.length < PAGE) break;
     offset += PAGE;
   }
-  return out;
+  return applyAvailability(supabase, out, "full");
 }
 
 export async function listPublicProducts(limit = 48, offset = 0): Promise<PublicProduct[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("products")
-    .select(productSelect)
-    .eq("status", "active")
-    .order("title")
-    .range(offset, offset + limit - 1);
-
+  const { data, error } = await selectProducts((cols) =>
+    supabase.from("products").select(cols).eq("status", "active").order("title").range(offset, offset + limit - 1),
+  );
   if (error) throw error;
-  return (data as ProductRow[] | null)?.map(mapProduct).filter(Boolean) as PublicProduct[];
+  return applyAvailability(supabase, ((data as ProductRow[] | null)?.map(mapProduct).filter(Boolean) as PublicProduct[]) || [], "full");
 }
 
 export async function getPublicProductByHandle(handle: string): Promise<PublicProduct | null> {
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("products")
-    .select(productSelect)
-    .eq("handle", handle)
-    .eq("status", "active")
-    .maybeSingle();
-
+  const { data, error } = await selectProducts((cols) =>
+    supabase.from("products").select(cols).eq("handle", handle).eq("status", "active").maybeSingle(),
+  );
   if (error) throw error;
   if (!data) return null;
-  return mapProduct(data as ProductRow);
+  const product = mapProduct(data as ProductRow);
+  if (!product) return null;
+  return (await applyAvailability(supabase, [product], "full"))[0] ?? null;
 }
 
 export async function countPublicProducts(): Promise<number> {
@@ -263,7 +387,7 @@ export async function filterPublicProducts(filter: CatalogFilter): Promise<Catal
   const mediaByProduct = await loadMediaByProduct(supabase, rows.map((r) => r.id));
 
   return {
-    products: rows.map((r) => mapListing(r, mediaByProduct.get(r.id) || [])),
+    products: await applyAvailability(supabase, rows.map((r) => mapListing(r, mediaByProduct.get(r.id) || [])), "listing"),
     total: count ?? rows.length,
     limit,
     offset,
@@ -282,7 +406,7 @@ export async function listRelatedProducts(product: PublicProduct, limit = 4): Pr
   if (error) throw error;
   const picked = ((data || []) as ListingRow[]).slice(0, limit);
   const mediaByProduct = await loadMediaByProduct(supabase, picked.map((r) => r.id));
-  return picked.map((r) => mapListing(r, mediaByProduct.get(r.id) || []));
+  return applyAvailability(supabase, picked.map((r) => mapListing(r, mediaByProduct.get(r.id) || [])), "listing");
 }
 
 export type CompareSummary = {

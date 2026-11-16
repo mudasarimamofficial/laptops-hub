@@ -1,5 +1,5 @@
 import { V5_SUB } from "@/lib/catalog/v5-taxonomy";
-import type { PublicProduct } from "@/types/catalog";
+import type { PublicProduct, PublicVariant } from "@/types/catalog";
 
 /**
  * Server-side adapter from the live catalog to the shape the V5 prototype renders from
@@ -36,6 +36,12 @@ export type V5Product = {
   specs: Record<string, string>;
   variantId: string;
   maxPerOrder: number;
+  optionNames: string[];
+  variants: PublicVariant[];
+  /** More than one purchasable variant: the shopper must choose options on the PDP (cards never pick one silently). */
+  hasOptions: boolean;
+  /** Lowest currently purchasable price, for "From" on cards. */
+  fromPricePaisa: number;
   /** Public listing description (V5 `intro`). */
   intro: string;
 };
@@ -120,6 +126,10 @@ export function toV5(p: PublicProduct, i: number): V5Product {
     specs,
     variantId: p.variantId,
     maxPerOrder: p.maxPerOrder,
+    optionNames: p.optionNames || [],
+    variants: p.variants || [],
+    hasOptions: (p.variantCount ?? p.variants?.length ?? 1) > 1,
+    fromPricePaisa: p.fromPricePaisa ?? p.pricePaisa,
     intro: p.descriptionSafe || "",
   };
 }
@@ -222,6 +232,8 @@ export type V5Card = {
   badge: string;
   variantId: string;
   maxPerOrder: number;
+  /** Card links to the PDP ("Choose options") instead of adding a variant the shopper did not pick. */
+  hasOptions: boolean;
 };
 
 export function v5Card(p: V5Product): V5Card {
@@ -238,12 +250,13 @@ export function v5Card(p: V5Product): V5Card {
     img2: p.imgs[1]?.u ?? null,
     alt: p.model + (p.config ? ", " + p.config : "") + " (photo 1 of " + p.imgs.length + ")",
     chips: p.chips,
-    priceText: fmtPkr(p.pricePaisa),
+    priceText: p.hasOptions ? "From " + fmtPkr(p.fromPricePaisa) : fmtPkr(p.pricePaisa),
     pricePaisa: p.pricePaisa,
     avail: p.avail,
     badge: p.badge,
     variantId: p.variantId,
     maxPerOrder: p.maxPerOrder,
+    hasOptions: p.hasOptions,
   };
 }
 
@@ -341,6 +354,7 @@ export type V5CompareCol = {
   maxPerOrder: number;
   config: string;
   sku: string | null;
+  hasOptions: boolean;
   values: Record<string, string | null>;
 };
 
@@ -361,8 +375,9 @@ export function v5CompareCol(p: V5Product): V5CompareCol {
     maxPerOrder: p.maxPerOrder,
     config: p.config,
     sku: p.sku,
+    hasOptions: p.hasOptions,
     values: {
-      Price: fmtPkr(p.pricePaisa),
+      Price: p.hasOptions ? "From " + fmtPkr(p.fromPricePaisa) : fmtPkr(p.pricePaisa),
       Category: p.badge,
       Brand: p.brand,
       Processor: sp.Processor || null,

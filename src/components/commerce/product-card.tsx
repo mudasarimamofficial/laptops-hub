@@ -9,6 +9,8 @@ import { useCompare } from "@/lib/commerce/compare-store";
 import { canPurchase } from "@/lib/catalog/availability";
 import { toV5, v5Card, type V5Card } from "@/lib/catalog/v5-model";
 import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
+import { MerchBadgeFor } from "@/components/storefront/merch-badges";
+import { CARD_IMAGE_SIZES, imageSrcSet, sizedImage } from "@/lib/catalog/image-url";
 
 /** Port of `ProductCard v5.dc.html`. Category badge only (no stock wording by design). */
 export function V5ProductCard({ item }: { item: V5Card }) {
@@ -18,7 +20,10 @@ export function V5ProductCard({ item }: { item: V5Card }) {
   const compared = useCompare((s) => s.handles.includes(item.h));
   const add = useCart((s) => s.add);
   const purchasable = canPurchase({ available: item.avail, pricePaisa: item.pricePaisa, variantId: item.variantId });
-  const img = hover && item.img2 ? item.img2 : item.img;
+  // Remote catalog images can disappear from the CDN: fall back to the main photo, then to the gallery's "No image".
+  const [failed, setFailed] = useState<string[]>([]);
+  const candidate = hover && item.img2 && !failed.includes(item.img2) ? item.img2 : item.img;
+  const img = candidate && !failed.includes(candidate) ? candidate : null;
   const cmp = compared
     ? { label: "Comparing", tick: "✓", bd: "#2159D4", bg: "#EAF3FE", color: "#1748B5", box: "#2159D4", fill: "#2159D4" }
     : { label: "Compare", tick: "", bd: "#DAE5F2", bg: "#FFFFFF", color: "#102039", box: "#9AA7BA", fill: "transparent" };
@@ -39,18 +44,33 @@ export function V5ProductCard({ item }: { item: V5Card }) {
         {img ? (
           // eslint-disable-next-line @next/next/no-img-element -- V5 card image; remote catalog CDN
           <img
-            src={img}
+            src={sizedImage(img, 800)}
+            srcSet={imageSrcSet(img)}
+            sizes={CARD_IMAGE_SIZES}
             alt={item.alt}
             loading="lazy"
             decoding="async"
+            onError={() => setFailed((f) => (f.includes(img) ? f : [...f, img]))}
+            // A server-rendered image can fail before hydration attaches onError: check once React has the element.
+            ref={(el) => {
+              if (!el || !el.complete || el.naturalWidth > 0) return;
+              // complete+0 can also mean "lazy, not fetched yet" in some engines: confirm with a probe before hiding.
+              const probe = new Image();
+              probe.onerror = () => setFailed((f) => (f.includes(img) ? f : [...f, img]));
+              probe.src = sizedImage(img, 800);
+            }}
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", padding: 18, mixBlendMode: "multiply", transform: hover ? "scale(1.03)" : "scale(1)", transition: "transform .35s ease" }}
           />
-        ) : null}
+        ) : (
+          // No photo yet (pending approval) or the CDN file is gone: the gallery's "No image" state, never an empty tile.
+          <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "var(--lh-ink-2,#52637B)" }}>No image</span>
+        )}
         <div style={{ position: "absolute", top: 12, left: 12, right: 12, display: "flex", gap: 6, justifyContent: "space-between", alignItems: "flex-start", minWidth: 0 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, fontWeight: 700, letterSpacing: ".04em", textTransform: "uppercase", padding: "5px 10px", borderRadius: 999, background: "#FFFFFF", border: "1px solid #BCD0F2", color: "#1748B5", whiteSpace: "nowrap", flexShrink: 0 }}>
             <span style={{ flexShrink: 0, width: 6, height: 6, borderRadius: "50%", background: "#2159D4" }} />
             {item.badge}
           </span>
+          <MerchBadgeFor handle={item.h} />
         </div>
       </Link>
       <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: "16px 18px 18px", flex: 1, borderTop: "1px solid var(--lh-border,#DAE5F2)" }}>
@@ -92,7 +112,18 @@ export function V5ProductCard({ item }: { item: V5Card }) {
             {cmp.label}
           </button>
         </div>
-        {purchasable ? (
+        {purchasable && item.hasOptions ? (
+          // Several variants (RAM/storage/colour…): the shopper chooses on the product page; a card never adds a variant
+          // they did not pick.
+          <Link
+            href={item.href}
+            className="v5-card-atc"
+            data-testid="card-choose-options"
+            style={{ height: 46, border: 0, borderRadius: 12, background: "var(--lh-action,#2159D4)", color: "#FFFFFF", font: "700 14px var(--font-body)", cursor: "pointer", boxShadow: "inset 0 1px 0 rgba(255,255,255,.18)", transition: "background .18s ease,transform .18s ease", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
+          >
+            Choose options
+          </Link>
+        ) : purchasable ? (
           <button
             type="button"
             className="v5-card-atc"

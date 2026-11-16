@@ -1,0 +1,5 @@
+/* Merchant admin root stylesheet: Tailwind + shared tokens/base + admin console tokens. No V5 storefront CSS. */
+@import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/base.css";
+@import "../styles/admin.css";

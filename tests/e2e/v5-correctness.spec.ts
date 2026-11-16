@@ -56,7 +56,7 @@ test("draft product is not public", async ({ page }) => {
   expect((await api.json()).items).toEqual([]);
 });
 
-test("public cards never show Add to cart without a purchasable variant", async ({ page }) => {
+test("public cards show exactly one action: Add to cart (one purchasable variant), Choose options, or Ask", async ({ page }) => {
   await page.goto(`${base}/collections/laptops`, { waitUntil: "load" });
   const cards = page.locator("article");
   const count = await cards.count();
@@ -65,7 +65,9 @@ test("public cards never show Add to cart without a purchasable variant", async 
     const c = cards.nth(i);
     const atc = await c.getByRole("button", { name: /^(Add to cart|Added)$/ }).count();
     const ask = await c.getByRole("button", { name: "Ask about this product" }).count();
-    expect(atc + ask).toBe(1);
+    // Products with options (RAM/storage variants) send the shopper to the PDP to choose one exact variant.
+    const choose = await c.getByTestId("card-choose-options").count();
+    expect(atc + ask + choose).toBe(1);
   }
 });
 
@@ -172,6 +174,9 @@ test("compare tray is keyboard operable", async ({ page }) => {
 });
 
 test("COD checkout stays disabled", async ({ request }) => {
+  // Asserts the production default (COD_CHECKOUT_ENABLED unset). The isolated stack deliberately runs with COD on to
+  // exercise real orders; there the gates are covered by p0-admin-isolation-and-checkout-gates and preview-read-only.
+  test.skip(process.env.COD_CHECKOUT_ENABLED === "true", "this run's app has COD_CHECKOUT_ENABLED=true by design");
   const res = await request.post(`${base}/api/checkout/cod`, { data: {} });
   expect(res.status()).toBe(403);
   expect((await res.json()).error).toBe("checkout_disabled");

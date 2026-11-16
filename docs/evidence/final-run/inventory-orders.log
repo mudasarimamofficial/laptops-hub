@@ -1,0 +1,24 @@
+PASS  one_off_race_exactly_one_order — ok=1 insufficient_stock=7
+PASS  one_off_stock_zero_not_negative — qoh=0
+PASS  one_off_single_ledger_row — [{"delta":-1,"quantity_after":0,"reason":"order_placed","reference_id":"350ec399-d681-47b4-b0bd-15c870d53230"}]
+PASS  duplicate_submit_deducts_once — qoh=3 ledger=1
+PASS  failed_order_rolls_back_everything — insufficient_stock qoh=3/3
+PASS  sold_out_refused — insufficient_stock
+PASS  untracked_sold_no_stock_or_ledger
+PASS  oversell_allowed_variant_goes_negative_with_ledger — [{"delta":-2,"quantity_after":-2,"reason":"order_placed","reference_id":"46012d14-608f-469b-9aee-a0e823f94183"}]
+PASS  cancel_before_shipping_restocks — qoh=5 rows=1
+PASS  repeat_cancel_refused_no_double_restock — invalid_transition
+PASS  status_changes_never_rededuct — after_order=4 after_transitions=4
+PASS  cancel_after_failed_delivery_no_auto_restock — qoh=4 restock_rows=0
+PASS  adjust_add_units_with_ledger
+PASS  adjust_never_below_zero — negative_stock
+PASS  adjust_set_with_stale_count_refused — stale_quantity
+PASS  adjust_set_counted_quantity
+PASS  adjust_refused_for_fulfillment_actor — forbidden
+PASS  adjust_refused_for_untracked — not_tracked
+PASS  adjust_requires_known_reason — invalid_reason
+PASS  adjust_vs_checkout_race_consistent — orders=2 adjusted=0 qoh=0
+PASS  anon_cannot_call_adjust_inventory — permission denied for function adjust_inventory
+PASS  anon_cannot_write_or_read_ledger — permission denied for table inventory_ledger / permission denied for table inventory_ledger
+
+22/22 passed · docs/evidence/INVENTORY_ORDERS_RESULTS.json

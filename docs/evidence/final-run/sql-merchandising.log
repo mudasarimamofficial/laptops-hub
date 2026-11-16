@@ -1,0 +1,42 @@
+BEGIN
+DO
+CREATE TABLE
+GRANT
+INSERT 0 4
+CREATE TABLE
+INSERT 0 5
+DO
+INSERT 0 3
+INSERT 0 1
+INSERT 0 1
+DO
+SET
+INSERT 0 1
+DO
+DO
+DO
+INSERT 0 1
+DO
+RESET
+SET
+DO
+RESET
+DELETE 1
+INSERT 0 1
+PASS|a "best_seller" badge is refused|new row for relation "product_badges" violates check constraint "product_badges_kind_check"
+PASS|a stored "top_seller" badge is refused|new row for relation "product_badges" violates check constraint "product_badges_kind_check"
+PASS|anon can read reel creator + tag|1
+PASS|anon cannot add badges|permission denied for table product_badges
+PASS|anon cannot delete badges|permission denied for table product_badges
+PASS|anon cannot read creator_consent column|permission denied for table reels
+PASS|anon cannot read the badge note|permission denied for table product_badges
+PASS|anon sees only badges inside their schedule|1
+PASS|authenticated (non-staff) cannot change badges|permission denied for table product_badges
+PASS|badge removed with its product|0
+PASS|consented creator name is stored|1
+PASS|creator name without consent is refused|new row for relation "reels" violates check constraint "reels_creator_requires_consent"
+PASS|end before start is refused|new row for relation "product_badges" violates check constraint "product_badges_window"
+PASS|script-like tag is refused|new row for relation "reels" violates check constraint "reels_tag_format"
+PASS|withdrawing consent while named is refused|new row for relation "reels" violates check constraint "reels_creator_requires_consent"
+TOTAL|15 passed|0 failed
+ROLLBACK

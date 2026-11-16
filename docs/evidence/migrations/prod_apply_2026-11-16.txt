@@ -1,0 +1,83 @@
+Initialising login role...
+Connecting to remote database...
+Do you want to push these migrations to the remote database?
+ • 20261025120000_merchant_catalog_extensions.sql
+ • 20261025130000_site_builder_sections.sql
+ • 20261025140000_theme_publish_variant_rpc.sql
+ • 20261025150000_theme_rls_inventory_hardening.sql
+ • 20261025160000_theme_immutability_service_role.sql
+ • 20261114100000_function_search_path_hardening.sql
+ • 20261115100000_reels_and_product_reviews.sql
+ • 20261116100000_merchandising_badges_and_reel_details.sql
+ • 20261117100000_order_inventory_integrity.sql
+ • 20261117110000_anon_write_revoke_and_fk_indexes.sql
+ • 20261117120000_shipping_zone_rules.sql
+ • 20261117130000_inventory_adjustments.sql
+ • 20261117140000_catalog_column_security_grants.sql
+ • 20261117150000_staff_direct_access_least_privilege.sql
+ • 20261118100000_store_testimonials_and_home_sections.sql
+
+ [Y/n] y
+Applying migration 20261025120000_merchant_catalog_extensions.sql...
+NOTICE (00000): policy "inventory_ledger_staff_read" for relation "public.inventory_ledger" does not exist, skipping
+Applying migration 20261025130000_site_builder_sections.sql...
+NOTICE (00000): policy "theme_templates_staff" for relation "public.theme_templates" does not exist, skipping
+NOTICE (00000): policy "theme_templates_staff_select" for relation "public.theme_templates" does not exist, skipping
+NOTICE (00000): policy "theme_versions_staff" for relation "public.theme_versions" does not exist, skipping
+NOTICE (00000): policy "theme_versions_staff_select" for relation "public.theme_versions" does not exist, skipping
+NOTICE (00000): policy "theme_publications_staff" for relation "public.theme_publications" does not exist, skipping
+NOTICE (00000): policy "theme_publications_staff_select" for relation "public.theme_publications" does not exist, skipping
+Applying migration 20261025140000_theme_publish_variant_rpc.sql...
+Applying migration 20261025150000_theme_rls_inventory_hardening.sql...
+NOTICE (00000): trigger "theme_versions_immutability" for relation "public.theme_versions" does not exist, skipping
+NOTICE (00000): trigger "theme_publications_guard" for relation "public.theme_publications" does not exist, skipping
+NOTICE (00000): policy "theme_templates_staff" for relation "public.theme_templates" does not exist, skipping
+NOTICE (00000): policy "theme_versions_staff" for relation "public.theme_versions" does not exist, skipping
+NOTICE (00000): policy "theme_publications_staff" for relation "public.theme_publications" does not exist, skipping
+Applying migration 20261025160000_theme_immutability_service_role.sql...
+Applying migration 20261114100000_function_search_path_hardening.sql...
+Applying migration 20261115100000_reels_and_product_reviews.sql...
+NOTICE (00000): trigger "reels_set_updated_at" for relation "public.reels" does not exist, skipping
+NOTICE (00000): policy "reels_public_select" for relation "public.reels" does not exist, skipping
+NOTICE (00000): policy "reels_staff_all" for relation "public.reels" does not exist, skipping
+NOTICE (00000): policy "product_reviews_public_select" for relation "public.product_reviews" does not exist, skipping
+NOTICE (00000): policy "product_reviews_staff_all" for relation "public.product_reviews" does not exist, skipping
+Applying migration 20261116100000_merchandising_badges_and_reel_details.sql...
+NOTICE (00000): trigger "product_badges_set_updated_at" for relation "public.product_badges" does not exist, skipping
+NOTICE (00000): policy "product_badges_public_select" for relation "public.product_badges" does not exist, skipping
+NOTICE (00000): policy "product_badges_staff_all" for relation "public.product_badges" does not exist, skipping
+Applying migration 20261117100000_order_inventory_integrity.sql...
+NOTICE (00000): trigger "order_items_inventory_ledger" for relation "public.order_items" does not exist, skipping
+NOTICE (00000): trigger "orders_cancel_restock" for relation "public.orders" does not exist, skipping
+Applying migration 20261117110000_anon_write_revoke_and_fk_indexes.sql...
+Applying migration 20261117120000_shipping_zone_rules.sql...
+Applying migration 20261117130000_inventory_adjustments.sql...
+Applying migration 20261117140000_catalog_column_security_grants.sql...
+Applying migration 20261117150000_staff_direct_access_least_privilege.sql...
+Applying migration 20261118100000_store_testimonials_and_home_sections.sql...
+NOTICE (00000): trigger "store_testimonials_updated_at" for relation "public.store_testimonials" does not exist, skipping
+NOTICE (00000): policy "store_testimonials_public_select" for relation "public.store_testimonials" does not exist, skipping
+Warning: failed to cache migrations catalog: error exporting pg-delta catalog: edge-runtime script produced no output:
+runtime has escaped from the event loop unexpectedly: event loop error: Error: Failed to read certificate file '/workspace/supabase/.temp/pgdelta/pgdelta-target-ca.crt': ENOENT: no such file or directory, open '/workspace/supabase/.temp/pgdelta/pgdelta-target-ca.crt'
+    at getCertValue (file:///var/tmp/sb-compile-edge-runtime/node_modules/localhost/@supabase/pg-delta/1.0.0-alpha.27/dist/core/plan/ssl-config.js:44:27)
+    at async parseSslConfig (file:///var/tmp/sb-compile-edge-runtime/node_modules/localhost/@supabase/pg-delta/1.0.0-alpha.27/dist/core/plan/ssl-config.js:62:23)
+    at async createManagedPool (file:///var/tmp/sb-compile-edge-runtime/node_modules/localhost/@supabase/pg-delta/1.0.0-alpha.27/dist/core/postgres-config.js:340:23)
+    at async file:///var/tmp/sb-compile-edge-runtime/index.ts:10:25
+main worker has been destroyed
+event loop error: Error: Failed to read certificate file '/workspace/supabase/.temp/pgdelta/pgdelta-target-ca.crt': ENOENT: no such file or directory, open '/workspace/supabase/.temp/pgdelta/pgdelta-target-ca.crt'
+    at getCertValue (file:///var/tmp/sb-compile-edge-runtime/node_modules/localhost/@supabase/pg-delta/1.0.0-alpha.27/dist/core/plan/ssl-config.js:44:27)
+    at async parseSslConfig (file:///var/tmp/sb-compile-edge-runtime/node_modules/localhost/@supabase/pg-delta/1.0.0-alpha.27/dist/core/plan/ssl-config.js:62:23)
+    at async createManagedPool (file:///var/tmp/sb-compile-edge-runtime/node_modules/localhost/@supabase/pg-delta/1.0.0-alpha.27/dist/core/postgres-config.js:340:23)
+    at async file:///var/tmp/sb-compile-edge-runtime/index.ts:10:25
+
+Finished supabase db push.
+
+== post-migration checks (read-only, 2026-11-16) ==
+backup: D:\LaptopsHub-Backups\2026-11-16-pre-apply (schema 94077155…, data a6eb7acd…, roles 168a95a9…) — off-repo
+migration list --linked: 29 applied (remote = local)
+counts: products 232, variants 232, orders 0, collections 16 (all automated), store_settings 4 (+inventory_policy), staff 2, auth.users 2, store_testimonials 0
+store_settings.cod_checkout: {"enabled":false}
+public tables without RLS: none; not-validated constraints: none
+anon INSERT/UPDATE/DELETE/TRUNCATE grants: contact_inquiries INSERT only
+live storefront (cb638b7) on migrated schema: / collections PDP search cart checkout track-order admin/login sitemap → 200
+note: "failed to cache migrations catalog (pg-delta)" is a CLI local cache warning after all migrations applied

@@ -1,0 +1,42 @@
+BEGIN
+DO
+CREATE TABLE
+GRANT
+INSERT 0 1
+CREATE TABLE
+INSERT 0 8
+DO
+INSERT 0 3
+INSERT 0 3
+DO
+SET
+INSERT 0 1
+INSERT 0 1
+DO
+DO
+DO
+DO
+DO
+RESET
+SET
+DO
+RESET
+PASS|anon cannot approve reviews|permission denied for table product_reviews
+PASS|anon cannot insert reels|permission denied for table reels
+PASS|anon cannot insert reviews directly|permission denied for table product_reviews
+PASS|anon cannot read ip_hash|permission denied for table product_reviews
+PASS|anon cannot read reviewer_email|permission denied for table product_reviews
+PASS|anon sees only approved reviews|1
+PASS|anon sees only published+cleared reels|2
+PASS|authenticated (non-staff) cannot publish reels|permission denied for table reels
+PASS|javascript: video is refused|new row for relation "reels" violates check constraint "reels_video_scheme"
+PASS|plain http (non-local) video is refused|new row for relation "reels" violates check constraint "reels_video_scheme"
+PASS|publish without rights is refused|new row for relation "reels" violates check constraint "reels_publish_requires_rights"
+PASS|rating 6 is refused|new row for relation "product_reviews" violates check constraint "product_reviews_rating_check"
+PASS|revoking rights on a published reel is refused|new row for relation "reels" violates check constraint "reels_publish_requires_rights"
+PASS|ronin.pk poster is refused|new row for relation "reels" violates check constraint "reels_no_reference_assets"
+PASS|ronin.pk subdomain video is refused|new row for relation "reels" violates check constraint "reels_no_reference_assets"
+PASS|ronin.pk video is refused|new row for relation "reels" violates check constraint "reels_no_reference_assets"
+PASS|too-short review body is refused|new row for relation "product_reviews" violates check constraint "product_reviews_body_check"
+TOTAL|17 passed|0 failed
+ROLLBACK

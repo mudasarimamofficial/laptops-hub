@@ -1,0 +1,13 @@
+PASS  anon_cannot_read_orders — permission denied for table orders
+PASS  anon_cannot_read_inquiries — permission denied for table contact_inquiries
+PASS  anon_cannot_select_inventory_columns — permission denied for table product_variants
+PASS  anon_cannot_select_internal_product_columns — permission denied for table products
+PASS  anon_cannot_list_drafts — draft_rows=0
+PASS  anon_cannot_insert_admin_membership — permission denied for table admin_memberships
+PASS  anon_can_read_public_prices — rows=3
+PASS  service_role_can_read_inventory_for_staff_ops — ok
+PASS  order_token_rpc_returns_empty_for_unknown — rows=0
+
+---
+Passed 9/9
+Wrote D:\Laptops Hub Vercel Development\docs\SECURITY_P0_PROBE_RESULTS.json

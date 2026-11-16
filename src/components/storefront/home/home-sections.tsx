@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LHImg } from "@/components/storefront/v5/lh-img";
 import { V5ProductCard } from "@/components/commerce/product-card";
 import { CompareCount, NewGenRow } from "@/components/storefront/home/home-client";
+import { DEFAULT_STOREFRONT_PRESENTATION, sectionLabel, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import type { V5Card, V5Link } from "@/lib/catalog/v5-model";
 
 /** Server-rendered V5 home sections 04–10 (`Laptops Hub Storefront v5.dc.html`). */
@@ -20,11 +21,11 @@ const SECTION = { maxWidth: 1360, margin: "0 auto", padding: "clamp(56px,7vw,96p
 
 export type BrandTile = { name: string; count: number; fromText: string; lines: string; img: string | null; tint: string; href: string };
 
-export function BrandSection({ tiles }: { tiles: BrandTile[] }) {
+export function BrandSection({ tiles, pres = DEFAULT_STOREFRONT_PRESENTATION }: { tiles: BrandTile[]; pres?: StorefrontPresentation }) {
   return (
     <section id="brands" data-screen-label="04 Brands" style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(24px,3vw,40px) clamp(16px,3vw,32px) 0" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
-        <Kicker>04 — BRANDS</Kicker>
+        <Kicker>{sectionLabel("04", "BRANDS", pres)}</Kicker>
         <h2 style={H2}>Shop by brand</h2>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,300px),1fr))", gap: 18 }}>
@@ -40,7 +41,9 @@ export function BrandSection({ tiles }: { tiles: BrandTile[] }) {
                 <span style={{ fontFamily: "var(--font-display)", fontSize: 40, fontWeight: 700, letterSpacing: "-.04em", lineHeight: 1 }}>{b.name}</span>
                 <span style={{ fontSize: 14, color: "var(--lh-ink-2)" }}>{b.lines}</span>
               </div>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, padding: "6px 10px", borderRadius: 999, background: "var(--lh-ice)", border: "1px solid var(--lh-border)", color: "var(--lh-action)", whiteSpace: "nowrap" }}>{b.count} listings</span>
+              {pres.showCatalogCounts ? (
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, padding: "6px 10px", borderRadius: 999, background: "var(--lh-ice)", border: "1px solid var(--lh-border)", color: "var(--lh-action)", whiteSpace: "nowrap" }}>{b.count} listings</span>
+              ) : null}
             </div>
             <div style={{ position: "relative", flex: 1, minHeight: 150, borderRadius: 16, background: "radial-gradient(90% 80% at 50% 100%,var(--lh-titanium),var(--lh-canvas) 70%)", overflow: "hidden" }}>
               <LHImg src={b.img} alt="" pad="14px" blend="multiply" />
@@ -58,19 +61,21 @@ export function BrandSection({ tiles }: { tiles: BrandTile[] }) {
   );
 }
 
-export function FeaturedSection({ cards, laptopCount, brandTotal, accCount }: { cards: V5Card[]; laptopCount: number; brandTotal: number; accCount: number }) {
+export function FeaturedSection({ cards, laptopCount, brandTotal, accCount, pres = DEFAULT_STOREFRONT_PRESENTATION }: { cards: V5Card[]; laptopCount: number; brandTotal: number; accCount: number; pres?: StorefrontPresentation }) {
   return (
     <section style={SECTION}>
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, marginBottom: 28, flexWrap: "wrap" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <Kicker>05 — FEATURED</Kicker>
+          <Kicker>{sectionLabel("05", "FEATURED", pres)}</Kicker>
           <h2 style={H2}>Featured laptops</h2>
-          <span style={{ fontSize: 16, color: "var(--lh-ink-2)" }}>
-            {laptopCount} laptops from {brandTotal} brands, plus {accCount} accessories.
-          </span>
+          {pres.showCatalogCounts ? (
+            <span style={{ fontSize: 16, color: "var(--lh-ink-2)" }}>
+              {laptopCount} laptops from {brandTotal} brands, plus {accCount} accessories.
+            </span>
+          ) : null}
         </div>
         <Link href="/collections/laptops" className="v5-hov-bd-action" style={{ height: 44, padding: "0 20px", borderRadius: 999, border: "1px solid var(--lh-border)", background: "#FFFFFF", color: "var(--lh-ink)", fontWeight: 600, fontSize: 15, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
-          <span>View all {laptopCount} →</span>
+          <span>{pres.showCatalogCounts ? `View all ${laptopCount} →` : "View all laptops →"}</span>
         </Link>
       </div>
       <div className="v5-card-grid">
@@ -84,7 +89,7 @@ export function FeaturedSection({ cards, laptopCount, brandTotal, accCount }: { 
 
 export type Promo = { href: string; img: string | null; alt: string; brand: string; model: string; config: string; priceText: string; rows: { k: string; v: string }[] };
 
-export function PromoSection({ promo }: { promo: Promo }) {
+export function PromoSection({ promo, pres = DEFAULT_STOREFRONT_PRESENTATION }: { promo: Promo; pres?: StorefrontPresentation }) {
   return (
     <section style={{ marginTop: "clamp(56px,7vw,96px)", backgroundColor: "var(--lh-navy)", backgroundImage: "radial-gradient(50% 80% at 0% 50%,rgba(var(--lh-action-rgb),.32),transparent 70%),radial-gradient(40% 70% at 100% 0%,rgba(var(--lh-iris-rgb),.3),transparent 70%)", color: "#FFFFFF", overflow: "hidden" }}>
       <div className="v5-promo-grid" style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(48px,6vw,88px) clamp(16px,3vw,32px)", display: "grid", gap: "clamp(28px,4vw,64px)", alignItems: "center" }}>
@@ -94,7 +99,7 @@ export function PromoSection({ promo }: { promo: Promo }) {
           </span>
         </Link>
         <div style={{ display: "flex", flexDirection: "column", gap: 20, minWidth: 0 }}>
-          <Kicker onDark>06 — FEATURED CONFIGURATION</Kicker>
+          <Kicker onDark>{sectionLabel("06", "FEATURED CONFIGURATION", pres)}</Kicker>
           <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(32px,3.6vw,54px)", letterSpacing: "-.04em", lineHeight: 1.02, fontWeight: 700 }}>
             {promo.brand} {promo.model}
           </h2>
@@ -119,11 +124,11 @@ export function PromoSection({ promo }: { promo: Promo }) {
   );
 }
 
-export function SpecSection({ links }: { links: (V5Link & { bar: string; share: string })[] }) {
+export function SpecSection({ links, pres = DEFAULT_STOREFRONT_PRESENTATION }: { links: (V5Link & { bar: string; share: string })[]; pres?: StorefrontPresentation }) {
   return (
     <section style={SECTION}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
-        <Kicker>07 — SPECIFICATIONS</Kicker>
+        <Kicker>{sectionLabel("07", "SPECIFICATIONS", pres)}</Kicker>
         <h2 style={H2}>Shop by spec</h2>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,240px),1fr))", gap: 12 }}>
@@ -144,11 +149,11 @@ export function SpecSection({ links }: { links: (V5Link & { bar: string; share: 
   );
 }
 
-export function NewGenSection({ cards, count }: { cards: V5Card[]; count: number }) {
+export function NewGenSection({ cards, count, pres = DEFAULT_STOREFRONT_PRESENTATION }: { cards: V5Card[]; count: number; pres?: StorefrontPresentation }) {
   return (
     <section style={{ marginTop: "clamp(56px,7vw,96px)", background: "linear-gradient(180deg,var(--lh-ice),var(--lh-canvas))", color: "var(--lh-ink)" }}>
       <div style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(48px,6vw,88px) clamp(16px,3vw,32px)" }}>
-        <NewGenRow count={count}>
+        <NewGenRow count={count} pres={pres}>
           {cards.map((c) => (
             <div key={c.h} style={{ scrollSnapAlign: "start" }}>
               <V5ProductCard item={c} />
@@ -160,11 +165,11 @@ export function NewGenSection({ cards, count }: { cards: V5Card[]; count: number
   );
 }
 
-export function BudgetSection({ tiles }: { tiles: V5Link[] }) {
+export function BudgetSection({ tiles, pres = DEFAULT_STOREFRONT_PRESENTATION }: { tiles: V5Link[]; pres?: StorefrontPresentation }) {
   return (
     <section style={SECTION}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
-        <Kicker>09 — BUDGET</Kicker>
+        <Kicker>{sectionLabel("09", "BUDGET", pres)}</Kicker>
         <h2 style={H2}>Shop by budget</h2>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: 18 }}>
@@ -184,13 +189,13 @@ export function BudgetSection({ tiles }: { tiles: V5Link[] }) {
 
 export type CmpDemo = { a: { model: string; img: string | null }; b: { model: string; img: string | null }; rows: { k: string; a: string; b: string; diff: boolean }[] };
 
-export function CompareDemoSection({ demo }: { demo: CmpDemo | null }) {
+export function CompareDemoSection({ demo, pres = DEFAULT_STOREFRONT_PRESENTATION }: { demo: CmpDemo | null; pres?: StorefrontPresentation }) {
   const cols = "90px minmax(0,1fr) minmax(0,1fr)";
   return (
     <section style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(56px,7vw,96px) clamp(16px,3vw,32px) clamp(64px,8vw,112px)" }}>
       <div className="v5-cmp-grid" style={{ position: "relative", overflow: "hidden", borderRadius: 32, backgroundColor: "var(--lh-navy)", backgroundImage: "radial-gradient(60% 90% at 100% 100%,rgba(var(--lh-iris-rgb),.45),transparent 70%),radial-gradient(50% 80% at 0% 0%,rgba(var(--lh-action-rgb),.4),transparent 70%)", color: "#FFFFFF", padding: "clamp(28px,4vw,56px)", display: "grid", gap: "clamp(28px,4vw,56px)", alignItems: "center" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <Kicker onDark>10 — COMPARE</Kicker>
+          <Kicker onDark>{sectionLabel("10", "COMPARE", pres)}</Kicker>
           <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(30px,3.2vw,48px)", letterSpacing: "-.04em", lineHeight: 1.04, fontWeight: 700 }}>Compare before you buy.</h2>
           <p style={{ margin: 0, fontSize: 17, lineHeight: 1.55, color: "var(--lh-on-dark-2)", maxWidth: "46ch" }}>
             Add up to four laptops and line up processor, memory, storage, display and price. Rows that differ are highlighted.

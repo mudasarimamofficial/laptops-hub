@@ -1,7 +1,7 @@
 /**
  * Seeds a LOCAL Supabase with realistic, non-customer launch fixtures for the isolated browser journeys
  * (tests/e2e-isolated): two products, a Lahore/Punjab COD zone, checkout enabled in local store_settings, and staff
- * accounts (manager, fulfillment, editor). Refuses any non-local URL. Writes .isolated/fixture.json
+ * accounts (owner, manager, fulfillment, editor). Refuses any non-local URL. Writes .isolated/fixture.json
  * (gitignored; contains only local test passwords).
  *
  *   NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SERVICE_ROLE_KEY=… node scripts/test-fixtures/seed-isolated.mjs
@@ -23,6 +23,8 @@ const must = ({ data, error }, what) => {
 };
 
 // Public catalog facts (the live catalog is public); prices here are test values on a local database.
+// Images: the approved homepage preset files (homepage-image-presets.ts) — the earlier per-product CDN file was deleted
+// upstream (404). They stay media approval "pending" like every catalog image.
 const PRODUCTS = [
   {
     handle: "dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
@@ -30,7 +32,7 @@ const PRODUCTS = [
     manufacturer: "Dell",
     price: 7_000_000,
     max: 2,
-    img: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162.jpg",
+    img: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111",
   },
   {
     handle: "lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage",
@@ -38,9 +40,15 @@ const PRODUCTS = [
     manufacturer: "Lenovo",
     price: 5_500_000,
     max: 2,
-    img: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162.jpg",
+    img: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111",
   },
 ];
+
+// Deterministic order baseline: every order on this LOCAL database is a test artefact of an earlier isolated run
+// (assertLocalOnly above refuses anything else). Suites that count orders (social proof, dashboard metrics) start
+// from zero instead of mutating each other's rows. Child rows (items, addresses, events, collections, fulfillments)
+// cascade.
+must(await sb.from("orders").delete().not("id", "is", null), "clear local test orders");
 
 const out = { products: [], zone: null, staff: {} };
 for (const p of PRODUCTS) {
@@ -62,7 +70,7 @@ const zone = must(
 out.zone = { id: zone.id, city: "Lahore", province: "Punjab", flatFeePaisa: 30_000, codFeePaisa: 15_000 };
 must(await sb.from("store_settings").upsert({ key: "cod_checkout", value: { enabled: true } }), "cod setting");
 
-for (const role of ["manager", "fulfillment", "editor"]) {
+for (const role of ["owner", "manager", "fulfillment", "editor"]) {
   const email = `iso-${role}-${Date.now()}@lh-test.local`;
   const password = `T3st-${randomUUID()}`;
   const u = must(await sb.auth.admin.createUser({ email, password, email_confirm: true }), "user");

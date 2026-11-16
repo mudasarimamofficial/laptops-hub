@@ -1,0 +1,264 @@
+{
+  "at": "2026-11-16T10:40:52.555Z",
+  "base": "http://127.0.0.1:3102",
+  "label": "final_iad1-model-110ms",
+  "runs": 5,
+  "results": [
+    {
+      "journey": "overview",
+      "path": "/admin",
+      "ttfb": {
+        "p50": 1142,
+        "p75": 1151,
+        "p95": 1219
+      },
+      "load": {
+        "p50": 1201,
+        "p75": 1227,
+        "p95": 1314
+      }
+    },
+    {
+      "journey": "products",
+      "path": "/admin/products",
+      "ttfb": {
+        "p50": 1212,
+        "p75": 1237,
+        "p95": 1284
+      },
+      "load": {
+        "p50": 1327,
+        "p75": 1347,
+        "p95": 1426
+      }
+    },
+    {
+      "journey": "product-search",
+      "path": "/admin/products?q=dell",
+      "ttfb": {
+        "p50": 1144,
+        "p75": 1195,
+        "p95": 1409
+      },
+      "load": {
+        "p50": 1215,
+        "p75": 1257,
+        "p95": 1507
+      }
+    },
+    {
+      "journey": "product-edit",
+      "path": "/admin/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ttfb": {
+        "p50": 1229,
+        "p75": 1276,
+        "p95": 1409
+      },
+      "load": {
+        "p50": 1390,
+        "p75": 1429,
+        "p95": 1593
+      }
+    },
+    {
+      "journey": "product-new",
+      "path": "/admin/products/new",
+      "ttfb": {
+        "p50": 994,
+        "p75": 1030,
+        "p95": 1074
+      },
+      "load": {
+        "p50": 1060,
+        "p75": 1176,
+        "p95": 1229
+      }
+    },
+    {
+      "journey": "products-bulk",
+      "path": "/admin/products/bulk",
+      "ttfb": {
+        "p50": 1114,
+        "p75": 1119,
+        "p95": 1129
+      },
+      "load": {
+        "p50": 1179,
+        "p75": 1179,
+        "p95": 1185
+      }
+    },
+    {
+      "journey": "orders",
+      "path": "/admin/orders",
+      "ttfb": {
+        "p50": 1103,
+        "p75": 1145,
+        "p95": 1168
+      },
+      "load": {
+        "p50": 1171,
+        "p75": 1198,
+        "p95": 1234
+      }
+    },
+    {
+      "journey": "customers",
+      "path": "/admin/customers",
+      "ttfb": {
+        "p50": 1120,
+        "p75": 1203,
+        "p95": 1225
+      },
+      "load": {
+        "p50": 1166,
+        "p75": 1266,
+        "p95": 1298
+      }
+    },
+    {
+      "journey": "inventory",
+      "path": "/admin/inventory",
+      "ttfb": {
+        "p50": 1090,
+        "p75": 1100,
+        "p95": 1100
+      },
+      "load": {
+        "p50": 1144,
+        "p75": 1144,
+        "p95": 1160
+      }
+    },
+    {
+      "journey": "collections",
+      "path": "/admin/collections",
+      "ttfb": {
+        "p50": 1096,
+        "p75": 1102,
+        "p95": 1132
+      },
+      "load": {
+        "p50": 1179,
+        "p75": 1192,
+        "p95": 1194
+      }
+    },
+    {
+      "journey": "collection-edit",
+      "path": "/admin/collections/laptops",
+      "ttfb": {
+        "p50": 1096,
+        "p75": 1124,
+        "p95": 1136
+      },
+      "load": {
+        "p50": 1162,
+        "p75": 1186,
+        "p95": 1195
+      }
+    },
+    {
+      "journey": "reviews",
+      "path": "/admin/reviews",
+      "ttfb": {
+        "p50": 1113,
+        "p75": 1115,
+        "p95": 1118
+      },
+      "load": {
+        "p50": 1161,
+        "p75": 1162,
+        "p95": 1172
+      }
+    },
+    {
+      "journey": "testimonials",
+      "path": "/admin/reviews/testimonials",
+      "ttfb": {
+        "p50": 1124,
+        "p75": 1125,
+        "p95": 1135
+      },
+      "load": {
+        "p50": 1187,
+        "p75": 1191,
+        "p95": 1198
+      }
+    },
+    {
+      "journey": "online-store",
+      "path": "/admin/online-store",
+      "ttfb": {
+        "p50": 984,
+        "p75": 998,
+        "p95": 999
+      },
+      "load": {
+        "p50": 1051,
+        "p75": 1065,
+        "p95": 1069
+      }
+    },
+    {
+      "journey": "settings",
+      "path": "/admin/settings",
+      "ttfb": {
+        "p50": 1597,
+        "p75": 1604,
+        "p95": 1613
+      },
+      "load": {
+        "p50": 1691,
+        "p75": 1716,
+        "p95": 1719
+      }
+    },
+    {
+      "journey": "staff",
+      "path": "/admin/staff",
+      "ttfb": {
+        "p50": 1508,
+        "p75": 1726,
+        "p95": 1987
+      },
+      "load": {
+        "p50": 1581,
+        "p75": 1812,
+        "p95": 2160
+      }
+    },
+    {
+      "journey": "analytics",
+      "path": "/admin/analytics",
+      "ttfb": {
+        "p50": 1355,
+        "p75": 1364,
+        "p95": 1374
+      },
+      "load": {
+        "p50": 1419,
+        "p75": 1435,
+        "p95": 1472
+      }
+    },
+    {
+      "journey": "navigation",
+      "path": "/admin/navigation",
+      "ttfb": {
+        "p50": 1329,
+        "p75": 1348,
+        "p95": 1404
+      },
+      "load": {
+        "p50": 1427,
+        "p75": 1450,
+        "p95": 1479
+      }
+    }
+  ],
+  "medianOfJourneyP50": {
+    "ttfb": 1120,
+    "load": 1179
+  }
+}

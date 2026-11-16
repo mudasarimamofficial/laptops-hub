@@ -1,6 +1,6 @@
 {
-  "base": "http://127.0.0.1:3000",
-  "at": "2026-10-23T18:39:28.931Z",
+  "base": "http://127.0.0.1:3001",
+  "at": "2026-11-16T11:21:51.744Z",
   "results": [
     {
       "name": "anon_patch__api_admin_products_dell_latitude_7420_core_i5_1",
@@ -95,17 +95,17 @@
     {
       "name": "nonstaff_rls_orders",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table orders"
     },
     {
       "name": "nonstaff_rls_memberships",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table admin_memberships"
     },
     {
       "name": "nonstaff_rls_inquiries",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table contact_inquiries"
     },
     {
       "name": "nonstaff_rls_drafts",

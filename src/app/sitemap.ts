@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getV5Catalog, V5_COLS } from "@/lib/catalog/v5";
 import { isPrelaunch, siteUrl } from "@/lib/site-url";
 import { contentVisibility, previewAllContent } from "@/lib/content/pages";
+import { createPublicClient } from "@/lib/supabase/server";
 
 export const revalidate = 3600;
 
@@ -15,11 +16,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const vis = previewAllContent() ? { pages: {}, articles: {} } : await contentVisibility();
   const pages = Object.entries(vis.pages).filter(([, v]) => v).map(([k]) => k);
   const articles = Object.entries(vis.articles).filter(([, v]) => v).map(([k]) => k);
+  // Merchant-made collections (published, not deleted); the built-in V5 ones are listed from V5_COLS.
+  const { data: own } = await createPublicClient().from("collections").select("slug").eq("published", true).is("deleted_at", null);
+  const custom = (own || []).map((c) => c.slug as string).filter((slug) => !V5_COLS[slug]);
   return [
     { url: `${base}/`, changeFrequency: "daily", priority: 1 },
     ...Object.entries(V5_COLS)
       .filter(([, c]) => !c.hidden)
       .map(([id]) => ({ url: `${base}/collections/${id}`, changeFrequency: "daily" as const, priority: 0.7 })),
+    ...custom.map((slug) => ({ url: `${base}/collections/${slug}`, changeFrequency: "daily" as const, priority: 0.6 })),
     ...P.map((p) => ({ url: `${base}/products/${p.h}`, changeFrequency: "weekly" as const, priority: 0.6 })),
     { url: `${base}/compare`, changeFrequency: "monthly", priority: 0.3 },
     ...pages.map((k) => ({ url: `${base}/pages/${k}`, changeFrequency: "monthly" as const, priority: 0.3 })),

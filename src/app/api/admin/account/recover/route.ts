@@ -1,4 +1,5 @@
 import { createHash } from "crypto";
+import { publicWriteBlockedResponse } from "@/lib/security/public-write-guard";
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { clientIp, rateLimit } from "@/lib/security/rate-limit";
@@ -15,6 +16,9 @@ const GENERIC = {
 /** Staff: request a password-recovery email. */
 export async function POST(request: Request) {
   const headers = { "Cache-Control": "no-store" };
+  // No recovery emails or password changes on Production auth from a Preview / read-only deployment.
+  const blocked = publicWriteBlockedResponse();
+  if (blocked) return blocked;
   if (isCrossSite(request.headers.get("origin"), request.url, request.headers.get("x-forwarded-host") || request.headers.get("host"))) {
     return NextResponse.json({ error: "forbidden" }, { status: 403, headers });
   }

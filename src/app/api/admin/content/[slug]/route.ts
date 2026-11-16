@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
-import { createAuthorizedStaffClient, staffErrorResponse, type StaffRole } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse, type StaffRole } from "@/lib/auth/staff";
 import { LEGAL_CONTENT_SLUGS, sanitizeCmsHtml } from "@/lib/security/sanitize-html";
 import { templateHasPending } from "@/lib/content/resolve";
 import { V5_CONTENT } from "@/lib/content/v5-content";
@@ -23,7 +23,7 @@ const LEGAL_APPROVERS: StaffRole[] = ["owner", "admin", "manager"];
 
 export async function PATCH(request: Request, ctx: Ctx) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager", "editor"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const { slug } = await ctx.params;
     const parsed = schema.safeParse(await request.json().catch(() => null));
     if (!parsed.success) {
@@ -118,7 +118,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
     }
 
     const { error } = await supabase.from("content_pages").update(patch).eq("slug", slug);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
 
     await supabase.from("audit_logs").insert({
       actor_user_id: staff.userId,
@@ -139,6 +139,9 @@ export async function PATCH(request: Request, ctx: Ctx) {
     // demand).
     revalidateTag("content", { expire: 0 });
     revalidatePath("/", "layout");
+    revalidatePath("/(storefront)", "layout");
+    revalidatePath("/compare");
+    revalidatePath("/compare", "page");
     revalidatePath("/sitemap.xml");
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/lib/commerce/cart-store";
 import { openCartDrawer } from "@/lib/commerce/cart-ui";
 import { canPurchase } from "@/lib/catalog/availability";
+import { DEFAULT_STOREFRONT_PRESENTATION, sectionLabel, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import { setStoryInView } from "@/lib/commerce/story-ui";
 
 export type StoryProps = {
@@ -18,9 +19,13 @@ export type StoryProps = {
   variantId: string;
   maxPerOrder: number;
   available: boolean;
+  /** Several variants: "Details" leads to the option picker; no one-click add of an unchosen variant. */
+  hasOptions?: boolean;
   /** Four angles (front, left, right, rear): V5 cutouts when approved, otherwise catalog photos. */
   angles: { src: string | null; cutout: boolean }[];
   rows: { k: string; v: string }[];
+  /** Storefront label switches (Admin → Settings → Storefront labels). */
+  pres?: StorefrontPresentation;
 };
 
 const LABELS = ["Front", "Left", "Right", "Rear"];
@@ -47,6 +52,7 @@ const E = (x: number) => x * x * (3 - 2 * x);
 
 /** Port of V5 section `#story` ("02 Product story"): pinned scene, four angles, scroll-linked spec reveal. */
 export function ProductStory(p: StoryProps) {
+  const pres = p.pres ?? DEFAULT_STOREFRONT_PRESENTATION;
   const ref = useRef<HTMLElement>(null);
   const [rm, setRm] = useState(false);
   const [ci, setCi] = useState(0);
@@ -138,7 +144,7 @@ export function ProductStory(p: StoryProps) {
   };
 
   const live = ctaOn || rm;
-  const purchasable = canPurchase({ available: p.available, pricePaisa: p.pricePaisa, variantId: p.variantId });
+  const purchasable = !p.hasOptions && canPurchase({ available: p.available, pricePaisa: p.pricePaisa, variantId: p.variantId });
   const href = "/products/" + encodeURIComponent(p.handle);
   const stageVars = { "--o0": 1, "--o1": 0, "--o2": 0, "--o3": 0 } as Record<string, number>;
   if (rm) for (let i = 0; i < 4; i++) stageVars["--o" + i] = i === ci ? 1 : 0;
@@ -171,15 +177,23 @@ export function ProductStory(p: StoryProps) {
 
           <div className="v5-story-grid" style={{ position: "relative", width: "100%", maxWidth: 1360, margin: "0 auto", display: "grid", alignItems: "stretch" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0, minHeight: 0 }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".14em", color: "var(--lh-on-dark-2)" }}>
-                  <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
-                  02 — PRODUCT STORY
-                </span>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-on-dark-2)" }}>
-                  {VIEW[ci]} · {ci + 1}/4
-                </span>
-              </div>
+              {/* "Product story" is an internal section name and "Front view · 1/4" a technical counter: both hidden
+                  by default at the owner's request (the angle names stay in each image's alt text). */}
+              {pres.showSectionNumbers || pres.showStoryAngleLabels ? (
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                  {pres.showSectionNumbers ? (
+                    <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".14em", color: "var(--lh-on-dark-2)" }}>
+                      <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
+                      {sectionLabel("02", "PRODUCT STORY", pres)}
+                    </span>
+                  ) : <span />}
+                  {pres.showStoryAngleLabels ? (
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-on-dark-2)" }}>
+                      {VIEW[ci]} · {ci + 1}/4
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
               <div className="v5-story-stage" style={{ position: "relative", perspective: 1400 }}>
                 <div aria-hidden="true" style={{ position: "absolute", left: "16%", right: "16%", top: "-14%", bottom: "22%", background: "linear-gradient(180deg,rgba(var(--lh-haze-rgb),0),rgba(var(--lh-haze-rgb),.2) 60%,rgba(var(--lh-haze-rgb),0))", clipPath: "polygon(44% 0,56% 0,100% 100%,0 100%)", opacity: "calc(.35 + var(--sp) * .5)" }} />
                 <div aria-hidden="true" style={{ position: "absolute", left: "14%", right: "14%", bottom: "5%", height: "18%", borderRadius: "50%", background: "radial-gradient(closest-side,rgba(var(--lh-electric-rgb),.5),rgba(var(--lh-action-rgb),.18) 60%,transparent)", transform: "translate3d(calc(var(--px) * 1vw),0,0) scaleX(calc(.8 + var(--ps) * .2))" }} />
@@ -237,7 +251,7 @@ export function ProductStory(p: StoryProps) {
                       aria-pressed={on}
                       style={{ minHeight: 44, padding: "6px 8px", borderRadius: 12, border: `1px solid ${on ? "rgba(var(--lh-electric-rgb),.75)" : "rgba(var(--lh-haze-rgb),.2)"}`, background: on ? "rgba(var(--lh-action-rgb),.38)" : "rgba(255,255,255,.04)", color: on ? "#FFFFFF" : "var(--lh-on-dark-2)", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center", gap: 1, cursor: "pointer", transition: "background .25s ease,border-color .25s ease,color .25s ease" }}
                     >
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".1em" }}>0{i + 1}</span>
+                      {pres.showSectionNumbers ? <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".1em" }}>0{i + 1}</span> : null}
                       <span style={{ fontSize: 13, fontWeight: 600 }}>{label}</span>
                     </button>
                   );

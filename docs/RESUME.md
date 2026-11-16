@@ -1,5 +1,39 @@
 # Resume here
 
+> **2026-11-16 engineering closeout (Claude Opus 5.5) — read first:** start with `docs/IDE_AI_HANDOFF_CURRENT.md` and
+> `docs/LAPTOPS_HUB_ENGINEERING_CLOSEOUT.md` (final classification, run table, not-done list). Several claims in the
+> 2026-11-15 entry below were **not true** and are superseded: the "restored anon SELECT grants" was a manual local grant
+> (replaced by migrations 27/28); pagination's PASS had rc=127 and an always-true assertion; the timeouts it raised hid
+> races that are now fixed at the cause. New in this pass: migration 28 (High: staff direct Data API write escalation,
+> also present in production — needs owner approval to apply), exact-variant checkout end to end, admin global search,
+> keyboard shortcuts, sign-out. **14 migrations pending for production (15–28).** Nothing pushed, merged or deployed.
+
+> **2026-11-15 defect closure & release-candidate certification (Claude Opus 4.6):** P0 variant picker
+> implemented (types, queries, V5 model, VariantPicker component, ProductBuy integration, PDP page).
+> Fixed lint error (analytics Date.now() purity), 3 isolated e2e timeouts (production-mode slow load →
+> domcontentloaded + 60s), 3 cross-browser assertion timeouts (→ 15s), catalog pagination env var.
+> Restored anon SELECT grants on catalog tables (revoked by prior security pass). Full 24-suite release
+> run executed. New docs: FEATURE_AUDIT_UNCERTAIN_SEVEN.md, API_ERROR_SANITIZATION_AUDIT.md,
+> SECURITY_COLUMN_LEVEL_ASSESSMENT.md, STAGING_CONFIG_TEMPLATE.md, RELEASE_CANDIDATE_CLASSIFICATION.md.
+> Classification: **B — release candidate with known non-blocking items.** No production changes made.
+
+> **2026-11-14 third pass (Claude):** adds truthful social proof and reel playback on top of `3dae91a`: recent-order notices
+> and a data-backed "Top seller" badge computed only from real confirmed/delivered orders (both OFF by default, no demo mode,
+> no PII in the public payload); editorial "Featured / Popular pick / Staff pick" labels with schedules (Admin → Badges & social
+> proof); reels now play the visible clip muted, one at a time, with explicit sound, reduced-motion/data-saver fallbacks and a
+> consent-gated creator name. New local-only migration `20261116100000_merchandising_badges_and_reel_details.sql` (**8 pending**
+> for production). Evidence: isolated Playwright 57/57, unit 27 files, SQL matrices 26/26 + 17/17 + 15/15. Vercel production
+> re-verified read-only (still `cb638b7`); Supabase production still NOT re-verified (MCP denied, CLI unlinked).
+
+> **2026-11-14 release-candidate pass (Claude):** HEAD on `feat/merchant-operating-system` after `a534b18` + docs. Admin/storefront
+> separated by route groups; server-side checkout readiness gates; deliberate Rs 0 + Rs 0 = "Free delivery", blank fee rejected;
+> storefront counts/section numbers/angle counters hidden by default (owner toggle); fonts self-hosted (fixes fresh builds);
+> local-only migrations `20261114100000_function_search_path_hardening.sql` and `20261115100000_reels_and_product_reviews.sql` (7 pending for production); rights-gated reels, moderated reviews and an Admin → Blog editor built and tested locally (isolated 52/52).
+> Status: **READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED.** Production unchanged; Supabase production not
+> re-verified this pass. Start with `docs/LAPTOPS_HUB_CLIENT_REQUESTS_ACCEPTANCE_MATRIX.md`, then
+> `docs/LAPTOPS_HUB_MIGRATION_AND_RELEASE_RUNBOOK.md`. Baseline dirty tree preserved in `stash@{0}`.
+
+
 **Latest (2026-10-23, final launch closure):** outbox lease fix; migration `20261024100000` **applied to production 2026-10-23** (owner-approved, ledger 14;
 `docs/MIGRATION_PRODUCTION_APPROVAL.md`). Production web still `34f9839`; next: merge + deploy (step 2). Launch order:
 `docs/FINAL_LAUNCH_SEQUENCE.md`; owner inputs and how-tos: `docs/FINAL_LAUNCH_OWNER_INPUTS.md`; policy skeletons:

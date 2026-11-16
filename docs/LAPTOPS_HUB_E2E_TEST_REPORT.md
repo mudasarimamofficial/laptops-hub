@@ -1,0 +1,146 @@
+# Laptops HUB — E2E Test Report
+
+## Engineering closeout run (2026-11-16, label `final-2026-11-16-d`) — current
+
+**Result:**
+- Isolated: 101/101
+- Legacy: 27/27
+- Cross-browser: 105/105 (Chromium, WebKit, Firefox)
+- All 25 suites of `run-final-suite.sh` exit 0.
+
+**Stack, in order:**
+1. Fresh `supabase db reset --local` (28 migrations)
+2. Seed
+3. `next build` with `THEME_PUBLISHED_ENABLED=1`
+4. `next start -p 3001`, with the fake email provider on :4599
+
+**Related files:**
+- Machine-readable results: `docs/LAPTOPS_HUB_E2E_TEST_REPORT.json`, generated from the Playwright JSON output by `scripts/release/e2e-report-json.mjs`.
+- Per-suite exit codes: `docs/evidence/final-run/summary.json`.
+- Earlier full runs and the cause of each failure: `LAPTOPS_HUB_ENGINEERING_CLOSEOUT.md` §C.
+
+| Isolated spec file | Passed |
+|---|---|
+| `content-pages.spec.ts` | 8/8 |
+| `home-inquiry.spec.ts` | 7/7 |
+| `launch-journey.spec.ts` | 10/10 |
+| `p0-admin-isolation-and-checkout-gates.spec.ts` | 10/10 |
+| `p0-admin-search.spec.ts` | 4/4 |
+| `p0-admin-sign-out.spec.ts` | 4/4 |
+| `p0-inventory-oversell.spec.ts` | 3/3 |
+| `p0-merchant-inventory-collections.spec.ts` | 4/4 |
+| `p0-staff-invitations.spec.ts` | 9/9 |
+| `p0-variant-order-journey.spec.ts` | 9/9 |
+| `p1-image-fallback.spec.ts` | 1/1 |
+| `p1-reels-reviews-blog.spec.ts` | 4/4 |
+| `p1-social-proof.spec.ts` | 5/5 |
+| `p1-storefront-labels.spec.ts` | 2/2 |
+| `password-recovery.spec.ts` | 5/5 |
+| `prehydration.spec.ts` | 2/2 |
+| `shipping-zones.spec.ts` | 5/5 |
+| `z-owner-acceptance-36-steps.spec.ts` | 9/9 |
+
+The sections below are earlier passes, kept for history.
+
+## Earlier pass (2026-11-15)
+
+**Code under test:** `feat/merchant-operating-system` — third pass (social proof, badges, reel autoplay) on top of `3dae91a`; the commit that contains this report. **Stack:** isolated only. **Browser:** Playwright Chromium 1.64.1 (headless). WebKit/real devices not run.
+- Local Supabase reset (`supabase db reset --local`) and seeded by `scripts/test-fixtures/seed-isolated.mjs` (owner, manager, fulfillment, editor) immediately before the run
+- `next build` + `next start -p 3001`
+- Fake Resend on `:4599`
+
+**Machine-readable results:** `docs/LAPTOPS_HUB_E2E_TEST_REPORT.json` (per-test status and duration).
+
+No test touched production. Every isolated spec refuses to run unless Supabase is on 127.0.0.1/localhost (`assertLocalOnly`).
+
+## Fourth pass: Preview read-only gate (2026-11-15)
+
+**Code under test:** the Preview hardening commit on top of `8430f56`.
+
+**Result: 57/57** on a clean run (reset, seed, build, start, full suite). The unit suite has 28 files.
+
+The new file `tests/unit/preview-read-only.test.ts` runs 23 checks:
+- It calls the real handlers for contact, reviews, COD, staff recovery, staff password and cron.
+- Scenarios:
+  - Vercel Preview with the Production Supabase ref
+  - the same with `MERCHANT_MUTATIONS_DISABLED=1`
+  - `MERCHANT_MUTATIONS_DISABLED=1` on a genuine local stack
+- Every call returns `503 preview_read_only` with `no-store`.
+- Zero outbound requests: a global `fetch` trap would fail the test.
+- The rate limiter stays in memory and still enforces limits.
+- Production and local stacks remain writable.
+
+Failures seen during this pass, and their causes:
+- **Before the clean reset, each full run had one different failure:**
+  - blog publish, notification retry, shipping zone save
+  - each passed when re-run alone
+  - same-run durations varied up to 3x (machine load, and data accumulated across six runs)
+  - the clean-reset run passed 57/57
+- **password-recovery:** the fixture staff are reused, so `password:`/`recover:` counters from a run 11 minutes earlier tripped the (correct) limits. The spec now clears those **local** counters in `beforeAll`.
+- **Seed gap:** the seed did not create the `owner` that three specs need. It now does.
+- **Reels component fix:** a missing video could reject `play()` without the error event reaching React. That left a dead player. The rejection now also sets the "not available" state.
+
+## Results
+
+| Suite | Command | Result |
+|---|---|---|
+| Isolated Playwright journeys (10 spec files) | `npx playwright test --config=playwright.isolated.config.ts` | **57/57 PASS** (~7 min) |
+| P0 admin isolation + checkout gates (now 8 admin routes × 5 widths) | `p0-admin-isolation-and-checkout-gates.spec.ts` | 10/10 |
+| P1 social proof, badges, reel playback | `p1-social-proof.spec.ts` | 5/5 |
+| P1 storefront labels | `p1-storefront-labels.spec.ts` | 2/2 |
+| P1 reels, reviews, blog | `p1-reels-reviews-blog.spec.ts` | 4/4 |
+| Launch journeys (COD order, notifications, retry) | `launch-journey.spec.ts` | 10/10 |
+| Content pages gating | `content-pages.spec.ts` | 8/8 |
+| Home inquiry | `home-inquiry.spec.ts` | 7/7 |
+| Staff password recovery | `password-recovery.spec.ts` | 5/5 |
+| Shipping zones admin | `shipping-zones.spec.ts` | 4/4 |
+| Pre-hydration form safety | `prehydration.spec.ts` | 2/2 |
+| Unit tests (27 files, incl. `social-proof.test.ts`, run under UTC and America/New_York too) | `npm run test:unit` | **PASS** |
+| Shipping/COD SQL matrix | `scripts/db-tests/shipping-cod-matrix.sql` (local, ROLLBACK) | **26/26 PASS** |
+| Reels/reviews SQL matrix | `scripts/db-tests/reels-reviews-matrix.sql` (local, ROLLBACK) | **17/17 PASS** |
+| Merchandising SQL matrix | `scripts/db-tests/merchandising-matrix.sql` (local, ROLLBACK) | **15/15 PASS** |
+| Typecheck / lint | `npx tsc --noEmit -p .` / `npx eslint src tests --quiet` | **0 errors** |
+| Production build | `npx next build` | **PASS** (fonts self-hosted) |
+
+## What the P0/P1 specs prove
+
+- **Admin isolation.** At 360, 390, 768, 1280 and 1440 px on `/admin`, `/admin/settings`, `/admin/products` and `/admin/orders`, none of these appear: storefront header, footer, or skip link. No horizontal overflow. The mobile drawer opens, and Escape closes it.
+- **Storefront chrome.** Home, collection and checkout keep their storefront chrome.
+- **Readiness matrix.** All 8 gates render. The status reads "Ordering open" on the fixture. The service-role key is absent from the HTML.
+- **Rs 0 + Rs 0 zone.**
+  - The page shows "Free delivery · No COD fee", "Delivery: Free", and cash due equal to the price.
+  - The server quote returns `{shippingPaisa: 0, codFeePaisa: 0, totalDuePaisa: price}`.
+  - The zone is restored afterwards.
+- **Nonzero fees.** Exact fees and totals render. For an unserved city (Gwadar), the message reads "do not currently deliver COD" and the order button is disabled. The quote API returns no raw SQL text.
+- **Blocking gate.** With `cod_checkout.enabled=false`, the shopper sees "Online ordering opens soon" and the button is disabled. Admin shows "Ordering closed" with `db_setting` = fail. The setting is restored afterwards.
+- **Labels.** On `/` and `/collections/all` none of the following appear:
+  - "N listings", "products in the catalog", "View all N"
+  - "NN — X" section numbers, "· n/4" angle counters
+  - "Laptops HUB hero" captions
+
+  The owner toggles "Show catalog counts" in Admin, and the stored value reads back as `{showCatalogCounts:true, …false}`. The checkbox stays checked after reload, the public footer count appears, and section numbers stay hidden. The setting is removed afterwards.
+
+- **Reels.** No row on the homepage by default. Admin refuses a ronin.pk link and an unlicensed publish (the database refuses the latter too). A published, owned reel appears with `preload="none"` and a product link; unpublishing through the admin API removes the row.
+- **Reviews.** The product page shows "No reviews yet" and no `aggregateRating`. Cross-site posts get 403. A submitted review is stored `pending` with a 32-hex IP hash and is not shown. After approval it appears with "4.0 out of 5 · 1 review" and `aggregateRating`, without the reviewer's email. Rejecting hides it again.
+- **Blog.** Publishing an empty post is refused. A published post renders at `/guides/<slug>`, is listed on `/guides` and in the sitemap, and has `<script>` and `javascript:` links stripped. Back to draft gives 404.
+- **Roles.** Fulfillment staff get 403 on the post, reel and review-moderation APIs.
+- **Social proof (zero baseline).** With notices and "Top seller" switched on but only placed/cancelled/shipped orders (threshold: delivered), `/api/activity/recent` returns `[]`, Admin shows 0 qualifying orders / 0 top sellers, and no notice or badge appears on the PDP within 9.5 s.
+- **Social proof (real orders).** After 3 delivered sandbox orders, the API returns 2 items with only `city/handle/imageUrl/title/when` keys; the raw response contains no customer name, phone, order number, street or city. The PDP shows the flame "Top seller" badge and the notice "A customer ordered … today" (never "paid/bought"). Dismissing stops notices for the session; `/checkout` never shows one.
+- **Editorial labels.** An editor sets "Popular pick" (audited, star style on the PDP); forging `top_seller` through the API gives 400; editors get 403 on the settings API and do not see the settings form.
+- **Reel playback.** With an original synthetic WebM served to the test: exactly one video plays, muted; `preload="none"`; pressing sound on the second reel plays it unmuted and stops the first. Under `prefers-reduced-motion` nothing plays until the play button is pressed. A 404 video shows "This video is not available right now." Creator name and tag render only for the consented row.
+
+## Notes for re-runners
+
+- Load the local env first: `set -a; . ./.env.local; set +a`.
+- The recovery endpoint is deliberately limited to 3 per hour per email, and password changes are limited too. Back-to-back reruns therefore hit those limits. Clear the **local** buckets with:
+  ```bash
+  docker exec supabase_db_Laptops_Hub_Vercel_Development psql -U postgres -c "delete from public.rate_limit_buckets;"
+  ```
+- Screenshots go to `test-results/p0-evidence/`, which is gitignored.
+
+## Not tested in this pass
+
+- Production / Preview deployments: no deploy was made.
+- Real email delivery.
+- Production Supabase advisors: access was denied.
+- Merchant smoke, theme RLS and CSV scripts were not re-run. Their last recorded passes are in `PRODUCTION_RELEASE_CANDIDATE.md`, and none of their code paths changed in this pass.

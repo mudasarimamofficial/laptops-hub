@@ -1,0 +1,20 @@
+Starting test-settings-navigation-persistence.mjs against http://127.0.0.1:3001
+Testing Store Settings API...
+res1 status: 200 {
+  ok: true,
+  persisted: {
+    business_identity: {
+      name: 'Laptops HUB Bahawalpur Flagship',
+      support_email: 'support@laptopshub.pk',
+      support_phone: '0309 3372974'
+    },
+    inventory_defaults: { tracked: true, low_stock_threshold: 3 },
+    seo_defaults: { title_suffix: '| Official Laptops HUB' }
+  }
+}
+✓ Store Settings persistence & validation verified.
+Testing Navigation API...
+✓ Navigation persistence, safety, and restore verified.
+Verifying public storefront renders navigation cleanly...
+✓ Storefront renders navigation successfully.
+ALL TESTS IN test-settings-navigation-persistence.mjs PASSED!

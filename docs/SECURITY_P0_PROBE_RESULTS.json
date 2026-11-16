@@ -1,15 +1,15 @@
 {
-  "at": "2026-10-23T18:39:25.720Z",
+  "at": "2026-11-16T11:21:51.090Z",
   "results": [
     {
       "name": "anon_cannot_read_orders",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table orders"
     },
     {
       "name": "anon_cannot_read_inquiries",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table contact_inquiries"
     },
     {
       "name": "anon_cannot_select_inventory_columns",
@@ -29,7 +29,7 @@
     {
       "name": "anon_cannot_insert_admin_membership",
       "ok": true,
-      "detail": "new row violates row-level security policy for table \"admin_memberships\""
+      "detail": "permission denied for table admin_memberships"
     },
     {
       "name": "anon_can_read_public_prices",

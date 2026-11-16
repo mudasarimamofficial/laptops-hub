@@ -1,11 +1,11 @@
 {
   "base": "http://127.0.0.1:3001",
-  "at": "2026-10-23T12:49:07.739Z",
+  "at": "2026-11-16T11:21:55.448Z",
   "results": [
     {
       "name": "nonstaff_cannot_read_orders",
       "ok": true,
-      "detail": "ok"
+      "detail": "permission denied for table orders"
     },
     {
       "name": "nonstaff_cannot_list_memberships",

@@ -1,0 +1,46 @@
+== backup: 94077155336a3d0d schema, 100be2a92ede8596 data
+NOTICE:  database "prod_restore" does not exist, skipping
+restore schema: ok
+restore data: 7 error line(s) total, 0 touching public tables
+      1 psql:/tmp/pr_data.sql:1930: ERROR:  relation "storage.buckets" does not exist
+      1 psql:/tmp/pr_data.sql:1938: ERROR:  relation "storage.buckets_analytics" does not exist
+      1 psql:/tmp/pr_data.sql:1946: ERROR:  relation "storage.buckets_vectors" does not exist
+      1 psql:/tmp/pr_data.sql:1954: ERROR:  relation "storage.objects" does not exist
+      1 psql:/tmp/pr_data.sql:1962: ERROR:  relation "storage.s3_multipart_uploads" does not exist
+      1 psql:/tmp/pr_data.sql:1970: ERROR:  relation "storage.s3_multipart_uploads_parts" does not exist
+      1 psql:/tmp/pr_data.sql:1978: ERROR:  relation "storage.vector_indexes" does not exist
+public tables: 22, rows: 1476; auth.users=2
+key figures before: 232 products / 232 variants / stock 0 / 0 orders / total 0 paisa / 0 items
+== apply pending migrations 20261025120000_merchant_catalog_extensions.sql .. 20261118100000_store_testimonials_and_home_sections.sql
+ok   20261025120000_merchant_catalog_extensions.sql
+ok   20261025130000_site_builder_sections.sql
+ok   20261025140000_theme_publish_variant_rpc.sql
+ok   20261025150000_theme_rls_inventory_hardening.sql
+ok   20261025160000_theme_immutability_service_role.sql
+ok   20261114100000_function_search_path_hardening.sql
+ok   20261115100000_reels_and_product_reviews.sql
+ok   20261116100000_merchandising_badges_and_reel_details.sql
+ok   20261117100000_order_inventory_integrity.sql
+ok   20261117110000_anon_write_revoke_and_fk_indexes.sql
+ok   20261117120000_shipping_zone_rules.sql
+ok   20261117130000_inventory_adjustments.sql
+ok   20261117140000_catalog_column_security_grants.sql
+ok   20261117150000_staff_direct_access_least_privilege.sql
+ok   20261118100000_store_testimonials_and_home_sections.sql
+key figures after:  232 products / 232 variants / stock 0 / 0 orders / total 0 paisa / 0 items
+== tables whose row count changed (new tables appear only in 'after'):
+inventory_ledger NEW 0
+product_badges NEW 0
+product_reviews NEW 0
+reels NEW 0
+store_settings 3 4
+store_testimonials NEW 0
+theme_publications NEW 0
+theme_templates NEW 1
+theme_versions NEW 1
+key figures: UNCHANGED
+== all constraints valid on real data
+0 not-validated constraints
+== schema after upgrade vs clean build of all migrations
+differing lines vs schema_clean.sql: 0
+scratch database dropped; copies of the backup removed from the container

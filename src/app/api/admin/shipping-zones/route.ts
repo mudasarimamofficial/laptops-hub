@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staff";
+import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
 import { ZONE_COLUMNS, zoneInputProblem, zoneInputSchema } from "@/lib/commerce/zone-input";
 
 /** Create a shipping zone. Answers with the stored row, so staff see exactly what was saved. */
 export async function POST(request: Request) {
   try {
-    const { staff, supabase } = await createAuthorizedStaffClient(["owner", "admin", "manager"]);
+    const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager"]);
     const body = await request.json().catch(() => null);
     const parsed = zoneInputSchema.safeParse(body);
     if (!parsed.success) {
@@ -19,6 +19,8 @@ export async function POST(request: Request) {
         name: parsed.data.name,
         provinces: parsed.data.provinces,
         cities: parsed.data.cities,
+        excluded_cities: parsed.data.excludedCities,
+        free_shipping_min_paisa: parsed.data.freeShippingMinPkr === null ? null : pkrMajorToPaisa(parsed.data.freeShippingMinPkr),
         flat_fee_paisa: pkrMajorToPaisa(parsed.data.flatFeePkr),
         cod_fee_paisa: pkrMajorToPaisa(parsed.data.codFeePkr),
         is_active: parsed.data.isActive,

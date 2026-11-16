@@ -4,7 +4,7 @@ import { ContactForm, FaqList, TocButtons } from "@/components/content/content-c
 import { getV5Catalog, V5_COLS, v5Card, type V5Product } from "@/lib/catalog/v5";
 import { V5_CONTENT } from "@/lib/content/v5-content";
 import { supportHref, unlinkUnpublished } from "@/lib/content/links";
-import { contentVisibility, type ResolvedContent } from "@/lib/content/pages";
+import { contentVisibility, publicPostCards, type ResolvedContent } from "@/lib/content/pages";
 import type { V5Block } from "@/lib/content/types";
 
 /** Port of the V5 `isPage` view (content pages, guides index and articles). */
@@ -133,8 +133,7 @@ function Block({ b, i, ctx, pageSlug }: { b: V5Block; i: number; ctx: Ctx; pageS
 }
 
 async function ArticleCards({ exclude }: { exclude: string | null }) {
-  const vis = await contentVisibility();
-  const list = V5_CONTENT.articles.filter((a) => a.slug !== exclude && vis.articles[a.slug]);
+  const list = (await publicPostCards()).filter((a) => a.slug !== exclude);
   if (!list.length) return null;
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,280px),1fr))", gap: 16, marginTop: 10 }}>
@@ -202,9 +201,7 @@ export async function ContentPage({ page, kind }: { page: ResolvedContent; kind:
   const isArt = kind !== "page";
   // Side navigation lists only public pages (preview: all, with V5 status marks).
   const side = isArt
-    ? V5_CONTENT.articles
-        .filter((a) => page.preview || vis.articles[a.slug])
-        .map((a) => ({ label: a.title, href: `/guides/${a.slug}`, pend: false }))
+    ? (await publicPostCards()).map((a) => ({ label: a.title, href: `/guides/${a.slug}`, pend: false }))
     : Object.entries(V5_CONTENT.pages)
         .filter(([k]) => page.preview || vis.pages[k])
         .map(([k, p]) => ({ label: p.title, href: `/pages/${k}`, pend: page.preview && p.status === "pending" }));

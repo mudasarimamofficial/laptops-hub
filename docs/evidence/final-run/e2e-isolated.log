@@ -1,0 +1,170 @@
+
+Running 108 tests using 1 worker
+
+  ok   1 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/about renders complete copy (2.0s)
+  ok   2 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/why-laptops-hub renders complete copy (1.5s)
+  ok   3 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/contact renders complete copy (1.2s)
+  ok   4 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/faq renders complete copy (1.2s)
+  ok   5 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/condition-guide renders complete copy (1.0s)
+  ok   6 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/order-inquiries renders complete copy (1.4s)
+  ok   7 tests\e2e-isolated\content-pages.spec.ts:38:7 › prepared content pages (isolated) › FAQ accordion works with the keyboard (2.0s)
+  ok   8 tests\e2e-isolated\content-pages.spec.ts:50:7 › prepared content pages (isolated) › published contact page keeps the working contact form (1.6s)
+  ok   9 tests\e2e-isolated\cross-browser-home-sections.spec.ts:58:7 › Homepage reviews + map across browsers (isolated) › reviews carousel and map reveal render and behave (4.5s)
+  ok  10 tests\e2e-isolated\home-inquiry.spec.ts:34:9 › homepage inquiry (isolated) › section is visible before the footer at 375px, no horizontal scroll (2.3s)
+  ok  11 tests\e2e-isolated\home-inquiry.spec.ts:34:9 › homepage inquiry (isolated) › section is visible before the footer at 820px, no horizontal scroll (2.7s)
+  ok  12 tests\e2e-isolated\home-inquiry.spec.ts:34:9 › homepage inquiry (isolated) › section is visible before the footer at 1440px, no horizontal scroll (2.7s)
+  ok  13 tests\e2e-isolated\home-inquiry.spec.ts:49:7 › homepage inquiry (isolated) › invalid input is refused in the browser and nothing is stored (2.9s)
+  ok  14 tests\e2e-isolated\home-inquiry.spec.ts:68:7 › homepage inquiry (isolated) › valid inquiry is saved once (double click), staff see it and update its status (8.0s)
+  ok  15 tests\e2e-isolated\home-inquiry.spec.ts:107:7 › homepage inquiry (isolated) › product inquiry dialog (inquiry-only listing) is saved once and reaches staff (3.7s)
+  ok  16 tests\e2e-isolated\home-inquiry.spec.ts:132:7 › homepage inquiry (isolated) › bots, cross-site posts, server errors and offline submissions are handled truthfully (2.7s)
+  ok  17 tests\e2e-isolated\launch-journey.spec.ts:65:7 › launch journeys (isolated) › customer: product → cart → checkout → confirmation (3.5s)
+  ok  18 tests\e2e-isolated\launch-journey.spec.ts:92:7 › launch journeys (isolated) › notifications: business alert + customer confirmation delivered once (30ms)
+  ok  19 tests\e2e-isolated\launch-journey.spec.ts:102:7 › launch journeys (isolated) › customer: track order by number + phone; wrong phone refused (1.4s)
+  ok  20 tests\e2e-isolated\launch-journey.spec.ts:114:7 › launch journeys (isolated) › checkout: unserved address and invalid phone are refused (3.2s)
+  ok  21 tests\e2e-isolated\launch-journey.spec.ts:133:7 › launch journeys (isolated) › duplicate submit: one order, one notification (2.5s)
+  ok  22 tests\e2e-isolated\launch-journey.spec.ts:148:7 › launch journeys (isolated) › admin: editor cannot open orders (2.7s)
+  ok  23 tests\e2e-isolated\launch-journey.spec.ts:154:7 › launch journeys (isolated) › admin: confirm → pack → dispatch with tracking → collect COD; customer sees it (5.4s)
+  ok  24 tests\e2e-isolated\launch-journey.spec.ts:193:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff (5.6s)
+  ok  25 tests\e2e-isolated\launch-journey.spec.ts:208:7 › launch journeys (isolated) › notifications: provider outage → failed, staff retry → sent once (4.9s)
+  ok  26 tests\e2e-isolated\launch-journey.spec.ts:229:7 › launch journeys (isolated) › cron endpoint requires the secret (399ms)
+  ok  27 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:49:9 › P0: admin isolation and checkout gates (isolated) › admin has no storefront chrome at 360px (8.2s)
+  ok  28 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:49:9 › P0: admin isolation and checkout gates (isolated) › admin has no storefront chrome at 390px (9.3s)
+  ok  29 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:49:9 › P0: admin isolation and checkout gates (isolated) › admin has no storefront chrome at 768px (8.9s)
+  ok  30 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:49:9 › P0: admin isolation and checkout gates (isolated) › admin has no storefront chrome at 1280px (8.7s)
+  ok  31 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:49:9 › P0: admin isolation and checkout gates (isolated) › admin has no storefront chrome at 1440px (9.1s)
+  ok  32 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:72:7 › P0: admin isolation and checkout gates (isolated) › storefront keeps its chrome (home, collection, checkout) (2.1s)
+  ok  33 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:81:7 › P0: admin isolation and checkout gates (isolated) › admin overview shows the server-side readiness matrix (2.5s)
+  ok  34 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:97:7 › P0: admin isolation and checkout gates (isolated) › PKR 0 + 0 zone: 'Free delivery', total equals subtotal; restored afterwards (2.8s)
+  ok  35 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:121:7 › P0: admin isolation and checkout gates (isolated) › nonzero fees render exactly; unserved city gives no clickable order (3.4s)
+  ok  36 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:138:7 › P0: admin isolation and checkout gates (isolated) › a failing blocking gate (store setting off) makes storefront checkout non-clickable (4.4s)
+  ok  37 tests\e2e-isolated\p0-admin-search.spec.ts:54:7 › P0: global admin search and shortcuts (isolated) › owner: Ctrl+K and '/' open it, Esc closes; product by SKU and order by phone open with the keyboard (4.3s)
+  ok  38 tests\e2e-isolated\p0-admin-search.spec.ts:95:7 › P0: global admin search and shortcuts (isolated) › API: identifiers only, role-scoped, safe with filter syntax; anonymous refused (2.8s)
+  ok  39 tests\e2e-isolated\p0-admin-search.spec.ts:114:7 › P0: global admin search and shortcuts (isolated) › editor: products and editor sections only — no orders (2.2s)
+  ok  40 tests\e2e-isolated\p0-admin-search.spec.ts:128:7 › P0: global admin search and shortcuts (isolated) › fulfillment: orders only — no products, no catalog sections (3.1s)
+  ok  41 tests\e2e-isolated\p0-admin-sign-out.spec.ts:26:9 › P0: admin sign-out (isolated) › owner: sign out ends the session; replayed cookies are refused (3.9s)
+  ok  42 tests\e2e-isolated\p0-admin-sign-out.spec.ts:26:9 › P0: admin sign-out (isolated) › editor: sign out ends the session; replayed cookies are refused (3.9s)
+  ok  43 tests\e2e-isolated\p0-admin-sign-out.spec.ts:26:9 › P0: admin sign-out (isolated) › fulfillment: sign out ends the session; replayed cookies are refused (4.4s)
+  ok  44 tests\e2e-isolated\p0-admin-sign-out.spec.ts:50:7 › P0: admin sign-out (isolated) › cross-site sign-out is refused (2.7s)
+  ok  45 tests\e2e-isolated\p0-inventory-oversell.spec.ts:61:7 › P0: oversell is owner/admin-only and honoured at checkout (isolated) › manager: control is read-only and a forged API change is refused (3.3s)
+  ok  46 tests\e2e-isolated\p0-inventory-oversell.spec.ts:73:7 › P0: oversell is owner/admin-only and honoured at checkout (isolated) › owner: sets it in the matrix, it persists, and a save without the field keeps it (4.4s)
+  ok  47 tests\e2e-isolated\p0-inventory-oversell.spec.ts:95:7 › P0: oversell is owner/admin-only and honoured at checkout (isolated) › checkout honours it: order at 0 stock succeeds, stock -1, ledger written (96ms)
+  ok  48 tests\e2e-isolated\p0-merchant-inventory-collections.spec.ts:60:7 › P0: collections, inventory desk and analytics (isolated) › manual collection: search, add, storefront shows exactly that product (5.0s)
+  ok  49 tests\e2e-isolated\p0-merchant-inventory-collections.spec.ts:71:7 › P0: collections, inventory desk and analytics (isolated) › automated collection by brand: storefront shows matching products only (5.2s)
+  ok  50 tests\e2e-isolated\p0-merchant-inventory-collections.spec.ts:79:7 › P0: collections, inventory desk and analytics (isolated) › inventory desk: receive, count, refuse below zero, history; editor refused (9.2s)
+  ok  51 tests\e2e-isolated\p0-merchant-inventory-collections.spec.ts:129:7 › P0: collections, inventory desk and analytics (isolated) › analytics: all-time numbers match the database (3.9s)
+  ok  52 tests\e2e-isolated\p0-staff-invitations.spec.ts:73:7 › P0: staff invitations, roles and deactivation (isolated) › owner invites an admin and a fulfillment person; each sets a password and gets exactly that role (12.5s)
+  ok  53 tests\e2e-isolated\p0-staff-invitations.spec.ts:114:7 › P0: staff invitations, roles and deactivation (isolated) › invitation failures are shown to the owner and change nothing (4.2s)
+  ok  54 tests\e2e-isolated\p0-staff-invitations.spec.ts:153:7 › P0: staff invitations, roles and deactivation (isolated) › an address typed before the page has hydrated is kept and can be sent (4.8s)
+  ok  55 tests\e2e-isolated\p0-staff-invitations.spec.ts:170:7 › P0: staff invitations, roles and deactivation (isolated) › admin limits: cannot grant admin, cannot touch owner, self or another admin (3.2s)
+  ok  56 tests\e2e-isolated\p0-staff-invitations.spec.ts:186:9 › P0: staff invitations, roles and deactivation (isolated) › manager: Staff page and API refused (2.5s)
+  ok  57 tests\e2e-isolated\p0-staff-invitations.spec.ts:186:9 › P0: staff invitations, roles and deactivation (isolated) › editor: Staff page and API refused (2.7s)
+  ok  58 tests\e2e-isolated\p0-staff-invitations.spec.ts:186:9 › P0: staff invitations, roles and deactivation (isolated) › fulfillment: Staff page and API refused (2.7s)
+  ok  59 tests\e2e-isolated\p0-staff-invitations.spec.ts:197:7 › P0: staff invitations, roles and deactivation (isolated) › anonymous: refused (37ms)
+  ok  60 tests\e2e-isolated\p0-staff-invitations.spec.ts:202:7 › P0: staff invitations, roles and deactivation (isolated) › deactivation ends access at once; reactivation restores it (9.9s)
+  ok  61 tests\e2e-isolated\p0-variant-order-journey.spec.ts:68:7 › P0: exact variant from PDP to COD order (isolated) › merchant: owner creates a 2-option laptop and a variant product without option data (real admin API) (2.6s)
+  ok  62 tests\e2e-isolated\p0-variant-order-journey.spec.ts:107:7 › P0: exact variant from PDP to COD order (isolated) › PDP: default is the first available variant; sold-out option is shown, selectable and not buyable (1.6s)
+  ok  63 tests\e2e-isolated\p0-variant-order-journey.spec.ts:150:7 › P0: exact variant from PDP to COD order (isolated) › PDP → cart: the selected variant (id, price, SKU, label) is what the cart holds (2.1s)
+  ok  64 tests\e2e-isolated\p0-variant-order-journey.spec.ts:154:7 › P0: exact variant from PDP to COD order (isolated) › checkout: quote and committed COD order use exactly that variant; stock and ledger move once (4.3s)
+  ok  65 tests\e2e-isolated\p0-variant-order-journey.spec.ts:183:7 › P0: exact variant from PDP to COD order (isolated) › API: forged, sold-out, over-limit and unpublished variants are refused with shopper messages (no raw DB text) (2.2s)
+  ok  66 tests\e2e-isolated\p0-variant-order-journey.spec.ts:212:7 › P0: exact variant from PDP to COD order (isolated) › last unit: two concurrent COD orders for the final 16GB/512GB unit → exactly one order (1.8s)
+  ok  67 tests\e2e-isolated\p0-variant-order-journey.spec.ts:224:7 › P0: exact variant from PDP to COD order (isolated) › PDP without option data lists each variant; the chosen one reaches the cart (2.2s)
+  ok  68 tests\e2e-isolated\p0-variant-order-journey.spec.ts:237:7 › P0: exact variant from PDP to COD order (isolated) › listing: a multi-variant card links to the option picker instead of adding an unchosen variant (1.4s)
+  ok  69 tests\e2e-isolated\p0-variant-order-journey.spec.ts:246:7 › P0: exact variant from PDP to COD order (isolated) › merchant: cancelling the order restocks exactly the ordered variant, ledger records it, no cash recorded (3.3s)
+  ok  70 tests\e2e-isolated\p1-image-fallback.spec.ts:7:5 › product cards fall back to 'No image' when the CDN photo is gone (1.7s)
+  ok  71 tests\e2e-isolated\p1-product-bulk-select.spec.ts:28:7 › Products: bulk selection (isolated) › tick, select all, feature/unfeature, open in bulk editor (5.1s)
+  ok  72 tests\e2e-isolated\p1-reels-reviews-blog.spec.ts:46:7 › P1: reels, reviews, blog (isolated) › reels: no row by default; reference and unlicensed videos refused; published owned reel shows (8.8s)
+  ok  73 tests\e2e-isolated\p1-reels-reviews-blog.spec.ts:102:7 › P1: reels, reviews, blog (isolated) › reviews: honest empty state; submission is pending until approved; then rating + JSON-LD (8.9s)
+  ok  74 tests\e2e-isolated\p1-reels-reviews-blog.spec.ts:162:7 › P1: reels, reviews, blog (isolated) › blog: empty publish refused; published post is public and sanitised; draft is 404 (6.1s)
+  ok  75 tests\e2e-isolated\p1-reels-reviews-blog.spec.ts:207:7 › P1: reels, reviews, blog (isolated) › fulfillment staff cannot write posts or reels or moderate reviews (1.8s)
+  ok  76 tests\e2e-isolated\p1-social-proof.spec.ts:96:7 › P1: truthful social proof (isolated) › zero qualifying orders: features on, yet no notice and no top-seller badge (13.3s)
+  ok  77 tests\e2e-isolated\p1-social-proof.spec.ts:117:7 › P1: truthful social proof (isolated) › real confirmed orders: anonymous notice + data-backed top seller; no personal data (31.9s)
+  ok  78 tests\e2e-isolated\p1-social-proof.spec.ts:165:7 › P1: truthful social proof (isolated) › editorial label: set in admin, shown with its own look; sales claims cannot be set (4.4s)
+  ok  79 tests\e2e-isolated\p1-social-proof.spec.ts:190:7 › P1: truthful social proof (isolated) › reels: visible reel autoplays muted, one at a time; sound only on request; reduced motion waits (11.8s)
+  ok  80 tests\e2e-isolated\p1-social-proof.spec.ts:245:7 › P1: truthful social proof (isolated) › broken video shows an unavailable state instead of a dead player (2.8s)
+  ok  81 tests\e2e-isolated\p1-store-testimonials-map.spec.ts:47:7 › Store reviews + map (isolated) › map: homepage only, after the footer, lazy iframe from the safe embed, no overflow (8.6s)
+  ok  82 tests\e2e-isolated\p1-store-testimonials-map.spec.ts:85:7 › Store reviews + map (isolated) › map: reduced motion has no sticky reveal (2.0s)
+  ok  83 tests\e2e-isolated\p1-store-testimonials-map.spec.ts:92:7 › Store reviews + map (isolated) › editor: can draft and submit, cannot publish (UI and API) (5.6s)
+  ok  84 tests\e2e-isolated\p1-store-testimonials-map.spec.ts:122:7 › Store reviews + map (isolated) › owner: approve → homepage shows it with honest labels; HTML stays text; hide removes it (12.4s)
+  ok  85 tests\e2e-isolated\p1-store-testimonials-map.spec.ts:206:7 › Store reviews + map (isolated) › reduced motion: reviews do not move and repeats are not rendered visibly (1.9s)
+  ok  86 tests\e2e-isolated\p1-storefront-labels.spec.ts:34:7 › P1: storefront labels and counts (isolated) › default: no counts, no section numbers, no angle counter, no alt-text captions (3.1s)
+  ok  87 tests\e2e-isolated\p1-storefront-labels.spec.ts:46:7 › P1: storefront labels and counts (isolated) › owner turns catalog counts back on in Admin; persisted and shown publicly (4.7s)
+  ok  88 tests\e2e-isolated\password-recovery.spec.ts:69:7 › staff password recovery (isolated) › full recovery: email link → new password → all sessions ended; UID, role and status unchanged (9.1s)
+  ok  89 tests\e2e-isolated\password-recovery.spec.ts:132:7 › staff password recovery (isolated) › token_hash link (recommended email template) works on another device (1.2s)
+  ok  90 tests\e2e-isolated\password-recovery.spec.ts:141:7 › staff password recovery (isolated) › recovery never grants access: deactivated and non-staff users stay forbidden (5.1s)
+  ok  91 tests\e2e-isolated\password-recovery.spec.ts:166:7 › staff password recovery (isolated) › password API requires a fresh recovery session; a normal sign-in cannot use it (2.1s)
+  ok  92 tests\e2e-isolated\password-recovery.spec.ts:179:7 › staff password recovery (isolated) › request endpoint: generic answer, no mail for unknown addresses, rate limits, cross-site and bad links refused (3.9s)
+  ok  93 tests\e2e-isolated\prehydration.spec.ts:31:7 › forms before hydration (isolated) › customer forms: track order and homepage inquiry cannot submit and post when they do (1.9s)
+  ok  94 tests\e2e-isolated\prehydration.spec.ts:45:7 › forms before hydration (isolated) › admin forms: shipping zone, product and content edits cannot submit (4.7s)
+  ok  95 tests\e2e-isolated\shipping-zones.spec.ts:32:7 › admin shipping zones (isolated) › before hydration the form cannot submit (no silent page reload, nothing lost) (3.0s)
+  ok  96 tests\e2e-isolated\shipping-zones.spec.ts:47:7 › admin shipping zones (isolated) › create: validation message, stored values in paisa, saved details shown, audit entry (4.6s)
+  ok  97 tests\e2e-isolated\shipping-zones.spec.ts:74:7 › admin shipping zones (isolated) › checkout quote: served city gets the zone fees, unserved city is refused (127ms)
+  x   98 tests\e2e-isolated\shipping-zones.spec.ts:91:7 › admin shipping zones (isolated) › zone rules: excluded city and free-delivery minimum are saved, shown and applied by quote and order (1.5m)
+  -   99 tests\e2e-isolated\shipping-zones.spec.ts:122:7 › admin shipping zones (isolated) › edit: deactivate shows the stored state; server rejects bad input with a clear message; editors are refused
+  ok 100 tests\e2e-isolated\z-owner-acceptance-36-steps.spec.ts:111:7 › Owner acceptance scenario — 36 steps (isolated) › 1–5: owner creates a laptop with two variants, prices and real (synthetic) stock (4.4s)
+  ok 101 tests\e2e-isolated\z-owner-acceptance-36-steps.spec.ts:154:7 › Owner acceptance scenario — 36 steps (isolated) › 6–9: media, collection, publish, storefront appearance (8.2s)
+  ok 102 tests\e2e-isolated\z-owner-acceptance-36-steps.spec.ts:202:7 › Owner acceptance scenario — 36 steps (isolated) › 10–15: cart, Pakistan address, quote, COD order, confirmation, stock + ledger (4.0s)
+  ok 103 tests\e2e-isolated\z-owner-acceptance-36-steps.spec.ts:256:7 › Owner acceptance scenario — 36 steps (isolated) › 16–22: order desk — confirm, pack, ship, deliver, record COD cash, accounting (7.7s)
+  ok 104 tests\e2e-isolated\z-owner-acceptance-36-steps.spec.ts:298:7 › Owner acceptance scenario — 36 steps (isolated) › 23–27: review, blog, reel, editorial badge, genuine sales indicators (28.5s)
+  ok 105 tests\e2e-isolated\z-owner-acceptance-36-steps.spec.ts:407:7 › Owner acceptance scenario — 36 steps (isolated) › 28–32: theme editor — change a section, draft, preview, publish, roll back (16.9s)
+  ok 106 tests\e2e-isolated\z-owner-acceptance-36-steps.spec.ts:469:7 › Owner acceptance scenario — 36 steps (isolated) › 33–34: restricted employee is refused prohibited actions (5.7s)
+  ok 107 tests\e2e-isolated\z-owner-acceptance-36-steps.spec.ts:499:7 › Owner acceptance scenario — 36 steps (isolated) › 35: mobile storefront and admin layouts (11.1s)
+  ok 108 tests\e2e-isolated\z-owner-acceptance-36-steps.spec.ts:523:7 › Owner acceptance scenario — 36 steps (isolated) › 36: nothing outside the isolated stack was touched (9ms)
+
+
+  1) tests\e2e-isolated\shipping-zones.spec.ts:91:7 › admin shipping zones (isolated) › zone rules: excluded city and free-delivery minimum are saved, shown and applied by quote and order 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.click: Test timeout of 90000ms exceeded.
+    Browser logs:
+
+    <launching> C:\Users\mudas\AppData\Local\ms-playwright\chromium-1248\chrome-win64\chrome.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,AvoidCorsURLLoaderRestartOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=C:\Users\mudas\AppData\Local\Temp\playwright_chromiumdev_profile-S3leHt --remote-debugging-pipe --no-startup-window
+    <launched> pid=18440
+    [pid=18440][err] [18440:24532:1116/162820.220:ERROR:chrome\browser\ui\views\user_education\impl\browser_user_education_interface_impl.cc:186] Attempting to show IPH IPH_ExtensionsZeroStatePromo before browser initialization complete; IPH will not be shown.
+    [pid=18440][err] [18440:24532:1116/163021.144:ERROR:chrome\browser\ui\views\user_education\impl\browser_user_education_interface_impl.cc:186] Attempting to show IPH IPH_ExtensionsZeroStatePromo before browser initialization complete; IPH will not be shown.
+    [pid=18440] <gracefully close start>
+    Call log:
+      - waiting for getByRole('button', { name: 'Sign in' })
+        - locator resolved to <button disabled type="submit" class="lh-btn lh-btn-primary mt-6 w-full">Sign in</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not enabled
+        - retrying click action
+          - waiting 100ms
+        171 × waiting for element to be visible, enabled and stable
+            - element is not enabled
+          - retrying click action
+            - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+
+
+      16 |   await page.getByLabel("Email").fill(fx.staff[role].email);
+      17 |   await page.getByLabel("Password").fill(fx.staff[role].password);
+    > 18 |   await page.getByRole("button", { name: "Sign in" }).click();
+         |                                                       ^
+      19 |   await page.waitForURL(/\/admin(\?|$|\/(?!login))/);
+      20 | }
+      21 |
+        at signIn (D:\Laptops Hub Vercel Development\tests\e2e-isolated\shipping-zones.spec.ts:18:55)
+        at D:\Laptops Hub Vercel Development\tests\e2e-isolated\shipping-zones.spec.ts:92:5
+
+    Error Context: test-results\shipping-zones-admin-shipp-2565c--applied-by-quote-and-order\error-context.md
+
+    Error Context: test-results\shipping-zones-admin-shipp-2565c--applied-by-quote-and-order\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\shipping-zones-admin-shipp-2565c--applied-by-quote-and-order\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\shipping-zones-admin-shipp-2565c--applied-by-quote-and-order\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests\e2e-isolated\shipping-zones.spec.ts:91:7 › admin shipping zones (isolated) › zone rules: excluded city and free-delivery minimum are saved, shown and applied by quote and order 
+  1 did not run
+  106 passed (10.4m)

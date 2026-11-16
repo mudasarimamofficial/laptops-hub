@@ -1,0 +1,158 @@
+{
+  "tool": "Lighthouse 13.3.0 (CLI, headless Chrome)",
+  "target": "local production build (next start) on 127.0.0.1:3001, local Supabase",
+  "note": "Lab metrics on a developer laptop with simulated throttling; not field data.",
+  "runs": [
+    {
+      "page": "collection-desktop",
+      "url": "/collections/all",
+      "scores": {
+        "performance": 89,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 2115,
+      "FCP_ms": 363,
+      "TBT_ms": 63,
+      "CLS": 0,
+      "SI_ms": 1035,
+      "failing": [
+        "color-contrast",
+        "unused-javascript",
+        "bf-cache",
+        "forced-reflow-insight",
+        "image-delivery-insight",
+        "lcp-breakdown-insight",
+        "lcp-discovery-insight",
+        "legacy-javascript-insight",
+        "render-blocking-insight"
+      ]
+    },
+    {
+      "page": "collection-mobile",
+      "url": "/collections/all",
+      "scores": {
+        "performance": 74,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 3921,
+      "FCP_ms": 1039,
+      "TBT_ms": 549,
+      "CLS": 0,
+      "SI_ms": 2214,
+      "failing": [
+        "mainthread-work-breakdown",
+        "bootup-time",
+        "unused-javascript",
+        "bf-cache",
+        "image-delivery-insight",
+        "lcp-discovery-insight",
+        "legacy-javascript-insight",
+        "render-blocking-insight"
+      ]
+    },
+    {
+      "page": "home-desktop",
+      "url": "/",
+      "scores": {
+        "performance": 88,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 2216,
+      "FCP_ms": 433,
+      "TBT_ms": 21,
+      "CLS": 0,
+      "SI_ms": 1183,
+      "failing": [
+        "unsized-images",
+        "unused-javascript",
+        "bf-cache",
+        "forced-reflow-insight",
+        "image-delivery-insight",
+        "legacy-javascript-insight",
+        "render-blocking-insight"
+      ]
+    },
+    {
+      "page": "home-mobile",
+      "url": "/",
+      "scores": {
+        "performance": 59,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 5285,
+      "FCP_ms": 1768,
+      "TBT_ms": 797,
+      "CLS": 0,
+      "SI_ms": 4101,
+      "failing": [
+        "mainthread-work-breakdown",
+        "bootup-time",
+        "unsized-images",
+        "unused-javascript",
+        "bf-cache",
+        "forced-reflow-insight",
+        "image-delivery-insight",
+        "legacy-javascript-insight",
+        "render-blocking-insight"
+      ]
+    },
+    {
+      "page": "pdp-desktop",
+      "url": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "scores": {
+        "performance": 83,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 3051,
+      "FCP_ms": 351,
+      "TBT_ms": 37,
+      "CLS": 0.001,
+      "SI_ms": 971,
+      "failing": [
+        "unused-javascript",
+        "bf-cache",
+        "forced-reflow-insight",
+        "image-delivery-insight",
+        "lcp-breakdown-insight",
+        "lcp-discovery-insight",
+        "legacy-javascript-insight",
+        "render-blocking-insight"
+      ]
+    },
+    {
+      "page": "pdp-mobile",
+      "url": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "scores": {
+        "performance": 68,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 4715,
+      "FCP_ms": 930,
+      "TBT_ms": 595,
+      "CLS": 0,
+      "SI_ms": 2913,
+      "failing": [
+        "mainthread-work-breakdown",
+        "unused-javascript",
+        "bf-cache",
+        "image-delivery-insight",
+        "lcp-breakdown-insight",
+        "lcp-discovery-insight",
+        "legacy-javascript-insight",
+        "render-blocking-insight"
+      ]
+    }
+  ]
+}

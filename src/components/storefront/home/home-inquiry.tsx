@@ -5,6 +5,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { normalizePakistanMobile } from "@/lib/phone";
 import { INQUIRY_BUDGETS, INQUIRY_TOPICS } from "@/lib/validation/contact";
 import { useHydrated } from "@/lib/ui/use-hydrated";
+import { sectionLabel } from "@/lib/content/storefront-presentation";
 
 type Phone = { display: string; href: string };
 type Fields = { name: string; phone: string; email: string; preferred: "" | "call" | "email"; topic: string; budget: string; useCase: string; msg: string };
@@ -19,7 +20,15 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  * limited, origin-checked, stored in contact_inquiries and listed for staff in /admin/inquiries. Success is shown only
  * after the server confirms the insert; no email is sent and no reply time is promised.
  */
-export function HomeInquirySection({ phones, privacyHref }: { phones: Phone[]; privacyHref: string | null }) {
+export function HomeInquirySection({
+  phones,
+  privacyHref,
+  showSectionNumbers = false,
+}: {
+  phones: Phone[];
+  privacyHref: string | null;
+  showSectionNumbers?: boolean;
+}) {
   const id = useId();
   const hydrated = useHydrated();
   const [f, setF] = useState<Fields>(EMPTY);
@@ -113,7 +122,7 @@ export function HomeInquirySection({ phones, privacyHref }: { phones: Phone[]; p
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".12em", color: "var(--lh-ink-2)" }}>
             <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
-            11 — NEED HELP CHOOSING?
+            {sectionLabel("11", "NEED HELP CHOOSING?", { showSectionNumbers })}
           </span>
           <h2 id={`${id}-h`} style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(30px,3.2vw,48px)", letterSpacing: "-.04em", lineHeight: 1.04, fontWeight: 700 }}>
             Tell us what you&apos;re looking for.

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { LHImg } from "@/components/storefront/v5/lh-img";
 import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
+import { DEFAULT_STOREFRONT_PRESENTATION, sectionLabel, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import { useCompare } from "@/lib/commerce/compare-store";
 
 export type CbData = {
@@ -13,7 +14,7 @@ export type CbData = {
 };
 
 /** Port of V5 section `#chromebooks` ("03 Chromebooks") with its scroll-linked `--cp` parallax. */
-export function ChromebookSection({ cb }: { cb: CbData }) {
+export function ChromebookSection({ cb, pres = DEFAULT_STOREFRONT_PRESENTATION }: { cb: CbData; pres?: StorefrontPresentation }) {
   const ref = useRef<HTMLElement>(null);
   const [asking, setAsking] = useState(false);
 
@@ -58,7 +59,7 @@ export function ChromebookSection({ cb }: { cb: CbData }) {
       <div className="v5-cb-grid" style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(72px,9vw,128px) clamp(16px,3vw,32px) clamp(64px,8vw,112px)", display: "grid", gap: "clamp(36px,5vw,72px)", alignItems: "center" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 22, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <span style={{ padding: "7px 12px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".14em", whiteSpace: "nowrap" }}>03 — CHROMEBOOKS</span>
+            <span style={{ padding: "7px 12px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".14em", whiteSpace: "nowrap" }}>{sectionLabel("03", "CHROMEBOOKS", pres)}</span>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".12em", color: "var(--lh-ink-2)" }}>NOW LISTED</span>
           </div>
           <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(38px,4.8vw,76px)", lineHeight: 0.98, letterSpacing: "-.05em", fontWeight: 700, color: "var(--lh-ink)", textWrap: "balance" }}>
@@ -111,7 +112,7 @@ export function ChromebookSection({ cb }: { cb: CbData }) {
 }
 
 /** V5 "08 — Newer generations" scroll-snap row with prev/next buttons (±600px). */
-export function NewGenRow({ count, children }: { count: number; children: ReactNode }) {
+export function NewGenRow({ count, children, pres = DEFAULT_STOREFRONT_PRESENTATION }: { count: number; children: ReactNode; pres?: StorefrontPresentation }) {
   const row = useRef<HTMLDivElement>(null);
   const btn = { width: 44, height: 44, borderRadius: "50%", border: "1px solid var(--lh-border)", background: "#FFFFFF", cursor: "pointer", display: "grid", placeItems: "center" } as const;
   return (
@@ -120,14 +121,14 @@ export function NewGenRow({ count, children }: { count: number; children: ReactN
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".12em", color: "var(--lh-ink-2)" }}>
             <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
-            08 — NEWER GENERATIONS
+            {sectionLabel("08", "NEWER GENERATIONS", pres)}
           </span>
           <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(28px,3vw,44px)", letterSpacing: "-.035em", fontWeight: 700 }}>10th gen and newer</h2>
           <span style={{ fontSize: 16, color: "var(--lh-ink-2)" }}>Intel Core 10th, 11th, 12th and 13th generation models.</span>
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           <Link href="/collections/gen-10-plus" className="v5-hov-color-action" style={{ display: "inline-flex", alignItems: "center", minHeight: 44, fontWeight: 600, fontSize: 15, color: "var(--lh-action)", marginRight: 6, whiteSpace: "nowrap" }}>
-            <span>View all {count} →</span>
+            <span>{pres.showCatalogCounts ? `View all ${count} →` : "View all →"}</span>
           </Link>
           <button type="button" aria-label="Scroll left" className="v5-hov-bd-action" style={btn} onClick={() => row.current?.scrollBy({ left: -600 })}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#102039" strokeWidth="2" aria-hidden="true">

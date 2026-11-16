@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { DEFAULT_STOREFRONT_PRESENTATION, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import { useCompare } from "@/lib/commerce/compare-store";
 
 /** One hero laptop: V5 cutout when approved media is configured, otherwise the catalog photo (multiply blend). */
-export type HeroShot = { href: string; label: string; src: string | null; cutout: boolean };
+/** `label` is the image alt text; `name` is the product name shown to shoppers on the price tag. */
+export type HeroShot = { href: string; label: string; name: string; src: string | null; cutout: boolean };
 
 export type HeroProps = {
   totalCount: number;
@@ -14,6 +16,8 @@ export type HeroProps = {
   laptopCount: number;
   accCount: number;
   main: HeroShot & { priceText: string; stockText: string; chips: string[] };
+  /** Storefront label switches (Admin → Settings → Storefront labels). */
+  pres?: StorefrontPresentation;
   side1: HeroShot | null;
   side2: HeroShot | null;
 };
@@ -33,7 +37,7 @@ function usePrefersReducedMotion() {
 const ease = "cubic-bezier(.2,.7,.2,1)";
 
 /** Port of V5 section `#top` ("01 Hero"): layered stage, scroll (--hp) and pointer (--mx/--my) parallax, intro. */
-export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCount, main, side1, side2 }: HeroProps) {
+export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCount, main, side1, side2, pres = DEFAULT_STOREFRONT_PRESENTATION }: HeroProps) {
   const rm = usePrefersReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const [entered, setEntered] = useState(false);
@@ -161,23 +165,25 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
             style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 10, minHeight: 42, padding: "5px 14px 5px 5px", borderRadius: 999, background: "rgba(255,255,255,.92)", border: "1px solid var(--lh-border)", color: "var(--lh-ink)", fontSize: 14, fontWeight: 600, opacity: 1, transform: inT, transition: tr([["opacity", 0.8, 0.4], ["transform", 0.8, 0.4, true]]) + ",border-color .2s ease" }}
           >
             <span style={{ padding: "6px 10px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 500, letterSpacing: ".12em", whiteSpace: "nowrap" }}>CHROMEBOOKS</span>
-            {chromebookCount ? `${chromebookCount} listed` : "Ask what is available"}
+            {chromebookCount ? (pres.showCatalogCounts ? `${chromebookCount} listed` : "Now listed") : "Ask what is available"}
             <span aria-hidden="true" style={{ color: "var(--lh-action)" }}>→</span>
           </a>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(16px,2.4vw,36px)", paddingTop: "clamp(10px,1.4vw,18px)", borderTop: "1px solid var(--lh-border)", maxWidth: 520, opacity: 1, transition: tr([["opacity", 0.8, 0.6]]) }}>
-            <Link href="/collections/all" style={{ display: "flex", flexDirection: "column", gap: 2, color: "var(--lh-ink)" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700 }}>{totalCount}</span>
-              <span style={{ fontSize: 13, color: "var(--lh-ink-2)" }}>listings</span>
-            </Link>
-            <Link href="/collections/laptops" style={{ display: "flex", flexDirection: "column", gap: 2, color: "var(--lh-ink)" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700, color: "var(--lh-success)" }}>{laptopCount}</span>
-              <span style={{ fontSize: 13, color: "var(--lh-ink-2)" }}>laptops</span>
-            </Link>
-            <Link href="/collections/accessories" style={{ display: "flex", flexDirection: "column", gap: 2, color: "var(--lh-ink)" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700 }}>{accCount}</span>
-              <span style={{ fontSize: 13, color: "var(--lh-ink-2)" }}>accessories</span>
-            </Link>
-          </div>
+          {pres.showCatalogCounts ? (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(16px,2.4vw,36px)", paddingTop: "clamp(10px,1.4vw,18px)", borderTop: "1px solid var(--lh-border)", maxWidth: 520, opacity: 1, transition: tr([["opacity", 0.8, 0.6]]) }}>
+              <Link href="/collections/all" style={{ display: "flex", flexDirection: "column", gap: 2, color: "var(--lh-ink)" }}>
+                <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700 }}>{totalCount}</span>
+                <span style={{ fontSize: 13, color: "var(--lh-ink-2)" }}>listings</span>
+              </Link>
+              <Link href="/collections/laptops" style={{ display: "flex", flexDirection: "column", gap: 2, color: "var(--lh-ink)" }}>
+                <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700, color: "var(--lh-success)" }}>{laptopCount}</span>
+                <span style={{ fontSize: 13, color: "var(--lh-ink-2)" }}>laptops</span>
+              </Link>
+              <Link href="/collections/accessories" style={{ display: "flex", flexDirection: "column", gap: 2, color: "var(--lh-ink)" }}>
+                <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700 }}>{accCount}</span>
+                <span style={{ fontSize: 13, color: "var(--lh-ink-2)" }}>accessories</span>
+              </Link>
+            </div>
+          ) : null}
         </div>
 
         <div className="v5-hero-comp" style={{ position: "relative", minWidth: 0, zIndex: 1 }}>
@@ -234,7 +240,7 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
             style={{ position: "absolute", bottom: 0, zIndex: 3, display: "flex", alignItems: "center", gap: 14, padding: "10px 12px 10px 16px", borderRadius: 18, background: "rgba(255,255,255,.94)", border: "1px solid rgba(255,255,255,.95)", boxShadow: "0 18px 40px -18px rgba(var(--lh-navy-rgb),.45)", color: "var(--lh-ink)", opacity: 1, transition: tr([["opacity", 0.8, 0.7]]) + ",box-shadow .2s ease" }}
           >
             <span style={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              <span style={{ fontSize: 13, fontWeight: 600 }}>{main.label}</span>
+              <span style={{ fontSize: 13, fontWeight: 600 }}>{main.name}</span>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-action)" }}>{main.stockText}</span>
             </span>
             <span style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 700, whiteSpace: "nowrap" }}>{main.priceText}</span>

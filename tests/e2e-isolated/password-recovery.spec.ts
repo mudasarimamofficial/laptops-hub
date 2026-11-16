@@ -52,6 +52,10 @@ const membership = async (userId: string) =>
 test.describe.serial("staff password recovery (isolated)", () => {
   test.beforeAll(async () => {
     await assertLocalOnly("recovery journeys");
+    // The fixture staff are reused run after run, so recovery/password counters from an earlier run in the same
+    // window would trip the (correct) limits here. Start each run with clean counters on the LOCAL database only.
+    const { error } = await sb.from("rate_limit_buckets").delete().or("bucket_key.like.password:*,bucket_key.like.recover:*");
+    expect(error, "clear local recovery rate-limit counters").toBeNull();
   });
   // Later suites sign in with the fixture passwords: put back the ones these journeys change.
   test.afterAll(async () => {
@@ -107,7 +111,13 @@ test.describe.serial("staff password recovery (isolated)", () => {
     const { data: u } = await sb.auth.admin.getUserById(manager.id);
     expect(u.user?.email).toBe(manager.email);
     expect(await membership(manager.id)).toEqual(before);
-    const { count } = await sb.from("audit_logs").select("id", { count: "exact", head: true }).eq("action", "auth.password_reset").eq("entity_id", manager.id);
+    // Exactly one audit entry for THIS reset (the local DB keeps entries from earlier runs).
+    const { count } = await sb
+      .from("audit_logs")
+      .select("id", { count: "exact", head: true })
+      .eq("action", "auth.password_reset")
+      .eq("entity_id", manager.id)
+      .gte("created_at", new Date(t0).toISOString());
     expect(count).toBe(1);
 
     // The used link cannot be reused.

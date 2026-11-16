@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { publicWriteBlockedResponse } from "@/lib/security/public-write-guard";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/security/rate-limit";
 import { isCrossSite } from "@/lib/validation/contact";
@@ -11,6 +12,9 @@ import { isFreshRecoverySession, newPasswordProblem } from "@/lib/auth/recovery"
  */
 export async function POST(request: Request) {
   const headers = { "Cache-Control": "no-store" };
+  // No recovery emails or password changes on Production auth from a Preview / read-only deployment.
+  const blocked = publicWriteBlockedResponse();
+  if (blocked) return blocked;
   if (isCrossSite(request.headers.get("origin"), request.url, request.headers.get("x-forwarded-host") || request.headers.get("host"))) {
     return NextResponse.json({ error: "forbidden" }, { status: 403, headers });
   }
@@ -48,9 +52,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "update_failed", message }, { status: 400, headers });
   }
 
-  await createServiceClient()
-    .from("audit_logs")
-    .insert({ actor_user_id: user.id, action: "auth.password_reset", entity_type: "auth_user", entity_id: user.id, after: { via: "recovery_email" } });
+  // Audit only when merchant side-effects are allowed (never Preview→Production).
+  const { canPersistMerchantSideEffects } = await import("@/lib/security/merchant-write-guard");
+  if (canPersistMerchantSideEffects()) {
+    await createServiceClient()
+      .from("audit_logs")
+      .insert({
+        actor_user_id: user.id,
+        action: "auth.password_reset",
+        entity_type: "auth_user",
+        entity_id: user.id,
+        after: { via: "recovery_email" },
+      });
+  }
   await supabase.auth.signOut({ scope: "global" });
   return NextResponse.json({ ok: true }, { headers });
 }

@@ -1,5 +1,17 @@
 export type ProductStatus = "draft" | "active" | "archived";
 
+export type PublicVariant = {
+  id: string;
+  sku: string | null;
+  title: string;
+  optionValues: Record<string, string>;
+  pricePaisa: number;
+  compareAtPaisa: number | null;
+  maxPerOrder: number;
+  available: boolean;
+  mediaId: string | null;
+};
+
 export type PublicProduct = {
   id: string;
   handle: string;
@@ -11,6 +23,12 @@ export type PublicProduct = {
   featured: boolean;
   tags: string[];
   specs: Record<string, unknown>;
+  optionNames: string[];
+  variants: PublicVariant[];
+  /** Purchasable variants (PDP) or, for listing rows, how many exist — >1 means the shopper must choose options. */
+  variantCount: number;
+  /** Lowest price among currently purchasable variants ("From" price on cards). */
+  fromPricePaisa: number;
   variantId: string;
   sku: string | null;
   pricePaisa: number;

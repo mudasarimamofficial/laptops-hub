@@ -10,6 +10,8 @@ type Variant = {
   title: string;
   sku: string | null;
   pricePaisa: number;
+  inventoryMode?: "tracked" | "untracked";
+  quantityOnHand?: number | null;
 };
 
 type Props = {
@@ -21,6 +23,8 @@ type Props = {
   manufacturer: string | null;
   productType: string | null;
   category: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
   variants: Variant[];
 };
 
@@ -35,9 +39,17 @@ export function ProductEditForm(props: Props) {
   const [manufacturer, setManufacturer] = useState(props.manufacturer || "");
   const [productType, setProductType] = useState(props.productType || "");
   const [category, setCategory] = useState(props.category || "");
+  const [seoTitle, setSeoTitle] = useState(props.seoTitle || "");
+  const [seoDescription, setSeoDescription] = useState(props.seoDescription || "");
   const [variantId, setVariantId] = useState(props.variants[0]?.id || "");
   const selected = props.variants.find((v) => v.id === variantId) || props.variants[0];
   const [pricePkr, setPricePkr] = useState(String(paisaToMajor(selected?.pricePaisa || 0)));
+  const [inventoryMode, setInventoryMode] = useState<"tracked" | "untracked">(
+    selected?.inventoryMode === "tracked" ? "tracked" : "untracked",
+  );
+  const [quantityOnHand, setQuantityOnHand] = useState(
+    String(selected?.quantityOnHand ?? 0),
+  );
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -45,7 +57,11 @@ export function ProductEditForm(props: Props) {
   function onVariantChange(id: string) {
     setVariantId(id);
     const v = props.variants.find((x) => x.id === id);
-    if (v) setPricePkr(String(paisaToMajor(v.pricePaisa)));
+    if (v) {
+      setPricePkr(String(paisaToMajor(v.pricePaisa)));
+      setInventoryMode(v.inventoryMode === "tracked" ? "tracked" : "untracked");
+      setQuantityOnHand(String(v.quantityOnHand ?? 0));
+    }
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -62,10 +78,14 @@ export function ProductEditForm(props: Props) {
         manufacturer: manufacturer.trim() || null,
         productType: productType.trim() || null,
         category: category.trim() || null,
+        seoTitle: seoTitle.trim() || null,
+        seoDescription: seoDescription.trim() || null,
       };
       if (variantId && pricePkr) {
         body.variantId = variantId;
         body.pricePkr = Number(pricePkr);
+        body.inventoryMode = inventoryMode;
+        body.quantityOnHand = inventoryMode === "tracked" ? Number(quantityOnHand) : null;
       }
       const res = await fetch(`/api/admin/products/${encodeURIComponent(props.handle)}`, {
         method: "PATCH",
@@ -77,7 +97,7 @@ export function ProductEditForm(props: Props) {
         setErr(data.message || data.error || `Save failed (${res.status})`);
         return;
       }
-      setMsg("Saved. Only the selected variant price was updated.");
+      setMsg("Saved. Selected variant price and inventory settings were updated.");
       router.refresh();
     } catch {
       setErr("Network error — try again.");
@@ -151,6 +171,45 @@ export function ProductEditForm(props: Props) {
           Other variants keep their own prices. Stock counts are never shown publicly.
         </span>
       </label>
+      <fieldset className="space-y-2 rounded-xl border border-[var(--lh-border)] p-3">
+        <legend className="px-1 text-sm font-medium">Inventory (selected variant)</legend>
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="radio"
+            name="inv"
+            checked={inventoryMode === "untracked"}
+            onChange={() => setInventoryMode("untracked")}
+            className="mt-1"
+          />
+          <span>
+            Confirm availability
+            <span className="block text-xs text-[var(--lh-ink-2)]">Not unlimited stock — staff confirms before dispatch.</span>
+          </span>
+        </label>
+        <label className="flex items-start gap-2 text-sm">
+          <input
+            type="radio"
+            name="inv"
+            checked={inventoryMode === "tracked"}
+            onChange={() => setInventoryMode("tracked")}
+            className="mt-1"
+          />
+          <span>Tracked quantity</span>
+        </label>
+        {inventoryMode === "tracked" ? (
+          <label className="block text-sm">
+            <span className="font-medium">Quantity on hand</span>
+            <input
+              type="number"
+              min={0}
+              className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
+              value={quantityOnHand}
+              onChange={(e) => setQuantityOnHand(e.target.value)}
+              required
+            />
+          </label>
+        ) : null}
+      </fieldset>
       <div className="grid gap-4 sm:grid-cols-3">
         <label className="block text-sm">
           <span className="font-medium">Manufacturer</span>
@@ -182,15 +241,63 @@ export function ProductEditForm(props: Props) {
         <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} />
         Featured on storefront
       </label>
+      <label className="block text-sm">
+        <span className="font-medium">SEO title</span>
+        <input
+          className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
+          value={seoTitle}
+          onChange={(e) => setSeoTitle(e.target.value)}
+          maxLength={200}
+        />
+      </label>
+      <label className="block text-sm">
+        <span className="font-medium">SEO description</span>
+        <textarea
+          className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
+          rows={3}
+          value={seoDescription}
+          onChange={(e) => setSeoDescription(e.target.value)}
+          maxLength={500}
+        />
+      </label>
       {err ? <p className="text-sm text-red-600">{err}</p> : null}
       {msg ? <p className="text-sm text-emerald-700">{msg}</p> : null}
-      <button
-        type="submit"
-        disabled={busy || !hydrated}
-        className="rounded-[var(--lh-radius-pill)] bg-[linear-gradient(180deg,var(--lh-grad-action-from),var(--lh-grad-action-to))] px-6 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
-      >
-        {busy ? "Saving…" : "Save product"}
-      </button>
+      <div className="flex flex-wrap gap-3">
+        <button
+          type="submit"
+          disabled={busy || !hydrated}
+          className="rounded-[var(--lh-radius-pill)] bg-[linear-gradient(180deg,var(--lh-grad-action-from),var(--lh-grad-action-to))] px-6 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+        >
+          {busy ? "Saving…" : "Save product"}
+        </button>
+        <button
+          type="button"
+          disabled={busy || !hydrated}
+          className="rounded-[var(--lh-radius-pill)] border border-[var(--lh-border)] px-6 py-2.5 text-sm font-semibold disabled:opacity-60"
+          onClick={async () => {
+            setBusy(true);
+            setErr(null);
+            try {
+              const res = await fetch(`/api/admin/products/${encodeURIComponent(props.handle)}/duplicate`, {
+                method: "POST",
+              });
+              const data = await res.json().catch(() => ({}));
+              if (!res.ok) {
+                setErr(data.message || "Duplicate failed");
+                return;
+              }
+              router.push(`/admin/products/${encodeURIComponent(data.handle)}`);
+              router.refresh();
+            } catch {
+              setErr("Network error");
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          Duplicate
+        </button>
+      </div>
     </form>
   );
 }

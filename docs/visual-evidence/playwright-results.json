@@ -4,7 +4,12 @@
       "C:\\nvm4w\\nodejs\\node.exe",
       "D:\\Laptops Hub Vercel Development\\node_modules\\@playwright\\test\\cli.js",
       "test",
-      "tests/e2e"
+      "-c",
+      "playwright.config.ts",
+      "tests/e2e/theme-publish-workflow.spec.ts",
+      "tests/e2e/merchant-admin-workflows.spec.ts",
+      "tests/e2e/homepage-presets.spec.ts",
+      "tests/e2e/v5-correctness.spec.ts"
     ],
     "configFile": "D:\\Laptops Hub Vercel Development\\playwright.config.ts",
     "rootDir": "D:/Laptops Hub Vercel Development/tests/e2e",
@@ -18,7 +23,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 3
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "projects": [
@@ -27,7 +32,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 3
+          "actualWorkers": 1
         },
         "id": "",
         "name": "",
@@ -36,7 +41,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 60000
+        "timeout": 120000
       }
     ],
     "filteredProjects": [
@@ -47,16 +52,16 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 3
+          "actualWorkers": 1
         },
         "name": "",
         "testDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e",
         "snapshotDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e",
         "testIgnore": [],
         "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
-        "timeout": 60000,
+        "timeout": 120000,
         "use": {
-          "baseURL": "http://127.0.0.1:3000",
+          "baseURL": "http://127.0.0.1:3001",
           "trace": "off",
           "launchOptions": {
             "executablePath": "C:\\Users\\mudas\\AppData\\Local\\ms-playwright\\chromium-1248\\chrome-win64\\chrome.exe"
@@ -89,695 +94,976 @@
     "updateSnapshots": "default",
     "updateSourceMethod": "patch",
     "version": "1.64.1",
-    "workers": 4,
+    "workers": 1,
     "webServer": null
   },
   "suites": [
     {
-      "title": "v5-content.spec.ts",
-      "file": "v5-content.spec.ts",
+      "title": "homepage-presets.spec.ts",
+      "file": "homepage-presets.spec.ts",
       "column": 0,
       "line": 0,
-      "specs": [
+      "specs": [],
+      "suites": [
         {
-          "title": "gated page /pages/about",
-          "ok": true,
-          "tags": [],
-          "tests": [
+          "title": "Homepage approved image presets",
+          "file": "homepage-presets.spec.ts",
+          "line": 87,
+          "column": 6,
+          "specs": [
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "hero and product story use the seven CDN defaults",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 4567,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:05.616Z",
+                  "timeout": 120000,
                   "annotations": [],
-                  "attachments": []
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1341,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:34:40.933Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
+              "id": "f26f46f93b072a2dfa28-9c2f06d2c812c251f71c",
+              "file": "homepage-presets.spec.ts",
+              "line": 92,
+              "column": 7
             }
-          ],
-          "id": "37798ce615b3c7053179-3580aa851c3bc71a9ddd",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
+          ]
+        }
+      ]
+    },
+    {
+      "title": "merchant-admin-workflows.spec.ts",
+      "file": "merchant-admin-workflows.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
         {
-          "title": "gated page /pages/why-laptops-hub",
-          "ok": true,
-          "tags": [],
-          "tests": [
+          "title": "merchant admin workflows",
+          "file": "merchant-admin-workflows.spec.ts",
+          "line": 52,
+          "column": 15,
+          "specs": [
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "seed staff roles",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 3013,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:11.144Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                        "line": 52,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 601,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:34:43.360Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                            "line": 52,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-b87112a6bbf6e39a01c9",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "gated page /pages/contact",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "f3213d8a8edd57ec3d33-794858d92a6576abd5ba",
+              "file": "merchant-admin-workflows.spec.ts",
+              "line": 58,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "owner creates product and opens editor",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1754,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:14.436Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                        "line": 52,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1869,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:34:44.270Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                            "line": 52,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-20d3178eaf1cb116f164",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "gated page /pages/faq",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "f3213d8a8edd57ec3d33-749019937b8a6b0a52d1",
+              "file": "merchant-admin-workflows.spec.ts",
+              "line": 65,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "owner saves variant matrix rows",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2383,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:16.375Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                        "line": 52,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2085,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:34:46.180Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                            "line": 52,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-48939c05aed1131be986",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "gated page /pages/shipping",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "f3213d8a8edd57ec3d33-a7acadd6ba799129ce23",
+              "file": "merchant-admin-workflows.spec.ts",
+              "line": 77,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "owner opens collections and create form",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1735,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:18.957Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                        "line": 52,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3823,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:34:48.308Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                            "line": 52,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-af86ad303959585cb7f0",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "gated page /pages/returns",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "f3213d8a8edd57ec3d33-fa2b0b33e85f7dd168ce",
+              "file": "merchant-admin-workflows.spec.ts",
+              "line": 92,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "owner sees import job history UI",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2403,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:20.858Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                        "line": 52,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1421,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:34:52.168Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                            "line": 52,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-7f94616f1fcf0ef54966",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "gated page /pages/warranty",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "f3213d8a8edd57ec3d33-ec971b0699e6a4f392e0",
+              "file": "merchant-admin-workflows.spec.ts",
+              "line": 109,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "owner edits store settings form",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2132,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:23.364Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                        "line": 52,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1990,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:34:53.630Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                            "line": 52,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-e8ce1be73cc19d34f7b6",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "gated page /pages/condition-guide",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "f3213d8a8edd57ec3d33-89526a34e7f615cad6fe",
+              "file": "merchant-admin-workflows.spec.ts",
+              "line": 116,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "owner inventory + inquiries + orders shells load",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1778,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:25.598Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                        "line": 52,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4539,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:34:55.667Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                            "line": 52,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-229c3a5dc5a7442de69a",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "gated page /pages/how-to-choose",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "f3213d8a8edd57ec3d33-c741b37ce43804342558",
+              "file": "merchant-admin-workflows.spec.ts",
+              "line": 129,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "editor cannot open settings; fulfillment cannot customize theme",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2543,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:27.458Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                        "line": 52,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3674,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:35:00.283Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                            "line": 52,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-a78f6337d24a2a3f99b0",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "gated page /pages/comparison-guide",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "f3213d8a8edd57ec3d33-2911f575a774aac4115d",
+              "file": "merchant-admin-workflows.spec.ts",
+              "line": 145,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "desktop and mobile admin shells render products list",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2435,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:30.099Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                        "line": 52,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3773,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:35:03.988Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\merchant-admin-workflows.spec.ts",
+                            "line": 52,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
+              "id": "f3213d8a8edd57ec3d33-52adff00b8f3b5f3748b",
+              "file": "merchant-admin-workflows.spec.ts",
+              "line": 171,
+              "column": 7
             }
-          ],
-          "id": "37798ce615b3c7053179-a004d140dadc4e9e344b",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
+          ]
+        }
+      ]
+    },
+    {
+      "title": "theme-publish-workflow.spec.ts",
+      "file": "theme-publish-workflow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
         {
-          "title": "gated page /pages/order-inquiries",
-          "ok": true,
-          "tags": [],
-          "tests": [
+          "title": "theme publish/rollback browser workflow",
+          "file": "theme-publish-workflow.spec.ts",
+          "line": 137,
+          "column": 15,
+          "specs": [
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "seed published baseline A",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2292,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:32.625Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 137,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 458,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:35:07.844Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-fd45e964ede9c463dae1",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "gated page /pages/privacy",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "13543266674abcaf3d4f-e66a66b2e366ca2cf261",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 142,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "logged-out storefront shows published A (not draft)",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2427,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:35.117Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 137,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1030,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:35:08.362Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-0a288475b336b7e49d6e",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "gated page /pages/terms",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "13543266674abcaf3d4f-607513551449aa60546f",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 150,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "owner changes image, saves draft; public unchanged",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2433,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:37.621Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 137,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4304,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:35:09.417Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-ca393ee70b3149451c02",
-          "file": "v5-content.spec.ts",
-          "line": 14,
-          "column": 7
-        },
-        {
-          "title": "guides index and articles are gated and noindex",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "13543266674abcaf3d4f-f74e94ca245925e271ef",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 159,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "owner opens draft preview showing draft URL",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 3540,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:40.135Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 137,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3015,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:35:13.759Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-7a68c3ce935b7a71c560",
-          "file": "v5-content.spec.ts",
-          "line": 28,
-          "column": 5
-        },
-        {
-          "title": "missing content routes 404",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "13543266674abcaf3d4f-961d7ef7323e166ebf10",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 181,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "owner publishes; logged-out sees draft URL; snapshot immutable",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1383,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:43.793Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 137,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4617,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:35:16.819Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-fd11c818f9f08582945c",
-          "file": "v5-content.spec.ts",
-          "line": 37,
-          "column": 5
-        },
-        {
-          "title": "sitemap lists no unpublished content",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "13543266674abcaf3d4f-2775554cfa2c3faa310c",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 202,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "owner rolls back; logged-out sees previous image",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 57,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:45.234Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 137,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3791,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:35:21.482Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-39e98804e23f7402a3f1",
-          "file": "v5-content.spec.ts",
-          "line": 42,
-          "column": 5
-        },
-        {
-          "title": "contact form: validation, submitting, failure, success (mocked)",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "13543266674abcaf3d4f-5cfa03fb8a006d5c5a86",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 244,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "editor cannot publish via API",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2129,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:45.320Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 137,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1989,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:35:25.313Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-a1de8d799e618366d30d",
-          "file": "v5-content.spec.ts",
-          "line": 47,
-          "column": 5
-        },
-        {
-          "title": "contact form shows the submitting state",
-          "ok": true,
-          "tags": [],
-          "tests": [
+              "id": "13543266674abcaf3d4f-a877ee632e30ddefe843",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 261,
+              "column": 7
+            },
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
+              "title": "seven approved CDN presets still present after workflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 1941,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:47.495Z",
-                  "annotations": [],
-                  "attachments": []
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 137,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1555,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T11:35:27.362Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
-              "status": "expected"
+              "id": "13543266674abcaf3d4f-adeb92db66e37f332ad9",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 269,
+              "column": 7
             }
-          ],
-          "id": "37798ce615b3c7053179-9a9616200c20dae0c684",
-          "file": "v5-content.spec.ts",
-          "line": 89,
-          "column": 5
-        },
-        {
-          "title": "contact API rejects invalid and cross-site posts without storing",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 579,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:49.485Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-ab3f6712ad42260c1e1f",
-          "file": "v5-content.spec.ts",
-          "line": 103,
-          "column": 5
-        },
-        {
-          "title": "help side navigation marks unpublished pages and current page",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 650,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:50.095Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-bdd9727f4dd3dc21b70b",
-          "file": "v5-content.spec.ts",
-          "line": 116,
-          "column": 5
+          ]
         }
       ]
     },
@@ -793,22 +1079,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5338,
+                  "duration": 1346,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:05.673Z",
+                  "startTime": "2026-11-16T11:35:28.989Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -827,27 +1113,47 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "handle not public in this database",
+                  "location": {
+                    "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
+                    "line": 27,
+                    "column": 10
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 2571,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 756,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:12.218Z",
-                  "annotations": [],
+                  "startTime": "2026-11-16T11:35:30.399Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "handle not public in this database",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
+                        "line": 27,
+                        "column": 10
+                      }
+                    }
+                  ],
                   "attachments": []
                 }
               ],
-              "status": "expected"
+              "status": "skipped"
             }
           ],
           "id": "343f6d1acd4c7d349bb8-925e629ba2185dea87ee",
@@ -861,22 +1167,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3181,
+                  "duration": 1334,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:14.931Z",
+                  "startTime": "2026-11-16T11:35:31.199Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -895,22 +1201,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2167,
+                  "duration": 662,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:18.238Z",
+                  "startTime": "2026-11-16T11:35:32.577Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -924,27 +1230,27 @@
           "column": 5
         },
         {
-          "title": "public cards never show Add to cart without a purchasable variant",
+          "title": "public cards show exactly one action: Add to cart (one purchasable variant), Choose options, or Ask",
           "ok": true,
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3312,
+                  "duration": 886,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:20.493Z",
+                  "startTime": "2026-11-16T11:35:33.271Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -952,7 +1258,7 @@
               "status": "expected"
             }
           ],
-          "id": "343f6d1acd4c7d349bb8-8924ab559dc1845c47c6",
+          "id": "343f6d1acd4c7d349bb8-dd4e65ba6d98ca4d73a5",
           "file": "v5-correctness.spec.ts",
           "line": 59,
           "column": 5
@@ -963,22 +1269,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6125,
+                  "duration": 2611,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:23.871Z",
+                  "startTime": "2026-11-16T11:35:34.190Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -988,7 +1294,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-ce14f50d3295e17ca9a6",
           "file": "v5-correctness.spec.ts",
-          "line": 76,
+          "line": 78,
           "column": 7
         },
         {
@@ -997,22 +1303,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6127,
+                  "duration": 2451,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:30.071Z",
+                  "startTime": "2026-11-16T11:35:36.840Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1022,7 +1328,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-fe7d4d1a936c019e7625",
           "file": "v5-correctness.spec.ts",
-          "line": 76,
+          "line": 78,
           "column": 7
         },
         {
@@ -1031,22 +1337,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3665,
+                  "duration": 1651,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:36.265Z",
+                  "startTime": "2026-11-16T11:35:39.323Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1056,7 +1362,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-0f31873b904889a2ff86",
           "file": "v5-correctness.spec.ts",
-          "line": 119,
+          "line": 121,
           "column": 5
         },
         {
@@ -1065,22 +1371,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6216,
+                  "duration": 2724,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:40.111Z",
+                  "startTime": "2026-11-16T11:35:41.002Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1090,7 +1396,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-08c168310b3100a25238",
           "file": "v5-correctness.spec.ts",
-          "line": 131,
+          "line": 133,
           "column": 5
         },
         {
@@ -1099,22 +1405,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "",
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2477,
+                  "duration": 1215,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:46.390Z",
+                  "startTime": "2026-11-16T11:35:43.755Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1124,7 +1430,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-4cd6898002a3831b1c63",
           "file": "v5-correctness.spec.ts",
-          "line": 158,
+          "line": 160,
           "column": 5
         },
         {
@@ -1133,48 +1439,15 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 62,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:48.921Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-2abc13682556b6f6f927",
-          "file": "v5-correctness.spec.ts",
-          "line": 174,
-          "column": 5
-        },
-        {
-          "title": "inquiry dialog submits to /api/contact (needs an inquiry-only product and a non-production DB)",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
+              "timeout": 120000,
               "annotations": [
                 {
                   "type": "skip",
+                  "description": "this run's app has COD_CHECKOUT_ENABLED=true by design",
                   "location": {
                     "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                    "line": 183,
-                    "column": 6
+                    "line": 179,
+                    "column": 8
                   }
                 }
               ],
@@ -1183,22 +1456,23 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "skipped",
-                  "duration": 0,
+                  "duration": 12,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-23T12:53:49.027Z",
+                  "startTime": "2026-11-16T11:35:45.011Z",
                   "annotations": [
                     {
                       "type": "skip",
+                      "description": "this run's app has COD_CHECKOUT_ENABLED=true by design",
                       "location": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                        "line": 183,
-                        "column": 6
+                        "line": 179,
+                        "column": 8
                       }
                     }
                   ],
@@ -1208,289 +1482,9 @@
               "status": "skipped"
             }
           ],
-          "id": "343f6d1acd4c7d349bb8-ec6ae295927bb267c7a1",
+          "id": "343f6d1acd4c7d349bb8-2abc13682556b6f6f927",
           "file": "v5-correctness.spec.ts",
-          "line": 183,
-          "column": 6
-        }
-      ]
-    },
-    {
-      "title": "v5-visual.spec.ts",
-      "file": "v5-visual.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "homepage visual desktop-1897x860",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 7037,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:05.616Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-456471319bbc45050cb7",
-          "file": "v5-visual.spec.ts",
-          "line": 22,
-          "column": 7
-        },
-        {
-          "title": "homepage visual laptop-1440x900",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 4364,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:13.789Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-3585fa97134321a28715",
-          "file": "v5-visual.spec.ts",
-          "line": 22,
-          "column": 7
-        },
-        {
-          "title": "homepage visual tablet-768x1024",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 3647,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:18.277Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-0f2b7c5e12057d67c39f",
-          "file": "v5-visual.spec.ts",
-          "line": 22,
-          "column": 7
-        },
-        {
-          "title": "homepage visual mobile-390x844",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 5449,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:22.069Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-296d3f5b05f42dd06e6b",
-          "file": "v5-visual.spec.ts",
-          "line": 22,
-          "column": 7
-        },
-        {
-          "title": "product story price panel visible at 1897x860",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 4343,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:27.630Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-f767c45a9e4e7a477205",
-          "file": "v5-visual.spec.ts",
-          "line": 39,
-          "column": 5
-        },
-        {
-          "title": "product story price panel visible at 390x844",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 3044,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:32.157Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-fd97a1b268ac7757a783",
-          "file": "v5-visual.spec.ts",
-          "line": 51,
-          "column": 5
-        },
-        {
-          "title": "search and collections reachable",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 3571,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:35.349Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-82912e588c45c3cf785f",
-          "file": "v5-visual.spec.ts",
-          "line": 62,
-          "column": 5
-        },
-        {
-          "title": "reduced motion does not crash story",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 2071,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-23T12:53:39.008Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-1f5e7a2143d7ab03fad3",
-          "file": "v5-visual.spec.ts",
-          "line": 70,
+          "line": 176,
           "column": 5
         }
       ]
@@ -1498,10 +1492,10 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-23T12:53:04.515Z",
-    "duration": 46668.307,
-    "expected": 39,
-    "skipped": 1,
+    "startTime": "2026-11-16T11:34:39.960Z",
+    "duration": 65553.43000000001,
+    "expected": 27,
+    "skipped": 2,
     "unexpected": 0,
     "flaky": 0
   }

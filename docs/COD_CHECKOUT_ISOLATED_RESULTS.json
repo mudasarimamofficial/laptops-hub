@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "app": "http://127.0.0.1:3001",
-  "at": "2026-10-23T18:29:50.123Z",
+  "at": "2026-11-16T11:22:26.883Z",
   "results": [
     {
       "name": "forged_price_ignored",
@@ -11,7 +11,7 @@
     {
       "name": "new_order_unpaid_cod",
       "ok": true,
-      "detail": "{\"id\":\"3292e260-1605-432b-ba55-11e77e651de7\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
+      "detail": "{\"id\":\"e11b76ef-756c-4385-8de2-1f5f9d37524c\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
     },
     {
       "name": "same_key_one_order",
@@ -81,7 +81,7 @@
     {
       "name": "anon_order_insert_denied",
       "ok": true,
-      "detail": "new row violates row-level security policy for table \"orders\""
+      "detail": "permission denied for table orders"
     },
     {
       "name": "anon_quote_served_address",
@@ -101,7 +101,7 @@
     {
       "name": "anon_orders_unreadable",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table orders"
     },
     {
       "name": "anon_record_cod_collection_denied",
@@ -117,6 +117,11 @@
       "name": "anon_consume_rate_limit_denied",
       "ok": true,
       "detail": "42501 permission denied for function consume_rate_limit"
+    },
+    {
+      "name": "http_policy_withdrawn_refuses_order",
+      "ok": true,
+      "detail": "403 {\"error\":\"policies_pending\",\"message\":\"Online ordering is not available right now. Please contact Laptops HUB to order.\"}"
     },
     {
       "name": "http_double_submit_one_order",

@@ -42,6 +42,16 @@ See `docs/LAPTOPS_HUB_ENGINEERING_CLOSEOUT.md` for evidence and the final classi
    always-true assertion removed; libuv exit crash (rc=127) fixed at the source; suite runner verdict = exit codes.
 7. Mandatory features: global admin search (Ctrl/⌘ K, "/") with server-side role scoping; admin list search no longer
    interpolates raw text into PostgREST filters.
+8. Admin **sign-out** (`POST /api/admin/account/sign-out`, works without JS, cross-site refused) in the sidebar footer.
+9. Staff invite form pre-hydration defect (typed address kept, button disabled) fixed + regression test.
+10. Performance: storefront card photos request the displayed size from the Shopify CDN (`src/lib/catalog/image-url.ts`,
+    `srcset`/`sizes`); same rendering.
+11. Test races found by repeated full runs, fixed at the cause: 36-step purchase notice checked in a fresh shopper
+    session (per-session cap); social-proof "broken video" test no longer waits forever for a play button that the
+    unavailable state legitimately removes. `playwright.isolated.config.ts` keeps traces on failure and the suite runner
+    copies them to `$TMPDIR/final-run-isolated-failures` before the next Playwright run clears `test-results/`.
+12. Docs: release manifest, staging certification (local only — no staging exists), runbook updated to 14 pending
+    migrations (15–28; 28 after 27).
 
 ## Open items for the next engineer
 

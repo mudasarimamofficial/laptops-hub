@@ -44,13 +44,13 @@ PASS|authenticated cannot execute create_cod_order|permission denied for functio
 PASS|db switch off refuses|checkout_disabled
 PASS|draft product refused|product_not_purchasable
 PASS|excluded city (normalised) is unserviceable|{"ok": false, "error": "unserviceable", "message": "We do not currently deliver COD to this city/province.", "options": 
-PASS|idempotent replay (no duplicate order)|{"ok": true, "order_id": "2d29381d-cc95-4ef0-a0fe-4bbcdbb60a6e", "duplicate": true, "access_token": "9e65855b-000e-4ef3-
+PASS|idempotent replay (no duplicate order)|{"ok": true, "order_id": "93fae6c5-32f2-481d-9509-962698f4859f", "duplicate": true, "access_token": "211f7d0a-7423-4f9c-
 PASS|missing zone refused (never free by default)|shipping_required
-PASS|order 0+0 total = subtotal|{"ok": true, "order_id": "95089665-24e2-4b0b-90dd-e57c5b10d2c5", "duplicate": false, "access_token": "2380f454-637f-4ee1
-PASS|order 360+50 total = subtotal+360+50|{"ok": true, "order_id": "2d29381d-cc95-4ef0-a0fe-4bbcdbb60a6e", "duplicate": false, "access_token": "9e65855b-000e-4ef3
+PASS|order 0+0 total = subtotal|{"ok": true, "order_id": "ce445efd-9ae8-4d48-9cda-f27ee0455501", "duplicate": false, "access_token": "53959cbb-e4f0-45f7
+PASS|order 360+50 total = subtotal+360+50|{"ok": true, "order_id": "93fae6c5-32f2-481d-9509-962698f4859f", "duplicate": false, "access_token": "211f7d0a-7423-4f9c
 PASS|order above threshold: stored delivery 0, COD fee 50|0/5000
-PASS|order above threshold: total = subtotal + COD fee|{"ok": true, "order_id": "4d99f519-b8f6-4223-8aae-0e6b27a2aa2c", "duplicate": false, "access_token": "0a58a009-d404-409d
-PASS|order below threshold: full 360+50|{"ok": true, "order_id": "065f8c76-88d8-4a17-a5f4-0c63743ece33", "duplicate": false, "access_token": "18570bb9-fc11-43a7
+PASS|order above threshold: total = subtotal + COD fee|{"ok": true, "order_id": "e7aa72dc-c3eb-4b76-a9fc-7b9cc80253ed", "duplicate": false, "access_token": "d05968f3-5471-4f88
+PASS|order below threshold: full 360+50|{"ok": true, "order_id": "29a06634-1946-47e6-93ed-379ec24a8ffa", "duplicate": false, "access_token": "522d2c02-9c93-4dbb
 PASS|order has item+address+event+outbox|
 PASS|order is unpaid COD (not collected)|unpaid_cod/cod
 PASS|other city in same province still served|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai

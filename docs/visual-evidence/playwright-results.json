@@ -127,12 +127,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1498,
+                      "duration": 2036,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:35:21.620Z",
+                      "startTime": "2026-11-16T07:47:56.604Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -187,12 +187,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 600,
+                      "duration": 916,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:35:24.144Z",
+                      "startTime": "2026-11-16T07:47:59.859Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -239,12 +239,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2644,
+                      "duration": 4904,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:35:25.057Z",
+                      "startTime": "2026-11-16T07:48:01.377Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -291,12 +291,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2857,
+                      "duration": 3665,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:35:27.757Z",
+                      "startTime": "2026-11-16T07:48:06.362Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -343,12 +343,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5722,
+                      "duration": 5861,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:35:30.727Z",
+                      "startTime": "2026-11-16T07:48:10.117Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -395,12 +395,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2622,
+                      "duration": 3674,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:35:36.528Z",
+                      "startTime": "2026-11-16T07:48:16.175Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -447,12 +447,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3254,
+                      "duration": 3644,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:35:39.242Z",
+                      "startTime": "2026-11-16T07:48:19.939Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -499,12 +499,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 7009,
+                      "duration": 9889,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:35:42.590Z",
+                      "startTime": "2026-11-16T07:48:23.667Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -551,12 +551,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5723,
+                      "duration": 7241,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:35:49.679Z",
+                      "startTime": "2026-11-16T07:48:33.635Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -603,12 +603,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4576,
+                      "duration": 5311,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:35:55.453Z",
+                      "startTime": "2026-11-16T07:48:40.945Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -644,7 +644,7 @@
         {
           "title": "theme publish/rollback browser workflow",
           "file": "theme-publish-workflow.spec.ts",
-          "line": 135,
+          "line": 137,
           "column": 15,
           "specs": [
             {
@@ -659,7 +659,7 @@
                       "type": "serial",
                       "location": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
+                        "line": 137,
                         "column": 15
                       }
                     }
@@ -672,18 +672,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 564,
+                      "duration": 608,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:36:00.142Z",
+                      "startTime": "2026-11-16T07:48:46.410Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
                             "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "line": 135,
+                            "line": 137,
                             "column": 15
                           }
                         }
@@ -696,7 +696,7 @@
               ],
               "id": "13543266674abcaf3d4f-e66a66b2e366ca2cf261",
               "file": "theme-publish-workflow.spec.ts",
-              "line": 140,
+              "line": 142,
               "column": 7
             },
             {
@@ -711,7 +711,7 @@
                       "type": "serial",
                       "location": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
+                        "line": 137,
                         "column": 15
                       }
                     }
@@ -724,18 +724,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 17343,
+                      "duration": 1548,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:36:00.808Z",
+                      "startTime": "2026-11-16T07:48:47.132Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
                             "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "line": 135,
+                            "line": 137,
                             "column": 15
                           }
                         }
@@ -748,7 +748,7 @@
               ],
               "id": "13543266674abcaf3d4f-607513551449aa60546f",
               "file": "theme-publish-workflow.spec.ts",
-              "line": 148,
+              "line": 150,
               "column": 7
             },
             {
@@ -763,7 +763,7 @@
                       "type": "serial",
                       "location": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
+                        "line": 137,
                         "column": 15
                       }
                     }
@@ -776,18 +776,18 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 19130,
+                      "duration": 6211,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:36:18.181Z",
+                      "startTime": "2026-11-16T07:48:48.716Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
                             "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "line": 135,
+                            "line": 137,
                             "column": 15
                           }
                         }
@@ -800,12 +800,12 @@
               ],
               "id": "13543266674abcaf3d4f-f74e94ca245925e271ef",
               "file": "theme-publish-workflow.spec.ts",
-              "line": 157,
+              "line": 159,
               "column": 7
             },
             {
               "title": "owner opens draft preview showing draft URL",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -815,7 +815,7 @@
                       "type": "serial",
                       "location": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
+                        "line": 137,
                         "column": 15
                       }
                     }
@@ -827,62 +827,32 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 18395,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('img[src*=\"e2e-draft-hero-main\"]')\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('img[src*=\"e2e-draft-hero-main\"]') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('img[src*=\"e2e-draft-hero-main\"]')\u001b[22m\n\u001b[2m    33 × locator resolved to <img alt=\"\" class=\"mt-1 h-28 w-auto object-contain\" src=\"https://example.com/e2e-draft-hero-main.webp\"/>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('img[src*=\"e2e-draft-hero-main\"]')\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('img[src*=\"e2e-draft-hero-main\"]') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('img[src*=\"e2e-draft-hero-main\"]')\u001b[22m\n\u001b[2m    33 × locator resolved to <img alt=\"\" class=\"mt-1 h-28 w-auto object-contain\" src=\"https://example.com/e2e-draft-hero-main.webp\"/>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts:191:70",
-                        "location": {
-                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                          "column": 70,
-                          "line": 191
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 189 |\u001b[39m     \u001b[36mawait\u001b[39m preview\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m\"domcontentloaded\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 190 |\u001b[39m     \u001b[36mawait\u001b[39m expect(preview\u001b[33m.\u001b[39mgetByText(\u001b[35m/draft preview only/i\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 191 |\u001b[39m     \u001b[36mawait\u001b[39m expect(preview\u001b[33m.\u001b[39mlocator(\u001b[32m`img[src*=\"e2e-draft-hero-main\"]`\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15\u001b[39m_000 })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 192 |\u001b[39m     \u001b[36mawait\u001b[39m preview\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m 193 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 194 |\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "column": 70,
-                            "line": 191
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('img[src*=\"e2e-draft-hero-main\"]')\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('img[src*=\"e2e-draft-hero-main\"]') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('img[src*=\"e2e-draft-hero-main\"]')\u001b[22m\n\u001b[2m    33 × locator resolved to <img alt=\"\" class=\"mt-1 h-28 w-auto object-contain\" src=\"https://example.com/e2e-draft-hero-main.webp\"/>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n\n  189 |     await preview.waitForLoadState(\"domcontentloaded\");\n  190 |     await expect(preview.getByText(/draft preview only/i)).toBeVisible();\n> 191 |     await expect(preview.locator(`img[src*=\"e2e-draft-hero-main\"]`)).toBeVisible({ timeout: 15_000 });\n      |                                                                      ^\n  192 |     await preview.close();\n  193 |   });\n  194 |\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts:191:70"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 4966,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:36:37.349Z",
+                      "startTime": "2026-11-16T07:48:54.991Z",
                       "annotations": [
                         {
                           "type": "serial",
                           "location": {
                             "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "line": 135,
+                            "line": 137,
                             "column": 15
                           }
                         }
                       ],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\theme-publish-workflow-the-ba531-t-preview-showing-draft-URL\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "column": 70,
-                        "line": 191
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "13543266674abcaf3d4f-961d7ef7323e166ebf10",
               "file": "theme-publish-workflow.spec.ts",
-              "line": 179,
+              "line": 181,
               "column": 7
             },
             {
@@ -897,7 +867,7 @@
                       "type": "serial",
                       "location": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
+                        "line": 137,
                         "column": 15
                       }
                     }
@@ -907,25 +877,34 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6572,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:36:56.026Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T07:49:00.049Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "13543266674abcaf3d4f-2775554cfa2c3faa310c",
               "file": "theme-publish-workflow.spec.ts",
-              "line": 195,
+              "line": 202,
               "column": 7
             },
             {
@@ -940,7 +919,7 @@
                       "type": "serial",
                       "location": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
+                        "line": 137,
                         "column": 15
                       }
                     }
@@ -950,25 +929,34 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6905,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:36:56.026Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T07:49:06.684Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "13543266674abcaf3d4f-5cfa03fb8a006d5c5a86",
               "file": "theme-publish-workflow.spec.ts",
-              "line": 237,
+              "line": 244,
               "column": 7
             },
             {
@@ -983,7 +971,7 @@
                       "type": "serial",
                       "location": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
+                        "line": 137,
                         "column": 15
                       }
                     }
@@ -993,25 +981,34 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2713,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:36:56.026Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T07:49:13.656Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "13543266674abcaf3d4f-a877ee632e30ddefe843",
               "file": "theme-publish-workflow.spec.ts",
-              "line": 254,
+              "line": 261,
               "column": 7
             },
             {
@@ -1026,7 +1023,7 @@
                       "type": "serial",
                       "location": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
+                        "line": 137,
                         "column": 15
                       }
                     }
@@ -1036,25 +1033,34 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1339,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-16T03:36:56.026Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T07:49:16.431Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 137,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "13543266674abcaf3d4f-adeb92db66e37f332ad9",
               "file": "theme-publish-workflow.spec.ts",
-              "line": 262,
+              "line": 269,
               "column": 7
             }
           ]
@@ -1080,15 +1086,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 15959,
+                  "duration": 1227,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:36:56.607Z",
+                  "startTime": "2026-11-16T07:49:17.878Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1124,15 +1130,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "skipped",
-                  "duration": 596,
+                  "duration": 891,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:37:12.969Z",
+                  "startTime": "2026-11-16T07:49:19.231Z",
                   "annotations": [
                     {
                       "type": "skip",
@@ -1168,15 +1174,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 26074,
+                  "duration": 1404,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:37:13.597Z",
+                  "startTime": "2026-11-16T07:49:20.166Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1202,15 +1208,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 669,
+                  "duration": 867,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:37:39.715Z",
+                  "startTime": "2026-11-16T07:49:21.610Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1224,8 +1230,8 @@
           "column": 5
         },
         {
-          "title": "public cards never show Add to cart without a purchasable variant",
-          "ok": false,
+          "title": "public cards show exactly one action: Add to cart (one purchasable variant), Choose options, or Ask",
+          "ok": true,
           "tags": [],
           "tests": [
             {
@@ -1236,53 +1242,23 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 673,
-                  "error": {
-                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts:68:23",
-                    "location": {
-                      "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                      "column": 23,
-                      "line": 68
-                    },
-                    "snippet": "\u001b[0m \u001b[90m 66 |\u001b[39m     \u001b[36mconst\u001b[39m atc \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m c\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[35m/^(Add to cart|Added)$/\u001b[39m })\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 67 |\u001b[39m     \u001b[36mconst\u001b[39m ask \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m c\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Ask about this product\"\u001b[39m })\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 68 |\u001b[39m     expect(atc \u001b[33m+\u001b[39m ask)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 69 |\u001b[39m   }\n \u001b[90m 70 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 71 |\u001b[39m\u001b[0m"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                        "column": 23,
-                        "line": 68
-                      },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n\n  66 |     const atc = await c.getByRole(\"button\", { name: /^(Add to cart|Added)$/ }).count();\n  67 |     const ask = await c.getByRole(\"button\", { name: \"Ask about this product\" }).count();\n> 68 |     expect(atc + ask).toBe(1);\n     |                       ^\n  69 |   }\n  70 | });\n  71 |\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts:68:23"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 1456,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:37:40.422Z",
+                  "startTime": "2026-11-16T07:49:22.525Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\v5-correctness-public-card-4a349-thout-a-purchasable-variant\\error-context.md"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                    "column": 23,
-                    "line": 68
-                  }
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
-          "id": "343f6d1acd4c7d349bb8-8924ab559dc1845c47c6",
+          "id": "343f6d1acd4c7d349bb8-dd4e65ba6d98ca4d73a5",
           "file": "v5-correctness.spec.ts",
           "line": 59,
           "column": 5
@@ -1300,15 +1276,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 2,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2561,
+                  "duration": 3336,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:37:41.997Z",
+                  "startTime": "2026-11-16T07:49:24.044Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1318,7 +1294,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-ce14f50d3295e17ca9a6",
           "file": "v5-correctness.spec.ts",
-          "line": 76,
+          "line": 78,
           "column": 7
         },
         {
@@ -1334,15 +1310,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 2,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1920,
+                  "duration": 2533,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:37:45.038Z",
+                  "startTime": "2026-11-16T07:49:27.467Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1352,7 +1328,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-fe7d4d1a936c019e7625",
           "file": "v5-correctness.spec.ts",
-          "line": 76,
+          "line": 78,
           "column": 7
         },
         {
@@ -1368,15 +1344,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 2,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1605,
+                  "duration": 1788,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:37:46.996Z",
+                  "startTime": "2026-11-16T07:49:30.049Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1386,7 +1362,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-0f31873b904889a2ff86",
           "file": "v5-correctness.spec.ts",
-          "line": 119,
+          "line": 121,
           "column": 5
         },
         {
@@ -1402,15 +1378,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 2,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 17540,
+                  "duration": 2873,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:37:48.638Z",
+                  "startTime": "2026-11-16T07:49:31.867Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1420,7 +1396,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-08c168310b3100a25238",
           "file": "v5-correctness.spec.ts",
-          "line": 131,
+          "line": 133,
           "column": 5
         },
         {
@@ -1436,15 +1412,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 2,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1214,
+                  "duration": 1768,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:38:06.226Z",
+                  "startTime": "2026-11-16T07:49:34.767Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1454,7 +1430,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-4cd6898002a3831b1c63",
           "file": "v5-correctness.spec.ts",
-          "line": 158,
+          "line": 160,
           "column": 5
         },
         {
@@ -1470,7 +1446,7 @@
                   "description": "this run's app has COD_CHECKOUT_ENABLED=true by design",
                   "location": {
                     "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                    "line": 177,
+                    "line": 179,
                     "column": 8
                   }
                 }
@@ -1480,22 +1456,22 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 2,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "skipped",
-                  "duration": 8,
+                  "duration": 14,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-16T03:38:07.496Z",
+                  "startTime": "2026-11-16T07:49:36.572Z",
                   "annotations": [
                     {
                       "type": "skip",
                       "description": "this run's app has COD_CHECKOUT_ENABLED=true by design",
                       "location": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                        "line": 177,
+                        "line": 179,
                         "column": 8
                       }
                     }
@@ -1508,7 +1484,7 @@
           ],
           "id": "343f6d1acd4c7d349bb8-2abc13682556b6f6f927",
           "file": "v5-correctness.spec.ts",
-          "line": 174,
+          "line": 176,
           "column": 5
         }
       ]
@@ -1516,11 +1492,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-16T03:35:20.590Z",
-    "duration": 167371.945,
-    "expected": 21,
-    "skipped": 6,
-    "unexpected": 2,
+    "startTime": "2026-11-16T07:47:54.668Z",
+    "duration": 102517.027,
+    "expected": 27,
+    "skipped": 2,
+    "unexpected": 0,
     "flaky": 0
   }
 }

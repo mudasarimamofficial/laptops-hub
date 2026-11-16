@@ -6,6 +6,30 @@ This page adds to `MERCHANT_HANDBOOK.md` (products, variants, collections, CSV, 
 
 `/admin` no longer shows the shop's header, footer, cart or compare tray. To see the shop, use **View storefront** in the admin navigation or open `/` in a new tab. Unknown admin addresses show an admin-styled "Page not found".
 
+## Finding things fast (search and shortcuts) — added 2026-11-16
+
+- Press **Ctrl K** (⌘ K on a Mac), or **/** when you are not typing in a box, from any admin page. Or click
+  **Search admin…** at the top.
+- Type a product name, SKU, order number (e.g. `LH-261116-…`) or a customer's phone number (any format: `0300 1234567`,
+  `+92 300 1234567`). Admin sections match too ("inventory", "staff").
+- **↑ ↓** choose, **Enter** opens, **Esc** closes.
+- You only see what your role may open: Fulfillment sees orders but not products; Editors see products but not orders.
+  Results show order numbers and statuses only — open the order to see customer details.
+
+## Signing out — added 2026-11-16
+
+Your email and role are shown at the bottom of the left menu, with **Sign out** underneath. Signing out ends the
+session on that device straight away (the login cannot be reused from that browser). To sign someone out everywhere,
+an owner/admin deactivates them in Staff, or they change their password.
+
+## Products with options (RAM / storage) — added 2026-11-16
+
+- Each option combination is its own variant with its own price, SKU and stock. On the shop, the product page shows a
+  chip for each value; a sold-out combination is shown crossed out and cannot be added to the cart.
+- Product cards for products with options say **Choose options** and show the lowest price ("From Rs …"), so the
+  shopper always picks one exact variant on the product page.
+- The order, the stock movement in Inventory, and any cancellation restock all refer to that exact variant.
+
 ## Is ordering open? (Overview → Checkout readiness)
 
 The readiness panel lists each condition the server checks before a customer can place a cash-on-delivery order:

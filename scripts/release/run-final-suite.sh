@@ -27,7 +27,7 @@ run() {
   local rc=$?
   local secs=$(( $(date +%s) - start ))
   local last
-  last=$(grep -E "passed|failed|PASS|FAIL|ok:|[0-9]+/[0-9]+|error|Error" "$OUT/$name.log" | tail -2 | tr '\n' ' ' | sed 's/"/'"'"'/g' | cut -c1-300)
+  last=$(grep -E "passed|failed|PASS|FAIL|ok:|[0-9]+/[0-9]+|error|Error" "$OUT/$name.log" | tail -2 | tr '\n\\' ' /' | tr -d '\000-\037' | sed 's/"/'"'"'/g' | cut -c1-300)
   [ "$rc" -eq 0 ] || FAILED=$((FAILED + 1))
   echo "[$name] rc=$rc ${secs}s :: $last"
   RESULTS+=("{\"suite\":\"$name\",\"rc\":$rc,\"seconds\":$secs,\"summary\":\"$last\"}")
@@ -58,6 +58,8 @@ run merchant-smoke     node scripts/test-merchant-catalog-smoke.mjs
 run csv-commit         ./node_modules/.bin/tsx scripts/test-shopify-csv-commit-smoke.mjs
 run catalog-pages      node scripts/test-catalog-pagination.mjs "$APP"
 run e2e-isolated       ./node_modules/.bin/playwright test -c playwright.isolated.config.ts --grep-invert "layout:"
+# The next Playwright run empties test-results/; keep any failure traces from the isolated run (git-ignored, local only).
+[ -d test-results ] && { rm -rf "${TMPDIR:-/tmp}/final-run-isolated-failures"; cp -r test-results "${TMPDIR:-/tmp}/final-run-isolated-failures"; }
 run e2e-legacy         ./node_modules/.bin/playwright test -c playwright.config.ts tests/e2e/theme-publish-workflow.spec.ts tests/e2e/merchant-admin-workflows.spec.ts tests/e2e/homepage-presets.spec.ts tests/e2e/v5-correctness.spec.ts
 run e2e-crossbrowser   ./node_modules/.bin/playwright test -c playwright.crossbrowser.config.ts
 

@@ -181,15 +181,15 @@ PASS  customer cannot read product_media.source_provider — 42501
 PASS  anon reads public product + variants + media
 PASS  anon reads public_catalog_listing
 PASS  anon reads catalog_products_public
-PASS  anon reads variant availability (boolean only) — [{"product_id":"c5ed80e3-a7cb-4be1-b045-3c39ba01c66f","variant_id":"022ad8d7-185a-46cf-817d-c78c396a8de0","available":true}]
+PASS  anon reads variant availability (boolean only) — [{"product_id":"22a3da87-cab5-4d38-8d73-94e6726c83d7","variant_id":"bc373b27-aa85-4f8c-bf30-50d818fde213","available":true}]
 PASS  customer reads public product + variants + media
 PASS  customer reads public_catalog_listing
 PASS  customer reads catalog_products_public
-PASS  customer reads variant availability (boolean only) — [{"product_id":"c5ed80e3-a7cb-4be1-b045-3c39ba01c66f","variant_id":"022ad8d7-185a-46cf-817d-c78c396a8de0","available":true}]
+PASS  customer reads variant availability (boolean only) — [{"product_id":"22a3da87-cab5-4d38-8d73-94e6726c83d7","variant_id":"bc373b27-aa85-4f8c-bf30-50d818fde213","available":true}]
 PASS  editor reads public product + variants + media
 PASS  editor reads public_catalog_listing
 PASS  editor reads catalog_products_public
-PASS  editor reads variant availability (boolean only) — [{"product_id":"c5ed80e3-a7cb-4be1-b045-3c39ba01c66f","variant_id":"022ad8d7-185a-46cf-817d-c78c396a8de0","available":true}]
+PASS  editor reads variant availability (boolean only) — [{"product_id":"22a3da87-cab5-4d38-8d73-94e6726c83d7","variant_id":"bc373b27-aa85-4f8c-bf30-50d818fde213","available":true}]
 PASS  anon can still submit a contact inquiry (insert only)
 
 193/193 passed · wrote docs\SECURITY_DIRECT_ACCESS_RESULTS.json

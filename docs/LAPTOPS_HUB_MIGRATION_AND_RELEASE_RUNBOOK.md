@@ -12,7 +12,7 @@
 | Source integrity | `.env*`, dumps and ZIPs are git-ignored; secret scan in `docs/LAPTOPS_HUB_STAGING_SECURITY_REPORT.md` |
 | Environment variable **names** (values live in Vercel only) | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SITE_URL` / `SITE_URL`, `SITE_PRELAUNCH`, `COD_CHECKOUT_ENABLED`, `NEXT_PUBLIC_COD_CHECKOUT_ENABLED`, `THEME_PUBLISHED_ENABLED` (new, needs migrations 16–19), `THEME_PUBLISH_DISABLED` (optional kill switch), `RESEND_API_KEY`, `STORE_FROM_EMAIL`, `STORE_NOTIFY_EMAIL`, `NOTIFY_CUSTOMER_EMAIL`, `NOTIFY_TIMEOUT_MS` (optional), `CRON_SECRET`, `MERCHANT_MUTATIONS_DISABLED` (Preview only). Never set `RESEND_API_URL` in production (test stand-in only) |
 | Database compatibility | `docs/LAPTOPS_HUB_MIGRATION_COMPATIBILITY_MATRIX.md` |
-| Migration files and dependencies | §2 below: 12 files, 15–26, file order; 23 before 25 |
+| Migration files and dependencies | §2 below: 14 files, 15–28, file order; 23 before 25; 28 after 27 |
 | Verified backup | Supabase → Database → Backups shows one newer than 1 hour, **and** a manual `pg_dump` of `public` + `auth` stored off-repo |
 | Restore rehearsal | Done locally on 2026-11-15 (`scripts/rehearsal/backup-restore.sh`, identical checksums). Repeat against a staging copy when staging exists |
 | Monitoring | Vercel → Logs / runtime errors for the production project; Admin → Orders (notification status column); Admin → Overview readiness matrix |
@@ -31,7 +31,7 @@
 supabase migration list --linked
 ```
 
-Expected: the 14 migrations above are remote, and the 12 below are local-only.
+Expected: the 14 migrations above are remote, and the 14 below are local-only.
 
 ## 2. Pending migrations (apply in this order)
 
@@ -49,11 +49,13 @@ Expected: the 14 migrations above are remote, and the 12 below are local-only.
 | 24 | `20261117110000_anon_write_revoke_and_fk_indexes.sql` | Revokes residual table INSERT/UPDATE/DELETE grants from `anon` (keeps `contact_inquiries` INSERT for the contact form); 16 foreign-key indexes | Low: RLS already denied these writes; indexes are small (`CREATE INDEX IF NOT EXISTS`, brief lock). Rollback: re-grant / drop index |
 | 25 | `20261117120000_shipping_zone_rules.sql` | `shipping_zones.excluded_cities`, `free_shipping_min_paisa`; `zone_serves_address` honours exclusions; `create_cod_order` applies the free-delivery minimum to the server-priced subtotal; quote returns the minimum | Medium: replaces `create_cod_order` (adds one block) and `quote_cod_shipping`/`zone_serves_address`; existing zones unchanged (defaults). SQL matrix 37/37. Depends on 23 |
 | 26 | `20261117130000_inventory_adjustments.sql` | `adjust_inventory(jsonb)` (service_role only): manual stock changes with reason, row lock, never below 0, stale-count protection, ledger row | Low: new function only. Rollback: `drop function public.adjust_inventory(jsonb);` |
+| 27 | `20261117140000_catalog_column_security_grants.sql` | Revokes broad table SELECT on `products`/`product_variants` from anon/authenticated and grants SELECT only on public storefront columns (incl. the variant-picker columns); stock, cost and internal metadata stay service-role/RPC only | Medium: a page that selects a non-granted column fails with 42501 — all storefront queries verified locally (cross-browser 105/105). Rollback: re-grant table SELECT (re-exposes internal columns) |
+| 28 | `20261117150000_staff_direct_access_least_privilege.sql` | **Security fix (High):** revokes direct Data API writes on 21 merchant tables and reads on 11 PII/operational tables from anon/authenticated (the app writes with the service role after its own role checks); hides `product_media` rights metadata; grants `products.deleted_at`; adds `storefront_variant_availability(uuid[])` (booleans only) | Medium: changes grants. No code dependency on 15–27 beyond 27. Must follow 27. `scripts/security-direct-staff-access.mjs` 193/193. Rollback: re-grant (not recommended — reopens the hole) |
 
 Apply one at a time through the reviewed migration path (`docs/MIGRATION_PRODUCTION_APPROVAL.md`). After each one, re-run step 1 and the read-only advisors.
 
-**Rehearsed locally (2026-11-15):** `bash scripts/rehearsal/migration-upgrade.sh` applies all 26 to an empty database and,
-separately, the 14 production migrations + data and then the 12 pending ones; the resulting public schemas and
+**Rehearsed locally (2026-11-15):** `bash scripts/rehearsal/migration-upgrade.sh` applies all 28 to an empty database (re-run 2026-11-16) and,
+separately, the 14 production migrations + data and then the 14 pending ones; the resulting public schemas and
 grants are byte-identical to each other and to the local stack, and data survives (`docs/evidence/migrations/`).
 `bash scripts/rehearsal/backup-restore.sh` dumps public+auth, restores into a scratch database and compares
 per-table row counts and content checksums (identical) plus policy/trigger/constraint/index counts.
@@ -67,7 +69,7 @@ exists (or take a manual `pg_dump` of `public` and `auth` with the owner's datab
 not show it as applied; the read-only advisors report a new ERROR; `select count(*)` on `orders`, `order_items`,
 `products`, `product_variants` differs from the pre-migration count; the storefront home or a product page returns 5xx.
 Pre-check before each file: row counts of those four tables. Post-check: same counts + advisors + one storefront page.
-No migration in 15–26 deletes or rewrites existing rows.
+No migration in 15–28 deletes or rewrites existing rows.
 
 ## 3. Owner dashboard actions (no code)
 
@@ -157,4 +159,4 @@ Watch Vercel runtime errors, Admin → Orders and the notification column for th
 - **Never restore an old database backup over production after live orders exist.** It would erase real orders,
   cash records, stock movements and staff changes. Use a restore only into a separate project to recover specific
   rows, and only with the owner's approval.
-- Down-scripts for 15–26 are outlines (§2 "Rollback"), not tested scripts.
+- Down-scripts for 15–28 are outlines (§2 "Rollback"), not tested scripts.

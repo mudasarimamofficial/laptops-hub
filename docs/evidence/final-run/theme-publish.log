@@ -1,6 +1,6 @@
 note: publication already existed before smoke
 theme-publish-smoke: ok {
-  published: '92c4fc9b-5269-4962-bbf5-563ba925495e',
-  second: 'd58d6c1a-3588-48e2-913b-37732ab49f3c',
-  rolledBackTo: '92c4fc9b-5269-4962-bbf5-563ba925495e'
+  published: '66cca40a-d519-4ffb-9b86-0b6d6ff1a1f5',
+  second: 'f0982536-08d0-432a-8d00-2b11ac557b5e',
+  rolledBackTo: '66cca40a-d519-4ffb-9b86-0b6d6ff1a1f5'
 }

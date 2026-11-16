@@ -1,6 +1,6 @@
 
 > laptops-hub@0.1.0 test:unit
-> tsx tests/unit/money.test.ts && tsx tests/unit/phone.test.ts && tsx tests/unit/staff-auth.test.ts && tsx tests/unit/sanitize-html.test.ts && tsx tests/unit/specs.test.ts && tsx tests/unit/availability-handles.test.ts && tsx tests/unit/cart-limits.test.ts && tsx tests/unit/contact.test.ts && tsx tests/unit/home-inquiry.test.ts && tsx tests/unit/content-resolve.test.ts && tsx tests/unit/content-links.test.ts && tsx tests/unit/site-url.test.ts && tsx tests/unit/prelaunch.test.ts && tsx tests/unit/notify.test.ts && tsx tests/unit/recovery.test.ts && tsx tests/unit/local-only.test.ts && tsx tests/unit/shopify-csv.test.ts && tsx tests/unit/shopify-export.test.ts && tsx tests/unit/collection-rule-eval.test.ts && tsx tests/unit/merchant-write-guard.test.ts && tsx tests/unit/homepage-image-presets.test.ts && tsx tests/unit/variant-matrix.test.ts && tsx tests/unit/variant-picker.test.ts && tsx tests/unit/admin-search-term.test.ts && tsx tests/unit/navigation.test.ts && tsx tests/unit/checkout-readiness.test.ts && tsx tests/unit/storefront-presentation.test.ts && tsx tests/unit/reels-reviews-blog.test.ts && tsx tests/unit/social-proof.test.ts && tsx tests/unit/preview-read-only.test.ts && tsx tests/unit/staff-admin.test.ts && tsx tests/unit/zone-input.test.ts && tsx tests/unit/order-analytics.test.ts
+> tsx tests/unit/money.test.ts && tsx tests/unit/phone.test.ts && tsx tests/unit/staff-auth.test.ts && tsx tests/unit/sanitize-html.test.ts && tsx tests/unit/specs.test.ts && tsx tests/unit/availability-handles.test.ts && tsx tests/unit/cart-limits.test.ts && tsx tests/unit/contact.test.ts && tsx tests/unit/home-inquiry.test.ts && tsx tests/unit/content-resolve.test.ts && tsx tests/unit/content-links.test.ts && tsx tests/unit/site-url.test.ts && tsx tests/unit/prelaunch.test.ts && tsx tests/unit/notify.test.ts && tsx tests/unit/recovery.test.ts && tsx tests/unit/local-only.test.ts && tsx tests/unit/shopify-csv.test.ts && tsx tests/unit/shopify-export.test.ts && tsx tests/unit/collection-rule-eval.test.ts && tsx tests/unit/merchant-write-guard.test.ts && tsx tests/unit/homepage-image-presets.test.ts && tsx tests/unit/variant-matrix.test.ts && tsx tests/unit/variant-picker.test.ts && tsx tests/unit/admin-search-term.test.ts && tsx tests/unit/image-url.test.ts && tsx tests/unit/navigation.test.ts && tsx tests/unit/checkout-readiness.test.ts && tsx tests/unit/storefront-presentation.test.ts && tsx tests/unit/reels-reviews-blog.test.ts && tsx tests/unit/social-proof.test.ts && tsx tests/unit/preview-read-only.test.ts && tsx tests/unit/staff-admin.test.ts && tsx tests/unit/zone-input.test.ts && tsx tests/unit/order-analytics.test.ts
 
 money.test.ts ok
 phone.test.ts ok
@@ -28,6 +28,7 @@ homepage-image-presets.test.ts: ok
 variant-matrix.test.ts: ok
 variant-picker.test.ts: ok
 admin-search-term tests passed
+image-url tests passed
 Running navigation.test.ts...
 navigation.test.ts ok
 checkout-readiness.test.ts: ok

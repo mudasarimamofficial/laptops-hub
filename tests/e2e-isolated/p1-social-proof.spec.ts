@@ -247,7 +247,13 @@ test.describe.serial("P1: truthful social proof (isolated)", () => {
     await page.goto("/");
     const section = page.getByTestId("reels-section");
     await section.scrollIntoViewIfNeeded();
-    await section.getByTestId("reel").first().getByTestId("reel-play").click().catch(() => null);
-    await expect(section.getByText("This video is not available right now.").first()).toBeVisible({ timeout: 15_000 });
+    // Muted autoplay may already have tried the (404) video, in which case the card has swapped its player and play
+    // button for the unavailable state. Only press play while the button is still there; the result must be the
+    // same either way. (An unbounded click on a button that disappears would wait out the whole test.)
+    const unavailable = section.getByText("This video is not available right now.").first();
+    const play = section.getByTestId("reel").first().getByTestId("reel-play");
+    await expect(unavailable.or(play).first()).toBeVisible();
+    if (!(await unavailable.isVisible())) await play.click({ timeout: 5_000 }).catch(() => null);
+    await expect(unavailable).toBeVisible({ timeout: 15_000 });
   });
 });

@@ -22,6 +22,6 @@ export default defineConfig({
   testDir: "tests/e2e-isolated",
   workers: 1,
   timeout: 90_000,
-  use: { ...base.use, baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3001", storageState: undefined },
+  use: { ...base.use, baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3001", storageState: undefined, trace: "retain-on-failure" },
   reporter: [["list"], ["json", { outputFile: "test-results/isolated-journeys.json" }]],
 });

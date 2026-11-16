@@ -1,85 +1,35 @@
 
 Running 29 tests using 1 worker
 
-  ok  1 tests\e2e\homepage-presets.spec.ts:92:7 › Homepage approved image presets › hero and product story use the seven CDN defaults (1.5s)
-  ok  2 tests\e2e\merchant-admin-workflows.spec.ts:58:7 › merchant admin workflows › seed staff roles (600ms)
-  ok  3 tests\e2e\merchant-admin-workflows.spec.ts:65:7 › merchant admin workflows › owner creates product and opens editor (2.6s)
-  ok  4 tests\e2e\merchant-admin-workflows.spec.ts:77:7 › merchant admin workflows › owner saves variant matrix rows (2.9s)
-  ok  5 tests\e2e\merchant-admin-workflows.spec.ts:92:7 › merchant admin workflows › owner opens collections and create form (5.7s)
-  ok  6 tests\e2e\merchant-admin-workflows.spec.ts:109:7 › merchant admin workflows › owner sees import job history UI (2.6s)
-  ok  7 tests\e2e\merchant-admin-workflows.spec.ts:116:7 › merchant admin workflows › owner edits store settings form (3.3s)
-  ok  8 tests\e2e\merchant-admin-workflows.spec.ts:129:7 › merchant admin workflows › owner inventory + inquiries + orders shells load (7.0s)
-  ok  9 tests\e2e\merchant-admin-workflows.spec.ts:145:7 › merchant admin workflows › editor cannot open settings; fulfillment cannot customize theme (5.7s)
-  ok 10 tests\e2e\merchant-admin-workflows.spec.ts:171:7 › merchant admin workflows › desktop and mobile admin shells render products list (4.6s)
-  ok 11 tests\e2e\theme-publish-workflow.spec.ts:140:7 › theme publish/rollback browser workflow › seed published baseline A (564ms)
-  ok 12 tests\e2e\theme-publish-workflow.spec.ts:148:7 › theme publish/rollback browser workflow › logged-out storefront shows published A (not draft) (17.3s)
-  ok 13 tests\e2e\theme-publish-workflow.spec.ts:157:7 › theme publish/rollback browser workflow › owner changes image, saves draft; public unchanged (19.1s)
-  x  14 tests\e2e\theme-publish-workflow.spec.ts:179:7 › theme publish/rollback browser workflow › owner opens draft preview showing draft URL (18.4s)
-  -  15 tests\e2e\theme-publish-workflow.spec.ts:195:7 › theme publish/rollback browser workflow › owner publishes; logged-out sees draft URL; snapshot immutable
-  -  16 tests\e2e\theme-publish-workflow.spec.ts:237:7 › theme publish/rollback browser workflow › owner rolls back; logged-out sees previous image
-  -  17 tests\e2e\theme-publish-workflow.spec.ts:254:7 › theme publish/rollback browser workflow › editor cannot publish via API
-  -  18 tests\e2e\theme-publish-workflow.spec.ts:262:7 › theme publish/rollback browser workflow › seven approved CDN presets still present after workflow
-  ok 19 tests\e2e\v5-correctness.spec.ts:25:7 › PDP curated specs + related images: dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage (16.0s)
+  ok  1 tests\e2e\homepage-presets.spec.ts:92:7 › Homepage approved image presets › hero and product story use the seven CDN defaults (2.0s)
+  ok  2 tests\e2e\merchant-admin-workflows.spec.ts:58:7 › merchant admin workflows › seed staff roles (916ms)
+  ok  3 tests\e2e\merchant-admin-workflows.spec.ts:65:7 › merchant admin workflows › owner creates product and opens editor (4.9s)
+  ok  4 tests\e2e\merchant-admin-workflows.spec.ts:77:7 › merchant admin workflows › owner saves variant matrix rows (3.7s)
+  ok  5 tests\e2e\merchant-admin-workflows.spec.ts:92:7 › merchant admin workflows › owner opens collections and create form (5.9s)
+  ok  6 tests\e2e\merchant-admin-workflows.spec.ts:109:7 › merchant admin workflows › owner sees import job history UI (3.7s)
+  ok  7 tests\e2e\merchant-admin-workflows.spec.ts:116:7 › merchant admin workflows › owner edits store settings form (3.6s)
+  ok  8 tests\e2e\merchant-admin-workflows.spec.ts:129:7 › merchant admin workflows › owner inventory + inquiries + orders shells load (9.9s)
+  ok  9 tests\e2e\merchant-admin-workflows.spec.ts:145:7 › merchant admin workflows › editor cannot open settings; fulfillment cannot customize theme (7.2s)
+  ok 10 tests\e2e\merchant-admin-workflows.spec.ts:171:7 › merchant admin workflows › desktop and mobile admin shells render products list (5.3s)
+  ok 11 tests\e2e\theme-publish-workflow.spec.ts:142:7 › theme publish/rollback browser workflow › seed published baseline A (608ms)
+  ok 12 tests\e2e\theme-publish-workflow.spec.ts:150:7 › theme publish/rollback browser workflow › logged-out storefront shows published A (not draft) (1.5s)
+  ok 13 tests\e2e\theme-publish-workflow.spec.ts:159:7 › theme publish/rollback browser workflow › owner changes image, saves draft; public unchanged (6.2s)
+  ok 14 tests\e2e\theme-publish-workflow.spec.ts:181:7 › theme publish/rollback browser workflow › owner opens draft preview showing draft URL (5.0s)
+  ok 15 tests\e2e\theme-publish-workflow.spec.ts:202:7 › theme publish/rollback browser workflow › owner publishes; logged-out sees draft URL; snapshot immutable (6.6s)
+  ok 16 tests\e2e\theme-publish-workflow.spec.ts:244:7 › theme publish/rollback browser workflow › owner rolls back; logged-out sees previous image (6.9s)
+  ok 17 tests\e2e\theme-publish-workflow.spec.ts:261:7 › theme publish/rollback browser workflow › editor cannot publish via API (2.7s)
+  ok 18 tests\e2e\theme-publish-workflow.spec.ts:269:7 › theme publish/rollback browser workflow › seven approved CDN presets still present after workflow (1.3s)
+  ok 19 tests\e2e\v5-correctness.spec.ts:25:7 › PDP curated specs + related images: dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage (1.2s)
   -  20 tests\e2e\v5-correctness.spec.ts:25:7 › PDP curated specs + related images: hp-chromebook-14-g5-4-32
-  ok 21 tests\e2e\v5-correctness.spec.ts:25:7 › PDP curated specs + related images: lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage (26.1s)
-  ok 22 tests\e2e\v5-correctness.spec.ts:52:5 › draft product is not public (669ms)
-  x  23 tests\e2e\v5-correctness.spec.ts:59:5 › public cards never show Add to cart without a purchasable variant (673ms)
-  ok 24 tests\e2e\v5-correctness.spec.ts:76:7 › compare tray add/remove/persist/stale desktop-1440 (2.6s)
-  ok 25 tests\e2e\v5-correctness.spec.ts:76:7 › compare tray add/remove/persist/stale mobile-390 (1.9s)
-  ok 26 tests\e2e\v5-correctness.spec.ts:119:5 › compare page still renders curated rows (1.6s)
-  ok 27 tests\e2e\v5-correctness.spec.ts:131:5 › cart honours max_per_order on PDP, drawer and cart page (17.5s)
-  ok 28 tests\e2e\v5-correctness.spec.ts:158:5 › compare tray is keyboard operable (1.2s)
-  -  29 tests\e2e\v5-correctness.spec.ts:174:5 › COD checkout stays disabled
+  ok 21 tests\e2e\v5-correctness.spec.ts:25:7 › PDP curated specs + related images: lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage (1.4s)
+  ok 22 tests\e2e\v5-correctness.spec.ts:52:5 › draft product is not public (867ms)
+  ok 23 tests\e2e\v5-correctness.spec.ts:59:5 › public cards show exactly one action: Add to cart (one purchasable variant), Choose options, or Ask (1.5s)
+  ok 24 tests\e2e\v5-correctness.spec.ts:78:7 › compare tray add/remove/persist/stale desktop-1440 (3.3s)
+  ok 25 tests\e2e\v5-correctness.spec.ts:78:7 › compare tray add/remove/persist/stale mobile-390 (2.5s)
+  ok 26 tests\e2e\v5-correctness.spec.ts:121:5 › compare page still renders curated rows (1.8s)
+  ok 27 tests\e2e\v5-correctness.spec.ts:133:5 › cart honours max_per_order on PDP, drawer and cart page (2.9s)
+  ok 28 tests\e2e\v5-correctness.spec.ts:160:5 › compare tray is keyboard operable (1.8s)
+  -  29 tests\e2e\v5-correctness.spec.ts:176:5 › COD checkout stays disabled
 
-
-  1) tests\e2e\theme-publish-workflow.spec.ts:179:7 › theme publish/rollback browser workflow › owner opens draft preview showing draft URL 
-
-    Error: expect(locator).toBeVisible() failed
-
-    Locator:  locator('img[src*="e2e-draft-hero-main"]')
-    Expected: visible
-    Received: hidden
-    Timeout:  15000ms
-
-    Call log:
-      - Expect "toBeVisible" locator('img[src*="e2e-draft-hero-main"]') with timeout 15000ms
-      - waiting for locator('img[src*="e2e-draft-hero-main"]')
-        33 × locator resolved to <img alt="" class="mt-1 h-28 w-auto object-contain" src="https://example.com/e2e-draft-hero-main.webp"/>
-           - unexpected value "hidden"
-
-
-      189 |     await preview.waitForLoadState("domcontentloaded");
-      190 |     await expect(preview.getByText(/draft preview only/i)).toBeVisible();
-    > 191 |     await expect(preview.locator(`img[src*="e2e-draft-hero-main"]`)).toBeVisible({ timeout: 15_000 });
-          |                                                                      ^
-      192 |     await preview.close();
-      193 |   });
-      194 |
-        at D:\Laptops Hub Vercel Development\tests\e2e\theme-publish-workflow.spec.ts:191:70
-
-    Error Context: test-results\theme-publish-workflow-the-ba531-t-preview-showing-draft-URL\error-context.md
-
-  2) tests\e2e\v5-correctness.spec.ts:59:5 › public cards never show Add to cart without a purchasable variant 
-
-    Error: expect(received).toBe(expected) // Object.is equality
-
-    Expected: 1
-    Received: 0
-
-      66 |     const atc = await c.getByRole("button", { name: /^(Add to cart|Added)$/ }).count();
-      67 |     const ask = await c.getByRole("button", { name: "Ask about this product" }).count();
-    > 68 |     expect(atc + ask).toBe(1);
-         |                       ^
-      69 |   }
-      70 | });
-      71 |
-        at D:\Laptops Hub Vercel Development\tests\e2e\v5-correctness.spec.ts:68:23
-
-    Error Context: test-results\v5-correctness-public-card-4a349-thout-a-purchasable-variant\error-context.md
-
-  2 failed
-    tests\e2e\theme-publish-workflow.spec.ts:179:7 › theme publish/rollback browser workflow › owner opens draft preview showing draft URL 
-    tests\e2e\v5-correctness.spec.ts:59:5 › public cards never show Add to cart without a purchasable variant 
   2 skipped
-  4 did not run
-  21 passed (2.8m)
+  27 passed (1.7m)

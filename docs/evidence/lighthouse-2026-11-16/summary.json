@@ -1,0 +1,94 @@
+{
+  "at": "2026-11-16T07:59:41.519Z",
+  "target": "local next start on 127.0.0.1:3001, local Supabase",
+  "note": "Lab metrics, simulated throttling, developer machine; not field data.",
+  "runs": [
+    {
+      "page": "collection-desktop",
+      "lighthouse": "12.6.1",
+      "scores": {
+        "performance": 86,
+        "accessibility": 96,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 1005,
+      "FCP_ms": 303,
+      "TBT_ms": 293,
+      "CLS": 0
+    },
+    {
+      "page": "collection-mobile",
+      "lighthouse": "12.6.1",
+      "scores": {
+        "performance": 62,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 4045,
+      "FCP_ms": 1201,
+      "TBT_ms": 1133,
+      "CLS": 0
+    },
+    {
+      "page": "home-desktop",
+      "lighthouse": "12.6.1",
+      "scores": {
+        "performance": 84,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 2367,
+      "FCP_ms": 419,
+      "TBT_ms": 108,
+      "CLS": 0
+    },
+    {
+      "page": "home-mobile",
+      "lighthouse": "12.6.1",
+      "scores": {
+        "performance": 59,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 5319,
+      "FCP_ms": 1638,
+      "TBT_ms": 663,
+      "CLS": 0
+    },
+    {
+      "page": "pdp-desktop",
+      "lighthouse": "12.6.1",
+      "scores": {
+        "performance": 97,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 1163,
+      "FCP_ms": 261,
+      "TBT_ms": 79,
+      "CLS": 0
+    },
+    {
+      "page": "pdp-mobile",
+      "lighthouse": "12.6.1",
+      "scores": {
+        "performance": 66,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "LCP_ms": 3932,
+      "FCP_ms": 984,
+      "TBT_ms": 975,
+      "CLS": 0
+    }
+  ],
+  "tool": "Lighthouse 12.6.1 (CLI, headless Chromium 1248)",
+  "exitCodes": "Every run exited 1 AFTER writing its report: EPERM removing Chrome's temporary profile directory (C:/Users/.../Temp/lighthouse.*) on Windows. Each report was checked: no runtimeError, correct final URL. Mobile runs carry the warning that the CPU is slower than Lighthouse expects.",
+  "comparability": "Not directly comparable with docs/evidence/lighthouse (Lighthouse 13.3.0, different dataset and machine load). No score improvement is claimed from these runs."
+}

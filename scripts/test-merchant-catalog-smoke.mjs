@@ -332,6 +332,17 @@ await check("theme working-draft save/retrieve", async () => {
     actorId = u.user.id;
     await sb.from("admin_memberships").upsert({ user_id: actorId, role: "owner", is_active: true });
   }
+  // Keep the current working draft and put it back afterwards: this check must not leave a one-section draft (pointing
+  // at a smoke product that is deleted below) for the owner — or for later suites — to open in the theme editor.
+  const { data: tpl } = await sb.from("theme_templates").select("id").eq("key", "homepage").single();
+  const { data: previous } = await sb
+    .from("theme_versions")
+    .select("sections, theme_settings")
+    .eq("template_id", tpl.id)
+    .eq("status", "draft")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
   const sections = [
     {
       id: "hero",
@@ -354,6 +365,21 @@ await check("theme working-draft save/retrieve", async () => {
     .eq("id", saved.version_id)
     .single();
   assert(got.sections[0].settings.productHandles[0] === handle);
+  if (previous?.sections?.length) {
+    const { error: restoreErr } = await sb.rpc("save_homepage_draft", {
+      payload: { actor_user_id: actorId, sections: previous.sections, theme_settings: previous.theme_settings ?? {} },
+    });
+    assert(!restoreErr, `restoring the previous draft failed: ${restoreErr?.message}`);
+    const { data: back } = await sb
+      .from("theme_versions")
+      .select("sections")
+      .eq("template_id", tpl.id)
+      .eq("status", "draft")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+    assert(JSON.stringify(back.sections) === JSON.stringify(previous.sections), "previous draft not restored");
+  }
 });
 
 await check("collections.collection_type backfill/manual", async () => {

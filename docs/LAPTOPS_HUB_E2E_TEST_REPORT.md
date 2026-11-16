@@ -1,4 +1,48 @@
-# Laptops HUB — E2E Test Report (2026-11-15)
+# Laptops HUB — E2E Test Report
+
+## Engineering closeout run (2026-11-16, label `final-2026-11-16-d`) — current
+
+**Result:**
+- Isolated: 101/101
+- Legacy: 27/27
+- Cross-browser: 105/105 (Chromium, WebKit, Firefox)
+- All 25 suites of `run-final-suite.sh` exit 0.
+
+**Stack, in order:**
+1. Fresh `supabase db reset --local` (28 migrations)
+2. Seed
+3. `next build` with `THEME_PUBLISHED_ENABLED=1`
+4. `next start -p 3001`, with the fake email provider on :4599
+
+**Related files:**
+- Machine-readable results: `docs/LAPTOPS_HUB_E2E_TEST_REPORT.json`, generated from the Playwright JSON output by `scripts/release/e2e-report-json.mjs`.
+- Per-suite exit codes: `docs/evidence/final-run/summary.json`.
+- Earlier full runs and the cause of each failure: `LAPTOPS_HUB_ENGINEERING_CLOSEOUT.md` §C.
+
+| Isolated spec file | Passed |
+|---|---|
+| `content-pages.spec.ts` | 8/8 |
+| `home-inquiry.spec.ts` | 7/7 |
+| `launch-journey.spec.ts` | 10/10 |
+| `p0-admin-isolation-and-checkout-gates.spec.ts` | 10/10 |
+| `p0-admin-search.spec.ts` | 4/4 |
+| `p0-admin-sign-out.spec.ts` | 4/4 |
+| `p0-inventory-oversell.spec.ts` | 3/3 |
+| `p0-merchant-inventory-collections.spec.ts` | 4/4 |
+| `p0-staff-invitations.spec.ts` | 9/9 |
+| `p0-variant-order-journey.spec.ts` | 9/9 |
+| `p1-image-fallback.spec.ts` | 1/1 |
+| `p1-reels-reviews-blog.spec.ts` | 4/4 |
+| `p1-social-proof.spec.ts` | 5/5 |
+| `p1-storefront-labels.spec.ts` | 2/2 |
+| `password-recovery.spec.ts` | 5/5 |
+| `prehydration.spec.ts` | 2/2 |
+| `shipping-zones.spec.ts` | 5/5 |
+| `z-owner-acceptance-36-steps.spec.ts` | 9/9 |
+
+The sections below are earlier passes, kept for history.
+
+## Earlier pass (2026-11-15)
 
 **Code under test:** `feat/merchant-operating-system` — third pass (social proof, badges, reel autoplay) on top of `3dae91a`; the commit that contains this report. **Stack:** isolated only. **Browser:** Playwright Chromium 1.64.1 (headless). WebKit/real devices not run.
 - Local Supabase reset (`supabase db reset --local`) and seeded by `scripts/test-fixtures/seed-isolated.mjs` (owner, manager, fulfillment, editor) immediately before the run

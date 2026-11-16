@@ -1,5 +1,13 @@
 # Resume here
 
+> **2026-11-16 engineering closeout (Claude Opus 5.5) — read first:** start with `docs/IDE_AI_HANDOFF_CURRENT.md` and
+> `docs/LAPTOPS_HUB_ENGINEERING_CLOSEOUT.md` (final classification, run table, not-done list). Several claims in the
+> 2026-11-15 entry below were **not true** and are superseded: the "restored anon SELECT grants" was a manual local grant
+> (replaced by migrations 27/28); pagination's PASS had rc=127 and an always-true assertion; the timeouts it raised hid
+> races that are now fixed at the cause. New in this pass: migration 28 (High: staff direct Data API write escalation,
+> also present in production — needs owner approval to apply), exact-variant checkout end to end, admin global search,
+> keyboard shortcuts, sign-out. **14 migrations pending for production (15–28).** Nothing pushed, merged or deployed.
+
 > **2026-11-15 defect closure & release-candidate certification (Claude Opus 4.6):** P0 variant picker
 > implemented (types, queries, V5 model, VariantPicker component, ProductBuy integration, PDP page).
 > Fixed lint error (analytics Date.now() purity), 3 isolated e2e timeouts (production-mode slow load →

@@ -238,6 +238,7 @@ export default async function HomePage() {
           variantId={HM.variantId}
           maxPerOrder={HM.maxPerOrder}
           available={HM.avail}
+          hasOptions={HM.hasOptions}
           angles={(["front", "left", "right", "rear"] as StoryAngle[]).map((angle, i) => {
             const resolved = resolveStoryAngleImage({
               angle,

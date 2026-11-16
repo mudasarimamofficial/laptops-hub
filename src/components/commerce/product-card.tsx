@@ -109,7 +109,18 @@ export function V5ProductCard({ item }: { item: V5Card }) {
             {cmp.label}
           </button>
         </div>
-        {purchasable ? (
+        {purchasable && item.hasOptions ? (
+          // Several variants (RAM/storage/colour…): the shopper chooses on the product page; a card never adds a variant
+          // they did not pick.
+          <Link
+            href={item.href}
+            className="v5-card-atc"
+            data-testid="card-choose-options"
+            style={{ height: 46, border: 0, borderRadius: 12, background: "var(--lh-action,#2159D4)", color: "#FFFFFF", font: "700 14px var(--font-body)", cursor: "pointer", boxShadow: "inset 0 1px 0 rgba(255,255,255,.18)", transition: "background .18s ease,transform .18s ease", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
+          >
+            Choose options
+          </Link>
+        ) : purchasable ? (
           <button
             type="button"
             className="v5-card-atc"

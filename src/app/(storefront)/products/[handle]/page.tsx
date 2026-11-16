@@ -68,13 +68,25 @@ export default async function ProductPage({ params }: Props) {
     sku: p.sku || undefined,
     brand: p.brand ? { "@type": "Brand", name: p.brand } : undefined,
     image: p.imgs.slice(0, 4).map((x) => x.u),
-    offers: {
-      "@type": "Offer",
-      price: (p.pricePaisa / 100).toFixed(2),
-      priceCurrency: "PKR",
-      itemCondition: p.cond === "Used" ? "https://schema.org/UsedCondition" : undefined,
-      url: `/products/${p.h}`,
-    },
+    offers:
+      p.variants.length > 1
+        ? {
+            // Several purchasable variants at different prices: a range, not one variant's price.
+            "@type": "AggregateOffer",
+            lowPrice: (Math.min(...p.variants.map((v) => v.pricePaisa)) / 100).toFixed(2),
+            highPrice: (Math.max(...p.variants.map((v) => v.pricePaisa)) / 100).toFixed(2),
+            offerCount: p.variants.length,
+            priceCurrency: "PKR",
+            itemCondition: p.cond === "Used" ? "https://schema.org/UsedCondition" : undefined,
+            url: `/products/${p.h}`,
+          }
+        : {
+            "@type": "Offer",
+            price: (p.pricePaisa / 100).toFixed(2),
+            priceCurrency: "PKR",
+            itemCondition: p.cond === "Used" ? "https://schema.org/UsedCondition" : undefined,
+            url: `/products/${p.h}`,
+          },
     aggregateRating:
       reviews.count && reviews.average !== null
         ? { "@type": "AggregateRating", ratingValue: reviews.average, reviewCount: reviews.count, bestRating: 5, worstRating: 1 }

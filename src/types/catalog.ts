@@ -25,6 +25,10 @@ export type PublicProduct = {
   specs: Record<string, unknown>;
   optionNames: string[];
   variants: PublicVariant[];
+  /** Purchasable variants (PDP) or, for listing rows, how many exist — >1 means the shopper must choose options. */
+  variantCount: number;
+  /** Lowest price among currently purchasable variants ("From" price on cards). */
+  fromPricePaisa: number;
   variantId: string;
   sku: string | null;
   pricePaisa: number;

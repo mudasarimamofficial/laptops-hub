@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { mapCheckoutError } from "@/lib/commerce/checkout-errors";
 import { z } from "zod";
 import { createServiceClient } from "@/lib/supabase/server";
 import { clientIp, rateLimit } from "@/lib/security/rate-limit";
@@ -61,7 +62,7 @@ export async function POST(request: Request) {
     for (const line of parsed.data.lines) {
       const { data: variant } = await supabase
         .from("product_variants")
-        .select("price_paisa, purchasable, product_id, products!inner(status)")
+        .select("price_paisa, purchasable, max_per_order, inventory_mode, quantity_on_hand, allow_oversell, product_id, products!inner(status)")
         .eq("id", line.variantId)
         .maybeSingle();
       const product = variant?.products as { status?: string } | { status?: string }[] | null;
@@ -69,6 +70,20 @@ export async function POST(request: Request) {
       if (!variant || !variant.purchasable || status !== "active" || variant.price_paisa <= 0) {
         return NextResponse.json(
           { error: "product_not_purchasable" },
+          { status: 409, headers: { "Cache-Control": "no-store" } },
+        );
+      }
+      // Same stock and limit rules as create_cod_order, so a quote never promises what the order will refuse.
+      const tracked = variant.inventory_mode === "tracked";
+      if (tracked && (variant.quantity_on_hand == null || (variant.quantity_on_hand < line.quantity && !variant.allow_oversell))) {
+        return NextResponse.json(
+          { error: "insufficient_stock", message: mapCheckoutError("insufficient_stock").message },
+          { status: 409, headers: { "Cache-Control": "no-store" } },
+        );
+      }
+      if (line.quantity > variant.max_per_order) {
+        return NextResponse.json(
+          { error: "quantity_exceeds_limit", message: mapCheckoutError("quantity_exceeds_limit").message },
           { status: 409, headers: { "Cache-Control": "no-store" } },
         );
       }

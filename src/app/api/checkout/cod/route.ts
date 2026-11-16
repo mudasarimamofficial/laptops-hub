@@ -7,6 +7,7 @@ import { normalizePakistanMobile } from "@/lib/phone";
 import { checkoutPayloadSchema } from "@/lib/validation/checkout";
 import { contentVisibility } from "@/lib/content/pages";
 import { mandatoryPoliciesPublic } from "@/lib/content/links";
+import { mapCheckoutError } from "@/lib/commerce/checkout-errors";
 
 export const runtime = "nodejs";
 
@@ -121,13 +122,10 @@ export async function POST(request: Request) {
         { status: 409 },
       );
     }
-    const status =
-      msg.includes("checkout_disabled") || msg.includes("shipping")
-        ? 403
-        : msg.includes("not_found") || msg.includes("purchasable") || msg.includes("quantity")
-          ? 409
-          : 400;
-    return NextResponse.json({ error: msg }, { status });
+    // Stable code + shopper message only; raw database text is logged, never returned.
+    const mapped = mapCheckoutError(msg);
+    if (mapped.error === "order_failed") console.error("[checkout] create_cod_order failed", error.code, msg.slice(0, 200));
+    return NextResponse.json({ error: mapped.error, message: mapped.message }, { status: mapped.status });
   }
 
   // New orders only (a replay returns duplicate: true and has no new outbox row): deliver the order alert after

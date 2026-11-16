@@ -19,6 +19,8 @@ export type StoryProps = {
   variantId: string;
   maxPerOrder: number;
   available: boolean;
+  /** Several variants: "Details" leads to the option picker; no one-click add of an unchosen variant. */
+  hasOptions?: boolean;
   /** Four angles (front, left, right, rear): V5 cutouts when approved, otherwise catalog photos. */
   angles: { src: string | null; cutout: boolean }[];
   rows: { k: string; v: string }[];
@@ -142,7 +144,7 @@ export function ProductStory(p: StoryProps) {
   };
 
   const live = ctaOn || rm;
-  const purchasable = canPurchase({ available: p.available, pricePaisa: p.pricePaisa, variantId: p.variantId });
+  const purchasable = !p.hasOptions && canPurchase({ available: p.available, pricePaisa: p.pricePaisa, variantId: p.variantId });
   const href = "/products/" + encodeURIComponent(p.handle);
   const stageVars = { "--o0": 1, "--o1": 0, "--o2": 0, "--o3": 0 } as Record<string, number>;
   if (rm) for (let i = 0; i < 4; i++) stageVars["--o" + i] = i === ci ? 1 : 0;

@@ -1,0 +1,971 @@
+{
+  "at": "2026-11-16T01:58:44.268Z",
+  "supabase": "http://127.0.0.1:54321",
+  "results": [
+    {
+      "name": "direct write refused: owner products.update(title)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: admin products.update(title)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: manager products.update(title)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: editor products.update(title)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: fulfillment products.update(title)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: inactive products.update(title)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: customer products.update(title)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: anon products.update(title)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: owner product_variants.update(price,stock)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: admin product_variants.update(price,stock)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: manager product_variants.update(price,stock)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: editor product_variants.update(price,stock)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: fulfillment product_variants.update(price,stock)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: inactive product_variants.update(price,stock)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: customer product_variants.update(price,stock)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: anon product_variants.update(price,stock)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: owner product_media.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: admin product_media.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: manager product_media.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: editor product_media.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: fulfillment product_media.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: inactive product_media.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: customer product_media.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: anon product_media.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: owner store_settings.upsert(cod_checkout enabled)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: admin store_settings.upsert(cod_checkout enabled)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: manager store_settings.upsert(cod_checkout enabled)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: editor store_settings.upsert(cod_checkout enabled)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: fulfillment store_settings.upsert(cod_checkout enabled)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: inactive store_settings.upsert(cod_checkout enabled)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: customer store_settings.upsert(cod_checkout enabled)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: anon store_settings.upsert(cod_checkout enabled)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: owner shipping_zones.update(fee 0)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: admin shipping_zones.update(fee 0)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: manager shipping_zones.update(fee 0)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: editor shipping_zones.update(fee 0)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: fulfillment shipping_zones.update(fee 0)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: inactive shipping_zones.update(fee 0)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: customer shipping_zones.update(fee 0)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: anon shipping_zones.update(fee 0)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: owner content_pages.update(legal_approved)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: admin content_pages.update(legal_approved)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: manager content_pages.update(legal_approved)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: editor content_pages.update(legal_approved)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: fulfillment content_pages.update(legal_approved)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: inactive content_pages.update(legal_approved)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: customer content_pages.update(legal_approved)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: anon content_pages.update(legal_approved)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: owner orders.update(payment collected)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: admin orders.update(payment collected)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: manager orders.update(payment collected)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: editor orders.update(payment collected)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: fulfillment orders.update(payment collected)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: inactive orders.update(payment collected)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: customer orders.update(payment collected)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: anon orders.update(payment collected)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: owner cod_collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: admin cod_collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: manager cod_collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: editor cod_collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: fulfillment cod_collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: inactive cod_collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: customer cod_collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: anon cod_collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: owner articles.insert(published)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: admin articles.insert(published)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: manager articles.insert(published)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: editor articles.insert(published)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: fulfillment articles.insert(published)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: inactive articles.insert(published)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: customer articles.insert(published)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: anon articles.insert(published)",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: owner collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: admin collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: manager collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: editor collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: fulfillment collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: inactive collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: customer collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct write refused: anon collections.insert",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: owner orders",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: admin orders",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: manager orders",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: editor orders",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: fulfillment orders",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: inactive orders",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: customer orders",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: anon orders",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: owner order_addresses",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: admin order_addresses",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: manager order_addresses",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: editor order_addresses",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: fulfillment order_addresses",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: inactive order_addresses",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: customer order_addresses",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: anon order_addresses",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: owner order_items",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: admin order_items",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: manager order_items",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: editor order_items",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: fulfillment order_items",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: inactive order_items",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: customer order_items",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: anon order_items",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: owner order_events",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: admin order_events",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: manager order_events",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: editor order_events",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: fulfillment order_events",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: inactive order_events",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: customer order_events",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: anon order_events",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: owner cod_collections",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: admin cod_collections",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: manager cod_collections",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: editor cod_collections",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: fulfillment cod_collections",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: inactive cod_collections",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: customer cod_collections",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: anon cod_collections",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: owner notification_outbox",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: admin notification_outbox",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: manager notification_outbox",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: editor notification_outbox",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: fulfillment notification_outbox",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: inactive notification_outbox",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: customer notification_outbox",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: anon notification_outbox",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: owner audit_logs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: admin audit_logs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: manager audit_logs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: editor audit_logs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: fulfillment audit_logs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: inactive audit_logs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: customer audit_logs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: anon audit_logs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: owner contact_inquiries",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: admin contact_inquiries",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: manager contact_inquiries",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: editor contact_inquiries",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: fulfillment contact_inquiries",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: inactive contact_inquiries",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: customer contact_inquiries",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: anon contact_inquiries",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: owner import_jobs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: admin import_jobs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: manager import_jobs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: editor import_jobs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: fulfillment import_jobs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: inactive import_jobs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: customer import_jobs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: anon import_jobs",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: owner fulfillments",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: admin fulfillments",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: manager fulfillments",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: editor fulfillments",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: fulfillment fulfillments",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: inactive fulfillments",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: customer fulfillments",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "direct read refused: anon fulfillments",
+      "ok": true,
+      "detail": "error 42501"
+    },
+    {
+      "name": "anon cannot read products.flags",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "anon cannot read products.media_approval",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "anon cannot read products.import_source",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "anon cannot read product_variants.quantity_on_hand",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "anon cannot read product_variants.inventory_mode",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "anon cannot read product_variants.cost_paisa",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "anon cannot read product_variants.allow_oversell",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "anon cannot read product_media.rights_note",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "anon cannot read product_media.approval",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "anon cannot read product_media.source_provider",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "customer cannot read products.flags",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "customer cannot read products.media_approval",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "customer cannot read products.import_source",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "customer cannot read product_variants.quantity_on_hand",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "customer cannot read product_variants.inventory_mode",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "customer cannot read product_variants.cost_paisa",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "customer cannot read product_variants.allow_oversell",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "customer cannot read product_media.rights_note",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "customer cannot read product_media.approval",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "customer cannot read product_media.source_provider",
+      "ok": true,
+      "detail": "42501"
+    },
+    {
+      "name": "anon reads public product + variants + media",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "anon reads public_catalog_listing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "anon reads catalog_products_public",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "anon reads variant availability (boolean only)",
+      "ok": true,
+      "detail": "[{\"variant_id\":\"1e99831e-8c92-4927-8664-8c27ad5d627b\",\"available\":true}]"
+    },
+    {
+      "name": "customer reads public product + variants + media",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "customer reads public_catalog_listing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "customer reads catalog_products_public",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "customer reads variant availability (boolean only)",
+      "ok": true,
+      "detail": "[{\"variant_id\":\"1e99831e-8c92-4927-8664-8c27ad5d627b\",\"available\":true}]"
+    },
+    {
+      "name": "editor reads public product + variants + media",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "editor reads public_catalog_listing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "editor reads catalog_products_public",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "editor reads variant availability (boolean only)",
+      "ok": true,
+      "detail": "[{\"variant_id\":\"1e99831e-8c92-4927-8664-8c27ad5d627b\",\"available\":true}]"
+    },
+    {
+      "name": "anon can still submit a contact inquiry (insert only)",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

@@ -15,6 +15,8 @@ const base: PublicProduct = {
   specs: { RAM: "16 GB", Display: "14 inch" },
   optionNames: [],
   variants: [],
+  variantCount: 1,
+  fromPricePaisa: 12500000,
   variantId: "v1",
   sku: "SKU",
   pricePaisa: 12500000,

@@ -137,7 +137,8 @@ export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json.message || json.error || "Checkout failed");
+        // The API always sends a shopper-facing message; never show a raw error code.
+        setError(json.message || "Your order could not be placed. Please try again.");
         return;
       }
       clear();

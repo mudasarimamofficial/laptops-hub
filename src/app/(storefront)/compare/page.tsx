@@ -84,7 +84,11 @@ export default function ComparePage() {
                   {c.model}
                 </Link>
                 <div style={{ display: "flex", gap: 8 }}>
-                  {canPurchase({ available: c.avail, pricePaisa: c.pricePaisa, variantId: c.variantId }) ? (
+                  {c.hasOptions && c.avail ? (
+                    <Link href={c.href} data-testid="compare-choose-options" style={{ flex: 1, height: 38, border: 0, borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontSize: 13, fontWeight: 700, whiteSpace: "nowrap", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      Choose options
+                    </Link>
+                  ) : canPurchase({ available: c.avail, pricePaisa: c.pricePaisa, variantId: c.variantId }) ? (
                     <button
                       type="button"
                       onClick={() => {

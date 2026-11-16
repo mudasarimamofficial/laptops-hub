@@ -1,6 +1,7 @@
 # Client handover — release 2026-11-16
 
-Release classification: see the end of `FINAL_E2E_REPORT.md`. Deployed to production 2026-11-16 (`772276b`); database at 29/29 migrations.
+Release classification: see the end of `FINAL_E2E_REPORT.md`. Deployed to production 2026-11-16 (`772276b`), with an accessibility fix on 2026-11-17 (`7e406df`,
+`dpl_2XLaqxjUnsWb8FGrT6TgmTaUJ8KQ`). Database at 29/29 migrations. Post-deploy acceptance: `POST_DEPLOY_ACCEPTANCE.md`.
 
 ## What the owner must approve or provide
 
@@ -8,7 +9,9 @@ Release classification: see the end of `FINAL_E2E_REPORT.md`. Deployed to produc
 |---|---|---|---|
 | 1 | ~~Migrations 15–29~~ — done 2026-11-16 | — | — |
 | 2 | ~~Merge PR #10~~ — done 2026-11-16 | — | — |
-| 2a | Sign in to the admin and open each section once; report anything slow or broken | Authenticated admin was not exercised live by the agent | Owner |
+| 2a | Authorize production write tests with named test data (or run them yourself); sign out and back in once | Admin was verified read-only in your session; writes and logout were not run on production | Owner |
+| 2b | Approve deleting the leftover test account `cod-sandbox-…@lh-test.local` (deactivated, never used) | Housekeeping; irreversible | Owner |
+| 2c | Decide on Supabase leaked-password protection | Advisor warning; plan-dependent setting | Owner |
 | 3 | Genuine customer reviews with consent (and avatar permission, if photos are used) | The homepage reviews section stays hidden until reviews are published | Owner |
 | 4 | Confirm the Google Maps listing and embed for the shop | The map shows the supplied embed | Owner |
 | 5 | Email: choose a provider (code supports Resend), create the account, publish **its** DNS values in Vercel, and set `RESEND_API_KEY`, `STORE_FROM_EMAIL`, `STORE_NOTIFY_EMAIL` (alert inbox), `NOTIFY_CUSTOMER_EMAIL=1` only if customer emails are approved, and `CRON_SECRET` | Order notification emails are not sent in production today | Owner |

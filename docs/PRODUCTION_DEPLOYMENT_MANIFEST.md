@@ -31,5 +31,5 @@
 | Old code (cb638b7) on the fully migrated schema | 20/20 (`docs/evidence/migrations/old_code_compat.json`) |
 | Preview build + region | `dpl_9gqgYg4ZPH33hyZhCaaGAuvaVn6i` READY, target preview (not production), regions `[sin1]`, `x-vercel-id …::sin1::`; home, PDP, collection, search, checkout page, admin login, sitemap, robots 200; map renders, reviews hidden |
 | Production migrations applied | 15–29 applied 2026-11-16 (owner approval); 29/29; `docs/evidence/migrations/prod_apply_2026-11-16.txt` |
-| Production deploy | PR #10 merged → `772276b` → `dpl_ErqN6evfpCNXoidJrp5xGVAqiDnC`, READY, regions sin1, apex + www aliased |
+| Production deploy | PR #10 merged → `772276b` → `dpl_ErqN6evfpCNXoidJrp5xGVAqiDnC` (2026-11-16); PR #11 a11y fix → `7e406df` → `dpl_2XLaqxjUnsWb8FGrT6TgmTaUJ8KQ` (2026-11-17, current), sin1, apex + www |
 | Live QA | `LIVE_QA_REPORT.md` — sitemap 267/267, 78/78 browser checks; authenticated admin not exercised |

@@ -1,32 +1,54 @@
 {
-  "at": "2026-11-16T00:45:13.757Z",
-  "count": 105,
-  "lastOffset": 96,
+  "at": "2026-11-16T03:11:14.882Z",
+  "app": "http://127.0.0.1:3001",
+  "synthetic": 105,
+  "total": 107,
+  "pageSize": 12,
   "results": [
     {
-      "name": "catalog_count_available",
+      "name": "synthetic_dataset_seeded",
       "ok": true,
-      "detail": "count=105 (min 1)"
+      "detail": "105 active + 1 draft"
     },
     {
-      "name": "last_page_fetchable",
+      "name": "view_lists_every_synthetic_active_product",
       "ok": true,
-      "detail": "n=9 offset=96"
+      "detail": "synthetic=105 total=107"
     },
     {
-      "name": "last_page_matches_tail_of_full_sort",
+      "name": "view_hides_draft",
       "ok": true,
-      "detail": "expected=9 got=9"
+      "detail": "rows=0"
     },
     {
-      "name": "drafts_hidden_from_anon_listing",
+      "name": "view_last_page_equals_tail_of_full_sort",
       "ok": true,
-      "detail": "drafts=0"
+      "detail": "offset=96 expected=11 got=11"
     },
     {
-      "name": "view_count_eq_public_active",
+      "name": "view_first_rows_are_synthetic_in_price_order",
       "ok": true,
-      "detail": "count=105"
+      "detail": "price-asc"
+    },
+    {
+      "name": "storefront_page1_shows_first_12_synthetic",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "storefront_load_more_reaches_every_product",
+      "ok": true,
+      "detail": "9 pages, p1:200/12+more p2:200/24+more p3:200/36+more p4:200/48+more p5:200/60+more p6:200/72+more p7:200/84+more p8:200/96+more p9:200/107"
+    },
+    {
+      "name": "storefront_final_page_has_all_synthetic_in_order",
+      "ok": true,
+      "detail": "synthetic=105"
+    },
+    {
+      "name": "draft_pdp_is_404",
+      "ok": true,
+      "detail": "status=404"
     }
   ]
 }

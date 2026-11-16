@@ -81,3 +81,7 @@ backups/
 docs/evidence/cross-browser/**/*.png
 docs/evidence/migrations/schema_local.sql
 docs/evidence/migrations/schema_upgrade.sql
+
+# Database dumps (never commit; see docs/LAPTOPS_HUB_BACKUP_RESTORE_RUNBOOK.md)
+*.dump
+*.sql.gz

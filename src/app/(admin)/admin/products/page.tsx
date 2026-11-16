@@ -6,6 +6,7 @@ import { StatusBadge } from "@/components/admin/ui/status-badge";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { formatPkr } from "@/lib/money";
 import { createServiceClient } from "@/lib/supabase/server";
+import { adminSearchTerm } from "@/lib/admin/search-term";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -28,7 +29,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
   await requireStaffPage(["owner", "admin", "manager", "editor"]);
 
   const sp = await searchParams;
-  const q = (sp.q || "").trim();
+  const q = adminSearchTerm(sp.q);
   const status = sp.status || "all";
   const page = Math.max(1, Number(sp.page || "1") || 1);
   const pageSize = 50;

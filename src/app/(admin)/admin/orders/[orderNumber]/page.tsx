@@ -148,11 +148,11 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             </div>
             <div className="flex justify-between text-[var(--lh-ink-2)]">
               <dt>Payment</dt>
-              <dd>{order.payment_status}</dd>
+              <dd data-testid="order-payment-status">{order.payment_status}</dd>
             </div>
             <div className="flex justify-between text-[var(--lh-ink-2)]">
               <dt>Fulfillment</dt>
-              <dd>{order.status}</dd>
+              <dd data-testid="order-fulfillment-status">{order.status}</dd>
             </div>
           </dl>
         </section>

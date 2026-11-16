@@ -99,6 +99,10 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     await sb.from("articles").delete().eq("slug", POST_SLUG);
     if (state.collectionSlug) await sb.from("collections").delete().eq("slug", state.collectionSlug);
     if (state.productId) {
+      // Orders placed for this run's product (steps 13 and 27) are removed so no later suite or rerun counts them.
+      const { data: lines } = await sb.from("order_items").select("order_id").eq("product_id", state.productId);
+      const ids = Array.from(new Set((lines || []).map((l) => l.order_id)));
+      if (ids.length) await sb.from("orders").delete().in("id", ids);
       await sb.from("product_badges").delete().eq("product_id", state.productId);
       await sb.from("products").update({ status: "archived" }).eq("id", state.productId);
     }

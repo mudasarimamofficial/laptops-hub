@@ -1,6 +1,17 @@
 /**
- * Prove full-catalog discoverability: last page of price-sorted listing is reachable.
- *   node scripts/test-catalog-pagination.mjs
+ * Full-catalog discoverability on the LOCAL stack, with a synthetic multi-page dataset that is always seeded (never
+ * conditional on how many products the local DB happens to hold) and always removed.
+ *
+ *   node scripts/test-catalog-pagination.mjs [appBaseUrl]     (default http://127.0.0.1:3001)
+ *
+ * Proves, for 105 synthetic active products priced below every real fixture (so they lead the price-asc sort) plus
+ * one synthetic draft:
+ *   - the public listing view counts them and its last page equals the tail of the full sort (Data API level);
+ *   - the storefront /collections/all?sort=price-asc "Load more" pages reveal exactly 12 more products per page, in
+ *     price order, with no product skipped or repeated, and the final page shows every active product without a
+ *     "Load more" link;
+ *   - the draft is never listed and its PDP is 404.
+ * Exit code 0 only if every check passed. Refuses a non-local Supabase or app.
  */
 import fs from "fs";
 import path from "path";
@@ -9,130 +20,135 @@ import { fileURLToPath } from "url";
 import { assertLocalOnly } from "./lib/local-only.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-function loadEnv() {
-  const p = path.join(root, ".env.local");
-  if (!fs.existsSync(p)) throw new Error(".env.local missing");
-  for (const line of fs.readFileSync(p, "utf8").split(/\r?\n/)) {
-    const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
-    if (!m || process.env[m[1]]) continue;
-    let v = m[2].trim();
-    if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
-    process.env[m[1]] = v;
-  }
+for (const line of fs.readFileSync(path.join(root, ".env.local"), "utf8").split(/\r?\n/)) {
+  const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
+  if (!m || process.env[m[1]]) continue;
+  let v = m[2].trim();
+  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
+  process.env[m[1]] = v;
 }
-loadEnv();
-
 await assertLocalOnly("test-catalog-pagination.mjs");
+const APP = (process.argv[2] || process.env.TEST_BASE_URL || "http://127.0.0.1:3001").replace(/\/$/, "");
+if (!/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(APP)) throw new Error(`refusing non-local app ${APP}`);
 
-const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
-  auth: { persistSession: false },
-});
-const adminSb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
-  auth: { persistSession: false },
-});
+const anon = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+const admin = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
+
+const PREFIX = "qa-synth-page-";
+const N = 105;
+const PAGE = 12; // src/lib/catalog/v5-collection.ts
+const RUN = Date.now().toString(36);
+const synthHandle = (i) => `${PREFIX}${String(i).padStart(3, "0")}`;
+const DRAFT = `${PREFIX}draft`;
 
 const results = [];
-function assert(name, ok, detail = "") {
-  results.push({ name, ok, detail });
+const check = (name, ok, detail = "") => {
+  results.push({ name, ok: !!ok, detail });
   console.log(`${ok ? "PASS" : "FAIL"}  ${name}${detail ? " — " + detail : ""}`);
-}
+};
+const must = ({ data, error }, what) => {
+  if (error) throw new Error(`${what}: ${error.message}`);
+  return data;
+};
+const cleanup = async () => must(await admin.from("products").delete().like("handle", `${PREFIX}%`), "cleanup");
 
-const SYNTH_PREFIX = "qa-synth-page-";
-let seededIds = [];
+/** Product handles in DOM order from a collection page (cards link to /products/<handle>). */
+const handlesIn = (html) => {
+  const seen = [];
+  for (const m of html.matchAll(/href="\/products\/([a-z0-9-]+)"/g)) if (!seen.includes(m[1])) seen.push(m[1]);
+  return seen;
+};
+const get = async (p) => {
+  const r = await fetch(APP + p, { headers: { "cache-control": "no-cache" } });
+  return { status: r.status, html: await r.text() };
+};
 
+let failure = null;
 try {
-  // Check baseline count
-  const { count: initialCount } = await sb
-    .from("public_catalog_listing")
-    .select("id", { count: "exact", head: true });
-
-  // Clean any leftover synthetic items
-  await adminSb.from("products").delete().like("handle", `${SYNTH_PREFIX}%`);
-
-  // If local catalog has fewer than 100 products, generate a multi-page synthetic dataset (at least 3 pages of 48)
-  if ((initialCount ?? 0) < 100) {
-    const needed = 105 - (initialCount ?? 0);
-    const synthProds = [];
-    for (let i = 1; i <= needed; i++) {
-      synthProds.push({
-        title: `QA Synthetic Laptop ${String(i).padStart(3, "0")}`,
-        handle: `${SYNTH_PREFIX}${String(i).padStart(3, "0")}`,
-        status: "active",
-      });
-    }
-    const { data: inserted, error: insErr } = await adminSb
-      .from("products")
-      .insert(synthProds)
-      .select("id");
-    if (insErr) {
-      console.warn("Could not insert synthetic products:", insErr.message);
-    } else if (inserted) {
-      seededIds = inserted.map((p) => p.id);
-      const variants = inserted.map((p, idx) => ({
-        product_id: p.id,
-        title: "Standard",
-        sku: `SKU-SYNTH-${Date.now()}-${idx + 1}`,
-        price_paisa: 6000000 + (idx + 1) * 50000,
-        compare_at_paisa: null,
-        quantity_on_hand: 10,
-        position: 1,
-        purchasable: true,
-      }));
-      const { error: vErr } = await adminSb.from("product_variants").insert(variants);
-      if (vErr) console.warn("Could not insert variants:", vErr.message);
-    }
-  }
-
-  const { count, error: cErr } = await sb
-    .from("public_catalog_listing")
-    .select("id", { count: "exact", head: true });
-
-  const minCount = Number(process.env.CATALOG_MIN_COUNT || 100);
-  assert("catalog_count_available", !cErr && (count ?? 0) >= minCount, cErr?.message || `count=${count} (min ${minCount})`);
-
-  const pageSize = 48;
-  const lastOffset = Math.max(0, Math.floor(((count || 1) - 1) / pageSize) * pageSize);
-
-  const { data: lastPage, error: pErr } = await sb
-    .from("public_catalog_listing")
-    .select("handle, title, price_paisa")
-    .order("price_paisa", { ascending: true })
-    .order("title")
-    .range(lastOffset, lastOffset + pageSize - 1);
-
-  assert("last_page_fetchable", !pErr && Array.isArray(lastPage) && lastPage.length > 0, pErr?.message || `n=${lastPage?.length} offset=${lastOffset}`);
-
-  const { data: allSorted } = await sb
-    .from("public_catalog_listing")
-    .select("handle, price_paisa")
-    .order("price_paisa", { ascending: true })
-    .order("title");
-
-  const expectedLast = (allSorted || []).slice(lastOffset);
-  assert(
-    "last_page_matches_tail_of_full_sort",
-    expectedLast.length === lastPage.length &&
-      expectedLast.every((row, i) => row.handle === lastPage[i].handle),
-    `expected=${expectedLast.length} got=${lastPage?.length}`,
+  await cleanup();
+  const rows = Array.from({ length: N }, (_, k) => ({ title: `QA Synthetic Laptop ${String(k + 1).padStart(3, "0")}`, handle: synthHandle(k + 1), status: "active", manufacturer: "QA" }));
+  rows.push({ title: "QA Synthetic Draft", handle: DRAFT, status: "draft", manufacturer: "QA" });
+  const inserted = must(await admin.from("products").insert(rows).select("id, handle"), "insert synthetic products");
+  const byHandle = Object.fromEntries(inserted.map((p) => [p.handle, p.id]));
+  must(
+    await admin.from("product_variants").insert(
+      inserted.map((p) => {
+        const i = p.handle === DRAFT ? 1 : Number(p.handle.slice(PREFIX.length));
+        // Rs 1,000 + Rs 10 × i: below every real fixture and strictly increasing, so price-asc order is known.
+        return { product_id: p.id, title: "Standard", sku: `QA-SYNTH-${RUN}-${p.handle.slice(PREFIX.length)}`, price_paisa: 100_000 + i * 1_000, quantity_on_hand: 10, position: 1, purchasable: true };
+      }),
+    ),
+    "insert synthetic variants",
   );
+  check("synthetic_dataset_seeded", Object.keys(byHandle).length === N + 1, `${N} active + 1 draft`);
 
-  const { data: drafts } = await sb.from("products").select("handle").eq("status", "draft").limit(5);
-  assert("drafts_hidden_from_anon_listing", !drafts || drafts.length === 0, `drafts=${drafts?.length}`);
+  // ── Data API level ──
+  const { count, error: cErr } = await anon.from("public_catalog_listing").select("id", { count: "exact", head: true });
+  const { count: synthCount } = await anon.from("public_catalog_listing").select("id", { count: "exact", head: true }).like("handle", `${PREFIX}%`);
+  check("view_lists_every_synthetic_active_product", !cErr && synthCount === N, cErr?.message || `synthetic=${synthCount} total=${count}`);
+  const { data: draftRow } = await anon.from("public_catalog_listing").select("handle").eq("handle", DRAFT);
+  check("view_hides_draft", Array.isArray(draftRow) && draftRow.length === 0, `rows=${draftRow?.length}`);
 
-  const { count: draftInView } = await sb
-    .from("public_catalog_listing")
-    .select("id", { count: "exact", head: true })
-    .ilike("handle", "%"); // all rows — view already filters active
-  assert("view_count_eq_public_active", (count ?? 0) === (draftInView ?? -1) || true, `count=${count}`);
+  const apiPage = 48;
+  const lastOffset = Math.floor(((count || 1) - 1) / apiPage) * apiPage;
+  const { data: lastPage, error: pErr } = await anon.from("public_catalog_listing").select("handle").order("price_paisa").order("title").order("id").range(lastOffset, lastOffset + apiPage - 1);
+  const { data: allSorted } = await anon.from("public_catalog_listing").select("handle").order("price_paisa").order("title").order("id");
+  const tail = (allSorted || []).slice(lastOffset);
+  check(
+    "view_last_page_equals_tail_of_full_sort",
+    !pErr && lastPage?.length > 0 && tail.length === lastPage.length && tail.every((r, i) => r.handle === lastPage[i].handle),
+    pErr?.message || `offset=${lastOffset} expected=${tail.length} got=${lastPage?.length}`,
+  );
+  check("view_first_rows_are_synthetic_in_price_order", (allSorted || []).slice(0, N).every((r, i) => r.handle === synthHandle(i + 1)), "price-asc");
 
-  const out = path.join(root, "docs", "CATALOG_PAGINATION_RESULTS.json");
-  fs.writeFileSync(out, JSON.stringify({ at: new Date().toISOString(), count, lastOffset, results }, null, 2));
+  // ── Storefront level (catalog cache: unstable_cache tag "catalog", 60 s) ──
+  const total = count;
+  let first = null;
+  for (let t = 0; t < 30; t++) {
+    first = await get("/collections/all?sort=price-asc");
+    if (first.status === 200 && first.html.includes(`Showing ${PAGE} of ${total}`) && handlesIn(first.html)[0] === synthHandle(1)) break;
+    await new Promise((r) => setTimeout(r, 3_000));
+  }
+  check("storefront_page1_shows_first_12_synthetic", first.status === 200 && handlesIn(first.html).filter((h) => h.startsWith(PREFIX)).join() === Array.from({ length: PAGE }, (_, k) => synthHandle(k + 1)).join(), `status=${first.status}`);
+
+  const lastStorefrontPage = Math.ceil(total / PAGE);
+  let prev = [];
+  let pagesOk = true;
+  const pageNotes = [];
+  for (let p = 1; p <= lastStorefrontPage; p++) {
+    const { status, html } = await get(`/collections/all?sort=price-asc${p > 1 ? `&page=${p}` : ""}`);
+    const hs = handlesIn(html);
+    const expectedLen = Math.min(p * PAGE, total);
+    const prefixKept = prev.every((h, i) => hs[i] === h); // earlier products stay, in the same order
+    const unique = new Set(hs).size === hs.length;
+    const hasMore = html.includes(">Load more<");
+    const ok = status === 200 && hs.length === expectedLen && prefixKept && unique && hasMore === p < lastStorefrontPage && !hs.includes(DRAFT);
+    if (!ok) pagesOk = false;
+    pageNotes.push(`p${p}:${status}/${hs.length}${hasMore ? "+more" : ""}`);
+    prev = hs;
+  }
+  check("storefront_load_more_reaches_every_product", pagesOk && prev.length === total, `${lastStorefrontPage} pages, ${pageNotes.join(" ")}`);
+  const synthOrder = prev.filter((h) => h.startsWith(PREFIX));
+  check("storefront_final_page_has_all_synthetic_in_order", synthOrder.length === N && synthOrder.every((h, i) => h === synthHandle(i + 1)), `synthetic=${synthOrder.length}`);
+
+  const draftPdp = await get(`/products/${DRAFT}`);
+  check("draft_pdp_is_404", draftPdp.status === 404, `status=${draftPdp.status}`);
+
+  fs.writeFileSync(path.join(root, "docs", "CATALOG_PAGINATION_RESULTS.json"), JSON.stringify({ at: new Date().toISOString(), app: APP, synthetic: N, total, pageSize: PAGE, results }, null, 2));
+} catch (e) {
+  failure = e;
+  check("script_completed", false, e.message);
 } finally {
-  if (seededIds.length > 0) {
-    await adminSb.from("products").delete().like("handle", `${SYNTH_PREFIX}%`);
+  try {
+    await cleanup();
+  } catch (e) {
+    check("cleanup", false, e.message);
   }
 }
 
 const failed = results.filter((r) => !r.ok);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
-process.exitCode = failed.length ? 1 : 0;
+// Close fetch's keep-alive sockets before Node exits: on Windows, exiting with live undici handles can trip the libuv
+// assertion "!(handle->flags & UV_HANDLE_CLOSING)" (async.c:94) and turn a finished run into exit code 127.
+await globalThis[Symbol.for("undici.globalDispatcher.1")]?.close?.().catch(() => {});
+process.exitCode = failed.length || failure ? 1 : 0;

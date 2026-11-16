@@ -23,7 +23,6 @@ const PRIVATE_NAME = `SANDBOX Buyer ${RUN}`;
 
 let savedSetting: unknown = null;
 const createdOrders: string[] = [];
-let stashedDeliveredOrders: { id: string; status: string }[] = [];
 
 async function signIn(page: Page, who: "owner" | "editor" = "owner") {
   await page.goto("/admin/login");
@@ -80,21 +79,16 @@ test.describe.serial("P1: truthful social proof (isolated)", () => {
     await assertLocalOnly("social proof journeys");
     fs.mkdirSync(OUT, { recursive: true });
     await cleanup();
-    const { data: existingDelivered } = await sb.from("orders").select("id, status").eq("status", "delivered");
-    if (existingDelivered && existingDelivered.length > 0) {
-      stashedDeliveredOrders = existingDelivered;
-      await sb.from("orders").update({ status: "shipped" }).in("id", existingDelivered.map((o) => o.id));
-    }
+    // Precondition, enforced (not skipped, and other suites' rows are never rewritten): the isolated seed clears local
+    // test orders and every suite deletes the orders it creates, so no delivered order may exist here.
+    const { data: delivered, error } = await sb.from("orders").select("order_number").eq("status", "delivered");
+    expect(error).toBeNull();
+    expect(delivered?.map((o) => o.order_number) ?? [], "leftover delivered orders break the zero-data baseline; reseed the isolated DB").toEqual([]);
     const { data } = await sb.from("store_settings").select("value").eq("key", "social_proof").maybeSingle();
     savedSetting = data?.value ?? null;
   });
   test.afterAll(async () => {
     await cleanup();
-    if (stashedDeliveredOrders.length > 0) {
-      for (const o of stashedDeliveredOrders) {
-        await sb.from("orders").update({ status: o.status }).eq("id", o.id);
-      }
-    }
     if (savedSetting === null) await sb.from("store_settings").delete().eq("key", "social_proof");
     else await sb.from("store_settings").update({ value: savedSetting }).eq("key", "social_proof");
   });

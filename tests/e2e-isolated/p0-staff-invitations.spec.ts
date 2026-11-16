@@ -58,14 +58,12 @@ async function acceptInvite(page: Page, email: string) {
 test.describe.serial("P0: staff invitations, roles and deactivation (isolated)", () => {
   test.beforeAll(async () => {
     await assertLocalOnly("staff invitations");
-    await sb.from("rate_limit_buckets").delete().like("bucket_key", "staff-invite:*");
-    const { data: oldMembers } = await sb.from("admin_memberships").select("user_id");
-    const fixtureIds = new Set(Object.values(fx.staff as Record<string, { id: string }>).map((s) => s.id));
-    for (const m of oldMembers || []) {
-      if (!fixtureIds.has(m.user_id)) {
-        await sb.auth.admin.deleteUser(m.user_id);
-      }
-    }
+    // Invitations are limited to 10 per inviter per hour (src/app/api/admin/staff/route.ts); start every run from a
+    // fresh quota ("*" is PostgREST's LIKE wildcard) and prove the reset worked.
+    const { error } = await sb.from("rate_limit_buckets").delete().like("bucket_key", "staff-invite:*");
+    expect(error).toBeNull();
+    const { count } = await sb.from("rate_limit_buckets").select("bucket_key", { count: "exact", head: true }).like("bucket_key", "staff-invite:*");
+    expect(count).toBe(0);
   });
 
   test.afterAll(async () => {
@@ -84,13 +82,20 @@ test.describe.serial("P0: staff invitations, roles and deactivation (isolated)",
       await page.getByLabel("Email address").fill(email);
       await page.getByLabel("Role", { exact: true }).selectOption(role);
       await page.getByRole("button", { name: "Send invitation", exact: true }).click();
-      await expect(page.getByText(`Invitation sent to ${email}.`)).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText(`Invitation sent to ${email}.`)).toBeVisible();
       const row = page.locator(`[data-testid=staff-row][data-email="${email}"]`);
-      await expect(row).toContainText("Invited — not signed in yet", { timeout: 15_000 });
+      await expect(row).toContainText("Invited — not signed in yet");
       const { data: u } = await sb.from("admin_memberships").select("user_id, role, is_active, created_by").eq("role", role).order("created_at", { ascending: false }).limit(1).single();
       expect(u).toMatchObject({ role, is_active: true, created_by: fx.staff.owner.id });
       ids[role] = u!.user_id;
     }
+    // Both invitations are stored and listed after a full reload (server data, not client state).
+    await page.reload();
+    for (const email of [ADMIN_EMAIL, FUL_EMAIL]) {
+      await expect(page.locator(`[data-testid=staff-row][data-email="${email}"]`)).toContainText("Invited — not signed in yet");
+    }
+    const { count: members } = await sb.from("admin_memberships").select("user_id", { count: "exact", head: true });
+    await expect(page.getByTestId("staff-row")).toHaveCount(members!);
     // Duplicate invitation refused.
     const dup = await api(page, "post", "/api/admin/staff", { email: FUL_EMAIL, role: "editor" });
     expect(dup.status()).toBe(409);
@@ -104,6 +109,62 @@ test.describe.serial("P0: staff invitations, roles and deactivation (isolated)",
     }
     const { count } = await sb.from("audit_logs").select("id", { count: "exact", head: true }).eq("action", "staff.invite").in("entity_id", [ids.admin, ids.fulfillment]);
     expect(count).toBe(2);
+  });
+
+  test("invitation failures are shown to the owner and change nothing", async ({ page }) => {
+    await signIn(page, fx.staff.owner.email, fx.staff.owner.password);
+    await page.waitForURL(/\/admin$/);
+    await page.goto("/admin/staff");
+    const rows = page.getByTestId("staff-row");
+    const before = await rows.count();
+    const membersBefore = (await sb.from("admin_memberships").select("user_id", { count: "exact", head: true })).count;
+    const invite = async (email: string, role: string) => {
+      await page.getByLabel("Email address").fill(email);
+      await page.getByLabel("Role", { exact: true }).selectOption(role);
+      await page.getByRole("button", { name: "Send invitation", exact: true }).click();
+    };
+
+    // Already staff → refused with an explanation; role unchanged.
+    await invite(ADMIN_EMAIL, "editor");
+    await expect(page.getByRole("alert").filter({ hasText: "This person already has admin access. Change their role in the list instead." })).toHaveText("This person already has admin access. Change their role in the list instead.");
+    expect((await sb.from("admin_memberships").select("role").eq("user_id", ids.admin).single()).data!.role).toBe("admin");
+
+    // Malformed email → 400 from the API (the form's email field also blocks it in the browser).
+    const bad = await api(page, "post", "/api/admin/staff", { email: "not-an-email", role: "editor" });
+    expect(bad.status()).toBe(400);
+    expect((await bad.json()).error).toBe("validation_failed");
+
+    // Hourly quota used up → 429 with a message; no Auth user, membership or email is created.
+    const LIMITED = `qa-limited-${TAG}@lh-test.local`;
+    await sb.from("rate_limit_buckets").upsert({ bucket_key: `staff-invite:${fx.staff.owner.id}`, count: 10, window_starts_at: new Date().toISOString() });
+    await invite(LIMITED, "editor");
+    await expect(page.getByRole("alert").filter({ hasText: "Too many invitations. Try again later." })).toHaveText("Too many invitations. Try again later.");
+    await sb.from("rate_limit_buckets").delete().eq("bucket_key", `staff-invite:${fx.staff.owner.id}`);
+    const { data: users } = await sb.auth.admin.listUsers({ perPage: 1000 });
+    expect(users.users.some((u) => u.email === LIMITED)).toBe(false);
+    const mails = ((await (await fetch(`${FAKE}/_log`)).json()) as { delivered: Mail[] }).delivered;
+    expect(mails.some((m) => m.to.includes(LIMITED))).toBe(false);
+
+    await page.reload();
+    await expect(rows).toHaveCount(before);
+    expect((await sb.from("admin_memberships").select("user_id", { count: "exact", head: true })).count).toBe(membersBefore);
+  });
+
+  test("an address typed before the page has hydrated is kept and can be sent", async ({ page }) => {
+    await signIn(page, fx.staff.owner.email, fx.staff.owner.password);
+    await page.waitForURL(/\/admin$/);
+    // Slow script delivery: the server-rendered form is usable for typing before React hydrates it.
+    await page.route(/\/_next\/static\/chunks\//, async (r) => {
+      await new Promise((x) => setTimeout(x, 2_000));
+      await r.continue();
+    });
+    await page.goto("/admin/staff", { waitUntil: "commit" });
+    const field = page.getByLabel("Email address");
+    await field.fill(`qa-early-${TAG}@lh-test.local`);
+    // Before the fix the address stayed visible while the button stayed disabled for good.
+    await expect(page.getByRole("button", { name: "Send invitation", exact: true })).toBeEnabled({ timeout: 30_000 });
+    await expect(field).toHaveValue(`qa-early-${TAG}@lh-test.local`);
+    await page.unroute(/\/_next\/static\/chunks\//);
   });
 
   test("admin limits: cannot grant admin, cannot touch owner, self or another admin", async ({ page }) => {

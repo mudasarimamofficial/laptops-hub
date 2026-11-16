@@ -179,15 +179,12 @@ test.describe.serial("launch journeys (isolated)", () => {
     const { count: audits } = await sb.from("audit_logs").select("id", { count: "exact", head: true }).eq("entity_id", o!.id);
     expect(audits).toBeGreaterThanOrEqual(4);
 
-    try {
-      await page.goto(orderUrl);
-    } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes("NS_BINDING_ABORTED")) {
-        await page.goto(orderUrl);
-      } else {
-        throw e;
-      }
-    }
+    // "Fully collected." is shown from the API response; the server-rendered summary changes only when the page's
+    // router.refresh() has landed. Navigating away before that aborts the refresh mid-flight (Firefox then reports the
+    // new page.goto as NS_BINDING_ABORTED), so wait for the refreshed server data first.
+    await expect(page.getByTestId("order-payment-status")).toHaveText("collected", { timeout: 15_000 });
+    await expect(page.getByTestId("order-fulfillment-status")).toHaveText("shipped");
+    await page.goto(orderUrl);
     await expect(page.getByTestId("order-status")).toHaveText("Dispatched");
     await expect(page.getByText("Test Courier · TEST-123")).toBeVisible();
     await expect(page.getByText("Paid — cash collected")).toBeVisible();
@@ -203,6 +200,7 @@ test.describe.serial("launch journeys (isolated)", () => {
     await page.getByLabel("Next status").selectOption("cancelled");
     await page.getByRole("button", { name: "Update status" }).click();
     await expect(page.getByText("Current: cancelled")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByTestId("order-fulfillment-status")).toHaveText("cancelled", { timeout: 15_000 });
     await page.goto(`/order/success/${accessToken}`);
     await expect(page.getByTestId("order-status")).toHaveText("Cancelled");
   });

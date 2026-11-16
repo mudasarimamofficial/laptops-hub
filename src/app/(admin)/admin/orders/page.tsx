@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
+import { adminSearchTerm, phoneDigits } from "@/lib/admin/search-term";
 import { formatPkr } from "@/lib/money";
 import { PendingBlock } from "@/components/ui/pending-block";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
@@ -17,7 +18,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
   const sp = await searchParams;
   const status = sp.status || "all";
   const payment = sp.payment || "all";
-  const q = (sp.q || "").trim();
+  const q = adminSearchTerm(sp.q);
 
   let orders: {
     order_number: string;
@@ -43,15 +44,20 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
     if (status !== "all") query = query.eq("status", status);
     if (payment !== "all") query = query.eq("payment_status", payment);
     if (q) {
+      const digits = phoneDigits(q);
       query = query.or(
-        `order_number.ilike.%${q}%,customer_name.ilike.%${q}%,customer_phone_e164.ilike.%${q}%`,
+        [`order_number.ilike.%${q}%`, `customer_name.ilike.%${q}%`, ...(digits ? [`customer_phone_normalized.ilike.%${digits}%`] : [])].join(","),
       );
     }
     const { data, error: err } = await query;
-    if (err) error = err.message;
+    if (err) {
+      console.error("[admin/orders] list failed", err);
+      error = "Orders could not be loaded. Reload the page or try again shortly.";
+    }
     else orders = data || [];
   } catch (e) {
-    error = e instanceof Error ? e.message : "Failed";
+    console.error("[admin/orders] list failed", e);
+    error = "Orders could not be loaded. Reload the page or try again shortly.";
   }
 
   return (

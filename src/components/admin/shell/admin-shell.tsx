@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import type { StaffRole } from "@/lib/auth/staff";
+import { AdminSearch } from "./admin-search";
 import { ADMIN_NAV, isAdminGuestPath, isNavActive, navVisibleForRole } from "./nav";
 
 export type AdminShellStaff = {
@@ -165,7 +166,8 @@ export function AdminShell({ staff, children }: Props) {
               <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
             </svg>
           </button>
-          <p className="truncate text-sm text-[var(--adm-ink-2)]">
+          <AdminSearch role={role} />
+          <p className="hidden truncate text-sm text-[var(--adm-ink-2)] md:block">
             Merchant console · <span className="text-[var(--adm-ink)]">PKR</span> · COD only
           </p>
           <div className="ml-auto flex items-center gap-3">

@@ -984,6 +984,24 @@ CREATE FUNCTION public.staff_can_edit_theme_drafts() RETURNS boolean
     AS $$
   SELECT public.has_staff_role(ARRAY['owner','admin','editor']::public.staff_role[]);
 $$;
+CREATE FUNCTION public.storefront_variant_availability(p_product_ids uuid[]) RETURNS TABLE(product_id uuid, variant_id uuid, available boolean)
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO ''
+    AS $$
+  SELECT v.product_id,
+         v.id,
+         (v.inventory_mode <> 'tracked'
+          OR COALESCE(v.allow_oversell, false)
+          OR COALESCE(v.quantity_on_hand, 0) > 0) AS available
+  FROM public.product_variants v
+  JOIN public.products p ON p.id = v.product_id
+  WHERE p.id = ANY (p_product_ids[1:200])
+    AND p.status = 'active'
+    AND p.deleted_at IS NULL
+    AND v.purchasable = true
+    AND v.price_paisa > 0;
+$$;
+COMMENT ON FUNCTION public.storefront_variant_availability(p_product_ids uuid[]) IS 'Public stock signal: (product_id, variant_id, true/false) per purchasable variant of active products (max 200 products per call). Never exposes quantities. Mirrors create_cod_order stock rule.';
 CREATE FUNCTION public.sync_product_variants(payload jsonb) RETURNS jsonb
     LANGUAGE plpgsql SECURITY DEFINER
     SET search_path TO 'public'

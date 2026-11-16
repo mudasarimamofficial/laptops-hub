@@ -1,9 +1,9 @@
-# bash scripts/rehearsal/backup-restore.sh — 2026-11-15T14:22Z
-dump: 380434 bytes, sha256 1704778dc2ecb49f
+dump: 327593 bytes, sha256 18b4e72742473193
+NOTICE:  database "lh_restore" does not exist, skipping
+NOTICE:  schema "auth" does not exist, skipping
 restore: ok
-objects source:   45 policies, 9 triggers, 129 constraints, 77 indexes, auth.users=18
-objects restored: 45 policies, 9 triggers, 129 constraints, 77 indexes, auth.users=18
-tables: 29, rows: 663 source / 663 restored
+objects source:   45 policies, 9 triggers, 129 constraints, 77 indexes, auth.users=4
+objects restored: 45 policies, 9 triggers, 129 constraints, 77 indexes, auth.users=4
+tables: 29, rows: 46 source / 46 restored
 per-table counts + md5: IDENTICAL
 scratch databases dropped; dump removed
-RST_RC=0

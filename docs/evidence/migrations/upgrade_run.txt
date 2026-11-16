@@ -1,35 +1,69 @@
-# bash scripts/rehearsal/migration-upgrade.sh — 2026-11-15T14:22Z, 26 migrations (14 production + 12 pending)
-applied in order (clean run: all 26; upgrade run: first 14 + seed data, then the remaining 12), each 'ok':
- 1. 20261021120000_init_laptops_hub.sql
- 2. 20261021130000_p0_security_hardening.sql
- 3. 20261021140000_cod_shipping_quote.sql
- 4. 20261021150000_collections_seed_and_rate_limits.sql
- 5. 20261021151000_content_pages_pending_seed.sql
- 6. 20261021160000_atomic_ops_catalog_cms.sql
- 7. 20261023110000_emergency_revoke_staff_rpc_execute.sql
- 8. 20261023120000_explicit_grants.sql
- 9. 20261023130000_cod_collection_idempotency_race.sql
-10. 20261023140000_least_privilege_defaults.sql
-11. 20261023150000_cod_collection_idempotency_conflict.sql
-12. 20261023160000_cod_order_idempotency_conflict.sql
-13. 20261023170000_fix_quote_cod_shipping_zone_type.sql
-14. 20261024100000_notification_outbox_lease.sql
-15. 20261025120000_merchant_catalog_extensions.sql
-16. 20261025130000_site_builder_sections.sql
-17. 20261025140000_theme_publish_variant_rpc.sql
-18. 20261025150000_theme_rls_inventory_hardening.sql
-19. 20261025160000_theme_immutability_service_role.sql
-20. 20261114100000_function_search_path_hardening.sql
-21. 20261115100000_reels_and_product_reviews.sql
-22. 20261116100000_merchandising_badges_and_reel_details.sql
-23. 20261117100000_order_inventory_integrity.sql
-24. 20261117110000_anon_write_revoke_and_fk_indexes.sql
-25. 20261117120000_shipping_zone_rules.sql
-26. 20261117130000_inventory_adjustments.sql
+== clean: all 28 on an empty database
+NOTICE:  database "mig_clean" does not exist, skipping
+ok   mig_clean 20261021120000_init_laptops_hub.sql
+ok   mig_clean 20261021130000_p0_security_hardening.sql
+ok   mig_clean 20261021140000_cod_shipping_quote.sql
+ok   mig_clean 20261021150000_collections_seed_and_rate_limits.sql
+ok   mig_clean 20261021151000_content_pages_pending_seed.sql
+ok   mig_clean 20261021160000_atomic_ops_catalog_cms.sql
+ok   mig_clean 20261023110000_emergency_revoke_staff_rpc_execute.sql
+ok   mig_clean 20261023120000_explicit_grants.sql
+ok   mig_clean 20261023130000_cod_collection_idempotency_race.sql
+ok   mig_clean 20261023140000_least_privilege_defaults.sql
+ok   mig_clean 20261023150000_cod_collection_idempotency_conflict.sql
+ok   mig_clean 20261023160000_cod_order_idempotency_conflict.sql
+ok   mig_clean 20261023170000_fix_quote_cod_shipping_zone_type.sql
+ok   mig_clean 20261024100000_notification_outbox_lease.sql
+ok   mig_clean 20261025120000_merchant_catalog_extensions.sql
+ok   mig_clean 20261025130000_site_builder_sections.sql
+ok   mig_clean 20261025140000_theme_publish_variant_rpc.sql
+ok   mig_clean 20261025150000_theme_rls_inventory_hardening.sql
+ok   mig_clean 20261025160000_theme_immutability_service_role.sql
+ok   mig_clean 20261114100000_function_search_path_hardening.sql
+ok   mig_clean 20261115100000_reels_and_product_reviews.sql
+ok   mig_clean 20261116100000_merchandising_badges_and_reel_details.sql
+ok   mig_clean 20261117100000_order_inventory_integrity.sql
+ok   mig_clean 20261117110000_anon_write_revoke_and_fk_indexes.sql
+ok   mig_clean 20261117120000_shipping_zone_rules.sql
+ok   mig_clean 20261117130000_inventory_adjustments.sql
+ok   mig_clean 20261117140000_catalog_column_security_grants.sql
+ok   mig_clean 20261117150000_staff_direct_access_least_privilege.sql
+== upgrade: first 14 (production state), then the remaining 14
+NOTICE:  database "mig_upgrade" does not exist, skipping
+ok   mig_upgrade 20261021120000_init_laptops_hub.sql
+ok   mig_upgrade 20261021130000_p0_security_hardening.sql
+ok   mig_upgrade 20261021140000_cod_shipping_quote.sql
+ok   mig_upgrade 20261021150000_collections_seed_and_rate_limits.sql
+ok   mig_upgrade 20261021151000_content_pages_pending_seed.sql
+ok   mig_upgrade 20261021160000_atomic_ops_catalog_cms.sql
+ok   mig_upgrade 20261023110000_emergency_revoke_staff_rpc_execute.sql
+ok   mig_upgrade 20261023120000_explicit_grants.sql
+ok   mig_upgrade 20261023130000_cod_collection_idempotency_race.sql
+ok   mig_upgrade 20261023140000_least_privilege_defaults.sql
+ok   mig_upgrade 20261023150000_cod_collection_idempotency_conflict.sql
+ok   mig_upgrade 20261023160000_cod_order_idempotency_conflict.sql
+ok   mig_upgrade 20261023170000_fix_quote_cod_shipping_zone_type.sql
+ok   mig_upgrade 20261024100000_notification_outbox_lease.sql
+ok   mig_upgrade 20261025120000_merchant_catalog_extensions.sql
+ok   mig_upgrade 20261025130000_site_builder_sections.sql
+ok   mig_upgrade 20261025140000_theme_publish_variant_rpc.sql
+ok   mig_upgrade 20261025150000_theme_rls_inventory_hardening.sql
+ok   mig_upgrade 20261025160000_theme_immutability_service_role.sql
+ok   mig_upgrade 20261114100000_function_search_path_hardening.sql
+ok   mig_upgrade 20261115100000_reels_and_product_reviews.sql
+ok   mig_upgrade 20261116100000_merchandising_badges_and_reel_details.sql
+ok   mig_upgrade 20261117100000_order_inventory_integrity.sql
+ok   mig_upgrade 20261117110000_anon_write_revoke_and_fk_indexes.sql
+ok   mig_upgrade 20261117120000_shipping_zone_rules.sql
+ok   mig_upgrade 20261117130000_inventory_adjustments.sql
+ok   mig_upgrade 20261117140000_catalog_column_security_grants.sql
+ok   mig_upgrade 20261117150000_staff_direct_access_least_privilege.sql
+data products/variants/stock before=2/2/6 after=2/2/6
+== re-apply the new migration (idempotence)
+ok   mig_upgrade 20261117150000_staff_direct_access_least_privilege.sql
 schema clean == upgrade: IDENTICAL
 grants clean == upgrade: IDENTICAL
 schema clean == local stack: IDENTICAL
-d41a663a264374958adecd614ea24b5a9223faa931e1b197ba5114314e249f29 *docs/evidence/migrations/schema_clean.sql
-d41a663a264374958adecd614ea24b5a9223faa931e1b197ba5114314e249f29 *docs/evidence/migrations/schema_local.sql
-d41a663a264374958adecd614ea24b5a9223faa931e1b197ba5114314e249f29 *docs/evidence/migrations/schema_upgrade.sql
-MIG_RC=0
+66a6e5f7a95f129133b86b9cc61bd03e88ac66b93be458ab4932aec01d3eb291 *docs/evidence/migrations/schema_clean.sql
+66a6e5f7a95f129133b86b9cc61bd03e88ac66b93be458ab4932aec01d3eb291 *docs/evidence/migrations/schema_local.sql
+66a6e5f7a95f129133b86b9cc61bd03e88ac66b93be458ab4932aec01d3eb291 *docs/evidence/migrations/schema_upgrade.sql

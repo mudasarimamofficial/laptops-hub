@@ -44,6 +44,12 @@ const PRODUCTS = [
   },
 ];
 
+// Deterministic order baseline: every order on this LOCAL database is a test artefact of an earlier isolated run
+// (assertLocalOnly above refuses anything else). Suites that count orders (social proof, dashboard metrics) start
+// from zero instead of mutating each other's rows. Child rows (items, addresses, events, collections, fulfillments)
+// cascade.
+must(await sb.from("orders").delete().not("id", "is", null), "clear local test orders");
+
 const out = { products: [], zone: null, staff: {} };
 for (const p of PRODUCTS) {
   const prod = must(

@@ -1,13 +1,14 @@
 # Client handover — release 2026-11-16
 
-Release classification: see the end of `FINAL_E2E_REPORT.md`. This release is **not yet in production**.
+Release classification: see the end of `FINAL_E2E_REPORT.md`. Deployed to production 2026-11-16 (`772276b`); database at 29/29 migrations.
 
 ## What the owner must approve or provide
 
 | # | Item | Why it is needed | Who |
 |---|---|---|---|
-| 1 | Approve applying migrations 15–29 to production (list, risk and rollback in `FINAL_PRODUCTION_AUDIT.md`) | The new code needs them | Owner |
-| 2 | Approve merging the PR into `main` (deploys production) after item 1 | Ships the release | Owner |
+| 1 | ~~Migrations 15–29~~ — done 2026-11-16 | — | — |
+| 2 | ~~Merge PR #10~~ — done 2026-11-16 | — | — |
+| 2a | Sign in to the admin and open each section once; report anything slow or broken | Authenticated admin was not exercised live by the agent | Owner |
 | 3 | Genuine customer reviews with consent (and avatar permission, if photos are used) | The homepage reviews section stays hidden until reviews are published | Owner |
 | 4 | Confirm the Google Maps listing and embed for the shop | The map shows the supplied embed | Owner |
 | 5 | Email: choose a provider (code supports Resend), create the account, publish **its** DNS values in Vercel, and set `RESEND_API_KEY`, `STORE_EMAIL_FROM`, `CRON_SECRET` | Order notification emails are not sent in production today | Owner |

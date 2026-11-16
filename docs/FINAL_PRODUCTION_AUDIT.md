@@ -7,11 +7,11 @@ Status vocabulary: **Implemented** · **Locally verified** (isolated stack, fres
 
 | Area | Implemented | Locally verified | Staging certified | Production deployed | Live verified | Business approval pending |
 |---|---|---|---|---|---|---|
-| Merchant OS (catalog, variants, stock ledger, collections, bulk, shipping zones, order desk, staff) | yes | yes (final suite) | no hosted staging | **no**: production runs `cb638b7` on 14 migrations | earlier release only | — |
-| Store testimonials and review carousel | yes | yes (E2E ×5 browsers, SQL 19/19) | no | no | no | genuine reviews and consent |
-| Store map after footer | yes | yes | no | no | no | confirming the map listing |
-| Admin latency (sin1, staff lookup dedupe, local JWT in middleware) | yes | modelled only | no | no | no | — |
-| Migrations 15–29 | yes | yes (real backup restored and upgraded) | no | **no** (14/29) | — | **owner approval for production SQL** |
+| Merchant OS (catalog, variants, stock ledger, collections, bulk, shipping zones, order desk, staff) | yes | yes (final suite) | no hosted staging | **yes** — `772276b`, 2026-11-16 | public pages yes; admin sign-in not exercised | — |
+| Store testimonials and review carousel | yes | yes (E2E ×5 browsers, SQL 19/19) | no | yes | hidden state verified (nothing published) | genuine reviews and consent |
+| Store map after footer | yes | yes | no | yes | **yes** (3 browsers × 2 viewports) | confirming the map listing |
+| Admin latency (sin1, staff lookup dedupe, local JWT in middleware) | yes | modelled only | no | yes (sin1) | unauthenticated only | — |
+| Migrations 15–29 | yes | yes (real backup restored and upgraded) | no | **yes** (29/29, owner-approved 2026-11-16) | post-checks PASS | — |
 | COD checkout | yes | yes | no | flags unchanged | disabled | policies, fees, stock, operations, test order |
 | Notification email | code yes | yes (fake provider) | no | no provider or env | — | provider choice, DNS values from provider |
 
@@ -47,9 +47,11 @@ and `CRON_SECRET` are set in production. None of these exist today, so order not
 production (they stay queued in `notification_outbox`). No DNS records were invented or added. Inbound mail needs a
 mailbox provider (e.g. the Hostinger mail plan, if the owner has one) and that provider's MX values.
 
-## Approval gate (production SQL and deploy)
+## Approval gate (production SQL and deploy) — approved and executed 2026-11-16
 
-The owner requires explicit approval for each production change. Pending, in order:
+The owner approved both steps. A fresh backup was taken first (`D:\LaptopsHub-Backups6-11-16-pre-apply`, schema
+checksum identical to the rehearsed one), the dry run listed exactly these 15, they applied in order, post-checks passed
+(`docs/evidence/migrations/prod_apply_2026-11-16.txt`), then PR #10 merged (`772276b`). The approved change set:
 
 1. **Apply migrations 15–29 to production** (exact list and hashes below), after a fresh same-day backup.
 2. **Deploy the code** by merging the PR into `main` (Vercel production branch), only after step 1 succeeds.

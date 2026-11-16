@@ -43,15 +43,19 @@ stricter, not weaker.
 
 ## Live QA
 
-**Not run for this release: it is not deployed.** Read-only checks on the current production (`cb638b7`): 267/267
-sitemap URLs 200, robots rules correct, no CSP blocking iframes, CRM on `app.` untouched.
+Deployed 2026-11-16 (`772276b`, `dpl_ErqN6evfpCNXoidJrp5xGVAqiDnC`, sin1) after migrations 15–29 were applied with
+owner approval. Read-only live QA: sitemap 267/267 200; 78/78 route and section checks in Chromium, WebKit and
+Firefox (desktop and phone). Details in `LIVE_QA_REPORT.md`. Authenticated admin pages were not exercised live.
 
 ## Performance
 
-Modelled locally only (`ADMIN_PERFORMANCE_REPORT.md`): median admin TTFB 1 753 ms (iad1 model) → 365 ms (sin1
-model). **Not a production measurement.** Real authenticated p50/p95 needs the deploy.
+Modelled locally (`ADMIN_PERFORMANCE_REPORT.md`): median admin TTFB 1 753 ms (iad1 model) → 365 ms (sin1 model);
+**not a production measurement**. Live and unauthenticated: dynamic routes p50 223–290 ms, `/admin` redirect p50
+103 ms (`LIVE_QA_REPORT.md`). Authenticated admin p50/p95 on production still needs a staff sign-in.
 
 ## Classification
 
-**ENGINEERING VERIFIED LOCALLY — STAGING BLOCKED.** No hosted writable staging exists, and creating one may need a
-paid plan. Production migrations and deploy wait on explicit owner approval (`FINAL_PRODUCTION_AUDIT.md`).
+**PRODUCTION DEPLOYED — BUSINESS ACTIVATION PENDING.** Migrations 15–29 are applied and the code is deployed, both
+with owner approval. The public storefront is verified live in three browsers. Not yet verified: authenticated admin
+on production, a hosted staging environment (none exists), genuine reviews, email provider and the COD business
+approvals (`FINAL_CLIENT_HANDOVER.md`).

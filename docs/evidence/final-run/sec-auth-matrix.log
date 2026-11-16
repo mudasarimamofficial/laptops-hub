@@ -21,6 +21,6 @@ PASS  nonstaff_rls_memberships — permission denied for table admin_memberships
 PASS  nonstaff_rls_inquiries — permission denied for table contact_inquiries
 PASS  nonstaff_rls_drafts — drafts=0
 PASS  nonstaff_rls_inventory — permission denied for table product_variants
-PASS  public_catalog_readable — n=2
+PASS  public_catalog_readable — n=3
 
 24/24 passed · wrote docs\SECURITY_AUTH_MATRIX_RESULTS.json

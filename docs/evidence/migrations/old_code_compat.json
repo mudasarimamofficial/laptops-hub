@@ -1,0 +1,106 @@
+{
+  "at": "2026-11-16T11:18:25.612Z",
+  "base": "http://127.0.0.1:3201",
+  "results": [
+    {
+      "name": "GET /",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "GET /products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "GET /collections/all",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "GET /search?q=dell",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "GET /pages/shipping",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "GET /cart",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "GET /checkout",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "GET /track-order",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "GET /admin/login",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "POST /api/contact (old code, anon insert)",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "admin /admin",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "admin /admin/products",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "admin /admin/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "admin /admin/orders",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "admin /admin/inventory",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "admin /admin/collections",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "admin /admin/settings",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "admin /admin/online-store",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "admin /admin/inquiries",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "name": "no client errors",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

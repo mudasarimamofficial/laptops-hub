@@ -1,0 +1,178 @@
+{
+  "generatedAt": "2026-11-16T11:52:35.020Z",
+  "suiteRun": {
+    "label": "final-2026-11-16-r2",
+    "head": "2bb58d482f26a85a7630ad379e90a79f88001836",
+    "dirtyWorkingTree": true,
+    "verdict": "FAIL",
+    "suites": [
+      {
+        "name": "static-lint",
+        "rc": 0,
+        "seconds": 24,
+        "summary": "✖ 12 problems (0 errors, 12 warnings)   0 errors and 1 warning potentially fixable with the `--fix` option."
+      },
+      {
+        "name": "static-tsc",
+        "rc": 0,
+        "seconds": 4,
+        "summary": ""
+      },
+      {
+        "name": "static-audit",
+        "rc": 0,
+        "seconds": 2,
+        "summary": ""
+      },
+      {
+        "name": "unit",
+        "rc": 0,
+        "seconds": 15,
+        "summary": "preview-read-only: 23 checks passed testimonials-map tests passed"
+      },
+      {
+        "name": "sql-shipping-cod",
+        "rc": 0,
+        "seconds": 0,
+        "summary": "PASS|zone mismatch refused|zone_mismatch TOTAL|37 passed|0 failed"
+      },
+      {
+        "name": "sql-merchandising",
+        "rc": 0,
+        "seconds": 1,
+        "summary": "PASS|withdrawing consent while named is refused|new row for relation 'reels' violates check constraint 'reels_creator_requires_consent' TOTAL|15 passed|0 failed"
+      },
+      {
+        "name": "sql-reels-reviews",
+        "rc": 0,
+        "seconds": 1,
+        "summary": "PASS|too-short review body is refused|new row for relation 'product_reviews' violates check constraint 'product_reviews_body_check' TOTAL|17 passed|0 failed"
+      },
+      {
+        "name": "sql-testimonials",
+        "rc": 0,
+        "seconds": 1,
+        "summary": "PASS|unknown source is refused|new row for relation 'store_testimonials' violates check constraint 'store_testimonials_source_check' TOTAL|19 passed|0 failed"
+      },
+      {
+        "name": "sec-p0-probe",
+        "rc": 0,
+        "seconds": 1,
+        "summary": "PASS  order_token_rpc_returns_empty_for_unknown — rows=0 Passed 9/9"
+      },
+      {
+        "name": "sec-auth-matrix",
+        "rc": 0,
+        "seconds": 0,
+        "summary": "PASS  public_catalog_readable — n=3 24/24 passed · wrote docs/SECURITY_AUTH_MATRIX_RESULTS.json"
+      },
+      {
+        "name": "sec-role-matrix",
+        "rc": 0,
+        "seconds": 4,
+        "summary": "PASS  anon_cod_api_401 — status=401 15/15 passed · wrote docs/SECURITY_ROLE_MATRIX_RESULTS.json"
+      },
+      {
+        "name": "sec-role-http",
+        "rc": 0,
+        "seconds": 17,
+        "summary": "PASS  editor cannot record collections — status=403 126/126 passed · docs/SECURITY_ROLE_HTTP_RESULTS.json"
+      },
+      {
+        "name": "sec-direct-access",
+        "rc": 0,
+        "seconds": 6,
+        "summary": "PASS  anon can still submit a contact inquiry (insert only) 193/193 passed · wrote docs/SECURITY_DIRECT_ACCESS_RESULTS.json"
+      },
+      {
+        "name": "theme-rls",
+        "rc": 0,
+        "seconds": 3,
+        "summary": "ok: plain draft forbidden   ok: actor spoof blocked"
+      },
+      {
+        "name": "theme-publish",
+        "rc": 0,
+        "seconds": 0,
+        "summary": ""
+      },
+      {
+        "name": "cod-concurrency",
+        "rc": 0,
+        "seconds": 1,
+        "summary": "PASS  distinct_keys_no_over_collection — ok=5 over=11 {'amount_collected_paisa':1000000,'payment_status':'collected'} 16/16 passed · docs/COD_CONCURRENCY_RESULTS.json"
+      },
+      {
+        "name": "cod-checkout",
+        "rc": 0,
+        "seconds": 2,
+        "summary": "PASS  http_contact_insert_as_anon — status=200 rows=1 32/32 passed · docs/COD_CHECKOUT_ISOLATED_RESULTS.json"
+      },
+      {
+        "name": "inventory-orders",
+        "rc": 0,
+        "seconds": 1,
+        "summary": "PASS  anon_cannot_write_or_read_ledger — permission denied for table inventory_ledger / permission denied for table inventory_ledger 22/22 passed · docs/evidence/INVENTORY_ORDERS_RESULTS.json"
+      },
+      {
+        "name": "inventory-ledger",
+        "rc": 0,
+        "seconds": 1,
+        "summary": ""
+      },
+      {
+        "name": "settings-nav",
+        "rc": 0,
+        "seconds": 2,
+        "summary": "ok: true, ALL TESTS IN test-settings-navigation-persistence.mjs PASSED!"
+      },
+      {
+        "name": "merchant-smoke",
+        "rc": 0,
+        "seconds": 1,
+        "summary": "=== Result: 25 passed · 0 failed ==="
+      },
+      {
+        "name": "csv-commit",
+        "rc": 0,
+        "seconds": 9,
+        "summary": "failed: 0   failed: 0"
+      },
+      {
+        "name": "catalog-pages",
+        "rc": 0,
+        "seconds": 92,
+        "summary": "PASS  draft_pdp_is_404 — status=404 9/9 passed"
+      },
+      {
+        "name": "e2e-isolated",
+        "rc": 1,
+        "seconds": 624,
+        "summary": "1 failed   106 passed (10.4m)"
+      },
+      {
+        "name": "e2e-legacy",
+        "rc": 0,
+        "seconds": 67,
+        "summary": "27 passed (1.1m)"
+      },
+      {
+        "name": "e2e-crossbrowser",
+        "rc": 0,
+        "seconds": 299,
+        "summary": "ok 109 [firefox-desktop] › tests/e2e-isolated/launch-journey.spec.ts:208:7 › launch journeys (isolated) › notifications: provider outage → failed, staff retry → sent once (5.9s)   110 passed (5.0m)"
+      }
+    ]
+  },
+  "rerun": {
+    "suite": "e2e-isolated",
+    "reason": "run r2: 1 failure (shipping-zones zone rules) — login page JS chunk failed with net::ERR_NO_BUFFER_SPACE (host socket buffer exhaustion), page never hydrated; no app defect",
+    "result": "108 passed, 0 failed, 0 flaky, no retries",
+    "log": "docs/evidence/final-run/e2e-isolated-rerun.log"
+  },
+  "oldCodeCompat": "20/20",
+  "live": {
+    "status": "not run for this release — not deployed",
+    "baseline": "267/267 sitemap URLs 200 on current production cb638b7"
+  }
+}

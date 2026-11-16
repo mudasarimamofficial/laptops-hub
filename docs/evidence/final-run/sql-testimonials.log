@@ -1,0 +1,41 @@
+BEGIN
+DO
+CREATE TABLE
+GRANT
+CREATE TABLE
+INSERT 0 10
+DO
+INSERT 0 3
+INSERT 0 1
+INSERT 0 1
+SET
+INSERT 0 1
+DO
+DO
+DO
+RESET
+SET
+DO
+RESET
+DO
+PASS|a merchant testimonial may have no rating|null
+PASS|a valid Google testimonial with a maps link is accepted|1
+PASS|anon cannot insert|permission denied for table store_testimonials
+PASS|anon cannot read consent or staff ids|permission denied for table store_testimonials
+PASS|anon cannot read verification notes|permission denied for table store_testimonials
+PASS|anon sees published only|QA Published
+PASS|authenticated (incl. staff tokens) cannot publish directly|permission denied for table store_testimonials
+PASS|avatar without permission is refused|new row for relation "store_testimonials" violates check constraint "store_testimonials_avatar_needs_permissio
+PASS|draft accepts store reviews + map sections|saved
+PASS|draft still refuses unknown section types|unsupported_section_type
+PASS|Google source with a look-alike host is refused|new row for relation "store_testimonials" violates check constraint "store_testimonials_google_needs_link"
+PASS|Google source with a non-Google link is refused|new row for relation "store_testimonials" violates check constraint "store_testimonials_google_needs_link"
+PASS|Google source without a link is refused|new row for relation "store_testimonials" violates check constraint "store_testimonials_google_needs_link"
+PASS|http (not https) avatar is refused|new row for relation "store_testimonials" violates check constraint "store_testimonials_avatar_url_check"
+PASS|javascript: source URL is refused|new row for relation "store_testimonials" violates check constraint "store_testimonials_source_url_check"
+PASS|publishing without consent is refused|new row for relation "store_testimonials" violates check constraint "store_testimonials_publish_needs_consent"
+PASS|rating 6 is refused|new row for relation "store_testimonials" violates check constraint "store_testimonials_rating_check"
+PASS|too-short text is refused|new row for relation "store_testimonials" violates check constraint "store_testimonials_body_check"
+PASS|unknown source is refused|new row for relation "store_testimonials" violates check constraint "store_testimonials_source_check"
+TOTAL|19 passed|0 failed
+ROLLBACK

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-16T07:30:19.607Z",
+  "at": "2026-11-16T11:21:51.090Z",
   "results": [
     {
       "name": "anon_cannot_read_orders",
@@ -34,7 +34,7 @@
     {
       "name": "anon_can_read_public_prices",
       "ok": true,
-      "detail": "rows=2"
+      "detail": "rows=3"
     },
     {
       "name": "service_role_can_read_inventory_for_staff_ops",

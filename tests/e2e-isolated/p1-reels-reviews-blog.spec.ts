@@ -135,7 +135,11 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     await expect(item).toBeVisible();
     await expect(item.getByText("Email (private): qa-reviewer@example.test")).toBeVisible();
     await item.getByRole("button", { name: "Approve" }).click();
-    await expect(item.getByRole("button", { name: "Approve" })).toHaveAttribute("aria-pressed", "true");
+    // Approved reviews leave the pending queue (the list refreshes) and are listed under "Approved".
+    await expect(item).toHaveCount(0);
+    await expect.poll(async () => (await sb.from("product_reviews").select("status").eq("author_name", REVIEWER).single()).data?.status).toBe("approved");
+    await page.goto("/admin/reviews?status=approved");
+    await expect(page.getByTestId("review-row").filter({ hasText: REVIEWER }).getByRole("button", { name: "Approve" })).toHaveAttribute("aria-pressed", "true");
 
     await page.goto(`/products/${P.handle}`);
     const after = page.getByTestId("pdp-reviews");
@@ -149,7 +153,8 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     // Rejecting hides it again.
     await page.goto("/admin/reviews?status=approved");
     await page.getByTestId("review-row").filter({ hasText: REVIEWER }).getByRole("button", { name: "Reject" }).click();
-    await expect(page.getByTestId("review-row").filter({ hasText: REVIEWER }).getByRole("button", { name: "Reject" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.getByTestId("review-row").filter({ hasText: REVIEWER })).toHaveCount(0);
+    await expect.poll(async () => (await sb.from("product_reviews").select("status").eq("author_name", REVIEWER).single()).data?.status).toBe("rejected");
     await page.goto(`/products/${P.handle}`);
     await expect(page.getByTestId("pdp-reviews").getByText(REVIEWER)).toHaveCount(0);
   });

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-16T07:31:49.355Z",
+  "at": "2026-11-16T11:22:17.977Z",
   "supabase": "http://127.0.0.1:54321",
   "results": [
     {
@@ -920,7 +920,7 @@
     {
       "name": "anon reads variant availability (boolean only)",
       "ok": true,
-      "detail": "[{\"product_id\":\"22a3da87-cab5-4d38-8d73-94e6726c83d7\",\"variant_id\":\"bc373b27-aa85-4f8c-bf30-50d818fde213\",\"available\":true}]"
+      "detail": "[{\"product_id\":\"fe564367-c422-4c8d-abba-6e537a1bd743\",\"variant_id\":\"3e5d7e32-3938-406d-8e4d-45b365b2f9ca\",\"available\":true}]"
     },
     {
       "name": "customer reads public product + variants + media",
@@ -940,7 +940,7 @@
     {
       "name": "customer reads variant availability (boolean only)",
       "ok": true,
-      "detail": "[{\"product_id\":\"22a3da87-cab5-4d38-8d73-94e6726c83d7\",\"variant_id\":\"bc373b27-aa85-4f8c-bf30-50d818fde213\",\"available\":true}]"
+      "detail": "[{\"product_id\":\"fe564367-c422-4c8d-abba-6e537a1bd743\",\"variant_id\":\"3e5d7e32-3938-406d-8e4d-45b365b2f9ca\",\"available\":true}]"
     },
     {
       "name": "editor reads public product + variants + media",
@@ -960,7 +960,7 @@
     {
       "name": "editor reads variant availability (boolean only)",
       "ok": true,
-      "detail": "[{\"product_id\":\"22a3da87-cab5-4d38-8d73-94e6726c83d7\",\"variant_id\":\"bc373b27-aa85-4f8c-bf30-50d818fde213\",\"available\":true}]"
+      "detail": "[{\"product_id\":\"fe564367-c422-4c8d-abba-6e537a1bd743\",\"variant_id\":\"3e5d7e32-3938-406d-8e4d-45b365b2f9ca\",\"available\":true}]"
     },
     {
       "name": "anon can still submit a contact inquiry (insert only)",

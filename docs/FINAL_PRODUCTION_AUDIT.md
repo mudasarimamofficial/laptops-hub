@@ -42,7 +42,7 @@ certification environment. **The release is therefore not "staging certified".**
 | `resend._domainkey`, `send.` MX/TXT | none | Resend (the provider the code supports) is not verified for this domain |
 
 **Outbound** email is a separate question from MX. It works only once a provider is chosen, its account exists, its
-issued DKIM/SPF (and optional return-path) values are published in Vercel DNS, and `RESEND_API_KEY`, `STORE_EMAIL_FROM`
+issued DKIM/SPF (and optional return-path) values are published in Vercel DNS, and `RESEND_API_KEY`, `STORE_FROM_EMAIL`, `STORE_NOTIFY_EMAIL`
 and `CRON_SECRET` are set in production. None of these exist today, so order notification emails are not sent in
 production (they stay queued in `notification_outbox`). No DNS records were invented or added. Inbound mail needs a
 mailbox provider (e.g. the Hostinger mail plan, if the owner has one) and that provider's MX values.

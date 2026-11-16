@@ -1,0 +1,31 @@
+{
+  "measuredAt": "2026-11-17",
+  "deployment": "dpl_ErqN6evfpCNXoidJrp5xGVAqiDnC (772276b), functions sin1, Supabase ap-southeast-1",
+  "client": "owner's existing signed-in session in the Claude desktop browser pane, test host in Pakistan (edge bom1); read-only GETs only",
+  "method": {
+    "fullPage": "8 sequential same-origin fetch() of each admin page with the session cookie, cache: no-store; TTFB and total",
+    "clickNavigation": "3 rounds of real sidebar-link clicks (Next.js client navigation); duration of the RSC request from the Resource Timing API (immune to hidden-tab timer throttling)"
+  },
+  "fullPage_ms": {
+    "/admin": [410, 549], "/admin/analytics": [398, 409], "/admin/activity": [383, 416], "/admin/products": [393, 426],
+    "/admin/products/<handle>": [393, 509], "/admin/products/new": [319, 430], "/admin/products/bulk": [367, 505],
+    "/admin/inventory": [448, 532], "/admin/collections": [343, 379], "/admin/collections/laptops": [358, 415],
+    "/admin/orders": [379, 443], "/admin/customers": [350, 486], "/admin/inquiries": [337, 443], "/admin/blog": [326, 408],
+    "/admin/reels": [375, 387], "/admin/reviews": [354, 460], "/admin/reviews/testimonials": [369, 427],
+    "/admin/merchandising": [407, 581], "/admin/media": [441, 498], "/admin/content": [350, 358], "/admin/navigation": [356, 384],
+    "/admin/seo": [368, 407], "/admin/online-store": [345, 404], "/admin/settings": [382, 446], "/admin/staff": [347, 426],
+    "/admin/help": [297, 382],
+    "_format": "[TTFB p50, TTFB p95]; all 26 pages HTTP 200, no error text"
+  },
+  "clickNavigation_ms": {
+    "overall": { "n": 36, "p50": 405, "p95": 552, "max": 862, "allStatus": 200 },
+    "/admin/products": [504, 862], "/admin/inventory": [469, 532], "/admin/collections": [401, 461], "/admin/orders": [474, 495],
+    "/admin/reviews": [386, 413], "/admin/blog": [357, 361], "/admin/reels": [378, 528], "/admin/settings": [461, 500],
+    "/admin/staff": [388, 388], "/admin/online-store": [315, 336], "/admin/analytics": [377, 468], "/admin": [468, 552],
+    "_format": "[p50, p95] of 3 samples each; max 862 ms = first (cold) product-list navigation"
+  },
+  "notes": [
+    "Self-crafted RSC fetches returned 500 because the router-state header was synthetic; real clicks return 200.",
+    "Wall-clock click timings in round 3 read ~1000 ms because the browser pane was hidden (timer throttling); RSC durations above are used instead."
+  ]
+}

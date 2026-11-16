@@ -36,6 +36,33 @@ specific authorization (see "Needs the owner").
 - No interaction was reproducibly slow (none > 1 s), so no performance change was made. This replaces the modelled
   365 ms figure: the real figure includes the Pakistan ↔ Singapore network round trip.
 
+### Production write tests (owner-authorized 2026-11-17, clearly named test data, cleaned up)
+
+Run in the owner's session through the real admin UI. No customer-facing change; email not configured; COD off.
+
+| Journey | Result | Evidence |
+|---|---|---|
+| Create product "QA TEST — do not sell" (draft, PKR 1,000, tracked qty 3) | PASS: saved as draft, not purchasable, storefront PDP 404, not in search | DB row; audit `product.create` |
+| Variants: option RAM = 8GB / 16GB, own SKUs, prices PKR 1,000 / 1,200, qty 2 / 1 | PASS: "Saved 2 variants"; exact prices (100 000 / 120 000 paisa) and quantities stored; ledger `initial_stock` +2 / +1 | `products.variants.sync` |
+| Inventory desk: +3 "Stock received" on QA-TEST-8 | PASS: 2 → 5; ledger row; low-stock badge updated | `inventory.adjust` |
+| Bulk actions: select only the test row → Feature, then Unfeature | PASS: "1 selected", "Feature: 1 updated", "Unfeature: 1 updated"; no other product touched (featured count 0 after) | `products.bulk_patch` ×2 |
+| Testimonial: draft "QA TEST" (not on homepage, no consent) → Submit for approval → Delete (confirmation dialog) | PASS: never visible to anonymous visitors (REST `[]`); deleted | `testimonial.create/status.pending/delete` |
+| Blog: draft post with a `<script>` tag → Delete | PASS: saved as draft, script stripped by server sanitizer, `/guides/<slug>` 404; deleted after confirmation | `post.create/delete` |
+| Theme editor: change map heading in the draft → Save draft → reload → restore → Save draft | PASS: draft persisted; live homepage unchanged; restored. The working draft equals the original for all 11 original sections, with map/reviews sections added at their defaults. **Nothing published** (0 publications) | `theme.homepage.draft_save` ×2 |
+| Cleanup: Danger zone → type handle → Soft-delete | PASS: product archived + soft-deleted, PDP 404, not in sitemap; `create_cod_order` refuses non-active products | `product.soft_delete` |
+
+Left on production by design: the archived, soft-deleted test product row and its 3 stock-ledger rows (the ledger is
+append-only audit history), plus the audit-log entries above.
+
+Observations (not defects, no change made):
+- "Open draft preview" opens a page that shows only the hero and product-story images. Other section edits (map,
+  reviews, text) are visible only in the editor inspector, or on the storefront after a publish with
+  `THEME_PUBLISHED_ENABLED=1`.
+- Not tested on production: theme **publish/rollback** (the first publish would become the live pointer if the theme
+  flag is ever turned on), staff invite/revoke (needs email; the only other account is the deactivated test account),
+  order lifecycle (no orders; COD off), collections create (no delete path, so it would leave permanent data). All are
+  covered on the isolated stack.
+
 ## 2. Production security review
 
 Supabase advisors (`docs/evidence/security/advisors_prod_2026-11-17.json`): 62 findings, 0 ERROR.
@@ -108,7 +135,7 @@ gates.
 
 ## 6. Needs the owner
 
-1. Authorize **production write tests** with clearly named test data (e.g. one draft product "QA TEST — do not sell",
+1. ~~Production write tests~~: done 2026-11-17 (see "Production write tests" above).
    a draft testimonial, a theme draft publish + rollback), or run them yourself. No customer notification can fire,
    because email is not configured and COD is off.
 2. Approve **deleting the leftover test account** `cod-sandbox-…@lh-test.local` (deactivated; irreversible).

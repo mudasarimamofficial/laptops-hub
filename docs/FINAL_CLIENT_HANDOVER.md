@@ -9,7 +9,7 @@ Release classification: see the end of `FINAL_E2E_REPORT.md`. Deployed to produc
 |---|---|---|---|
 | 1 | ~~Migrations 15–29~~ — done 2026-11-16 | — | — |
 | 2 | ~~Merge PR #10~~ — done 2026-11-16 | — | — |
-| 2a | Authorize production write tests with named test data (or run them yourself); sign out and back in once | Admin was verified read-only in your session; writes and logout were not run on production | Owner |
+| 2a | Sign out and back in once to confirm logout on production | Product, variant, stock, bulk, testimonial, blog and theme-draft writes were verified on production 2026-11-17; logout was not run (it would end your session) | Owner |
 | 2b | Approve deleting the leftover test account `cod-sandbox-…@lh-test.local` (deactivated, never used) | Housekeeping; irreversible | Owner |
 | 2c | Decide on Supabase leaked-password protection | Advisor warning; plan-dependent setting | Owner |
 | 3 | Genuine customer reviews with consent (and avatar permission, if photos are used) | The homepage reviews section stays hidden until reviews are published | Owner |

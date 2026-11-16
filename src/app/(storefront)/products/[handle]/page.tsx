@@ -112,9 +112,11 @@ export default async function ProductPage({ params }: Props) {
             <p style={{ margin: 0, fontSize: 17, color: "var(--lh-ink-2)", lineHeight: 1.45 }}>{p.config}</p>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: 22, borderRadius: 24, background: "#FFFFFF", border: "1px solid var(--lh-border)", boxShadow: "0 24px 50px -36px rgba(var(--lh-navy-rgb),.5)" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontSize: 34, fontWeight: 700, letterSpacing: "-.03em" }}>{fmtPkr(p.pricePaisa)}</span>
-            </div>
+            {p.variants.length <= 1 ? (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
+                <span style={{ fontFamily: "var(--font-display)", fontSize: 34, fontWeight: 700, letterSpacing: "-.03em" }}>{fmtPkr(p.pricePaisa)}</span>
+              </div>
+            ) : null}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>
               {v5KeySpecs(p).map((k) => (
                 <div key={k.k} style={{ display: "flex", flexDirection: "column", gap: 5, padding: "12px 14px", borderRadius: 14, background: "var(--lh-canvas)", border: "1px solid var(--lh-divider)" }}>
@@ -123,7 +125,7 @@ export default async function ProductPage({ params }: Props) {
                 </div>
               ))}
             </div>
-            <ProductBuy handle={p.h} title={p.t} model={p.model} config={p.config} sku={p.sku} variantId={p.variantId} pricePaisa={p.pricePaisa} maxPerOrder={p.maxPerOrder} available={p.avail} imageUrl={p.imgs[0]?.u ?? null} />
+            <ProductBuy handle={p.h} title={p.t} model={p.model} config={p.config} sku={p.sku} variantId={p.variantId} pricePaisa={p.pricePaisa} maxPerOrder={p.maxPerOrder} available={p.avail} imageUrl={p.imgs[0]?.u ?? null} optionNames={p.optionNames} variants={p.variants} />
           </div>
           {policies.length ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,150px),1fr))", gap: 8 }}>

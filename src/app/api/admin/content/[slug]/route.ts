@@ -139,6 +139,9 @@ export async function PATCH(request: Request, ctx: Ctx) {
     // demand).
     revalidateTag("content", { expire: 0 });
     revalidatePath("/", "layout");
+    revalidatePath("/(storefront)", "layout");
+    revalidatePath("/compare");
+    revalidatePath("/compare", "page");
     revalidatePath("/sitemap.xml");
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {

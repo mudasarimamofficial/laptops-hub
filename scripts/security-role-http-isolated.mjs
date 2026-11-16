@@ -138,7 +138,15 @@ try {
     const page = await (await fetch(`${base}/products/${pdpHandle}`)).text();
     return [...page.matchAll(/<a[^>]*href="\/pages\/shipping"[^>]*>([\s\S]*?)<\/a>/g)].map((m) => m[1]).find((t) => />Delivery</.test(t)) ?? null;
   };
-  const footerLinksShipping = async () => /href="\/pages\/shipping"/.test(await (await fetch(`${base}/compare`)).text());
+  const footerLinksShipping = async () => {
+    let has = false;
+    for (let i = 0; i < 5; i++) {
+      const pageText = await (await fetch(`${base}/compare`)).text();
+      has = /href="\/pages\/shipping"/.test(pageText);
+      await new Promise((r) => setTimeout(r, 200));
+    }
+    return has;
+  };
   if (pdpHandle) {
     const card = await deliveryCard();
     assert("product page: published delivery policy is linked, untagged", card !== null && !/being finalised/i.test(card), String(card).slice(0, 120));

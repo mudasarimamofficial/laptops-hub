@@ -13,6 +13,8 @@ const base: PublicProduct = {
   featured: false,
   tags: ["business"],
   specs: { RAM: "16 GB", Display: "14 inch" },
+  optionNames: [],
+  variants: [],
   variantId: "v1",
   sku: "SKU",
   pricePaisa: 12500000,

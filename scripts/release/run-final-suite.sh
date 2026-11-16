@@ -9,7 +9,7 @@ set -u
 cd "$(dirname "$0")/../.."
 set -a; . ./.env.local; set +a
 case "${NEXT_PUBLIC_SUPABASE_URL:-}" in http://127.0.0.1:*|http://localhost:*) ;; *) echo "refusing: Supabase is not local"; exit 2 ;; esac
-export PLAYWRIGHT_BASE_URL=http://127.0.0.1:3001 TEST_BASE_URL=http://127.0.0.1:3001 FAKE_RESEND_URL=http://127.0.0.1:4599
+export PLAYWRIGHT_BASE_URL=http://127.0.0.1:3001 TEST_BASE_URL=http://127.0.0.1:3001 FAKE_RESEND_URL=http://127.0.0.1:4599 CATALOG_MIN_COUNT=1
 APP=http://127.0.0.1:3001
 OUT=docs/evidence/final-run
 mkdir -p "$OUT"
@@ -31,8 +31,8 @@ run() {
 
 sql() { docker exec -i "$DB" psql -U postgres -v ON_ERROR_STOP=1 -At < "$1"; }
 
-run static-lint        npx eslint
-run static-tsc         npx tsc --noEmit
+run static-lint        ./node_modules/.bin/eslint
+run static-tsc         ./node_modules/.bin/tsc --noEmit
 run static-audit       npm audit --omit=dev
 run unit               npm run test:unit
 run sql-shipping-cod   sql scripts/db-tests/shipping-cod-matrix.sql
@@ -50,11 +50,11 @@ run inventory-orders   node scripts/test-inventory-orders.mjs
 run inventory-ledger   node scripts/test-inventory-ledger-sync.mjs
 run settings-nav       node scripts/test-settings-navigation-persistence.mjs
 run merchant-smoke     node scripts/test-merchant-catalog-smoke.mjs
-run csv-commit         npx tsx scripts/test-shopify-csv-commit-smoke.mjs
+run csv-commit         ./node_modules/.bin/tsx scripts/test-shopify-csv-commit-smoke.mjs
 run catalog-pages      node scripts/test-catalog-pagination.mjs
-run e2e-isolated       npx playwright test -c playwright.isolated.config.ts --grep-invert "layout:"
-run e2e-legacy         npx playwright test -c playwright.config.ts tests/e2e/theme-publish-workflow.spec.ts tests/e2e/merchant-admin-workflows.spec.ts tests/e2e/homepage-presets.spec.ts tests/e2e/v5-correctness.spec.ts
-run e2e-crossbrowser   npx playwright test -c playwright.crossbrowser.config.ts
+run e2e-isolated       ./node_modules/.bin/playwright test -c playwright.isolated.config.ts --grep-invert "layout:"
+run e2e-legacy         ./node_modules/.bin/playwright test -c playwright.config.ts tests/e2e/theme-publish-workflow.spec.ts tests/e2e/merchant-admin-workflows.spec.ts tests/e2e/homepage-presets.spec.ts tests/e2e/v5-correctness.spec.ts
+run e2e-crossbrowser   ./node_modules/.bin/playwright test -c playwright.crossbrowser.config.ts
 
 {
   echo "{"

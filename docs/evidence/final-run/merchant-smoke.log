@@ -1,0 +1,31 @@
+
+=== Merchant catalog / theme local smoke ===
+
+  ✓ products.deleted_at column exists
+  ✓ product_media.origin column exists
+  ✓ product_variants barcode/position columns exist
+  ✓ inventory_ledger table exists
+  ✓ inventory_policy store setting seeded
+  ✓ theme_templates homepage seeded
+  ✓ theme_versions v5-default-draft seeded
+  ✓ catalog_products_public excludes soft-deleted
+  ✓ anon cannot read inventory_ledger
+  ✓ anon cannot read theme_versions
+  ✓ create product with summary + option_names
+  ✓ create tracked + untracked variants
+  ✓ inventory ledger adjustment
+  ✓ add remote Shopify CDN media URLs
+  ✓ reorder media positions
+  ✓ remove one media row
+  ✓ create manual collection + membership
+  ✓ create automated collection with rule JSON
+  ✓ publish product then soft-delete
+  ✓ restore soft-deleted product
+  ✓ order_items FK survives product soft-delete (no cascade wipe)
+  ✓ theme working-draft save/retrieve
+  ✓ collections.collection_type backfill/manual
+  ✓ import_jobs extended columns writable
+  ✓ cleanup smoke product (hard delete local only)
+
+=== Result: 25 passed · 0 failed ===
+

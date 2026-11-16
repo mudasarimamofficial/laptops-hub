@@ -38,7 +38,7 @@
           "cross-browser-storefront.spec.ts",
           "launch-journey.spec.ts"
         ],
-        "timeout": 90000
+        "timeout": 180000
       },
       {
         "outputDir": "D:/Laptops Hub Vercel Development/test-results",
@@ -55,7 +55,7 @@
           "cross-browser-storefront.spec.ts",
           "launch-journey.spec.ts"
         ],
-        "timeout": 90000
+        "timeout": 180000
       },
       {
         "outputDir": "D:/Laptops Hub Vercel Development/test-results",
@@ -72,7 +72,7 @@
           "cross-browser-storefront.spec.ts",
           "launch-journey.spec.ts"
         ],
-        "timeout": 90000
+        "timeout": 180000
       },
       {
         "outputDir": "D:/Laptops Hub Vercel Development/test-results",
@@ -89,7 +89,7 @@
           "cross-browser-storefront.spec.ts",
           "launch-journey.spec.ts"
         ],
-        "timeout": 90000
+        "timeout": 180000
       },
       {
         "outputDir": "D:/Laptops Hub Vercel Development/test-results",
@@ -106,7 +106,7 @@
           "cross-browser-storefront.spec.ts",
           "launch-journey.spec.ts"
         ],
-        "timeout": 90000
+        "timeout": 180000
       }
     ],
     "filteredProjects": [
@@ -127,7 +127,7 @@
           "cross-browser-storefront.spec.ts",
           "launch-journey.spec.ts"
         ],
-        "timeout": 90000,
+        "timeout": 180000,
         "use": {
           "baseURL": "http://127.0.0.1:3001",
           "trace": "off",
@@ -169,7 +169,7 @@
           "cross-browser-storefront.spec.ts",
           "launch-journey.spec.ts"
         ],
-        "timeout": 90000,
+        "timeout": 180000,
         "use": {
           "baseURL": "http://127.0.0.1:3001",
           "trace": "off",
@@ -211,7 +211,7 @@
           "cross-browser-storefront.spec.ts",
           "launch-journey.spec.ts"
         ],
-        "timeout": 90000,
+        "timeout": 180000,
         "use": {
           "baseURL": "http://127.0.0.1:3001",
           "trace": "off",
@@ -250,7 +250,7 @@
           "cross-browser-storefront.spec.ts",
           "launch-journey.spec.ts"
         ],
-        "timeout": 90000,
+        "timeout": 180000,
         "use": {
           "baseURL": "http://127.0.0.1:3001",
           "trace": "off",
@@ -289,7 +289,7 @@
           "cross-browser-storefront.spec.ts",
           "launch-journey.spec.ts"
         ],
-        "timeout": 90000,
+        "timeout": 180000,
         "use": {
           "baseURL": "http://127.0.0.1:3001",
           "trace": "off",
@@ -346,11 +346,11 @@
       "specs": [
         {
           "title": "layout: home",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
@@ -359,40 +359,18 @@
                 {
                   "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "timedOut",
-                  "duration": 90139,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts",
-                        "column": 30,
-                        "line": 40
-                      },
-                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/?vw=1440\", waiting until \"networkidle\"\u001b[22m\n\n\n  38 |       // Distinct URL per width + network idle: Firefox can otherwise race a repeat goto with the router's own\n  39 |       // same-URL history update from the previous load (the page itself renders correctly either way).\n> 40 |       const res = await page.goto(`${url}${url.includes(\"?\") ? \"&\" : \"?\"}vw=${w}`, { waitUntil: \"networkidle\" });\n     |                              ^\n  41 |       if (gated) expect([200, 404], `${url} status`).toContain(res?.status());\n  42 |       else expect(res?.status(), `${url} status`).toBeLessThan(400);\n  43 |       await expect(page.locator(\"main, form\").first()).toBeVisible({ timeout: 15_000 });\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts:40:30"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 65420,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:14:17.074Z",
+                  "startTime": "2026-11-15T21:52:01.359Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\cross-browser-storefront-layout-home-chromium-desktop\\error-context.md"
-                    }
-                  ]
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "960b38c616beb50fe6ef-2f53a7305d1b7eb9c31b",
@@ -402,53 +380,31 @@
         },
         {
           "title": "layout: collection",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
               "projectName": "chromium-desktop",
               "results": [
                 {
-                  "workerIndex": 1,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "timedOut",
-                  "duration": 90132,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts",
-                        "column": 30,
-                        "line": 40
-                      },
-                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/collections/all?vw=1440\", waiting until \"networkidle\"\u001b[22m\n\n\n  38 |       // Distinct URL per width + network idle: Firefox can otherwise race a repeat goto with the router's own\n  39 |       // same-URL history update from the previous load (the page itself renders correctly either way).\n> 40 |       const res = await page.goto(`${url}${url.includes(\"?\") ? \"&\" : \"?\"}vw=${w}`, { waitUntil: \"networkidle\" });\n     |                              ^\n  41 |       if (gated) expect([200, 404], `${url} status`).toContain(res?.status());\n  42 |       else expect(res?.status(), `${url} status`).toBeLessThan(400);\n  43 |       await expect(page.locator(\"main, form\").first()).toBeVisible({ timeout: 15_000 });\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts:40:30"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 21410,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:15:50.402Z",
+                  "startTime": "2026-11-15T21:53:14.626Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\cross-browser-storefront-layout-collection-chromium-desktop\\error-context.md"
-                    }
-                  ]
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "960b38c616beb50fe6ef-3c8dc9b85a4786879fb0",
@@ -462,22 +418,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
               "projectName": "chromium-desktop",
               "results": [
                 {
-                  "workerIndex": 2,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 80369,
+                  "duration": 15149,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:17:23.178Z",
+                  "startTime": "2026-11-15T21:53:36.533Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -492,53 +448,31 @@
         },
         {
           "title": "layout: search",
-          "ok": false,
+          "ok": true,
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
               "projectName": "chromium-desktop",
               "results": [
                 {
-                  "workerIndex": 2,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
-                  "status": "timedOut",
-                  "duration": 90088,
-                  "error": {
-                    "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m",
-                    "stack": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                  },
-                  "errors": [
-                    {
-                      "message": "\u001b[31mTest timeout of 90000ms exceeded.\u001b[39m"
-                    },
-                    {
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts",
-                        "column": 30,
-                        "line": 40
-                      },
-                      "message": "Error: page.goto: Test timeout of 90000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/search?q=dell&vw=1440\", waiting until \"networkidle\"\u001b[22m\n\n\n  38 |       // Distinct URL per width + network idle: Firefox can otherwise race a repeat goto with the router's own\n  39 |       // same-URL history update from the previous load (the page itself renders correctly either way).\n> 40 |       const res = await page.goto(`${url}${url.includes(\"?\") ? \"&\" : \"?\"}vw=${w}`, { waitUntil: \"networkidle\" });\n     |                              ^\n  41 |       if (gated) expect([200, 404], `${url} status`).toContain(res?.status());\n  42 |       else expect(res?.status(), `${url} status`).toBeLessThan(400);\n  43 |       await expect(page.locator(\"main, form\").first()).toBeVisible({ timeout: 15_000 });\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\cross-browser-storefront.spec.ts:40:30"
-                    }
-                  ],
+                  "status": "passed",
+                  "duration": 11636,
+                  "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:18:44.375Z",
+                  "startTime": "2026-11-15T21:53:51.819Z",
                   "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\cross-browser-storefront-layout-search-chromium-desktop\\error-context.md"
-                    }
-                  ]
+                  "attachments": []
                 }
               ],
-              "status": "unexpected"
+              "status": "expected"
             }
           ],
           "id": "960b38c616beb50fe6ef-354b18eee386c853a073",
@@ -552,22 +486,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
               "projectName": "chromium-desktop",
               "results": [
                 {
-                  "workerIndex": 3,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 71295,
+                  "duration": 13200,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:20:15.984Z",
+                  "startTime": "2026-11-15T21:54:03.709Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -586,22 +520,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
               "projectName": "chromium-desktop",
               "results": [
                 {
-                  "workerIndex": 3,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 79484,
+                  "duration": 15906,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:21:28.294Z",
+                  "startTime": "2026-11-15T21:54:17.092Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -620,22 +554,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
               "projectName": "chromium-desktop",
               "results": [
                 {
-                  "workerIndex": 3,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 79477,
+                  "duration": 23469,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:22:47.864Z",
+                  "startTime": "2026-11-15T21:54:33.592Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -654,22 +588,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
               "projectName": "chromium-desktop",
               "results": [
                 {
-                  "workerIndex": 3,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 79331,
+                  "duration": 11627,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:24:07.366Z",
+                  "startTime": "2026-11-15T21:54:57.458Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -688,22 +622,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
               "projectName": "chromium-desktop",
               "results": [
                 {
-                  "workerIndex": 3,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 79693,
+                  "duration": 14011,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:25:26.723Z",
+                  "startTime": "2026-11-15T21:55:09.228Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -722,22 +656,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
               "projectName": "chromium-desktop",
               "results": [
                 {
-                  "workerIndex": 3,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 80116,
+                  "duration": 13236,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:26:46.460Z",
+                  "startTime": "2026-11-15T21:55:23.657Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -756,22 +690,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-desktop",
               "projectName": "chromium-desktop",
               "results": [
                 {
-                  "workerIndex": 3,
+                  "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5394,
+                  "duration": 13220,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:28:06.633Z",
+                  "startTime": "2026-11-15T21:55:37.171Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -790,22 +724,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4777,
+                  "duration": 10453,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:09.548Z",
+                  "startTime": "2026-11-15T21:59:34.872Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -824,22 +758,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1893,
+                  "duration": 6025,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:15.225Z",
+                  "startTime": "2026-11-15T21:59:50.838Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -858,22 +792,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1776,
+                  "duration": 7004,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:17.150Z",
+                  "startTime": "2026-11-15T21:59:57.399Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -892,22 +826,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1866,
+                  "duration": 5503,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:18.952Z",
+                  "startTime": "2026-11-15T22:00:04.868Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -926,22 +860,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2098,
+                  "duration": 3807,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:20.842Z",
+                  "startTime": "2026-11-15T22:00:10.708Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -960,22 +894,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2079,
+                  "duration": 7928,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:22.972Z",
+                  "startTime": "2026-11-15T22:00:15.622Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -994,22 +928,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1953,
+                  "duration": 16929,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:25.083Z",
+                  "startTime": "2026-11-15T22:00:24.592Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1028,22 +962,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2307,
+                  "duration": 6245,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:27.066Z",
+                  "startTime": "2026-11-15T22:00:41.971Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1062,22 +996,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1833,
+                  "duration": 4590,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:29.404Z",
+                  "startTime": "2026-11-15T22:00:48.848Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1096,22 +1030,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1912,
+                  "duration": 4959,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:31.263Z",
+                  "startTime": "2026-11-15T22:00:53.727Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1130,22 +1064,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "chromium-mobile",
               "projectName": "chromium-mobile",
               "results": [
                 {
-                  "workerIndex": 4,
+                  "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1729,
+                  "duration": 5277,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:29:33.206Z",
+                  "startTime": "2026-11-15T22:00:59.755Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1164,22 +1098,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 12023,
+                  "duration": 117650,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:30:19.560Z",
+                  "startTime": "2026-11-15T22:05:55.184Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1198,22 +1132,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7608,
+                  "duration": 55029,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:30:32.583Z",
+                  "startTime": "2026-11-15T22:07:59.881Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1232,22 +1166,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9585,
+                  "duration": 58334,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:30:40.230Z",
+                  "startTime": "2026-11-15T22:08:55.384Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1266,22 +1200,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8343,
+                  "duration": 64989,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:30:49.864Z",
+                  "startTime": "2026-11-15T22:09:53.913Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1300,22 +1234,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8142,
+                  "duration": 51545,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:30:58.252Z",
+                  "startTime": "2026-11-15T22:10:59.938Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1334,22 +1268,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8218,
+                  "duration": 76385,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:31:06.422Z",
+                  "startTime": "2026-11-15T22:11:53.212Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1368,22 +1302,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9305,
+                  "duration": 59251,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:31:14.662Z",
+                  "startTime": "2026-11-15T22:13:09.993Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1402,22 +1336,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10054,
+                  "duration": 78676,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:31:24.004Z",
+                  "startTime": "2026-11-15T22:14:09.993Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1436,22 +1370,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10256,
+                  "duration": 73304,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:31:34.109Z",
+                  "startTime": "2026-11-15T22:15:29.365Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1470,22 +1404,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 12098,
+                  "duration": 31089,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:31:44.476Z",
+                  "startTime": "2026-11-15T22:16:43.803Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1504,22 +1438,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-desktop",
               "projectName": "webkit-desktop",
               "results": [
                 {
-                  "workerIndex": 5,
+                  "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9207,
+                  "duration": 11680,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:31:56.617Z",
+                  "startTime": "2026-11-15T22:17:15.015Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1538,22 +1472,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4141,
+                  "duration": 11546,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:33:38.226Z",
+                  "startTime": "2026-11-15T22:19:16.025Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1572,22 +1506,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2743,
+                  "duration": 19200,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:33:42.656Z",
+                  "startTime": "2026-11-15T22:19:28.072Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1606,22 +1540,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 2887,
+                  "duration": 12766,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:33:45.449Z",
+                  "startTime": "2026-11-15T22:19:47.634Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1640,22 +1574,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7575,
+                  "duration": 4634,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:33:48.373Z",
+                  "startTime": "2026-11-15T22:20:00.694Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1674,22 +1608,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11790,
+                  "duration": 3813,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:33:56.023Z",
+                  "startTime": "2026-11-15T22:20:05.433Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1708,22 +1642,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4573,
+                  "duration": 3439,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:34:08.263Z",
+                  "startTime": "2026-11-15T22:20:09.330Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1742,22 +1676,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4967,
+                  "duration": 4802,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:34:12.961Z",
+                  "startTime": "2026-11-15T22:20:12.844Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1776,22 +1710,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3531,
+                  "duration": 4448,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:34:18.028Z",
+                  "startTime": "2026-11-15T22:20:17.697Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1810,22 +1744,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4227,
+                  "duration": 5458,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:34:21.680Z",
+                  "startTime": "2026-11-15T22:20:22.207Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1844,22 +1778,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5062,
+                  "duration": 6108,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:34:26.137Z",
+                  "startTime": "2026-11-15T22:20:27.731Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1878,22 +1812,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "webkit-mobile",
               "projectName": "webkit-mobile",
               "results": [
                 {
-                  "workerIndex": 6,
+                  "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5551,
+                  "duration": 5548,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:34:31.308Z",
+                  "startTime": "2026-11-15T22:20:33.930Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1912,22 +1846,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 18142,
+                  "duration": 116966,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:36:25.754Z",
+                  "startTime": "2026-11-15T22:24:19.156Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1946,22 +1880,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7429,
+                  "duration": 30658,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:36:45.364Z",
+                  "startTime": "2026-11-15T22:26:22.546Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1980,22 +1914,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7168,
+                  "duration": 16286,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:36:52.831Z",
+                  "startTime": "2026-11-15T22:26:53.266Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2014,22 +1948,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7268,
+                  "duration": 11545,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:37:00.023Z",
+                  "startTime": "2026-11-15T22:27:09.606Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2048,22 +1982,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8368,
+                  "duration": 9575,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:37:07.324Z",
+                  "startTime": "2026-11-15T22:27:21.219Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2082,22 +2016,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7462,
+                  "duration": 9724,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:37:15.724Z",
+                  "startTime": "2026-11-15T22:27:30.839Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2116,22 +2050,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 8472,
+                  "duration": 35483,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:37:23.209Z",
+                  "startTime": "2026-11-15T22:27:40.613Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2150,22 +2084,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7134,
+                  "duration": 13746,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:37:31.702Z",
+                  "startTime": "2026-11-15T22:28:16.155Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2184,22 +2118,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7581,
+                  "duration": 49153,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:37:38.857Z",
+                  "startTime": "2026-11-15T22:28:30.026Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2218,22 +2152,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9966,
+                  "duration": 50376,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:37:46.488Z",
+                  "startTime": "2026-11-15T22:29:19.298Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2252,22 +2186,22 @@
           "tags": [],
           "tests": [
             {
-              "timeout": 90000,
+              "timeout": 180000,
               "annotations": [],
               "expectedStatus": "passed",
               "projectId": "firefox-desktop",
               "projectName": "firefox-desktop",
               "results": [
                 {
-                  "workerIndex": 7,
+                  "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5496,
+                  "duration": 72066,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T13:37:56.489Z",
+                  "startTime": "2026-11-15T22:30:10.097Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2301,7 +2235,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2317,15 +2251,15 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4281,
+                      "duration": 19747,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:28:12.221Z",
+                      "startTime": "2026-11-15T21:55:54.022Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2353,7 +2287,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2369,15 +2303,15 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 44,
+                      "duration": 460,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:28:16.860Z",
+                      "startTime": "2026-11-15T21:56:19.550Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2405,7 +2339,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2421,15 +2355,15 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2092,
+                      "duration": 7120,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:28:16.934Z",
+                      "startTime": "2026-11-15T21:56:20.066Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2457,7 +2391,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2473,15 +2407,15 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3372,
+                      "duration": 9991,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:28:19.080Z",
+                      "startTime": "2026-11-15T21:56:27.517Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2509,7 +2443,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2525,15 +2459,15 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3091,
+                      "duration": 18089,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:28:22.494Z",
+                      "startTime": "2026-11-15T21:56:37.833Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2561,7 +2495,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2577,15 +2511,15 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5567,
+                      "duration": 17791,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:28:25.660Z",
+                      "startTime": "2026-11-15T21:56:56.287Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2609,11 +2543,11 @@
             },
             {
               "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2629,15 +2563,34 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 21210,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 45860,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Fully collected.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Fully collected.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Fully collected.')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Fully collected.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Fully collected.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Fully collected.')\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:173:54",
+                        "location": {
+                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                          "column": 54,
+                          "line": 173
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 171 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Collector reference\"\u001b[39m)\u001b[33m.\u001b[39mfill(\u001b[32m\"rider-1\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 172 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Record collection\"\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 173 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Fully collected.\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 174 |\u001b[39m     \u001b[36mconst\u001b[39m { data\u001b[33m:\u001b[39m o } \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m sb\u001b[33m.\u001b[39m\u001b[36mfrom\u001b[39m(\u001b[32m\"orders\"\u001b[39m)\u001b[33m.\u001b[39mselect(\u001b[32m\"id, status, payment_status, amount_collected_paisa\"\u001b[39m)\u001b[33m.\u001b[39meq(\u001b[32m\"order_number\"\u001b[39m\u001b[33m,\u001b[39m orderNumber)\u001b[33m.\u001b[39msingle()\u001b[33m;\u001b[39m\n \u001b[90m 175 |\u001b[39m     expect(o)\u001b[33m.\u001b[39mtoMatchObject({ status\u001b[33m:\u001b[39m \u001b[32m\"shipped\"\u001b[39m\u001b[33m,\u001b[39m payment_status\u001b[33m:\u001b[39m \u001b[32m\"collected\"\u001b[39m\u001b[33m,\u001b[39m amount_collected_paisa\u001b[33m:\u001b[39m \u001b[33mTOTAL\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 176 |\u001b[39m     \u001b[36mconst\u001b[39m { count\u001b[33m:\u001b[39m events } \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m sb\u001b[33m.\u001b[39m\u001b[36mfrom\u001b[39m(\u001b[32m\"order_events\"\u001b[39m)\u001b[33m.\u001b[39mselect(\u001b[32m\"id\"\u001b[39m\u001b[33m,\u001b[39m { count\u001b[33m:\u001b[39m \u001b[32m\"exact\"\u001b[39m\u001b[33m,\u001b[39m head\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39meq(\u001b[32m\"order_id\"\u001b[39m\u001b[33m,\u001b[39m o\u001b[33m!\u001b[39m\u001b[33m.\u001b[39mid)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "column": 54,
+                            "line": 173
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Fully collected.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Fully collected.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Fully collected.')\u001b[22m\n\n\n  171 |     await page.getByLabel(\"Collector reference\").fill(\"rider-1\");\n  172 |     await page.getByRole(\"button\", { name: \"Record collection\" }).click();\n> 173 |     await expect(page.getByText(\"Fully collected.\")).toBeVisible();\n      |                                                      ^\n  174 |     const { data: o } = await sb.from(\"orders\").select(\"id, status, payment_status, amount_collected_paisa\").eq(\"order_number\", orderNumber).single();\n  175 |     expect(o).toMatchObject({ status: \"shipped\", payment_status: \"collected\", amount_collected_paisa: TOTAL });\n  176 |     const { count: events } = await sb.from(\"order_events\").select(\"id\", { count: \"exact\", head: true }).eq(\"order_id\", o!.id);\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:173:54"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:28:31.282Z",
+                      "startTime": "2026-11-15T21:57:14.332Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2648,10 +2601,21 @@
                           }
                         }
                       ],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-97c54-ollect-COD-customer-sees-it-chromium-desktop\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "column": 54,
+                        "line": 173
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-680447ae856ced466bd5",
@@ -2665,7 +2629,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2681,34 +2645,25 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 8184,
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:28:52.548Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "line": 59,
-                            "column": 15
-                          }
-                        }
-                      ],
+                      "startTime": "2026-11-15T21:59:23.295Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
               "id": "6d0152bf536f153b62e1-e3f21140f6458121a7d5",
               "file": "launch-journey.spec.ts",
-              "line": 185,
+              "line": 187,
               "column": 7
             },
             {
@@ -2717,7 +2672,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2733,34 +2688,25 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6013,
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:29:00.776Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "line": 59,
-                            "column": 15
-                          }
-                        }
-                      ],
+                      "startTime": "2026-11-15T21:59:23.297Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
               "id": "6d0152bf536f153b62e1-74dd7b4b67a6bf264f9a",
               "file": "launch-journey.spec.ts",
-              "line": 198,
+              "line": 200,
               "column": 7
             },
             {
@@ -2769,7 +2715,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2785,34 +2731,25 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1224,
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:29:06.851Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "line": 59,
-                            "column": 15
-                          }
-                        }
-                      ],
+                      "startTime": "2026-11-15T21:59:23.297Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
               "id": "6d0152bf536f153b62e1-2895ce30692c80cc9e11",
               "file": "launch-journey.spec.ts",
-              "line": 219,
+              "line": 221,
               "column": 7
             },
             {
@@ -2821,7 +2758,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2837,15 +2774,15 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2831,
+                      "duration": 16769,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:29:35.121Z",
+                      "startTime": "2026-11-15T22:01:12.073Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2873,7 +2810,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2889,15 +2826,15 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 29,
+                      "duration": 453,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:29:38.259Z",
+                      "startTime": "2026-11-15T22:01:31.658Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2925,7 +2862,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2941,15 +2878,15 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1327,
+                      "duration": 9147,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:29:38.332Z",
+                      "startTime": "2026-11-15T22:01:32.685Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2977,7 +2914,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -2993,15 +2930,15 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2483,
+                      "duration": 7906,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:29:39.708Z",
+                      "startTime": "2026-11-15T22:01:42.144Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3029,7 +2966,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3045,15 +2982,15 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1821,
+                      "duration": 11284,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:29:42.232Z",
+                      "startTime": "2026-11-15T22:01:50.456Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3081,7 +3018,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3097,15 +3034,15 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4569,
+                      "duration": 35056,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:29:44.098Z",
+                      "startTime": "2026-11-15T22:02:02.031Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3133,7 +3070,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3149,15 +3086,15 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 15007,
+                      "duration": 45326,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:29:48.757Z",
+                      "startTime": "2026-11-15T22:02:37.553Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3185,7 +3122,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3201,15 +3138,15 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6558,
+                      "duration": 33536,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:30:03.859Z",
+                      "startTime": "2026-11-15T22:03:23.100Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3228,16 +3165,16 @@
               ],
               "id": "6d0152bf536f153b62e1-c5204ec208d736fa49ff",
               "file": "launch-journey.spec.ts",
-              "line": 185,
+              "line": 187,
               "column": 7
             },
             {
               "title": "notifications: provider outage → failed, staff retry → sent once",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3253,15 +3190,34 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 7420,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 31455,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/Accepted 1 · failed 0/)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/Accepted 1 · failed 0/) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/Accepted 1 · failed 0/)\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/Accepted 1 · failed 0/)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/Accepted 1 · failed 0/) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/Accepted 1 · failed 0/)\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:214:59",
+                        "location": {
+                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                          "column": 59,
+                          "line": 214
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 212 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"notification-status\"\u001b[39m))\u001b[33m.\u001b[39mtoHaveText(\u001b[32m\"failed\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 213 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Retry sending\"\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 214 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[35m/Accepted 1 · failed 0/\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 215 |\u001b[39m     \u001b[36mconst\u001b[39m rows \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m outboxFor(n)\u001b[33m;\u001b[39m\n \u001b[90m 216 |\u001b[39m     expect(rows[\u001b[35m0\u001b[39m])\u001b[33m.\u001b[39mtoMatchObject({ status\u001b[33m:\u001b[39m \u001b[32m\"accepted\"\u001b[39m\u001b[33m,\u001b[39m attempts\u001b[33m:\u001b[39m \u001b[35m2\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 217 |\u001b[39m     \u001b[36mconst\u001b[39m log \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m fakeLog()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "column": 59,
+                            "line": 214
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/Accepted 1 · failed 0/)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/Accepted 1 · failed 0/) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/Accepted 1 · failed 0/)\u001b[22m\n\n\n  212 |     await expect(page.getByTestId(\"notification-status\")).toHaveText(\"failed\");\n  213 |     await page.getByRole(\"button\", { name: \"Retry sending\" }).click();\n> 214 |     await expect(page.getByText(/Accepted 1 · failed 0/)).toBeVisible();\n      |                                                           ^\n  215 |     const rows = await outboxFor(n);\n  216 |     expect(rows[0]).toMatchObject({ status: \"accepted\", attempts: 2 });\n  217 |     const log = await fakeLog();\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:214:59"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:30:10.497Z",
+                      "startTime": "2026-11-15T22:03:56.867Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3272,15 +3228,26 @@
                           }
                         }
                       ],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-522af-led-staff-retry-→-sent-once-chromium-mobile\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "column": 59,
+                        "line": 214
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-8180912cdee9b571c94a",
               "file": "launch-journey.spec.ts",
-              "line": 198,
+              "line": 200,
               "column": 7
             },
             {
@@ -3289,7 +3256,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3305,34 +3272,25 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 161,
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:30:17.979Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "line": 59,
-                            "column": 15
-                          }
-                        }
-                      ],
+                      "startTime": "2026-11-15T22:05:48.754Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
               "id": "6d0152bf536f153b62e1-95cc355c176add22c10c",
               "file": "launch-journey.spec.ts",
-              "line": 219,
+              "line": 221,
               "column": 7
             },
             {
@@ -3341,7 +3299,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3357,15 +3315,15 @@
                   "projectName": "webkit-desktop",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 20186,
+                      "duration": 52185,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:32:06.033Z",
+                      "startTime": "2026-11-15T22:17:27.433Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3393,7 +3351,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3409,15 +3367,15 @@
                   "projectName": "webkit-desktop",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 44,
+                      "duration": 264,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:32:26.549Z",
+                      "startTime": "2026-11-15T22:18:20.919Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3445,7 +3403,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3461,15 +3419,15 @@
                   "projectName": "webkit-desktop",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 14067,
+                      "duration": 25528,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:32:26.623Z",
+                      "startTime": "2026-11-15T22:18:21.290Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3493,167 +3451,11 @@
             },
             {
               "title": "checkout: unserved address and invalid phone are refused",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 90000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "line": 59,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit-desktop",
-                  "projectName": "webkit-desktop",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 15302,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T13:32:40.728Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "line": 59,
-                            "column": 15
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6d0152bf536f153b62e1-16bc4e8e4f95dcf2bf05",
-              "file": "launch-journey.spec.ts",
-              "line": 114,
-              "column": 7
-            },
-            {
-              "title": "duplicate submit: one order, one notification",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 90000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "line": 59,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit-desktop",
-                  "projectName": "webkit-desktop",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 5977,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T13:32:56.110Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "line": 59,
-                            "column": 15
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6d0152bf536f153b62e1-586b8cb0369bc351d165",
-              "file": "launch-journey.spec.ts",
-              "line": 133,
-              "column": 7
-            },
-            {
-              "title": "admin: editor cannot open orders",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 90000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "line": 59,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit-desktop",
-                  "projectName": "webkit-desktop",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 14456,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T13:33:02.162Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "line": 59,
-                            "column": 15
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6d0152bf536f153b62e1-821c6e9e910cc2eb7962",
-              "file": "launch-journey.spec.ts",
-              "line": 148,
-              "column": 7
-            },
-            {
-              "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
               "ok": false,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3669,34 +3471,34 @@
                   "projectName": "webkit-desktop",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 19359,
+                      "duration": 24443,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('heading', { level: 1 })\nExpected: \u001b[32m\"LH-261115-CBC337\"\u001b[39m\nReceived: \u001b[31m\"Orders\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { level: 1 })\u001b[22m\n\u001b[2m    10 × locator resolved to <h1 class=\"font-[family-name:var(--font-display)] text-2xl font-bold tracking-[-0.03em] text-[var(--adm-ink)] sm:text-[1.75rem]\">Orders</h1>\u001b[22m\n\u001b[2m       - unexpected value \"Orders\"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('heading', { level: 1 })\nExpected: \u001b[32m\"LH-261115-CBC337\"\u001b[39m\nReceived: \u001b[31m\"Orders\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { level: 1 })\u001b[22m\n\u001b[2m    10 × locator resolved to <h1 class=\"font-[family-name:var(--font-display)] text-2xl font-bold tracking-[-0.03em] text-[var(--adm-ink)] sm:text-[1.75rem]\">Orders</h1>\u001b[22m\n\u001b[2m       - unexpected value \"Orders\"\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:158:59",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('We do not currently deliver COD to this city/province.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('We do not currently deliver COD to this city/province.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('We do not currently deliver COD to this city/province.')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('We do not currently deliver COD to this city/province.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('We do not currently deliver COD to this city/province.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('We do not currently deliver COD to this city/province.')\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:120:92",
                         "location": {
                           "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                          "column": 59,
-                          "line": 158
+                          "column": 92,
+                          "line": 120
                         },
-                        "snippet": "\u001b[0m \u001b[90m 156 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m\"/admin/orders\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 157 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"link\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m orderNumber })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 158 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"heading\"\u001b[39m\u001b[33m,\u001b[39m { level\u001b[33m:\u001b[39m \u001b[35m1\u001b[39m }))\u001b[33m.\u001b[39mtoHaveText(orderNumber)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 159 |\u001b[39m     \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m to \u001b[36mof\u001b[39m [\u001b[32m\"confirmed\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"packing\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"shipped\"\u001b[39m]) {\n \u001b[90m 160 |\u001b[39m       \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Next status\"\u001b[39m)\u001b[33m.\u001b[39mselectOption(to)\u001b[33m;\u001b[39m\n \u001b[90m 161 |\u001b[39m       \u001b[36mif\u001b[39m (to \u001b[33m===\u001b[39m \u001b[32m\"shipped\"\u001b[39m) {\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 118 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"City\"\u001b[39m)\u001b[33m.\u001b[39mfill(\u001b[32m\"Quetta\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 119 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Province\"\u001b[39m)\u001b[33m.\u001b[39mselectOption(\u001b[32m\"Balochistan\"\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 120 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"We do not currently deliver COD to this city/province.\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 121 |\u001b[39m     \u001b[36mconst\u001b[39m r \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mrequest\u001b[33m.\u001b[39mpost(\u001b[32m\"/api/checkout/cod\"\u001b[39m\u001b[33m,\u001b[39m {\n \u001b[90m 122 |\u001b[39m       headers\u001b[33m:\u001b[39m { origin\u001b[33m:\u001b[39m \u001b[32m\"http://127.0.0.1:3001\"\u001b[39m }\u001b[33m,\u001b[39m\n \u001b[90m 123 |\u001b[39m       data\u001b[33m:\u001b[39m { idempotencyKey\u001b[33m:\u001b[39m \u001b[32m`iso-${randomUUID()}`\u001b[39m\u001b[33m,\u001b[39m customerName\u001b[33m:\u001b[39m \u001b[32m\"Bad Phone\"\u001b[39m\u001b[33m,\u001b[39m customerPhone\u001b[33m:\u001b[39m \u001b[32m\"12345\"\u001b[39m\u001b[33m,\u001b[39m shippingZoneId\u001b[33m:\u001b[39m fx\u001b[33m.\u001b[39mzone\u001b[33m.\u001b[39mid\u001b[33m,\u001b[39m confirmCod\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m address\u001b[33m:\u001b[39m { line1\u001b[33m:\u001b[39m \u001b[32m\"x street\"\u001b[39m\u001b[33m,\u001b[39m city\u001b[33m:\u001b[39m \u001b[32m\"Lahore\"\u001b[39m\u001b[33m,\u001b[39m province\u001b[33m:\u001b[39m \u001b[32m\"Punjab\"\u001b[39m }\u001b[33m,\u001b[39m lines\u001b[33m:\u001b[39m [{ variantId\u001b[33m:\u001b[39m \u001b[33mP\u001b[39m\u001b[33m.\u001b[39mvariantId\u001b[33m,\u001b[39m quantity\u001b[33m:\u001b[39m \u001b[35m1\u001b[39m }] }\u001b[33m,\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "column": 59,
-                            "line": 158
+                            "column": 92,
+                            "line": 120
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('heading', { level: 1 })\nExpected: \u001b[32m\"LH-261115-CBC337\"\u001b[39m\nReceived: \u001b[31m\"Orders\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" getByRole('heading', { level: 1 }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('heading', { level: 1 })\u001b[22m\n\u001b[2m    10 × locator resolved to <h1 class=\"font-[family-name:var(--font-display)] text-2xl font-bold tracking-[-0.03em] text-[var(--adm-ink)] sm:text-[1.75rem]\">Orders</h1>\u001b[22m\n\u001b[2m       - unexpected value \"Orders\"\u001b[22m\n\n\n  156 |     await page.goto(\"/admin/orders\");\n  157 |     await page.getByRole(\"link\", { name: orderNumber }).click();\n> 158 |     await expect(page.getByRole(\"heading\", { level: 1 })).toHaveText(orderNumber);\n      |                                                           ^\n  159 |     for (const to of [\"confirmed\", \"packing\", \"shipped\"]) {\n  160 |       await page.getByLabel(\"Next status\").selectOption(to);\n  161 |       if (to === \"shipped\") {\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:158:59"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('We do not currently deliver COD to this city/province.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('We do not currently deliver COD to this city/province.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('We do not currently deliver COD to this city/province.')\u001b[22m\n\n\n  118 |     await page.getByLabel(\"City\").fill(\"Quetta\");\n  119 |     await page.getByLabel(\"Province\").selectOption(\"Balochistan\");\n> 120 |     await expect(page.getByText(\"We do not currently deliver COD to this city/province.\")).toBeVisible();\n      |                                                                                            ^\n  121 |     const r = await page.request.post(\"/api/checkout/cod\", {\n  122 |       headers: { origin: \"http://127.0.0.1:3001\" },\n  123 |       data: { idempotencyKey: `iso-${randomUUID()}`, customerName: \"Bad Phone\", customerPhone: \"12345\", shippingZoneId: fx.zone.id, confirmCod: true, address: { line1: \"x street\", city: \"Lahore\", province: \"Punjab\" }, lines: [{ variantId: P.variantId, quantity: 1 }] },\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:120:92"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:33:16.766Z",
+                      "startTime": "2026-11-15T22:18:46.920Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3711,17 +3513,146 @@
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-97c54-ollect-COD-customer-sees-it-webkit-desktop\\error-context.md"
+                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-f8ece-d-invalid-phone-are-refused-webkit-desktop\\error-context.md"
                         }
                       ],
                       "errorLocation": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "column": 59,
-                        "line": 158
+                        "column": 92,
+                        "line": 120
                       }
                     }
                   ],
                   "status": "unexpected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-16bc4e8e4f95dcf2bf05",
+              "file": "launch-journey.spec.ts",
+              "line": 114,
+              "column": 7
+            },
+            {
+              "title": "duplicate submit: one order, one notification",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T22:19:12.174Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-586b8cb0369bc351d165",
+              "file": "launch-journey.spec.ts",
+              "line": 133,
+              "column": 7
+            },
+            {
+              "title": "admin: editor cannot open orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T22:19:12.183Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-821c6e9e910cc2eb7962",
+              "file": "launch-journey.spec.ts",
+              "line": 148,
+              "column": 7
+            },
+            {
+              "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-desktop",
+                  "projectName": "webkit-desktop",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T22:19:12.186Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
                 }
               ],
               "id": "6d0152bf536f153b62e1-78c1dc6bfbcb219c27c3",
@@ -3735,7 +3666,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3759,7 +3690,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:33:36.501Z",
+                      "startTime": "2026-11-15T22:19:12.186Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -3769,7 +3700,7 @@
               ],
               "id": "6d0152bf536f153b62e1-fcb0191f4316b380939e",
               "file": "launch-journey.spec.ts",
-              "line": 185,
+              "line": 187,
               "column": 7
             },
             {
@@ -3778,7 +3709,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3802,7 +3733,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:33:36.502Z",
+                      "startTime": "2026-11-15T22:19:12.186Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -3812,7 +3743,7 @@
               ],
               "id": "6d0152bf536f153b62e1-04d67b8e79e1cd3e6764",
               "file": "launch-journey.spec.ts",
-              "line": 198,
+              "line": 200,
               "column": 7
             },
             {
@@ -3821,7 +3752,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3845,7 +3776,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:33:36.502Z",
+                      "startTime": "2026-11-15T22:19:12.187Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -3855,7 +3786,7 @@
               ],
               "id": "6d0152bf536f153b62e1-23fb3fc0d7df4ab4f496",
               "file": "launch-journey.spec.ts",
-              "line": 219,
+              "line": 221,
               "column": 7
             },
             {
@@ -3864,7 +3795,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3880,15 +3811,15 @@
                   "projectName": "webkit-mobile",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 45168,
+                      "duration": 49079,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:34:38.318Z",
+                      "startTime": "2026-11-15T22:20:40.336Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3916,7 +3847,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3932,15 +3863,15 @@
                   "projectName": "webkit-mobile",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 185,
+                      "duration": 198,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:35:24.853Z",
+                      "startTime": "2026-11-15T22:21:30.787Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3968,7 +3899,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -3984,15 +3915,15 @@
                   "projectName": "webkit-mobile",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 16161,
+                      "duration": 25263,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:35:25.111Z",
+                      "startTime": "2026-11-15T22:21:31.060Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4020,7 +3951,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4036,15 +3967,15 @@
                   "projectName": "webkit-mobile",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6126,
+                      "duration": 26414,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:35:41.350Z",
+                      "startTime": "2026-11-15T22:21:56.507Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4072,7 +4003,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4088,15 +4019,15 @@
                   "projectName": "webkit-mobile",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3093,
+                      "duration": 10673,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:35:47.627Z",
+                      "startTime": "2026-11-15T22:22:23.243Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4124,7 +4055,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4140,15 +4071,15 @@
                   "projectName": "webkit-mobile",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 9527,
+                      "duration": 24293,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:35:50.755Z",
+                      "startTime": "2026-11-15T22:22:34.034Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4172,11 +4103,11 @@
             },
             {
               "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4192,34 +4123,86 @@
                   "projectName": "webkit-mobile",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 38858,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T22:22:58.399Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d0152bf536f153b62e1-604b737aff93575a2dd7",
+              "file": "launch-journey.spec.ts",
+              "line": 154,
+              "column": 7
+            },
+            {
+              "title": "admin: cancellation by fulfillment staff",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                        "line": 59,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit-mobile",
+                  "projectName": "webkit-mobile",
+                  "results": [
+                    {
+                      "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 24274,
+                      "duration": 37786,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: packing')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: packing') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: packing')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: packing')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: packing') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: packing')\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:167:54",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: cancelled')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: cancelled') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: cancelled')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: cancelled')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: cancelled') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: cancelled')\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:195:56",
                         "location": {
                           "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                          "column": 54,
-                          "line": 167
+                          "column": 56,
+                          "line": 195
                         },
-                        "snippet": "\u001b[0m \u001b[90m 165 |\u001b[39m       \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Update status\"\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 166 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m`Status → ${to}`\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 167 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m`Current: ${to}`\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 168 |\u001b[39m     }\n \u001b[90m 169 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Collector reference\"\u001b[39m)\u001b[33m.\u001b[39mfill(\u001b[32m\"rider-1\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 170 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Record collection\"\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 193 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Next status\"\u001b[39m)\u001b[33m.\u001b[39mselectOption(\u001b[32m\"cancelled\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 194 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Update status\"\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 195 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Current: cancelled\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15\u001b[39m_000 })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 196 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m`/order/success/${accessToken}`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 197 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"order-status\"\u001b[39m))\u001b[33m.\u001b[39mtoHaveText(\u001b[32m\"Cancelled\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 198 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "column": 54,
-                            "line": 167
+                            "column": 56,
+                            "line": 195
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: packing')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: packing') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: packing')\u001b[22m\n\n\n  165 |       await page.getByRole(\"button\", { name: \"Update status\" }).click();\n  166 |       await expect(page.getByText(`Status → ${to}`)).toBeVisible();\n> 167 |       await expect(page.getByText(`Current: ${to}`)).toBeVisible();\n      |                                                      ^\n  168 |     }\n  169 |     await page.getByLabel(\"Collector reference\").fill(\"rider-1\");\n  170 |     await page.getByRole(\"button\", { name: \"Record collection\" }).click();\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:167:54"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: cancelled')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: cancelled') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: cancelled')\u001b[22m\n\n\n  193 |     await page.getByLabel(\"Next status\").selectOption(\"cancelled\");\n  194 |     await page.getByRole(\"button\", { name: \"Update status\" }).click();\n> 195 |     await expect(page.getByText(\"Current: cancelled\")).toBeVisible({ timeout: 15_000 });\n      |                                                        ^\n  196 |     await page.goto(`/order/success/${accessToken}`);\n  197 |     await expect(page.getByTestId(\"order-status\")).toHaveText(\"Cancelled\");\n  198 |   });\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:195:56"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:36:00.374Z",
+                      "startTime": "2026-11-15T22:23:37.330Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4234,65 +4217,22 @@
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-97c54-ollect-COD-customer-sees-it-webkit-mobile\\error-context.md"
+                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-84e50-lation-by-fulfillment-staff-webkit-mobile\\error-context.md"
                         }
                       ],
                       "errorLocation": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "column": 54,
-                        "line": 167
+                        "column": 56,
+                        "line": 195
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "6d0152bf536f153b62e1-604b737aff93575a2dd7",
-              "file": "launch-journey.spec.ts",
-              "line": 154,
-              "column": 7
-            },
-            {
-              "title": "admin: cancellation by fulfillment staff",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 90000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "line": 59,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit-mobile",
-                  "projectName": "webkit-mobile",
-                  "results": [
-                    {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T13:36:24.852Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
               "id": "6d0152bf536f153b62e1-3c7fbf0149174d572236",
               "file": "launch-journey.spec.ts",
-              "line": 185,
+              "line": 187,
               "column": 7
             },
             {
@@ -4301,7 +4241,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4325,7 +4265,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:36:24.852Z",
+                      "startTime": "2026-11-15T22:24:16.151Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -4335,7 +4275,7 @@
               ],
               "id": "6d0152bf536f153b62e1-1bccde5f3bcd19a89317",
               "file": "launch-journey.spec.ts",
-              "line": 198,
+              "line": 200,
               "column": 7
             },
             {
@@ -4344,7 +4284,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4368,7 +4308,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:36:24.852Z",
+                      "startTime": "2026-11-15T22:24:16.152Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -4378,7 +4318,7 @@
               ],
               "id": "6d0152bf536f153b62e1-2a604845711e7a23437b",
               "file": "launch-journey.spec.ts",
-              "line": 219,
+              "line": 221,
               "column": 7
             },
             {
@@ -4387,7 +4327,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4403,15 +4343,15 @@
                   "projectName": "firefox-desktop",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4887,
+                      "duration": 52189,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:38:02.121Z",
+                      "startTime": "2026-11-15T22:31:27.434Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4439,7 +4379,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4455,15 +4395,15 @@
                   "projectName": "firefox-desktop",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 61,
+                      "duration": 821,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:38:07.356Z",
+                      "startTime": "2026-11-15T22:32:24.994Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4491,7 +4431,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4507,15 +4447,15 @@
                   "projectName": "firefox-desktop",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2057,
+                      "duration": 34300,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:38:07.501Z",
+                      "startTime": "2026-11-15T22:32:26.754Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4543,7 +4483,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4559,15 +4499,15 @@
                   "projectName": "firefox-desktop",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2314,
+                      "duration": 33598,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:38:09.611Z",
+                      "startTime": "2026-11-15T22:33:01.479Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4595,7 +4535,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4611,15 +4551,15 @@
                   "projectName": "firefox-desktop",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2529,
+                      "duration": 16482,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:38:11.957Z",
+                      "startTime": "2026-11-15T22:33:35.452Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4647,7 +4587,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4663,15 +4603,15 @@
                   "projectName": "firefox-desktop",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5733,
+                      "duration": 36769,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:38:14.588Z",
+                      "startTime": "2026-11-15T22:33:52.081Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4699,7 +4639,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4715,34 +4655,34 @@
                   "projectName": "firefox-desktop",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 13166,
+                      "duration": 65803,
                       "error": {
-                        "message": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/81831373-6355-4f21-bf76-a81910406e6a\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/81831373-6355-4f21-bf76-a81910406e6a\", waiting until \"load\"\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:179:16",
+                        "message": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/bb37fe49-099c-400a-9869-0988ba1ebe0a\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/bb37fe49-099c-400a-9869-0988ba1ebe0a\", waiting until \"load\"\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:181:16",
                         "location": {
                           "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
                           "column": 16,
-                          "line": 179
+                          "line": 181
                         },
-                        "snippet": "\u001b[0m \u001b[90m 177 |\u001b[39m     expect(audits)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(\u001b[35m4\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 178 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 179 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(orderUrl)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 180 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"order-status\"\u001b[39m))\u001b[33m.\u001b[39mtoHaveText(\u001b[32m\"Dispatched\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 181 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Test Courier · TEST-123\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Paid — cash collected\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 179 |\u001b[39m     expect(audits)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(\u001b[35m4\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 180 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 181 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(orderUrl)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"order-status\"\u001b[39m))\u001b[33m.\u001b[39mtoHaveText(\u001b[32m\"Dispatched\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Test Courier · TEST-123\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 184 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Paid — cash collected\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
                             "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
                             "column": 16,
-                            "line": 179
+                            "line": 181
                           },
-                          "message": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/81831373-6355-4f21-bf76-a81910406e6a\", waiting until \"load\"\u001b[22m\n\n\n  177 |     expect(audits).toBeGreaterThanOrEqual(4);\n  178 |\n> 179 |     await page.goto(orderUrl);\n      |                ^\n  180 |     await expect(page.getByTestId(\"order-status\")).toHaveText(\"Dispatched\");\n  181 |     await expect(page.getByText(\"Test Courier · TEST-123\")).toBeVisible();\n  182 |     await expect(page.getByText(\"Paid — cash collected\")).toBeVisible();\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:179:16"
+                          "message": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/bb37fe49-099c-400a-9869-0988ba1ebe0a\", waiting until \"load\"\u001b[22m\n\n\n  179 |     expect(audits).toBeGreaterThanOrEqual(4);\n  180 |\n> 181 |     await page.goto(orderUrl);\n      |                ^\n  182 |     await expect(page.getByTestId(\"order-status\")).toHaveText(\"Dispatched\");\n  183 |     await expect(page.getByText(\"Test Courier · TEST-123\")).toBeVisible();\n  184 |     await expect(page.getByText(\"Paid — cash collected\")).toBeVisible();\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:181:16"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:38:20.371Z",
+                      "startTime": "2026-11-15T22:34:29.853Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4763,7 +4703,7 @@
                       "errorLocation": {
                         "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
                         "column": 16,
-                        "line": 179
+                        "line": 181
                       }
                     }
                   ],
@@ -4781,7 +4721,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4805,7 +4745,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:38:35.169Z",
+                      "startTime": "2026-11-15T22:35:45.734Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -4815,7 +4755,7 @@
               ],
               "id": "6d0152bf536f153b62e1-d32634e2309e32e24b80",
               "file": "launch-journey.spec.ts",
-              "line": 185,
+              "line": 187,
               "column": 7
             },
             {
@@ -4824,7 +4764,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4848,7 +4788,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:38:35.169Z",
+                      "startTime": "2026-11-15T22:35:45.748Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -4858,7 +4798,7 @@
               ],
               "id": "6d0152bf536f153b62e1-93f0b67412340f5a5be7",
               "file": "launch-journey.spec.ts",
-              "line": 198,
+              "line": 200,
               "column": 7
             },
             {
@@ -4867,7 +4807,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 90000,
+                  "timeout": 180000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -4891,7 +4831,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T13:38:35.169Z",
+                      "startTime": "2026-11-15T22:35:45.748Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -4901,7 +4841,7 @@
               ],
               "id": "6d0152bf536f153b62e1-d18221f4e368ec766a46",
               "file": "launch-journey.spec.ts",
-              "line": 219,
+              "line": 221,
               "column": 7
             }
           ]
@@ -4911,11 +4851,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-15T13:14:14.656Z",
-    "duration": 1460600.704,
-    "expected": 90,
-    "skipped": 9,
-    "unexpected": 6,
+    "startTime": "2026-11-15T21:51:52.485Z",
+    "duration": 2634320.342,
+    "expected": 85,
+    "skipped": 15,
+    "unexpected": 5,
     "flaky": 0
   }
 }

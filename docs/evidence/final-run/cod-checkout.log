@@ -1,0 +1,39 @@
+PASS  forged_price_ignored — total=9035000 expected=9035000 
+PASS  new_order_unpaid_cod — {"id":"e162d245-35b3-40ee-9f62-26eae5bfea42","total_due_paisa":9035000,"subtotal_paisa":9000000,"payment_status":"unpaid_cod","status":"placed"}
+PASS  same_key_one_order — orders=1
+PASS  same_key_responses — errors=["duplicate key value violates unique constraint \"orders_idempotency_key_uidx\"","duplicate key value violates unique constraint \"orders_idempotency_key_uidx\""]
+PASS  same_key_replay_returns_duplicate — {"ok":true,"duplicate":true}
+PASS  same_key_different_cart_conflict — idempotency_conflict
+PASS  same_key_different_zone_conflict — idempotency_conflict
+PASS  same_key_same_cart_still_duplicate — duplicate=true
+PASS  tracked_no_oversell — ok=1 insufficient=3 left=0
+PASS  quantity_over_limit_rejected
+PASS  draft_product_rejected
+PASS  zone_mismatch_rejected
+PASS  missing_zone_rejected
+PASS  short_idempotency_key_rejected
+PASS  anon_rpc_denied — permission denied for function create_cod_order
+PASS  anon_order_insert_denied — permission denied for table orders
+PASS  anon_quote_served_address — {"ok":true,"n":2}
+PASS  anon_quote_with_zone_id
+PASS  anon_quote_unserved_address — unserviceable
+PASS  anon_orders_unreadable — rows=0
+PASS  anon_record_cod_collection_denied — 42501 permission denied for function record_cod_collection
+PASS  anon_transition_order_status_denied — 42501 permission denied for function transition_order_status
+PASS  anon_consume_rate_limit_denied — 42501 permission denied for function consume_rate_limit
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+[TypeError: fetch failed] {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:3001
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1705:16) {
+    errno: -4078,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3001
+  }
+}
+
+Node.js v24.16.0

@@ -1,5 +1,17 @@
 export type ProductStatus = "draft" | "active" | "archived";
 
+export type PublicVariant = {
+  id: string;
+  sku: string | null;
+  title: string;
+  optionValues: Record<string, string>;
+  pricePaisa: number;
+  compareAtPaisa: number | null;
+  maxPerOrder: number;
+  available: boolean;
+  mediaId: string | null;
+};
+
 export type PublicProduct = {
   id: string;
   handle: string;
@@ -11,6 +23,8 @@ export type PublicProduct = {
   featured: boolean;
   tags: string[];
   specs: Record<string, unknown>;
+  optionNames: string[];
+  variants: PublicVariant[];
   variantId: string;
   sku: string | null;
   pricePaisa: number;

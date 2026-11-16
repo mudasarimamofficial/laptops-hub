@@ -1,0 +1,18 @@
+PASS  same_key_both_ok_or_one_ok —  
+PASS  same_key_one_fresh_one_replay — fresh=1 replay=1
+PASS  same_key_collected_once — collected=500000
+PASS  diff_keys_no_double_money — ok=1 over=1 err=|over_collection
+PASS  final_collected_eq_total — {"amount_collected_paisa":1000000,"payment_status":"collected","total_due_paisa":1000000}
+PASS  exactly_two_collection_rows — rows=2
+PASS  burst_same_key_no_errors — 174 calls over 12 keys (2/8/16/32), errors=[]
+PASS  burst_one_fresh_one_collection_id_per_key — keys with != 1 fresh or mixed ids: 0
+PASS  burst_collected_once_per_key — collected=1200 expected=1200
+PASS  burst_rows_events_audit_once_per_key — rows=12 events=12 audit=12
+PASS  replay_after_completion — {"first":"ok","again":{"ok":true,"collection_id":"49eb8e9e-454a-4e68-9769-678ce3193e21","payment_status":"partially_collected","idempotent_replay":true,"amount_collected_paisa":1300},"rows":1}
+PASS  same_key_different_amount_conflict — idempotency_conflict before=1300 after=1300
+PASS  same_key_other_order_conflict — idempotency_conflict o3_collected=0
+PASS  cross_order_same_key_one_collection_one_conflict — bad rounds=0/10 outcomes=fresh|idempotency_conflict
+PASS  same_order_different_amount_race_one_conflict — bad rounds=0/10
+PASS  distinct_keys_no_over_collection — ok=5 over=11 {"amount_collected_paisa":1000000,"payment_status":"collected"}
+
+16/16 passed · docs\COD_CONCURRENCY_RESULTS.json

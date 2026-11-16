@@ -10,8 +10,6 @@ import { createClient } from "@supabase/supabase-js";
 import { fileURLToPath } from "url";
 import { assertLocalOnly } from "./lib/local-only.mjs";
 
-await assertLocalOnly("security-p0-probe.mjs");
-
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 function loadEnv() {
   const p = path.join(root, ".env.local");
@@ -25,6 +23,8 @@ function loadEnv() {
   }
 }
 loadEnv();
+
+await assertLocalOnly("security-p0-probe.mjs");
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

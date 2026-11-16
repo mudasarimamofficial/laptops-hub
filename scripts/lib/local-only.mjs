@@ -44,7 +44,7 @@ export async function assertLocalOnly(label, { url = process.env.NEXT_PUBLIC_SUP
     try {
       const res = await fetch(`${String(url).replace(/\/+$/, "")}/rest/v1/`, {
         headers: { apikey: keys.find(Boolean) || "" },
-        signal: AbortSignal.timeout(5000),
+        signal: AbortSignal.timeout(15000),
       });
       if (res.headers.get("sb-project-ref")) problems.push(`endpoint is hosted project "${res.headers.get("sb-project-ref")}"`);
     } catch (e) {

@@ -45,10 +45,10 @@ export function ReelsSection({ reels, heading = "Generation Laptops HUB", autopl
       () => setPlaying(id),
       (err: unknown) => {
         setPlaying(null); // autoplay refused by the browser (NotAllowedError): the play button remains
-        // A missing/unsupported source can reject play() without the error event reaching React (it may fire before
-        // hydration, and never again for a retry): show the unavailable state rather than a dead player.
+        // A missing/unsupported source can reject play() without the error event reaching React:
+        // show the unavailable state rather than a dead player.
         const name = err instanceof DOMException ? err.name : "";
-        if (name === "NotSupportedError" || el.error || el.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
+        if (name === "NotSupportedError" || name === "AbortError" || el.error || el.networkState === HTMLMediaElement.NETWORK_NO_SOURCE) {
           setFailed((s) => (s.has(id) ? s : new Set(s).add(id)));
         }
       },
@@ -150,11 +150,16 @@ export function ReelsSection({ reels, heading = "Generation Laptops HUB", autopl
                 ) : (
                   <video
                     ref={(el) => {
-                      if (el) videos.current.set(r.id, el);
-                      else videos.current.delete(r.id);
+                      if (el) {
+                        videos.current.set(r.id, el);
+                        el.addEventListener("error", () => setFailed((s) => (s.has(r.id) ? s : new Set(s).add(r.id))), true);
+                      } else {
+                        videos.current.delete(r.id);
+                      }
                     }}
                     data-reel-id={r.id}
                     data-testid="reel-video"
+                    src={r.videoUrl}
                     muted={!hasSound}
                     playsInline
                     loop
@@ -163,7 +168,7 @@ export function ReelsSection({ reels, heading = "Generation Laptops HUB", autopl
                     aria-label={r.title}
                     onPause={() => setPlaying((p) => (p === r.id ? null : p))}
                     onPlay={() => setPlaying(r.id)}
-                    onError={() => setFailed((s) => new Set(s).add(r.id))}
+                    onError={() => setFailed((s) => (s.has(r.id) ? s : new Set(s).add(r.id)))}
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
                   >
                     {/* A failed <source> fires its own error event (not the video's): show the unavailable state either way. */}

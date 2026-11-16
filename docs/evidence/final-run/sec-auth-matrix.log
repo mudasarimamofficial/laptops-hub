@@ -1,0 +1,17 @@
+FAIL  anon_PATCH_/api/admin/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage — fetch failed
+FAIL  anon_POST_/api/admin/orders/LH-TEST/status — fetch failed
+FAIL  anon_POST_/api/admin/cod-collections — fetch failed
+FAIL  anon_POST_/api/admin/shipping-zones — fetch failed
+FAIL  anon_page_/admin — fetch failed
+FAIL  anon_page_/admin/products — fetch failed
+FAIL  anon_page_/admin/orders — fetch failed
+FAIL  anon_page_/admin/settings — fetch failed
+FAIL  anon_page_/admin/inquiries — fetch failed
+PASS  nonstaff_rls_orders — rows=0
+PASS  nonstaff_rls_memberships — rows=0
+PASS  nonstaff_rls_inquiries — rows=0
+PASS  nonstaff_rls_drafts — drafts=0
+PASS  nonstaff_rls_inventory — permission denied for table product_variants
+PASS  public_catalog_readable — n=3
+
+6/15 passed · wrote docs\SECURITY_AUTH_MATRIX_RESULTS.json

@@ -1,0 +1,238 @@
+
+Running 105 tests using 1 worker
+
+  x    1 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: home (22.3s)
+  ok   2 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: collection (6.8s)
+  ok   3 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: pdp (8.3s)
+  ok   4 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: search (7.2s)
+  ok   5 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: compare (4.6s)
+  ok   6 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: cart (7.4s)
+  ok   7 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: checkout (5.9s)
+  ok   8 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: track (5.8s)
+  ok   9 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: guides (9.3s)
+  ok  10 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: contact (8.1s)
+  ok  11 [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: admin-login (7.0s)
+  ok  12 [chromium-desktop] › tests\e2e-isolated\launch-journey.spec.ts:65:7 › launch journeys (isolated) › customer: product → cart → checkout → confirmation (10.1s)
+  ok  13 [chromium-desktop] › tests\e2e-isolated\launch-journey.spec.ts:92:7 › launch journeys (isolated) › notifications: business alert + customer confirmation delivered once (386ms)
+  ok  14 [chromium-desktop] › tests\e2e-isolated\launch-journey.spec.ts:102:7 › launch journeys (isolated) › customer: track order by number + phone; wrong phone refused (4.2s)
+  ok  15 [chromium-desktop] › tests\e2e-isolated\launch-journey.spec.ts:114:7 › launch journeys (isolated) › checkout: unserved address and invalid phone are refused (5.1s)
+  ok  16 [chromium-desktop] › tests\e2e-isolated\launch-journey.spec.ts:133:7 › launch journeys (isolated) › duplicate submit: one order, one notification (3.4s)
+  ok  17 [chromium-desktop] › tests\e2e-isolated\launch-journey.spec.ts:148:7 › launch journeys (isolated) › admin: editor cannot open orders (7.3s)
+  ok  18 [chromium-desktop] › tests\e2e-isolated\launch-journey.spec.ts:154:7 › launch journeys (isolated) › admin: confirm → pack → dispatch with tracking → collect COD; customer sees it (33.7s)
+  ok  19 [chromium-desktop] › tests\e2e-isolated\launch-journey.spec.ts:187:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff (13.1s)
+  ok  20 [chromium-desktop] › tests\e2e-isolated\launch-journey.spec.ts:200:7 › launch journeys (isolated) › notifications: provider outage → failed, staff retry → sent once (14.8s)
+  ok  21 [chromium-desktop] › tests\e2e-isolated\launch-journey.spec.ts:221:7 › launch journeys (isolated) › cron endpoint requires the secret (346ms)
+  ok  22 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: home (11.9s)
+  ok  23 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: collection (3.6s)
+  ok  24 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: pdp (2.8s)
+  ok  25 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: search (3.0s)
+  ok  26 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: compare (7.3s)
+  ok  27 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: cart (2.3s)
+  ok  28 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: checkout (2.4s)
+  ok  29 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: track (2.6s)
+  ok  30 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: guides (2.4s)
+  ok  31 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: contact (3.3s)
+  ok  32 [chromium-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: admin-login (2.4s)
+  ok  33 [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:65:7 › launch journeys (isolated) › customer: product → cart → checkout → confirmation (6.5s)
+  ok  34 [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:92:7 › launch journeys (isolated) › notifications: business alert + customer confirmation delivered once (216ms)
+  ok  35 [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:102:7 › launch journeys (isolated) › customer: track order by number + phone; wrong phone refused (3.0s)
+  ok  36 [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:114:7 › launch journeys (isolated) › checkout: unserved address and invalid phone are refused (4.2s)
+  ok  37 [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:133:7 › launch journeys (isolated) › duplicate submit: one order, one notification (2.4s)
+  ok  38 [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:148:7 › launch journeys (isolated) › admin: editor cannot open orders (7.8s)
+  ok  39 [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:154:7 › launch journeys (isolated) › admin: confirm → pack → dispatch with tracking → collect COD; customer sees it (22.8s)
+  ok  40 [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:187:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff (10.8s)
+  x   41 [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:200:7 › launch journeys (isolated) › notifications: provider outage → failed, staff retry → sent once (13.0s)
+  -   42 [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:221:7 › launch journeys (isolated) › cron endpoint requires the secret
+  ok  43 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: home (1.2m)
+  ok  44 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: collection (36.5s)
+  ok  45 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: pdp (22.5s)
+  ok  46 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: search (9.7s)
+  ok  47 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: compare (9.2s)
+  ok  48 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: cart (10.8s)
+  ok  49 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: checkout (11.2s)
+  ok  50 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: track (19.4s)
+  ok  51 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: guides (25.6s)
+  ok  52 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: contact (5.1s)
+  ok  53 [webkit-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: admin-login (3.6s)
+  ok  54 [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:65:7 › launch journeys (isolated) › customer: product → cart → checkout → confirmation (6.4s)
+  ok  55 [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:92:7 › launch journeys (isolated) › notifications: business alert + customer confirmation delivered once (100ms)
+  ok  56 [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:102:7 › launch journeys (isolated) › customer: track order by number + phone; wrong phone refused (2.2s)
+  ok  57 [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:114:7 › launch journeys (isolated) › checkout: unserved address and invalid phone are refused (16.1s)
+  ok  58 [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:133:7 › launch journeys (isolated) › duplicate submit: one order, one notification (5.8s)
+  ok  59 [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:148:7 › launch journeys (isolated) › admin: editor cannot open orders (16.5s)
+  ok  60 [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:154:7 › launch journeys (isolated) › admin: confirm → pack → dispatch with tracking → collect COD; customer sees it (54.0s)
+  x   61 [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:187:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff (22.0s)
+  -   62 [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:200:7 › launch journeys (isolated) › notifications: provider outage → failed, staff retry → sent once
+  -   63 [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:221:7 › launch journeys (isolated) › cron endpoint requires the secret
+  ok  64 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: home (6.6s)
+  ok  65 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: collection (3.0s)
+  ok  66 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: pdp (3.2s)
+  ok  67 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: search (2.2s)
+  ok  68 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: compare (2.2s)
+  ok  69 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: cart (1.9s)
+  ok  70 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: checkout (4.5s)
+  ok  71 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: track (3.3s)
+  ok  72 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: guides (2.1s)
+  ok  73 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: contact (1.3s)
+  ok  74 [webkit-mobile] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: admin-login (1.2s)
+  ok  75 [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:65:7 › launch journeys (isolated) › customer: product → cart → checkout → confirmation (5.3s)
+  ok  76 [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:92:7 › launch journeys (isolated) › notifications: business alert + customer confirmation delivered once (39ms)
+  ok  77 [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:102:7 › launch journeys (isolated) › customer: track order by number + phone; wrong phone refused (1.6s)
+  ok  78 [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:114:7 › launch journeys (isolated) › checkout: unserved address and invalid phone are refused (8.3s)
+  ok  79 [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:133:7 › launch journeys (isolated) › duplicate submit: one order, one notification (5.0s)
+  ok  80 [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:148:7 › launch journeys (isolated) › admin: editor cannot open orders (3.4s)
+  ok  81 [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:154:7 › launch journeys (isolated) › admin: confirm → pack → dispatch with tracking → collect COD; customer sees it (15.9s)
+  x   82 [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:187:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff (21.4s)
+  -   83 [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:200:7 › launch journeys (isolated) › notifications: provider outage → failed, staff retry → sent once
+  -   84 [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:221:7 › launch journeys (isolated) › cron endpoint requires the secret
+  ok  85 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: home (16.8s)
+  ok  86 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: collection (6.5s)
+  ok  87 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: pdp (9.9s)
+  ok  88 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: search (9.7s)
+  ok  89 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: compare (26.8s)
+  ok  90 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: cart (23.7s)
+  ok  91 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: checkout (19.4s)
+  ok  92 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: track (15.5s)
+  ok  93 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: guides (35.3s)
+  ok  94 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: contact (45.2s)
+  ok  95 [firefox-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: admin-login (33.8s)
+  ok  96 [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:65:7 › launch journeys (isolated) › customer: product → cart → checkout → confirmation (59.9s)
+  ok  97 [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:92:7 › launch journeys (isolated) › notifications: business alert + customer confirmation delivered once (711ms)
+  ok  98 [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:102:7 › launch journeys (isolated) › customer: track order by number + phone; wrong phone refused (10.1s)
+  ok  99 [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:114:7 › launch journeys (isolated) › checkout: unserved address and invalid phone are refused (12.8s)
+  ok 100 [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:133:7 › launch journeys (isolated) › duplicate submit: one order, one notification (6.0s)
+  ok 101 [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:148:7 › launch journeys (isolated) › admin: editor cannot open orders (17.8s)
+  x  102 [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:154:7 › launch journeys (isolated) › admin: confirm → pack → dispatch with tracking → collect COD; customer sees it (1.2m)
+  -  103 [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:187:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff
+  -  104 [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:200:7 › launch journeys (isolated) › notifications: provider outage → failed, staff retry → sent once
+  -  105 [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:221:7 › launch journeys (isolated) › cron endpoint requires the secret
+
+
+  1) [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: home ──
+
+    Error: / horizontal overflow at 360px
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1
+    Received:    643
+
+      43 |       await expect(page.locator("main, form").first()).toBeVisible({ timeout: 15_000 });
+      44 |       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    > 45 |       expect(overflow, `${url} horizontal overflow at ${w}px`).toBeLessThanOrEqual(1);
+         |                                                                ^
+      46 |       if (w === 390 || w === 1440 || isMobile) await page.screenshot({ path: path.join(dir, `${name}-${w}.png`) });
+      47 |     }
+      48 |     expect(errors, `uncaught errors on ${url}`).toEqual([]);
+        at D:\Laptops Hub Vercel Development\tests\e2e-isolated\cross-browser-storefront.spec.ts:45:64
+
+    Error Context: test-results\cross-browser-storefront-layout-home-chromium-desktop\error-context.md
+
+  2) [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:200:7 › launch journeys (isolated) › notifications: provider outage → failed, staff retry → sent once 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText(/Accepted 1 · failed 0/)
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText(/Accepted 1 · failed 0/) with timeout 5000ms
+      - waiting for getByText(/Accepted 1 · failed 0/)
+
+
+      212 |     await expect(page.getByTestId("notification-status")).toHaveText("failed");
+      213 |     await page.getByRole("button", { name: "Retry sending" }).click();
+    > 214 |     await expect(page.getByText(/Accepted 1 · failed 0/)).toBeVisible();
+          |                                                           ^
+      215 |     const rows = await outboxFor(n);
+      216 |     expect(rows[0]).toMatchObject({ status: "accepted", attempts: 2 });
+      217 |     const log = await fakeLog();
+        at D:\Laptops Hub Vercel Development\tests\e2e-isolated\launch-journey.spec.ts:214:59
+
+    Error Context: test-results\launch-journey-launch-jour-522af-led-staff-retry-→-sent-once-chromium-mobile\error-context.md
+
+  3) [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:187:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Current: cancelled')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Current: cancelled') with timeout 15000ms
+      - waiting for getByText('Current: cancelled')
+
+
+      193 |     await page.getByLabel("Next status").selectOption("cancelled");
+      194 |     await page.getByRole("button", { name: "Update status" }).click();
+    > 195 |     await expect(page.getByText("Current: cancelled")).toBeVisible({ timeout: 15_000 });
+          |                                                        ^
+      196 |     await page.goto(`/order/success/${accessToken}`);
+      197 |     await expect(page.getByTestId("order-status")).toHaveText("Cancelled");
+      198 |   });
+        at D:\Laptops Hub Vercel Development\tests\e2e-isolated\launch-journey.spec.ts:195:56
+
+    Error Context: test-results\launch-journey-launch-jour-84e50-lation-by-fulfillment-staff-webkit-desktop\error-context.md
+
+  4) [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:187:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Current: cancelled')
+    Expected: visible
+    Timeout: 15000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Current: cancelled') with timeout 15000ms
+      - waiting for getByText('Current: cancelled')
+
+
+      193 |     await page.getByLabel("Next status").selectOption("cancelled");
+      194 |     await page.getByRole("button", { name: "Update status" }).click();
+    > 195 |     await expect(page.getByText("Current: cancelled")).toBeVisible({ timeout: 15_000 });
+          |                                                        ^
+      196 |     await page.goto(`/order/success/${accessToken}`);
+      197 |     await expect(page.getByTestId("order-status")).toHaveText("Cancelled");
+      198 |   });
+        at D:\Laptops Hub Vercel Development\tests\e2e-isolated\launch-journey.spec.ts:195:56
+
+    Error Context: test-results\launch-journey-launch-jour-84e50-lation-by-fulfillment-staff-webkit-mobile\error-context.md
+
+  5) [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:154:7 › launch journeys (isolated) › admin: confirm → pack → dispatch with tracking → collect COD; customer sees it 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Fully collected.')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByText('Fully collected.') with timeout 5000ms
+      - waiting for getByText('Fully collected.')
+
+
+      171 |     await page.getByLabel("Collector reference").fill("rider-1");
+      172 |     await page.getByRole("button", { name: "Record collection" }).click();
+    > 173 |     await expect(page.getByText("Fully collected.")).toBeVisible();
+          |                                                      ^
+      174 |     const { data: o } = await sb.from("orders").select("id, status, payment_status, amount_collected_paisa").eq("order_number", orderNumber).single();
+      175 |     expect(o).toMatchObject({ status: "shipped", payment_status: "collected", amount_collected_paisa: TOTAL });
+      176 |     const { count: events } = await sb.from("order_events").select("id", { count: "exact", head: true }).eq("order_id", o!.id);
+        at D:\Laptops Hub Vercel Development\tests\e2e-isolated\launch-journey.spec.ts:173:54
+
+    Error Context: test-results\launch-journey-launch-jour-97c54-ollect-COD-customer-sees-it-firefox-desktop\error-context.md
+
+  5 failed
+    [chromium-desktop] › tests\e2e-isolated\cross-browser-storefront.spec.ts:28:7 › layout: home ───
+    [chromium-mobile] › tests\e2e-isolated\launch-journey.spec.ts:200:7 › launch journeys (isolated) › notifications: provider outage → failed, staff retry → sent once 
+    [webkit-desktop] › tests\e2e-isolated\launch-journey.spec.ts:187:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff 
+    [webkit-mobile] › tests\e2e-isolated\launch-journey.spec.ts:187:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff 
+    [firefox-desktop] › tests\e2e-isolated\launch-journey.spec.ts:154:7 › launch journeys (isolated) › admin: confirm → pack → dispatch with tracking → collect COD; customer sees it 
+  8 did not run
+  92 passed (23.8m)

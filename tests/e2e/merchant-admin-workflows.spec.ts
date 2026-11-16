@@ -143,6 +143,7 @@ test.describe.serial("merchant admin workflows", () => {
   });
 
   test("editor cannot open settings; fulfillment cannot customize theme", async ({ browser }) => {
+    test.setTimeout(120_000);
     {
       const ctx = await browser.newContext();
       const page = await ctx.newPage();

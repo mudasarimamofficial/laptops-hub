@@ -1,0 +1,27 @@
+staged products=2 errors=0
+dry-run summary {
+  created: 2,
+  updated: 0,
+  skipped: 0,
+  unchanged: 0,
+  conflict: 0,
+  failed: 0
+}
+commit summary {
+  created: 2,
+  updated: 0,
+  skipped: 0,
+  unchanged: 0,
+  conflict: 0,
+  failed: 0
+}
+media rows for smoke URLs 3
+reimport add_only summary {
+  created: 0,
+  updated: 0,
+  skipped: 2,
+  unchanged: 0,
+  conflict: 0,
+  failed: 0
+}
+shopify-csv-commit-smoke: ok

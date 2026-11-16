@@ -1,5 +1,5 @@
 import { V5_SUB } from "@/lib/catalog/v5-taxonomy";
-import type { PublicProduct } from "@/types/catalog";
+import type { PublicProduct, PublicVariant } from "@/types/catalog";
 
 /**
  * Server-side adapter from the live catalog to the shape the V5 prototype renders from
@@ -36,6 +36,8 @@ export type V5Product = {
   specs: Record<string, string>;
   variantId: string;
   maxPerOrder: number;
+  optionNames: string[];
+  variants: PublicVariant[];
   /** Public listing description (V5 `intro`). */
   intro: string;
 };
@@ -120,6 +122,8 @@ export function toV5(p: PublicProduct, i: number): V5Product {
     specs,
     variantId: p.variantId,
     maxPerOrder: p.maxPerOrder,
+    optionNames: p.optionNames || [],
+    variants: p.variants || [],
     intro: p.descriptionSafe || "",
   };
 }

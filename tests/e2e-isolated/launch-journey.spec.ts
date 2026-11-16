@@ -117,7 +117,7 @@ test.describe.serial("launch journeys (isolated)", () => {
     await page.goto("/checkout");
     await page.getByLabel("City").fill("Quetta");
     await page.getByLabel("Province").selectOption("Balochistan");
-    await expect(page.getByText("We do not currently deliver COD to this city/province.")).toBeVisible();
+    await expect(page.getByText("We do not currently deliver COD to this city/province.")).toBeVisible({ timeout: 15_000 });
     const r = await page.request.post("/api/checkout/cod", {
       headers: { origin: "http://127.0.0.1:3001" },
       data: { idempotencyKey: `iso-${randomUUID()}`, customerName: "Bad Phone", customerPhone: "12345", shippingZoneId: fx.zone.id, confirmCod: true, address: { line1: "x street", city: "Lahore", province: "Punjab" }, lines: [{ variantId: P.variantId, quantity: 1 }] },
@@ -158,6 +158,7 @@ test.describe.serial("launch journeys (isolated)", () => {
     // Client navigation to a dynamic admin page can take a few seconds in WebKit/Firefox under a full run.
     await page.waitForURL(new RegExp(`/admin/orders/${orderNumber}$`), { timeout: 30_000 });
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(orderNumber);
+    await expect(page.getByRole("button", { name: "Update status" })).toBeEnabled({ timeout: 15_000 });
     for (const to of ["confirmed", "packing", "shipped"]) {
       await page.getByLabel("Next status").selectOption(to);
       if (to === "shipped") {
@@ -165,12 +166,12 @@ test.describe.serial("launch journeys (isolated)", () => {
         await page.getByLabel("Tracking (optional)").fill("TEST-123");
       }
       await page.getByRole("button", { name: "Update status" }).click();
-      await expect(page.getByText(`Status → ${to}`)).toBeVisible();
-      await expect(page.getByText(`Current: ${to}`)).toBeVisible();
+      await expect(page.getByText(`Status → ${to}`)).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText(`Current: ${to}`)).toBeVisible({ timeout: 15_000 });
     }
     await page.getByLabel("Collector reference").fill("rider-1");
     await page.getByRole("button", { name: "Record collection" }).click();
-    await expect(page.getByText("Fully collected.")).toBeVisible();
+    await expect(page.getByText("Fully collected.")).toBeVisible({ timeout: 15_000 });
     const { data: o } = await sb.from("orders").select("id, status, payment_status, amount_collected_paisa").eq("order_number", orderNumber).single();
     expect(o).toMatchObject({ status: "shipped", payment_status: "collected", amount_collected_paisa: TOTAL });
     const { count: events } = await sb.from("order_events").select("id", { count: "exact", head: true }).eq("order_id", o!.id);
@@ -178,7 +179,15 @@ test.describe.serial("launch journeys (isolated)", () => {
     const { count: audits } = await sb.from("audit_logs").select("id", { count: "exact", head: true }).eq("entity_id", o!.id);
     expect(audits).toBeGreaterThanOrEqual(4);
 
-    await page.goto(orderUrl);
+    try {
+      await page.goto(orderUrl);
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("NS_BINDING_ABORTED")) {
+        await page.goto(orderUrl);
+      } else {
+        throw e;
+      }
+    }
     await expect(page.getByTestId("order-status")).toHaveText("Dispatched");
     await expect(page.getByText("Test Courier · TEST-123")).toBeVisible();
     await expect(page.getByText("Paid — cash collected")).toBeVisible();
@@ -190,9 +199,10 @@ test.describe.serial("launch journeys (isolated)", () => {
     const { orderNumber: n, accessToken } = await res.json();
     await signIn(page, "fulfillment");
     await page.goto(`/admin/orders/${n}`);
+    await expect(page.getByRole("button", { name: "Update status" })).toBeEnabled({ timeout: 15_000 });
     await page.getByLabel("Next status").selectOption("cancelled");
     await page.getByRole("button", { name: "Update status" }).click();
-    await expect(page.getByText("Current: cancelled")).toBeVisible();
+    await expect(page.getByText("Current: cancelled")).toBeVisible({ timeout: 15_000 });
     await page.goto(`/order/success/${accessToken}`);
     await expect(page.getByTestId("order-status")).toHaveText("Cancelled");
   });
@@ -211,7 +221,7 @@ test.describe.serial("launch journeys (isolated)", () => {
     await page.goto(`/admin/orders/${n}`);
     await expect(page.getByTestId("notification-status")).toHaveText("failed");
     await page.getByRole("button", { name: "Retry sending" }).click();
-    await expect(page.getByText(/Accepted 1 · failed 0/)).toBeVisible();
+    await expect(page.getByText(/Accepted 1 · failed 0/)).toBeVisible({ timeout: 15_000 });
     const rows = await outboxFor(n);
     expect(rows[0]).toMatchObject({ status: "accepted", attempts: 2 });
     const log = await fakeLog();

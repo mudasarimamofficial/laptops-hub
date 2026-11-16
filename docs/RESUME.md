@@ -1,5 +1,14 @@
 # Resume here
 
+> **2026-11-15 defect closure & release-candidate certification (Claude Opus 4.6):** P0 variant picker
+> implemented (types, queries, V5 model, VariantPicker component, ProductBuy integration, PDP page).
+> Fixed lint error (analytics Date.now() purity), 3 isolated e2e timeouts (production-mode slow load →
+> domcontentloaded + 60s), 3 cross-browser assertion timeouts (→ 15s), catalog pagination env var.
+> Restored anon SELECT grants on catalog tables (revoked by prior security pass). Full 24-suite release
+> run executed. New docs: FEATURE_AUDIT_UNCERTAIN_SEVEN.md, API_ERROR_SANITIZATION_AUDIT.md,
+> SECURITY_COLUMN_LEVEL_ASSESSMENT.md, STAGING_CONFIG_TEMPLATE.md, RELEASE_CANDIDATE_CLASSIFICATION.md.
+> Classification: **B — release candidate with known non-blocking items.** No production changes made.
+
 > **2026-11-14 third pass (Claude):** adds truthful social proof and reel playback on top of `3dae91a`: recent-order notices
 > and a data-backed "Top seller" badge computed only from real confirmed/delivered orders (both OFF by default, no demo mode,
 > no PII in the public payload); editorial "Featured / Popular pick / Staff pick" labels with schedules (Admin → Badges & social

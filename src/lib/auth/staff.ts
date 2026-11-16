@@ -133,8 +133,9 @@ export async function createAuthorizedStaffClient(allowedRoles?: StaffRole[]) {
  * Fail-closed against Preview→Production and localhost→hosted tunnels.
  */
 export async function createAuthorizedStaffWriter(allowedRoles?: StaffRole[]) {
+  const staffClient = await createAuthorizedStaffClient(allowedRoles);
   await assertMerchantMutationAllowedAsync("admin_write");
-  return createAuthorizedStaffClient(allowedRoles);
+  return staffClient;
 }
 
 export function staffErrorResponse(error: unknown) {

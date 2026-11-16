@@ -13,6 +13,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Agent skills and scratch
+    ".agents/**",
+    "scratch/**",
     // Legacy Claude Design reference / vendor (not part of Next app)
     "reference/**",
     "support.js",

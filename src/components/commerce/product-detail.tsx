@@ -3,12 +3,13 @@
 import { useRef, useState } from "react";
 import { LHImg } from "@/components/storefront/v5/lh-img";
 import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
+import { VariantPicker } from "@/components/commerce/variant-picker";
 import { useCart } from "@/lib/commerce/cart-store";
 import { openCartDrawer } from "@/lib/commerce/cart-ui";
 import { useCompare } from "@/lib/commerce/compare-store";
 import { showToast } from "@/lib/commerce/toast";
-import { canPurchase } from "@/lib/catalog/availability";
 import { fmtPkr } from "@/lib/catalog/v5-model";
+import type { PublicVariant } from "@/types/catalog";
 
 const arrow = { position: "absolute", top: "50%", transform: "translateY(-50%)", width: 46, height: 46, borderRadius: "50%", border: "1px solid var(--lh-border)", background: "rgba(255,255,255,.92)", boxShadow: "0 8px 20px -12px rgba(var(--lh-navy-rgb),.6)", cursor: "pointer", display: "grid", placeItems: "center" } as const;
 
@@ -78,23 +79,51 @@ export type BuyProps = {
   maxPerOrder: number;
   available: boolean;
   imageUrl: string | null;
+  optionNames: string[];
+  variants: PublicVariant[];
 };
 
-/** V5 PDP purchase panel controls: quantity stepper + add to cart (or inquiry), compare toggle. */
+/** V5 PDP purchase panel controls: variant picker, quantity stepper + add to cart (or inquiry), compare toggle. */
 export function ProductBuy(p: BuyProps) {
+  const hasMultipleVariants = (p.variants?.length ?? 0) > 1;
+  const defaultVariant = p.variants.find((v) => v.id === p.variantId && v.available) || p.variants.find((v) => v.available) || p.variants[0];
+  const [selectedVariant, setSelectedVariant] = useState<PublicVariant | null>(hasMultipleVariants ? (defaultVariant || null) : null);
   const [qty, setQty] = useState(1);
   const [asking, setAsking] = useState(false);
   const add = useCart((s) => s.add);
   const toggle = useCompare((s) => s.toggle);
   const compared = useCompare((s) => s.handles.includes(p.handle));
-  const max = Math.max(1, p.maxPerOrder || 1);
+
+  // If there are multiple variants, the active variant MUST be the selectedVariant.
+  // Never silently fall back to the first variant if the selection is invalid.
+  const activeVariant = hasMultipleVariants ? selectedVariant : (p.variants.find((v) => v.id === p.variantId) || p.variants[0]);
+  const activeVariantId = activeVariant?.id;
+  const activePricePaisa = activeVariant?.pricePaisa ?? (hasMultipleVariants ? 0 : p.pricePaisa);
+  const activeAvailable = activeVariant?.available ?? false;
+  const activeSku = activeVariant?.sku ?? p.sku;
+  const activeMaxPerOrder = activeVariant?.maxPerOrder ?? p.maxPerOrder;
+
+  const max = Math.max(1, activeMaxPerOrder || 1);
   const q = Math.min(qty, max);
-  const purchasable = canPurchase({ available: p.available, pricePaisa: p.pricePaisa, variantId: p.variantId });
+  const purchasable = Boolean(activeVariantId && activePricePaisa > 0 && activeAvailable);
   const step = { width: 48, height: "100%", border: 0, background: "transparent", fontSize: 20, cursor: "pointer", color: "var(--lh-ink)" } as const;
 
   return (
     <>
-      {purchasable ? (
+      {hasMultipleVariants ? (
+        <>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
+            <span aria-live="polite" style={{ fontFamily: "var(--font-display)", fontSize: 34, fontWeight: 700, letterSpacing: "-.03em" }}>
+              {activePricePaisa > 0 ? fmtPkr(activePricePaisa) : "Unavailable"}
+            </span>
+          </div>
+          <VariantPicker optionNames={p.optionNames} variants={p.variants} selected={selectedVariant} onSelect={(v) => { setSelectedVariant(v); setQty(1); }} />
+        </>
+      ) : null}
+      {activeSku && activeSku !== p.sku ? (
+        <p style={{ margin: 0, fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-ink-2)" }}>SKU: {activeSku}</p>
+      ) : null}
+      {purchasable && activeVariantId ? (
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "center", height: 54, border: "1px solid var(--lh-border)", borderRadius: 999, background: "#FFFFFF" }}>
             <button type="button" onClick={() => setQty(Math.max(1, q - 1))} aria-label="Decrease quantity" style={step}>
@@ -111,12 +140,12 @@ export function ProductBuy(p: BuyProps) {
             type="button"
             className="v5-card-atc"
             onClick={() => {
-              add({ variantId: p.variantId, handle: p.handle, title: p.title, unitPricePaisa: p.pricePaisa, quantity: q, imageUrl: p.imageUrl ?? undefined, maxPerOrder: p.maxPerOrder, model: p.model, config: p.config, sku: p.sku });
+              add({ variantId: activeVariantId, handle: p.handle, title: p.title, unitPricePaisa: activePricePaisa, quantity: q, imageUrl: p.imageUrl ?? undefined, maxPerOrder: activeMaxPerOrder, model: p.model, config: p.config, sku: activeSku });
               openCartDrawer();
             }}
             style={{ flex: 1, minWidth: 200, height: 54, border: 0, borderRadius: 14, background: "var(--lh-action)", color: "#FFFFFF", fontSize: 16, fontWeight: 700, cursor: "pointer", boxShadow: "0 14px 30px -18px rgba(var(--lh-action-rgb),.9)", transition: "background .18s ease,transform .18s ease" }}
           >
-            <span>Add to cart · {fmtPkr(p.pricePaisa * q)}</span>
+            <span>Add to cart · {fmtPkr(activePricePaisa * q)}</span>
           </button>
         </div>
       ) : (

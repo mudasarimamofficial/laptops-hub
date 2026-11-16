@@ -1,0 +1,7 @@
+PASS  catalog_count_available — count=105 (min 1)
+PASS  last_page_fetchable — n=9 offset=96
+PASS  last_page_matches_tail_of_full_sort — expected=9 got=9
+PASS  drafts_hidden_from_anon_listing — drafts=0
+PASS  view_count_eq_public_active — count=105
+
+5/5 passed

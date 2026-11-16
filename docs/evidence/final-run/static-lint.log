@@ -1,0 +1,28 @@
+
+D:\Laptops Hub Vercel Development\scripts\import-catalog.mjs
+  66:3  warning  Unused eslint-disable directive (no problems were reported from 'no-new-func')
+
+D:\Laptops Hub Vercel Development\scripts\test-theme-rls-matrix.mjs
+  75:17  warning  'sel' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\Laptops Hub Vercel Development\src\app\api\admin\store-settings\route.ts
+  21:6  warning  'SettingsSchema' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\Laptops Hub Vercel Development\src\components\admin\navigation-editor.tsx
+  51:10  warning  'editingItem' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  51:23  warning  'setEditingItem' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\Laptops Hub Vercel Development\src\lib\catalog\shopify-import-commit.ts
+  277:27  warning  '_o' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  277:48  warning  '_s' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  277:67  warning  '_h' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  277:83  warning  '_p' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\Laptops Hub Vercel Development\tests\e2e\theme-publish-workflow.spec.ts
+   6:29  warning  'Browser' is defined but never used               @typescript-eslint/no-unused-vars
+  12:7   warning  'BASE' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  25:7   warning  'PUBLISHED_B' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 12 problems (0 errors, 12 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

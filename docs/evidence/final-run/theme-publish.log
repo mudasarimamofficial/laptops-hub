@@ -1,0 +1,6 @@
+note: publication already existed before smoke
+theme-publish-smoke: ok {
+  published: '700d0c02-a1ae-4d80-8fba-0ed23d6001ea',
+  second: '1ba970b3-c784-41b8-b67b-084f7e6bf003',
+  rolledBackTo: '700d0c02-a1ae-4d80-8fba-0ed23d6001ea'
+}

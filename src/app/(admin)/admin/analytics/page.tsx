@@ -8,6 +8,11 @@ import { ANALYTICS_WINDOWS, orderAnalytics, type CollectionLite, type OrderLite 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Analytics", robots: { index: false, follow: false } };
 
+function dateCutoff(days: number | null): string | null {
+  if (days === null) return null;
+  return new Date(Date.now() - days * 86_400_000).toISOString();
+}
+
 /** Honest operational numbers from real orders and recorded cash only. Zero orders shows zeros. */
 export default async function AdminAnalyticsPage({ searchParams }: { searchParams: Promise<{ range?: string }> }) {
   await requireStaffPage(["owner", "admin", "manager"]);
@@ -15,8 +20,9 @@ export default async function AdminAnalyticsPage({ searchParams }: { searchParam
   const win = ANALYTICS_WINDOWS.find(([k]) => k === sp.range) ?? ANALYTICS_WINDOWS[1];
   const supabase = createServiceClient();
 
+  const cutoff = dateCutoff(win[2]);
   let q = supabase.from("orders").select("id, status, total_due_paisa").order("created_at", { ascending: false }).limit(10_000);
-  if (win[2] !== null) q = q.gte("created_at", new Date(Date.now() - win[2] * 86_400_000).toISOString());
+  if (cutoff) q = q.gte("created_at", cutoff);
   const { data: orders } = await q;
   const ids = (orders || []).map((o) => o.id);
   const collections: CollectionLite[] = [];

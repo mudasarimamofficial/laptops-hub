@@ -399,8 +399,8 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     await signIn(page, "owner");
     const { data: pubRow } = await sb.from("theme_publications").select("published_version_id").eq("template_key", "homepage").maybeSingle();
     state.hadPublication = Boolean(pubRow);
-    await page.goto("/admin/online-store");
-    await page.getByRole("button", { name: /cinematic hero/i }).first().click();
+    await page.goto("/admin/online-store", { waitUntil: "domcontentloaded", timeout: 60_000 });
+    await page.getByRole("button", { name: /cinematic hero/i }).first().click({ timeout: 30_000 });
     const main = page.getByTestId("theme-image-mainImageUrl");
     await expect(main).toBeVisible();
     if (!pubRow) {

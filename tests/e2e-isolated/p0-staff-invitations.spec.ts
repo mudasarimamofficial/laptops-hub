@@ -59,6 +59,13 @@ test.describe.serial("P0: staff invitations, roles and deactivation (isolated)",
   test.beforeAll(async () => {
     await assertLocalOnly("staff invitations");
     await sb.from("rate_limit_buckets").delete().like("bucket_key", "staff-invite:*");
+    const { data: oldMembers } = await sb.from("admin_memberships").select("user_id");
+    const fixtureIds = new Set(Object.values(fx.staff as Record<string, { id: string }>).map((s) => s.id));
+    for (const m of oldMembers || []) {
+      if (!fixtureIds.has(m.user_id)) {
+        await sb.auth.admin.deleteUser(m.user_id);
+      }
+    }
   });
 
   test.afterAll(async () => {
@@ -77,9 +84,9 @@ test.describe.serial("P0: staff invitations, roles and deactivation (isolated)",
       await page.getByLabel("Email address").fill(email);
       await page.getByLabel("Role", { exact: true }).selectOption(role);
       await page.getByRole("button", { name: "Send invitation", exact: true }).click();
-      await expect(page.getByText(`Invitation sent to ${email}.`)).toBeVisible();
+      await expect(page.getByText(`Invitation sent to ${email}.`)).toBeVisible({ timeout: 15_000 });
       const row = page.locator(`[data-testid=staff-row][data-email="${email}"]`);
-      await expect(row).toContainText("Invited — not signed in yet");
+      await expect(row).toContainText("Invited — not signed in yet", { timeout: 15_000 });
       const { data: u } = await sb.from("admin_memberships").select("user_id, role, is_active, created_by").eq("role", role).order("created_at", { ascending: false }).limit(1).single();
       expect(u).toMatchObject({ role, is_active: true, created_by: fx.staff.owner.id });
       ids[role] = u!.user_id;

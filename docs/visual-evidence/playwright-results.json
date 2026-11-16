@@ -5,7 +5,9 @@
       "D:\\Laptops Hub Vercel Development\\node_modules\\@playwright\\test\\cli.js",
       "test",
       "-c",
-      "playwright.config.ts"
+      "playwright.config.ts",
+      "tests/e2e/homepage-presets.spec.ts",
+      "tests/e2e/merchant-admin-workflows.spec.ts"
     ],
     "configFile": "D:\\Laptops Hub Vercel Development\\playwright.config.ts",
     "rootDir": "D:/Laptops Hub Vercel Development/tests/e2e",
@@ -19,7 +21,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 4
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "projects": [
@@ -28,7 +30,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "id": "",
         "name": "",
@@ -37,7 +39,7 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 60000
+        "timeout": 120000
       }
     ],
     "filteredProjects": [
@@ -48,14 +50,14 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "name": "",
         "testDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e",
         "snapshotDir": "D:\\Laptops Hub Vercel Development\\tests\\e2e",
         "testIgnore": [],
         "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
-        "timeout": 60000,
+        "timeout": 120000,
         "use": {
           "baseURL": "http://127.0.0.1:3001",
           "trace": "off",
@@ -90,7 +92,7 @@
     "updateSnapshots": "default",
     "updateSourceMethod": "patch",
     "version": "1.64.1",
-    "workers": 4,
+    "workers": 1,
     "webServer": null
   },
   "suites": [
@@ -109,11 +111,11 @@
           "specs": [
             {
               "title": "hero and product story use the seven CDN defaults",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "",
@@ -122,48 +124,18 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 14912,
-                      "error": {
-                        "message": "Error: missing laptop-hub-hero-hp-lap.webp\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
-                        "stack": "Error: missing laptop-hub-hero-hp-lap.webp\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\homepage-presets.spec.ts:96:69",
-                        "location": {
-                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\homepage-presets.spec.ts",
-                          "column": 69,
-                          "line": 96
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 94 |\u001b[39m     \u001b[36mconst\u001b[39m srcs \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m\"img\"\u001b[39m)\u001b[33m.\u001b[39mevaluateAll((imgs) \u001b[33m=>\u001b[39m imgs\u001b[33m.\u001b[39mmap((i) \u001b[33m=>\u001b[39m (i \u001b[36mas\u001b[39m \u001b[33mHTMLImageElement\u001b[39m)\u001b[33m.\u001b[39msrc))\u001b[33m;\u001b[39m\n \u001b[90m 95 |\u001b[39m     \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m part \u001b[36mof\u001b[39m [\u001b[33m...\u001b[39m\u001b[33mHERO\u001b[39m\u001b[33m,\u001b[39m \u001b[33m...\u001b[39m\u001b[33mSTORY\u001b[39m]) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 96 |\u001b[39m       expect(srcs\u001b[33m.\u001b[39msome((s) \u001b[33m=>\u001b[39m s\u001b[33m.\u001b[39mincludes(part))\u001b[33m,\u001b[39m \u001b[32m`missing ${part}`\u001b[39m)\u001b[33m.\u001b[39mtoBeTruthy()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 97 |\u001b[39m     }\n \u001b[90m 98 |\u001b[39m     \u001b[90m// Old cutout / replaced JPG heroes must not win for default products\u001b[39m\n \u001b[90m 99 |\u001b[39m     expect(srcs\u001b[33m.\u001b[39msome((s) \u001b[33m=>\u001b[39m s\u001b[33m.\u001b[39mincludes(\u001b[32m\"dell7420-0.png\"\u001b[39m)))\u001b[33m.\u001b[39mtoBeFalsy()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\homepage-presets.spec.ts",
-                            "column": 69,
-                            "line": 96
-                          },
-                          "message": "Error: missing laptop-hub-hero-hp-lap.webp\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n  94 |     const srcs = await page.locator(\"img\").evaluateAll((imgs) => imgs.map((i) => (i as HTMLImageElement).src));\n  95 |     for (const part of [...HERO, ...STORY]) {\n> 96 |       expect(srcs.some((s) => s.includes(part)), `missing ${part}`).toBeTruthy();\n     |                                                                     ^\n  97 |     }\n  98 |     // Old cutout / replaced JPG heroes must not win for default products\n  99 |     expect(srcs.some((s) => s.includes(\"dell7420-0.png\"))).toBeFalsy();\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\homepage-presets.spec.ts:96:69"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 7502,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T12:09:10.105Z",
+                      "startTime": "2026-11-15T22:57:15.841Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\homepage-presets-Homepage--4f4e9--use-the-seven-CDN-defaults\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\homepage-presets.spec.ts",
-                        "column": 69,
-                        "line": 96
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "f26f46f93b072a2dfa28-9c2f06d2c812c251f71c",
@@ -194,7 +166,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -210,15 +182,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2064,
+                      "duration": 4695,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T12:09:10.149Z",
+                      "startTime": "2026-11-15T22:57:39.167Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -246,7 +218,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -262,15 +234,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 25130,
+                      "duration": 23809,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T12:09:13.802Z",
+                      "startTime": "2026-11-15T22:57:45.943Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -298,7 +270,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -314,15 +286,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 16290,
+                      "duration": 18303,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T12:09:43.320Z",
+                      "startTime": "2026-11-15T22:58:10.105Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -350,7 +322,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -366,15 +338,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 16051,
+                      "duration": 21470,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T12:09:59.773Z",
+                      "startTime": "2026-11-15T22:58:28.929Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -402,7 +374,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -418,15 +390,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 13501,
+                      "duration": 6731,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T12:10:16.018Z",
+                      "startTime": "2026-11-15T22:58:50.881Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -454,7 +426,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -470,15 +442,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 12420,
+                      "duration": 14709,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T12:10:29.787Z",
+                      "startTime": "2026-11-15T22:58:57.938Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -506,7 +478,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -522,15 +494,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 38119,
+                      "duration": 62713,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T12:10:42.444Z",
+                      "startTime": "2026-11-15T22:59:13.064Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -558,7 +530,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -574,15 +546,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 20751,
+                      "duration": 32674,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T12:11:20.650Z",
+                      "startTime": "2026-11-15T23:00:16.085Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -610,7 +582,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 60000,
+                  "timeout": 120000,
                   "annotations": [
                     {
                       "type": "serial",
@@ -626,15 +598,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 30774,
+                      "duration": 40465,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T12:11:41.492Z",
+                      "startTime": "2026-11-15T23:00:48.908Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -653,2073 +625,21 @@
               ],
               "id": "f3213d8a8edd57ec3d33-52adff00b8f3b5f3748b",
               "file": "merchant-admin-workflows.spec.ts",
-              "line": 170,
+              "line": 171,
               "column": 7
             }
           ]
-        }
-      ]
-    },
-    {
-      "title": "theme-publish-workflow.spec.ts",
-      "file": "theme-publish-workflow.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "theme publish/rollback browser workflow",
-          "file": "theme-publish-workflow.spec.ts",
-          "line": 135,
-          "column": 15,
-          "specs": [
-            {
-              "title": "seed published baseline A",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 1238,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T12:09:10.069Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "line": 135,
-                            "column": 15
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "13543266674abcaf3d4f-e66a66b2e366ca2cf261",
-              "file": "theme-publish-workflow.spec.ts",
-              "line": 140,
-              "column": 7
-            },
-            {
-              "title": "logged-out storefront shows published A (not draft)",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 16296,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T12:09:11.792Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "line": 135,
-                            "column": 15
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "13543266674abcaf3d4f-607513551449aa60546f",
-              "file": "theme-publish-workflow.spec.ts",
-              "line": 148,
-              "column": 7
-            },
-            {
-              "title": "owner changes image, saves draft; public unchanged",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 28291,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T12:09:32.322Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "line": 135,
-                            "column": 15
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "13543266674abcaf3d4f-f74e94ca245925e271ef",
-              "file": "theme-publish-workflow.spec.ts",
-              "line": 157,
-              "column": 7
-            },
-            {
-              "title": "owner opens draft preview showing draft URL",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 30877,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T12:10:01.225Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "line": 135,
-                            "column": 15
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "13543266674abcaf3d4f-961d7ef7323e166ebf10",
-              "file": "theme-publish-workflow.spec.ts",
-              "line": 179,
-              "column": 7
-            },
-            {
-              "title": "owner publishes; logged-out sees draft URL; snapshot immutable",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "failed",
-                      "duration": 42582,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"e2e-draft-hero-main\"\u001b[39m\nReceived string:    \u001b[31m\"https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111\"\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"e2e-draft-hero-main\"\u001b[39m\nReceived string:    \u001b[31m\"https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111\"\u001b[39m\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts:212:23",
-                        "location": {
-                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                          "column": 23,
-                          "line": 212
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 210 |\u001b[39m     \u001b[36mconst\u001b[39m publicPage \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m ctx\u001b[33m.\u001b[39mnewPage()\u001b[33m;\u001b[39m\n \u001b[90m 211 |\u001b[39m     \u001b[36mconst\u001b[39m src \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m heroMainSrc(publicPage)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 212 |\u001b[39m     expect(src \u001b[33m||\u001b[39m \u001b[32m\"\"\u001b[39m)\u001b[33m.\u001b[39mtoContain(\u001b[32m\"e2e-draft-hero-main\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 213 |\u001b[39m     \u001b[36mawait\u001b[39m ctx\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m 214 |\u001b[39m\n \u001b[90m 215 |\u001b[39m     \u001b[36mconst\u001b[39m sb \u001b[33m=\u001b[39m admin()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "column": 23,
-                            "line": 212
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"e2e-draft-hero-main\"\u001b[39m\nReceived string:    \u001b[31m\"https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111\"\u001b[39m\n\n  210 |     const publicPage = await ctx.newPage();\n  211 |     const src = await heroMainSrc(publicPage);\n> 212 |     expect(src || \"\").toContain(\"e2e-draft-hero-main\");\n      |                       ^\n  213 |     await ctx.close();\n  214 |\n  215 |     const sb = admin();\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts:212:23"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T12:10:32.350Z",
-                      "annotations": [
-                        {
-                          "type": "serial",
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                            "line": 135,
-                            "column": 15
-                          }
-                        }
-                      ],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\theme-publish-workflow-the-8003c-raft-URL-snapshot-immutable\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "column": 23,
-                        "line": 212
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "13543266674abcaf3d4f-2775554cfa2c3faa310c",
-              "file": "theme-publish-workflow.spec.ts",
-              "line": 195,
-              "column": 7
-            },
-            {
-              "title": "owner rolls back; logged-out sees previous image",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T12:11:28.273Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "13543266674abcaf3d4f-5cfa03fb8a006d5c5a86",
-              "file": "theme-publish-workflow.spec.ts",
-              "line": 237,
-              "column": 7
-            },
-            {
-              "title": "editor cannot publish via API",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T12:11:28.273Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "13543266674abcaf3d4f-a877ee632e30ddefe843",
-              "file": "theme-publish-workflow.spec.ts",
-              "line": 254,
-              "column": 7
-            },
-            {
-              "title": "seven approved CDN presets still present after workflow",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 60000,
-                  "annotations": [
-                    {
-                      "type": "serial",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
-                        "line": 135,
-                        "column": 15
-                      }
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-15T12:11:28.274Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "13543266674abcaf3d4f-adeb92db66e37f332ad9",
-              "file": "theme-publish-workflow.spec.ts",
-              "line": 262,
-              "column": 7
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "v5-content.spec.ts",
-      "file": "v5-content.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "content route /pages/about is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 14256,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:09:09.874Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-5269e74fcfe9f4b8059c",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/why-laptops-hub is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 7861,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:09:30.178Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-8e616935b42c0958d647",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/contact is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 6136,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:09:38.495Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-b0e81c0f25adabe2621f",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/faq is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 4228,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:09:44.860Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-2455ece5c72117257302",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/shipping is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 3807,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:09:49.616Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-db82f172f4a5d08371fe",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/returns is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 3194,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:09:53.643Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-65280590e816ced5b07a",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/warranty is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 4502,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:09:56.946Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-3e1b06c82a61963ae084",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/condition-guide is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 2867,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:01.672Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-1156387b8401bf5b9d4a",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/how-to-choose is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 2789,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:04.680Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-5037cf2d7d040022ec5e",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/comparison-guide is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 7487,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:07.575Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-af82ae50b21dbf78a585",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/order-inquiries is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 7558,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:15.147Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-261ea81f101ee22fc7fb",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/privacy is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 2178,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:22.907Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-db32d525b4f419e81a95",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /pages/terms is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 4269,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:25.241Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-60bc43ef46856937069c",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /guides is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 4425,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:29.624Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-40dac2237d771414bfc1",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /guides/processor-generations-explained is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 2484,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:34.176Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-dad0cfaba00460cd1734",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /guides/how-much-ram is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 3088,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:36.775Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-23bfb6c70adc4cd7ce78",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /guides/choosing-storage is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 6044,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:39.985Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-c3ecd92c45b8f93f1617",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "content route /guides/business-laptop-lines is complete or not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 7439,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:46.390Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-0213490f51f9ac8db4b7",
-          "file": "v5-content.spec.ts",
-          "line": 19,
-          "column": 7
-        },
-        {
-          "title": "missing content routes 404",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 6575,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:53.963Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-fd11c818f9f08582945c",
-          "file": "v5-content.spec.ts",
-          "line": 35,
-          "column": 5
-        },
-        {
-          "title": "sitemap, footer and header link only public content",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 16711,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:00.692Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-943d4cf294093db9815e",
-          "file": "v5-content.spec.ts",
-          "line": 40,
-          "column": 5
-        },
-        {
-          "title": "homepage inquiry: validation, failure, success (mocked)",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 4174,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:17.544Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-34d55206904bd2cb89bb",
-          "file": "v5-content.spec.ts",
-          "line": 49,
-          "column": 5
-        },
-        {
-          "title": "contact page form: validation, failure, success (mocked) — when the contact page is public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [
-                {
-                  "type": "skip",
-                  "description": "contact page not published",
-                  "location": {
-                    "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-content.spec.ts",
-                    "line": 77,
-                    "column": 8
-                  }
-                }
-              ],
-              "expectedStatus": "skipped",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "skipped",
-                  "duration": 1375,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:21.847Z",
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "description": "contact page not published",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-content.spec.ts",
-                        "line": 77,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "attachments": []
-                }
-              ],
-              "status": "skipped"
-            }
-          ],
-          "id": "37798ce615b3c7053179-d4b814a3878f90c08fb0",
-          "file": "v5-content.spec.ts",
-          "line": 76,
-          "column": 5
-        },
-        {
-          "title": "contact API rejects invalid and cross-site posts without storing",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 1354,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:23.293Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-ab3f6712ad42260c1e1f",
-          "file": "v5-content.spec.ts",
-          "line": 101,
-          "column": 5
-        },
-        {
-          "title": "help side navigation lists only public pages — when any help page is public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
-                  "status": "passed",
-                  "duration": 11620,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:24.700Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "37798ce615b3c7053179-80b5379cebcefbf5315b",
-          "file": "v5-content.spec.ts",
-          "line": 116,
-          "column": 5
-        }
-      ]
-    },
-    {
-      "title": "v5-correctness.spec.ts",
-      "file": "v5-correctness.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "PDP curated specs + related images: dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
-          "ok": false,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 4,
-                  "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 11613,
-                  "error": {
-                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts:44:90",
-                    "location": {
-                      "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                      "column": 90,
-                      "line": 44
-                    },
-                    "snippet": "\u001b[0m \u001b[90m 42 |\u001b[39m         \u001b[36mawait\u001b[39m expect(img)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m\"src\"\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/^https?:\\/\\//\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 43 |\u001b[39m         \u001b[36mawait\u001b[39m img\u001b[33m.\u001b[39mscrollIntoViewIfNeeded()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 44 |\u001b[39m         \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(() \u001b[33m=>\u001b[39m img\u001b[33m.\u001b[39mevaluate((el\u001b[33m:\u001b[39m \u001b[33mHTMLImageElement\u001b[39m) \u001b[33m=>\u001b[39m el\u001b[33m.\u001b[39mnaturalWidth))\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 45 |\u001b[39m       } \u001b[36melse\u001b[39m {\n \u001b[90m 46 |\u001b[39m         \u001b[36mawait\u001b[39m expect(related\u001b[33m.\u001b[39mnth(i)\u001b[33m.\u001b[39mgetByText(\u001b[32m\"No image\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 47 |\u001b[39m       }\u001b[0m"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                        "column": 90,
-                        "line": 44
-                      },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  42 |         await expect(img).toHaveAttribute(\"src\", /^https?:\\/\\//);\n  43 |         await img.scrollIntoViewIfNeeded();\n> 44 |         await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);\n     |                                                                                          ^\n  45 |       } else {\n  46 |         await expect(related.nth(i).getByText(\"No image\")).toBeVisible();\n  47 |       }\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts:44:90"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:10:10.911Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\v5-correctness-PDP-curated-348de--gen-16gb-ram-256gb-storage\\error-context.md"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                    "column": 90,
-                    "line": 44
-                  }
-                }
-              ],
-              "status": "unexpected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-ef06f82bc9c80efcdd66",
-          "file": "v5-correctness.spec.ts",
-          "line": 25,
-          "column": 7
-        },
-        {
-          "title": "PDP curated specs + related images: hp-chromebook-14-g5-4-32",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [
-                {
-                  "type": "skip",
-                  "description": "handle not public in this database",
-                  "location": {
-                    "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                    "line": 27,
-                    "column": 10
-                  }
-                }
-              ],
-              "expectedStatus": "skipped",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 5,
-                  "parallelIndex": 0,
-                  "status": "skipped",
-                  "duration": 3250,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:21.431Z",
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "description": "handle not public in this database",
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                        "line": 27,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "attachments": []
-                }
-              ],
-              "status": "skipped"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-925e629ba2185dea87ee",
-          "file": "v5-correctness.spec.ts",
-          "line": 25,
-          "column": 7
-        },
-        {
-          "title": "PDP curated specs + related images: lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage",
-          "ok": false,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 5,
-                  "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 8667,
-                  "error": {
-                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts:44:90",
-                    "location": {
-                      "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                      "column": 90,
-                      "line": 44
-                    },
-                    "snippet": "\u001b[0m \u001b[90m 42 |\u001b[39m         \u001b[36mawait\u001b[39m expect(img)\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m\"src\"\u001b[39m\u001b[33m,\u001b[39m \u001b[35m/^https?:\\/\\//\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 43 |\u001b[39m         \u001b[36mawait\u001b[39m img\u001b[33m.\u001b[39mscrollIntoViewIfNeeded()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 44 |\u001b[39m         \u001b[36mawait\u001b[39m expect\u001b[33m.\u001b[39mpoll(() \u001b[33m=>\u001b[39m img\u001b[33m.\u001b[39mevaluate((el\u001b[33m:\u001b[39m \u001b[33mHTMLImageElement\u001b[39m) \u001b[33m=>\u001b[39m el\u001b[33m.\u001b[39mnaturalWidth))\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 45 |\u001b[39m       } \u001b[36melse\u001b[39m {\n \u001b[90m 46 |\u001b[39m         \u001b[36mawait\u001b[39m expect(related\u001b[33m.\u001b[39mnth(i)\u001b[33m.\u001b[39mgetByText(\u001b[32m\"No image\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 47 |\u001b[39m       }\u001b[0m"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                        "column": 90,
-                        "line": 44
-                      },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  42 |         await expect(img).toHaveAttribute(\"src\", /^https?:\\/\\//);\n  43 |         await img.scrollIntoViewIfNeeded();\n> 44 |         await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);\n     |                                                                                          ^\n  45 |       } else {\n  46 |         await expect(related.nth(i).getByText(\"No image\")).toBeVisible();\n  47 |       }\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts:44:90"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:27.008Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\v5-correctness-PDP-curated-4d2b1--gen-16gb-ram-512gb-storage\\error-context.md"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                    "column": 90,
-                    "line": 44
-                  }
-                }
-              ],
-              "status": "unexpected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-2b9413e791bb0fa086d3",
-          "file": "v5-correctness.spec.ts",
-          "line": 25,
-          "column": 7
-        },
-        {
-          "title": "draft product is not public",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 7,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 7730,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:00.323Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-058ae8ed96e06bac47b3",
-          "file": "v5-correctness.spec.ts",
-          "line": 52,
-          "column": 5
-        },
-        {
-          "title": "public cards never show Add to cart without a purchasable variant",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 7,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 5829,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:16.964Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-8924ab559dc1845c47c6",
-          "file": "v5-correctness.spec.ts",
-          "line": 59,
-          "column": 5
-        },
-        {
-          "title": "compare tray add/remove/persist/stale desktop-1440",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 7,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 6563,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:23.237Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-ce14f50d3295e17ca9a6",
-          "file": "v5-correctness.spec.ts",
-          "line": 76,
-          "column": 7
-        },
-        {
-          "title": "compare tray add/remove/persist/stale mobile-390",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 7,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 4154,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:29.872Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-fe7d4d1a936c019e7625",
-          "file": "v5-correctness.spec.ts",
-          "line": 76,
-          "column": 7
-        },
-        {
-          "title": "compare page still renders curated rows",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 7,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 3158,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:34.114Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-0f31873b904889a2ff86",
-          "file": "v5-correctness.spec.ts",
-          "line": 119,
-          "column": 5
-        },
-        {
-          "title": "cart honours max_per_order on PDP, drawer and cart page",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 7,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 5651,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:37.380Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-08c168310b3100a25238",
-          "file": "v5-correctness.spec.ts",
-          "line": 131,
-          "column": 5
-        },
-        {
-          "title": "compare tray is keyboard operable",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 7,
-                  "parallelIndex": 0,
-                  "status": "passed",
-                  "duration": 2204,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:43.107Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-4cd6898002a3831b1c63",
-          "file": "v5-correctness.spec.ts",
-          "line": 158,
-          "column": 5
-        },
-        {
-          "title": "COD checkout stays disabled",
-          "ok": false,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 7,
-                  "parallelIndex": 0,
-                  "status": "failed",
-                  "duration": 117,
-                  "error": {
-                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m403\u001b[39m\nReceived: \u001b[31m400\u001b[39m",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m403\u001b[39m\nReceived: \u001b[31m400\u001b[39m\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts:176:24",
-                    "location": {
-                      "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                      "column": 24,
-                      "line": 176
-                    },
-                    "snippet": "\u001b[0m \u001b[90m 174 |\u001b[39m test(\u001b[32m\"COD checkout stays disabled\"\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\n \u001b[90m 175 |\u001b[39m   \u001b[36mconst\u001b[39m res \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39mpost(\u001b[32m`${base}/api/checkout/cod`\u001b[39m\u001b[33m,\u001b[39m { data\u001b[33m:\u001b[39m {} })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 176 |\u001b[39m   expect(res\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m403\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 177 |\u001b[39m   expect((\u001b[36mawait\u001b[39m res\u001b[33m.\u001b[39mjson())\u001b[33m.\u001b[39merror)\u001b[33m.\u001b[39mtoBe(\u001b[32m\"checkout_disabled\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 178 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 179 |\u001b[39m\u001b[0m"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                        "column": 24,
-                        "line": 176
-                      },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m403\u001b[39m\nReceived: \u001b[31m400\u001b[39m\n\n  174 | test(\"COD checkout stays disabled\", async ({ request }) => {\n  175 |   const res = await request.post(`${base}/api/checkout/cod`, { data: {} });\n> 176 |   expect(res.status()).toBe(403);\n      |                        ^\n  177 |   expect((await res.json()).error).toBe(\"checkout_disabled\");\n  178 | });\n  179 |\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts:176:24"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:45.367Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\v5-correctness-COD-checkout-stays-disabled\\error-context.md"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
-                    "column": 24,
-                    "line": 176
-                  }
-                }
-              ],
-              "status": "unexpected"
-            }
-          ],
-          "id": "343f6d1acd4c7d349bb8-2abc13682556b6f6f927",
-          "file": "v5-correctness.spec.ts",
-          "line": 174,
-          "column": 5
-        }
-      ]
-    },
-    {
-      "title": "v5-visual.spec.ts",
-      "file": "v5-visual.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "homepage visual desktop-1897x860",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 6,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 8375,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:32.958Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-456471319bbc45050cb7",
-          "file": "v5-visual.spec.ts",
-          "line": 22,
-          "column": 7
-        },
-        {
-          "title": "homepage visual laptop-1440x900",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 6,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 4987,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:43.792Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-3585fa97134321a28715",
-          "file": "v5-visual.spec.ts",
-          "line": 22,
-          "column": 7
-        },
-        {
-          "title": "homepage visual tablet-768x1024",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 6,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 6034,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:49.219Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-0f2b7c5e12057d67c39f",
-          "file": "v5-visual.spec.ts",
-          "line": 22,
-          "column": 7
-        },
-        {
-          "title": "homepage visual mobile-390x844",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 6,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 6758,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:11:55.366Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-296d3f5b05f42dd06e6b",
-          "file": "v5-visual.spec.ts",
-          "line": 22,
-          "column": 7
-        },
-        {
-          "title": "product story price panel visible at 1897x860",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 6,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 5981,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:02.325Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-f767c45a9e4e7a477205",
-          "file": "v5-visual.spec.ts",
-          "line": 39,
-          "column": 5
-        },
-        {
-          "title": "product story price panel visible at 390x844",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 6,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 7072,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:08.833Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-fd97a1b268ac7757a783",
-          "file": "v5-visual.spec.ts",
-          "line": 51,
-          "column": 5
-        },
-        {
-          "title": "search and collections reachable",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 6,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 7499,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:16.285Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-82912e588c45c3cf785f",
-          "file": "v5-visual.spec.ts",
-          "line": 62,
-          "column": 5
-        },
-        {
-          "title": "reduced motion does not crash story",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 60000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 6,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 3135,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-11-15T12:12:23.885Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "f3484f0d43be3d1167e9-1f5e7a2143d7ab03fad3",
-          "file": "v5-visual.spec.ts",
-          "line": 70,
-          "column": 5
         }
       ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-15T12:09:05.601Z",
-    "duration": 221330.718,
-    "expected": 51,
-    "skipped": 5,
-    "unexpected": 5,
+    "startTime": "2026-11-15T22:57:06.341Z",
+    "duration": 380316.219,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 0,
     "flaky": 0
   }
 }

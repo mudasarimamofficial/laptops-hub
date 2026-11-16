@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { modelName, publicDescription, publicTags, toPublicSpecs } from "@/lib/catalog/specs";
-import type { PublicProduct } from "@/types/catalog";
+import type { PublicProduct, PublicVariant } from "@/types/catalog";
 
 type Db = Pick<Awaited<ReturnType<typeof createClient>>, "from">;
 type MediaItem = { url: string; alt: string; position: number };
@@ -16,13 +16,18 @@ type ProductRow = {
   featured: boolean;
   tags: string[] | null;
   specs: Record<string, unknown> | null;
+  option_names: string[] | null;
   product_variants: {
     id: string;
     sku: string | null;
+    title: string;
+    option_values: Record<string, string> | null;
     price_paisa: number;
     compare_at_paisa: number | null;
     max_per_order: number;
     purchasable: boolean;
+    position: number;
+    media_id: string | null;
   }[];
   product_media: { url: string; alt: string; position: number }[];
 };
@@ -53,8 +58,26 @@ function sortMedia(list: { url: string; alt: string | null; position: number }[]
     .map((m) => ({ url: m.url, alt: m.alt || fallbackAlt, position: m.position }));
 }
 
+function mapVariants(rows: ProductRow["product_variants"]): PublicVariant[] {
+  return (rows || [])
+    .filter((v) => v.purchasable && v.price_paisa > 0)
+    .sort((a, b) => a.position - b.position)
+    .map((v) => ({
+      id: v.id,
+      sku: v.sku,
+      title: v.title || "Default",
+      optionValues: v.option_values || {},
+      pricePaisa: v.price_paisa,
+      compareAtPaisa: v.compare_at_paisa,
+      maxPerOrder: v.max_per_order,
+      available: true,
+      mediaId: v.media_id,
+    }));
+}
+
 function mapProduct(row: ProductRow): PublicProduct | null {
-  const variant = row.product_variants?.find((v) => v.purchasable && v.price_paisa > 0);
+  const allVariants = mapVariants(row.product_variants);
+  const variant = allVariants[0];
   if (!variant) return null;
   return {
     id: row.id,
@@ -67,17 +90,30 @@ function mapProduct(row: ProductRow): PublicProduct | null {
     featured: row.featured,
     tags: publicTags(row.tags),
     specs: toPublicSpecs(row.specs),
+    optionNames: row.option_names || [],
+    variants: allVariants,
     variantId: variant.id,
     sku: variant.sku,
-    pricePaisa: variant.price_paisa,
-    compareAtPaisa: variant.compare_at_paisa,
-    maxPerOrder: variant.max_per_order,
-    available: variant.purchasable === true,
+    pricePaisa: variant.pricePaisa,
+    compareAtPaisa: variant.compareAtPaisa,
+    maxPerOrder: variant.maxPerOrder,
+    available: variant.available,
     images: sortMedia(row.product_media || [], row.title),
   };
 }
 
 function mapListing(row: ListingRow, media: { url: string; alt: string | null; position: number }[] = []): PublicProduct {
+  const singleVariant: PublicVariant = {
+    id: row.variant_id,
+    sku: row.sku,
+    title: "Default",
+    optionValues: {},
+    pricePaisa: row.price_paisa,
+    compareAtPaisa: row.compare_at_paisa,
+    maxPerOrder: row.max_per_order,
+    available: true,
+    mediaId: null,
+  };
   return {
     id: row.id,
     handle: row.handle,
@@ -89,12 +125,13 @@ function mapListing(row: ListingRow, media: { url: string; alt: string | null; p
     featured: row.featured,
     tags: publicTags(row.tags),
     specs: toPublicSpecs(row.specs),
+    optionNames: [],
+    variants: [singleVariant],
     variantId: row.variant_id,
     sku: row.sku,
     pricePaisa: row.price_paisa,
     compareAtPaisa: row.compare_at_paisa,
     maxPerOrder: row.max_per_order,
-    // public_catalog_listing only returns variants with purchasable = true AND price_paisa > 0.
     available: true,
     images: sortMedia(media, row.title),
   };
@@ -123,8 +160,8 @@ async function loadMediaByProduct(supabase: Db, ids: string[]) {
 
 const productSelect = `
   id, handle, title, description_safe, manufacturer, product_type, category,
-  featured, tags, specs,
-  product_variants ( id, sku, price_paisa, compare_at_paisa, max_per_order, purchasable ),
+  featured, tags, specs, option_names,
+  product_variants ( id, sku, title, option_values, price_paisa, compare_at_paisa, max_per_order, purchasable, position, media_id ),
   product_media ( url, alt, position )
 `;
 

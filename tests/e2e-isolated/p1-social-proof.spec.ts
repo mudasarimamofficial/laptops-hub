@@ -23,6 +23,7 @@ const PRIVATE_NAME = `SANDBOX Buyer ${RUN}`;
 
 let savedSetting: unknown = null;
 const createdOrders: string[] = [];
+let stashedDeliveredOrders: { id: string; status: string }[] = [];
 
 async function signIn(page: Page, who: "owner" | "editor" = "owner") {
   await page.goto("/admin/login");
@@ -79,18 +80,26 @@ test.describe.serial("P1: truthful social proof (isolated)", () => {
     await assertLocalOnly("social proof journeys");
     fs.mkdirSync(OUT, { recursive: true });
     await cleanup();
+    const { data: existingDelivered } = await sb.from("orders").select("id, status").eq("status", "delivered");
+    if (existingDelivered && existingDelivered.length > 0) {
+      stashedDeliveredOrders = existingDelivered;
+      await sb.from("orders").update({ status: "shipped" }).in("id", existingDelivered.map((o) => o.id));
+    }
     const { data } = await sb.from("store_settings").select("value").eq("key", "social_proof").maybeSingle();
     savedSetting = data?.value ?? null;
   });
   test.afterAll(async () => {
     await cleanup();
+    if (stashedDeliveredOrders.length > 0) {
+      for (const o of stashedDeliveredOrders) {
+        await sb.from("orders").update({ status: o.status }).eq("id", o.id);
+      }
+    }
     if (savedSetting === null) await sb.from("store_settings").delete().eq("key", "social_proof");
     else await sb.from("store_settings").update({ value: savedSetting }).eq("key", "social_proof");
   });
 
   test("zero qualifying orders: features on, yet no notice and no top-seller badge", async ({ page }) => {
-    const { count } = await sb.from("orders").select("id", { count: "exact", head: true }).eq("status", "delivered");
-    test.skip((count ?? 0) > 0, "precondition: the local DB must start with zero delivered orders");
     await signIn(page);
     // Unqualified orders only (placed / cancelled / shipped) — they must never count.
     await order("placed", P0.handle, P0.title, 5, P0.pricePaisa);
@@ -125,6 +134,8 @@ test.describe.serial("P1: truthful social proof (isolated)", () => {
     const { items } = JSON.parse(raw);
     expect(items.length).toBe(2);
     for (const it of items) expect(Object.keys(it).sort()).toEqual(["city", "handle", "imageUrl", "title", "when"]);
+    expect(items.some((i: { handle: string }) => i.handle === P0.handle)).toBe(true);
+    expect(items.some((i: { handle: string }) => i.handle === P1.handle)).toBe(true);
     expect(items.every((i: { city: unknown }) => i.city === null)).toBe(true);
     expect(raw).not.toContain(PRIVATE_NAME);
     expect(raw).not.toMatch(/3001112233|LH-SANDBOX|SANDBOX street|lahore/i);
@@ -200,7 +211,7 @@ test.describe.serial("P1: truthful social proof (isolated)", () => {
     const serve = async (p: Page) =>
       p.route(/qa-social-.*.webm/, (route) => route.fulfill({ status: 200, contentType: "video/webm", body: CLIP }));
     await serve(page);
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "domcontentloaded", timeout: 60_000 });
     const section = page.getByTestId("reels-section");
     await expect(section.getByRole("heading", { name: `Generation QA ${RUN}` })).toBeVisible();
     await section.scrollIntoViewIfNeeded();

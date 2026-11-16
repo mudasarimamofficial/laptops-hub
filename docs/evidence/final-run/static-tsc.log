@@ -1,0 +1,582 @@
+src/app/(admin)/admin/activity/page.tsx(42,28): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/activity/page.tsx(44,33): error TS2339: Property 'created_at' does not exist on type 'never'.
+src/app/(admin)/admin/activity/page.tsx(46,60): error TS2339: Property 'action' does not exist on type 'never'.
+src/app/(admin)/admin/activity/page.tsx(48,24): error TS2339: Property 'entity_type' does not exist on type 'never'.
+src/app/(admin)/admin/activity/page.tsx(48,40): error TS2339: Property 'entity_id' does not exist on type 'never'.
+src/app/(admin)/admin/activity/page.tsx(48,66): error TS2339: Property 'entity_id' does not exist on type 'never'.
+src/app/(admin)/admin/activity/page.tsx(51,24): error TS2339: Property 'actor_user_id' does not exist on type 'never'.
+src/app/(admin)/admin/activity/page.tsx(51,52): error TS2339: Property 'actor_user_id' does not exist on type 'never'.
+src/app/(admin)/admin/analytics/page.tsx(27,43): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/blog/[id]/page.tsx(25,111): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/blog/[id]/page.tsx(26,12): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/blog/[id]/page.tsx(27,36): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/blog/[id]/page.tsx(38,15): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/blog/[id]/page.tsx(39,28): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/blog/[id]/page.tsx(39,43): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/blog/[id]/page.tsx(39,61): error TS2339: Property 'excerpt' does not exist on type 'never'.
+src/app/(admin)/admin/blog/[id]/page.tsx(39,82): error TS2339: Property 'body_html' does not exist on type 'never'.
+src/app/(admin)/admin/blog/[id]/page.tsx(39,103): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/blog/page.tsx(35,24): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/blog/page.tsx(36,44): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/blog/page.tsx(37,20): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/blog/page.tsx(40,28): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/blog/page.tsx(40,39): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/blog/page.tsx(41,20): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/blog/page.tsx(41,48): error TS2339: Property 'published_at' does not exist on type 'never'.
+src/app/(admin)/admin/blog/page.tsx(41,78): error TS2339: Property 'published_at' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(29,11): error TS2339: Property 'collection_products' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(45,42): error TS2339: Property 'rule' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(46,22): error TS2339: Property 'rule' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(46,42): error TS2339: Property 'rule' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(46,67): error TS2339: Property 'rule' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(51,21): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(52,37): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(56,25): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(58,44): error TS2339: Property 'published' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(62,55): error TS2339: Property 'description' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(65,43): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/collections/[slug]/page.tsx(67,60): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/content/page.tsx(40,22): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/content/page.tsx(41,23): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/content/page.tsx(42,24): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/content/page.tsx(43,25): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/content/page.tsx(44,27): error TS2339: Property 'body_html' does not exist on type 'never'.
+src/app/(admin)/admin/content/page.tsx(45,34): error TS2339: Property 'legal_approved' does not exist on type 'never'.
+src/app/(admin)/admin/content/page.tsx(46,54): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/customers/page.tsx(51,28): error TS2339: Property 'order_number' does not exist on type 'never'.
+src/app/(admin)/admin/customers/page.tsx(52,60): error TS2339: Property 'customer_name' does not exist on type 'never'.
+src/app/(admin)/admin/customers/page.tsx(54,24): error TS2339: Property 'customer_phone_normalized' does not exist on type 'never'.
+src/app/(admin)/admin/customers/page.tsx(57,49): error TS2339: Property 'order_number' does not exist on type 'never'.
+src/app/(admin)/admin/customers/page.tsx(58,26): error TS2339: Property 'order_number' does not exist on type 'never'.
+src/app/(admin)/admin/customers/page.tsx(61,48): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(20,37): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(33,24): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(35,49): error TS2339: Property 'name' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(36,75): error TS2339: Property 'created_at' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(38,53): error TS2339: Property 'subject' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(40,20): error TS2339: Property 'phone' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(41,37): error TS2339: Property 'phone' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(42,24): error TS2339: Property 'phone' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(45,20): error TS2339: Property 'email' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(46,40): error TS2339: Property 'email' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(47,24): error TS2339: Property 'email' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(51,82): error TS2339: Property 'message' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(52,36): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/inquiries/page.tsx(52,50): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/inventory/page.tsx(155,26): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/inventory/page.tsx(156,68): error TS2339: Property 'created_at' does not exist on type 'never'.
+src/app/(admin)/admin/inventory/page.tsx(157,91): error TS2339: Property 'product_variants' does not exist on type 'never'.
+src/app/(admin)/admin/inventory/page.tsx(158,46): error TS2339: Property 'delta' does not exist on type 'never'.
+src/app/(admin)/admin/inventory/page.tsx(158,64): error TS2339: Property 'delta' does not exist on type 'never'.
+src/app/(admin)/admin/inventory/page.tsx(158,76): error TS2339: Property 'delta' does not exist on type 'never'.
+src/app/(admin)/admin/inventory/page.tsx(159,46): error TS2339: Property 'quantity_after' does not exist on type 'never'.
+src/app/(admin)/admin/inventory/page.tsx(160,69): error TS2339: Property 'reason' does not exist on type 'never'.
+src/app/(admin)/admin/inventory/page.tsx(160,82): error TS2339: Property 'reason' does not exist on type 'never'.
+src/app/(admin)/admin/media/page.tsx(34,25): error TS2339: Property 'products' does not exist on type 'never'.
+src/app/(admin)/admin/media/page.tsx(38,22): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/media/page.tsx(42,31): error TS2339: Property 'url' does not exist on type 'never'.
+src/app/(admin)/admin/media/page.tsx(42,43): error TS2339: Property 'alt' does not exist on type 'never'.
+src/app/(admin)/admin/media/page.tsx(45,40): error TS2339: Property 'approval' does not exist on type 'never'.
+src/app/(admin)/admin/media/page.tsx(53,122): error TS2339: Property 'url' does not exist on type 'never'.
+src/app/(admin)/admin/media/page.tsx(54,22): error TS2339: Property 'url' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(38,50): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(49,9): error TS2339: Property 'order_items' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(50,18): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(51,17): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(52,20): error TS2339: Property 'created_at' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(93,78): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(93,95): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(108,31): error TS2339: Property 'products' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(109,64): error TS2339: Property 'starts_at' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(109,85): error TS2339: Property 'ends_at' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(110,36): error TS2339: Property 'starts_at' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(110,62): error TS2339: Property 'starts_at' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(112,32): error TS2339: Property 'product_id' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(117,69): error TS2339: Property 'kind' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(117,97): error TS2339: Property 'kind' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(119,32): error TS2339: Property 'starts_at' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(119,53): error TS2339: Property 'ends_at' does not exist on type 'never'.
+src/app/(admin)/admin/merchandising/page.tsx(123,57): error TS2339: Property 'product_id' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(39,27): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(42,36): error TS2339: Property 'order_addresses' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(42,61): error TS2339: Property 'order_addresses' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(42,88): error TS2339: Property 'order_addresses' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(43,24): error TS2339: Property 'order_items' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(51,26): error TS2339: Property 'order_events' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(54,30): error TS2339: Property 'cod_collections' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(60,31): error TS2339: Property 'fulfillments' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(74,92): error TS2339: Property 'order_number' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(87,45): error TS2339: Property 'customer_name' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(91,45): error TS2339: Property 'customer_phone_e164' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(93,20): error TS2339: Property 'customer_email' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(96,47): error TS2339: Property 'customer_email' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(117,20): error TS2339: Property 'customer_note' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(120,28): error TS2339: Property 'customer_note' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(131,36): error TS2339: Property 'subtotal_paisa' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(135,36): error TS2339: Property 'shipping_paisa' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(139,36): error TS2339: Property 'cod_fee_paisa' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(143,36): error TS2339: Property 'total_due_paisa' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(147,36): error TS2339: Property 'amount_collected_paisa' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(151,26): error TS2339: Property 'payment_status' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(155,26): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(188,28): error TS2339: Property 'order_number' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(189,23): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(190,30): error TS2339: Property 'total_due_paisa' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(191,37): error TS2339: Property 'amount_collected_paisa' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(237,22): error TS2339: Property 'template' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(237,37): error TS2339: Property 'channel' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(237,91): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(237,120): error TS2339: Property 'attempts' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(240,77): error TS2339: Property 'business_status' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(241,64): error TS2339: Property 'customer_status' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(243,20): error TS2339: Property 'sent_at' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(245,64): error TS2339: Property 'sent_at' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(248,20): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(248,47): error TS2339: Property 'last_error' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(248,135): error TS2339: Property 'next_attempt_at' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(249,108): error TS2339: Property 'next_attempt_at' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(251,20): error TS2339: Property 'last_error' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(251,84): error TS2339: Property 'last_error' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(255,41): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/orders/[orderNumber]/page.tsx(255,104): error TS2339: Property 'order_number' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(47,11): error TS2339: Property 'product_variants' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(86,11): error TS2339: Property 'product_media' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(92,21): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(93,37): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(93,67): error TS2339: Property 'media_approval' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(97,25): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(101,39): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(103,39): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(115,22): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(116,21): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(117,31): error TS2339: Property 'description_safe' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(118,22): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(119,26): error TS2339: Property 'featured' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(120,28): error TS2339: Property 'manufacturer' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(121,27): error TS2339: Property 'product_type' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(122,24): error TS2339: Property 'category' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(123,24): error TS2339: Property 'seo_title' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(124,30): error TS2339: Property 'seo_description' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(129,22): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(135,41): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(137,39): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(137,59): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/products/[handle]/page.tsx(137,79): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/products/bulk/page.tsx(13,45): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(22,37): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(43,24): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(44,26): error TS2339: Property 'caption' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(45,27): error TS2339: Property 'video_url' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(46,28): error TS2339: Property 'poster_url' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(47,33): error TS2339: Property 'products' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(48,31): error TS2339: Property 'rights_status' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(49,29): error TS2339: Property 'rights_note' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(50,25): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(51,28): error TS2339: Property 'sort_order' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(52,30): error TS2339: Property 'creator_name' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(53,33): error TS2339: Property 'creator_consent' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(54,22): error TS2339: Property 'tag' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(57,26): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(60,56): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(62,26): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(62,46): error TS2339: Property 'rights_status' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(62,66): error TS2339: Property 'rights_status' does not exist on type 'never'.
+src/app/(admin)/admin/reels/page.tsx(66,37): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(59,25): error TS2339: Property 'products' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(61,26): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(64,44): error TS2339: Property 'rating' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(64,77): error TS2339: Property 'rating' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(64,103): error TS2339: Property 'rating' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(64,124): error TS2339: Property 'author_name' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(66,77): error TS2339: Property 'created_at' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(75,20): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(75,66): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(76,63): error TS2339: Property 'body' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(77,20): error TS2339: Property 'reviewer_email' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(77,103): error TS2339: Property 'reviewer_email' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(78,20): error TS2339: Property 'moderation_note' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(78,93): error TS2339: Property 'moderation_note' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(79,41): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/reviews/page.tsx(79,55): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(22,58): error TS2339: Property 'seo_title' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(22,82): error TS2339: Property 'seo_description' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(23,61): error TS2339: Property 'seo_title' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(23,85): error TS2339: Property 'seo_description' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(69,36): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(69,53): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(69,87): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(69,116): error TS2339: Property 'seo_title' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(69,146): error TS2339: Property 'seo_description' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(74,36): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(74,51): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(74,88): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(74,115): error TS2339: Property 'seo_title' does not exist on type 'never'.
+src/app/(admin)/admin/seo/page.tsx(74,145): error TS2339: Property 'seo_description' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(58,73): error TS2339: Property 'key' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(58,111): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(73,22): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(77,20): error TS2339: Property 'name' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(77,29): error TS2339: Property 'is_active' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(80,32): error TS2339: Property 'provinces' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(81,21): error TS2339: Property 'cities' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(82,20): error TS2339: Property 'excluded_cities' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(82,66): error TS2339: Property 'excluded_cities' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(85,39): error TS2339: Property 'flat_fee_paisa' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(85,79): error TS2339: Property 'cod_fee_paisa' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(86,20): error TS2339: Property 'free_shipping_min_paisa' does not exist on type 'never'.
+src/app/(admin)/admin/settings/page.tsx(86,91): error TS2339: Property 'free_shipping_min_paisa' does not exist on type 'never'.
+src/app/api/admin/account/password/route.ts(61,9): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/cod-collections/route.ts(31,73): error TS2345: Argument of type '{ payload: { actor_user_id: string; order_number: string; amount_paisa: number; idempotency_key: string; collector_ref: string; note: string; }; }' is not assignable to parameter of type 'undefined'.
+src/app/api/admin/collections/[slug]/route.ts(80,41): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(88,41): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(91,33): error TS2339: Property 'position' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(94,44): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(96,77): error TS2345: Argument of type '{ collection_id: any; product_id: string; position: number; }[]' is not assignable to parameter of type 'never[]'.
+  Type '{ collection_id: any; product_id: string; position: number; }' is not assignable to type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(107,21): error TS2345: Argument of type '{ position: number; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(108,43): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(114,90): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(116,35): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(121,79): error TS2345: Argument of type '{ collection_id: any; product_id: string; position: number; }[]' is not assignable to parameter of type 'never[]'.
+  Type '{ collection_id: any; product_id: string; position: number; }' is not assignable to type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(127,9): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/collections/[slug]/route.ts(130,29): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(133,34): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(153,65): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(153,90): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(159,71): error TS2345: Argument of type '{ [x: string]: unknown; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(159,99): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(164,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/collections/[slug]/route.ts(167,27): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/[slug]/route.ts(172,32): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/api/admin/collections/route.ts(105,69): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/collections/route.ts(108,63): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/collections/route.ts(117,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/collections/route.ts(120,23): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/collections/route.ts(121,27): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/api/admin/collections/route.ts(121,45): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/api/admin/collections/route.ts(124,28): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/api/admin/collections/route.ts(125,53): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/api/admin/collections/route.ts(125,68): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/content/[slug]/route.ts(108,58): error TS2339: Property 'legal_approved' does not exist on type 'never'.
+src/app/api/admin/content/[slug]/route.ts(120,67): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/app/api/admin/content/[slug]/route.ts(124,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/content/[slug]/route.ts(132,58): error TS2339: Property 'legal_approved' does not exist on type 'never'.
+src/app/api/admin/inquiries/[id]/route.ts(18,71): error TS2345: Argument of type '{ status: "new" | "open" | "closed"; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/inquiries/[id]/route.ts(21,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/inquiries/[id]/route.ts(25,32): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/api/admin/inventory/adjust/route.ts(40,68): error TS2345: Argument of type '{ payload: { variant_id: string; mode: "set" | "delta"; amount: number; reason: "stock_received" | "count_correction" | "damaged_or_lost" | "customer_return" | "other"; actor_user_id: string; expected_quantity: number | null; }; }' is not assignable to parameter of type 'undefined'.
+src/app/api/admin/inventory/adjust/route.ts(56,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/inventory/adjust/route.ts(60,33): error TS2339: Property 'quantity_before' does not exist on type 'never'.
+src/app/api/admin/inventory/adjust/route.ts(61,32): error TS2339: Property 'quantity_after' does not exist on type 'never'.
+src/app/api/admin/inventory/adjust/route.ts(64,63): error TS2339: Property 'quantity_after' does not exist on type 'never'.
+src/app/api/admin/inventory/adjust/route.ts(64,92): error TS2339: Property 'delta' does not exist on type 'never'.
+src/app/api/admin/navigation/route.ts(105,11): error TS2561: Object literal may only specify known properties, but 'key' does not exist in type 'never[]'. Did you mean to write 'keys'?
+src/app/api/admin/navigation/route.ts(137,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/navigation/route.ts(189,11): error TS2561: Object literal may only specify known properties, but 'key' does not exist in type 'never[]'. Did you mean to write 'keys'?
+src/app/api/admin/navigation/route.ts(202,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/notifications/retry/route.ts(16,57): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/orders/[orderNumber]/status/route.ts(31,75): error TS2345: Argument of type '{ payload: { actor_user_id: string; order_number: string; to_status: string; note: string; carrier: string; tracking_number: string; expected_from_status: string | null; }; }' is not assignable to parameter of type 'undefined'.
+src/app/api/admin/posts/[id]/route.ts(26,35): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/api/admin/posts/[id]/route.ts(36,68): error TS2339: Property 'published_at' does not exist on type 'never'.
+src/app/api/admin/posts/[id]/route.ts(36,97): error TS2339: Property 'published_at' does not exist on type 'never'.
+src/app/api/admin/posts/[id]/route.ts(37,62): error TS2345: Argument of type '{ published_at: any; updated_at: string; slug: string; title: string; excerpt: string; body_html: string; status: "draft" | "published"; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/posts/[id]/route.ts(40,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/posts/[id]/route.ts(44,30): error TS2339: Property 'slug' does not exist on type 'never'.
+src/app/api/admin/posts/[id]/route.ts(44,51): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/api/admin/posts/[id]/route.ts(64,48): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/posts/route.ts(23,31): error TS2353: Object literal may only specify known properties, and 'published_at' does not exist in type 'never[]'.
+src/app/api/admin/posts/route.ts(28,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/posts/route.ts(31,23): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/posts/route.ts(36,51): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/product-badges/route.ts(31,128): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/product-badges/route.ts(33,27): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/product-badges/route.ts(41,68): error TS2345: Argument of type '{ created_by?: string | undefined; product_id: any; kind: "featured" | "popular_pick" | "staff_pick"; starts_at: string | null; ends_at: string | null; note: string; updated_by: string; }' is not assignable to parameter of type 'never[]'.
+  Type '{ created_by?: string | undefined; product_id: any; kind: "featured" | "popular_pick" | "staff_pick"; starts_at: string | null; ends_at: string | null; note: string; updated_by: string; }' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/product-badges/route.ts(44,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/product-badges/route.ts(47,26): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/product-badges/route.ts(70,48): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(63,60): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/products/[handle]/duplicate/route.ts(64,39): error TS2339: Property 'data' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(69,62): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/products/[handle]/duplicate/route.ts(73,25): error TS2339: Property 'data' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(80,21): error TS18047: 'created' is possibly 'null'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(93,78): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/products/[handle]/duplicate/route.ts(97,56): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/products/[handle]/duplicate/route.ts(104,21): error TS18047: 'created' is possibly 'null'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(114,75): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/products/[handle]/duplicate/route.ts(117,11): error TS2353: Object literal may only specify known properties, and 'product_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(117,23): error TS18047: 'created' is possibly 'null'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(127,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(130,18): error TS18047: 'created' is possibly 'null'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(131,41): error TS18047: 'created' is possibly 'null'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(135,27): error TS18047: 'created' is possibly 'null'.
+src/app/api/admin/products/[handle]/duplicate/route.ts(135,47): error TS18047: 'created' is possibly 'null'.
+src/app/api/admin/products/[handle]/media/route.ts(88,33): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(95,35): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(132,33): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(135,62): error TS2339: Property 'position' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(138,27): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(151,63): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/products/[handle]/media/route.ts(155,29): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(161,65): error TS2345: Argument of type '{ product_id: any; url: string; alt: string; position: number; approval: string; }' is not assignable to parameter of type 'never[]'.
+  Type '{ product_id: any; url: string; alt: string; position: number; approval: string; }' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/products/[handle]/media/route.ts(165,19): error TS2339: Property 'data' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(169,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/media/route.ts(172,23): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(173,35): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(207,19): error TS2345: Argument of type '{ position: number; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(209,37): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(215,19): error TS2345: Argument of type '{ position: number; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(217,37): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(220,9): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/media/route.ts(223,28): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(240,15): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(242,33): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(248,17): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(250,35): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(258,17): error TS2345: Argument of type '{ is_primary: boolean; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(259,35): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(263,17): error TS2345: Argument of type '{ position: number; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(265,35): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(291,33): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(295,82): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(295,111): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/media/route.ts(299,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/media/route.ts(302,22): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(81,64): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/route.ts(81,96): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(83,48): error TS2345: Argument of type '{ status: string; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/route.ts(83,87): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(88,9): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/route.ts(91,29): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(112,64): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/route.ts(112,96): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(118,70): error TS2345: Argument of type '{ [x: string]: unknown; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/route.ts(118,95): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(129,39): error TS2339: Property 'product_id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(129,63): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(139,56): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(163,19): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/route.ts(164,29): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(165,38): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(171,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/route.ts(174,27): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(220,17): error TS2345: Argument of type '{ status: string; updated_by: string; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/route.ts(221,28): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(223,48): error TS2345: Argument of type '{ status: string; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/route.ts(223,90): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(228,9): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/route.ts(231,29): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(244,62): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/route.ts(244,91): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(247,46): error TS2345: Argument of type '{ status: string; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/[handle]/route.ts(247,88): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(249,9): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/route.ts(252,29): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/route.ts(267,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/[handle]/route.ts(270,27): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(65,29): error TS2339: Property 'deleted_at' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(74,33): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(82,28): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(83,25): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(84,30): error TS2339: Property 'option_names' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(86,17): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(87,20): error TS2339: Property 'title' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(88,18): error TS2339: Property 'sku' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(89,22): error TS2339: Property 'barcode' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(90,25): error TS2339: Property 'price_paisa' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(91,29): error TS2339: Property 'compare_at_paisa' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(92,28): error TS2339: Property 'inventory_mode' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(93,29): error TS2339: Property 'quantity_on_hand' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(94,26): error TS2339: Property 'purchasable' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(95,28): error TS2339: Property 'option_values' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(96,23): error TS2339: Property 'position' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(97,32): error TS2339: Property 'low_stock_threshold' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(98,28): error TS2339: Property 'allow_oversell' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(114,29): error TS2339: Property 'deleted_at' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(147,33): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(148,69): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(148,85): error TS2339: Property 'allow_oversell' does not exist on type 'never'.
+src/app/api/admin/products/[handle]/variants/route.ts(185,73): error TS2345: Argument of type '{ payload: { actor_user_id: string; product_id: any; option_names: string[]; variants: { id: string | null; title: string; sku: string | null; barcode: string | null; price_paisa: number; compare_at_paisa: number | null; ... 5 more ...; position: number; }[]; remove_missing: boolean; }; }' is not assignable to parameter of type 'undefined'.
+src/app/api/admin/products/[handle]/variants/route.ts(188,29): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/bulk/route.ts(47,34): error TS2339: Property 'tags' does not exist on type 'never'.
+src/app/api/admin/products/bulk/route.ts(53,72): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/bulk/route.ts(53,96): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/bulk/route.ts(64,37): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/bulk/route.ts(67,36): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/bulk/route.ts(73,52): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/api/admin/products/bulk/route.ts(80,58): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/bulk/route.ts(88,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/export/route.ts(46,39): error TS2339: Property 'collections' does not exist on type 'never'.
+src/app/api/admin/products/export/route.ts(46,58): error TS2339: Property 'collections' does not exist on type 'never'.
+src/app/api/admin/products/export/route.ts(46,79): error TS2339: Property 'collections' does not exist on type 'never'.
+src/app/api/admin/products/export/route.ts(47,40): error TS2339: Property 'products' does not exist on type 'never'.
+src/app/api/admin/products/export/route.ts(47,56): error TS2339: Property 'products' does not exist on type 'never'.
+src/app/api/admin/products/export/route.ts(47,74): error TS2339: Property 'products' does not exist on type 'never'.
+src/app/api/admin/products/export/route.ts(53,25): error TS2339: Property 'position' does not exist on type 'never'.
+src/app/api/admin/products/export/route.ts(58,9): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/export/route.ts(139,5): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/import/route.ts(180,11): error TS2353: Object literal may only specify known properties, and 'source' does not exist in type 'never[]'.
+src/app/api/admin/products/import/route.ts(194,20): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/import/route.ts(199,13): error TS2353: Object literal may only specify known properties, and 'source' does not exist in type 'never[]'.
+src/app/api/admin/products/import/route.ts(206,29): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/import/route.ts(223,17): error TS2345: Argument of type '{ status: string; finished_at: string; report: { stagingSummary: { productCount: number; variantCount: number; imageRowSignals: number; unknownHeaderCount: number; unknownHeaders: string[]; }; summary: Record<...>; results: CommitProductResult[]; profile: "modern" | "legacy"; }; progress: { ...; }; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/products/import/route.ts(232,9): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/route.ts(102,60): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/products/route.ts(104,25): error TS2339: Property 'data' does not exist on type 'never'.
+src/app/api/admin/products/route.ts(108,62): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/products/route.ts(115,25): error TS2339: Property 'data' does not exist on type 'never'.
+src/app/api/admin/products/route.ts(124,23): error TS18047: 'product' is possibly 'null'.
+src/app/api/admin/products/route.ts(136,91): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never[]'.
+  Type 'Record<string, unknown>' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/products/route.ts(143,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/products/route.ts(147,83): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/route.ts(151,61): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/products/search/route.ts(16,59): error TS2339: Property 'product_id' does not exist on type 'never'.
+src/app/api/admin/reels/[id]/route.ts(26,59): error TS2345: Argument of type 'ReelRow' is not assignable to parameter of type 'never'.
+src/app/api/admin/reels/[id]/route.ts(29,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/reels/[id]/route.ts(53,48): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/reels/route.ts(15,31): error TS2353: Object literal may only specify known properties, and 'created_by' does not exist in type 'never[]'.
+src/app/api/admin/reels/route.ts(20,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/reels/route.ts(23,23): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/reels/route.ts(28,51): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/reviews/[id]/route.ts(20,15): error TS2345: Argument of type '{ status: "pending" | "approved" | "rejected"; moderation_note: string; moderated_by: string; moderated_at: string; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/reviews/[id]/route.ts(29,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/reviews/[id]/route.ts(33,32): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/api/admin/reviews/[id]/route.ts(36,96): error TS2339: Property 'product_id' does not exist on type 'never'.
+src/app/api/admin/reviews/[id]/route.ts(37,18): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/api/admin/reviews/[id]/route.ts(37,62): error TS2339: Property 'handle' does not exist on type 'never'.
+src/app/api/admin/shipping-zones/[id]/route.ts(37,80): error TS2345: Argument of type '{ name: string; provinces: string[]; cities: string[]; excluded_cities: string[]; free_shipping_min_paisa: number | null; flat_fee_paisa: number; cod_fee_paisa: number; is_active: boolean; notes: string; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/shipping-zones/[id]/route.ts(44,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/shipping-zones/route.ts(19,9): error TS2353: Object literal may only specify known properties, and 'name' does not exist in type 'never[]'.
+src/app/api/admin/shipping-zones/route.ts(38,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/shipping-zones/route.ts(41,23): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/social-proof/route.ts(27,17): error TS2561: Object literal may only specify known properties, but 'key' does not exist in type 'never[]'. Did you mean to write 'keys'?
+src/app/api/admin/social-proof/route.ts(30,47): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/api/admin/social-proof/route.ts(35,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/social-proof/route.ts(38,26): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/api/admin/staff/[userId]/route.ts(47,26): error TS2339: Property 'role' does not exist on type 'never'.
+src/app/api/admin/staff/[userId]/route.ts(54,9): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/staff/[userId]/route.ts(58,32): error TS2339: Property 'role' does not exist on type 'never'.
+src/app/api/admin/staff/[userId]/route.ts(58,53): error TS2339: Property 'is_active' does not exist on type 'never'.
+src/app/api/admin/staff/[userId]/route.ts(63,73): error TS2345: Argument of type '{ role: "admin" | "manager" | "editor" | "fulfillment"; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/staff/[userId]/route.ts(71,73): error TS2345: Argument of type '{ is_active: boolean; }' is not assignable to parameter of type 'never'.
+src/app/api/admin/staff/[userId]/route.ts(79,17): error TS2339: Property 'is_active' does not exist on type 'never'.
+src/app/api/admin/staff/[userId]/route.ts(87,20): error TS2339: Property 'role' does not exist on type 'never'.
+src/app/api/admin/staff/route.ts(68,17): error TS2353: Object literal may only specify known properties, and 'user_id' does not exist in type 'never[]'.
+src/app/api/admin/staff/route.ts(74,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/store-settings/route.ts(36,23): error TS2339: Property 'key' does not exist on type 'never'.
+src/app/api/admin/store-settings/route.ts(36,34): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/api/admin/store-settings/route.ts(103,15): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/api/admin/store-settings/route.ts(103,35): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/api/admin/store-settings/route.ts(103,76): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/api/admin/store-settings/route.ts(104,28): error TS2339: Property 'key' does not exist on type 'never'.
+src/app/api/admin/store-settings/route.ts(104,37): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/api/admin/store-settings/route.ts(174,17): error TS2345: Argument of type '{ key: string; value: Record<string, unknown>; updated_at: string; updated_by: string; }' is not assignable to parameter of type 'never[]'.
+  Type '{ key: string; value: Record<string, unknown>; updated_at: string; updated_by: string; }' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/api/admin/store-settings/route.ts(205,21): error TS2339: Property 'key' does not exist on type 'never'.
+src/app/api/admin/store-settings/route.ts(205,30): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/api/admin/store-settings/route.ts(228,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/theme/homepage/publish/route.ts(62,74): error TS2345: Argument of type '{ payload: { actor_user_id: string; source_version_id: string | null; }; }' is not assignable to parameter of type 'undefined'.
+src/app/api/admin/theme/homepage/publish/route.ts(106,11): error TS2339: Property 'published_version_id' does not exist on type 'never'.
+src/app/api/admin/theme/homepage/publish/route.ts(108,11): error TS2339: Property 'status' does not exist on type 'never'.
+src/app/api/admin/theme/homepage/publish/route.ts(120,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/theme/homepage/rollback/route.ts(56,75): error TS2345: Argument of type '{ payload: { actor_user_id: string; target_version_id: string; }; }' is not assignable to parameter of type 'undefined'.
+src/app/api/admin/theme/homepage/rollback/route.ts(75,7): error TS2353: Object literal may only specify known properties, and 'actor_user_id' does not exist in type 'never[]'.
+src/app/api/admin/theme/homepage/route.ts(51,35): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/theme/homepage/route.ts(60,35): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/theme/homepage/route.ts(71,32): error TS2339: Property 'sections' does not exist on type 'never'.
+src/app/api/admin/theme/homepage/route.ts(77,29): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/theme/homepage/route.ts(78,25): error TS2339: Property 'label' does not exist on type 'never'.
+src/app/api/admin/theme/homepage/route.ts(80,33): error TS2339: Property 'theme_settings' does not exist on type 'never'.
+src/app/api/admin/theme/homepage/route.ts(81,46): error TS2339: Property 'published_version_id' does not exist on type 'never'.
+src/app/api/admin/theme/homepage/route.ts(120,35): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/admin/theme/homepage/route.ts(124,87): error TS2345: Argument of type '{ payload: { actor_user_id: string; sections: { id: string; type: string; enabled: boolean; label: string; settings: Record<string, unknown>; }[]; }; }' is not assignable to parameter of type 'undefined'.
+src/app/api/admin/theme/homepage/route.ts(135,90): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/checkout/cod/route.ts(62,17): error TS2339: Property 'value' does not exist on type 'never'.
+src/app/api/checkout/cod/route.ts(103,72): error TS2345: Argument of type '{ payload: { idempotency_key: string; customer_name: string; customer_phone_e164: string; customer_phone_normalized: string; customer_email: string | null; customer_note: string; shipping_zone_id: string; ... 4 more ...; lines: { ...; }[]; }; }' is not assignable to parameter of type 'undefined'.
+src/app/api/checkout/cod/route.ts(109,71): error TS2345: Argument of type '{ payload: { idempotency_key: string; customer_name: string; customer_phone_e164: string; customer_phone_normalized: string; customer_email: string | null; customer_note: string; shipping_zone_id: string; ... 4 more ...; lines: { ...; }[]; }; }' is not assignable to parameter of type 'undefined'.
+src/app/api/checkout/cod/route.ts(135,7): error TS18047: 'result' is possibly 'null'.
+src/app/api/checkout/cod/route.ts(135,36): error TS18047: 'result' is possibly 'null'.
+src/app/api/checkout/cod/route.ts(136,42): error TS18047: 'result' is possibly 'null'.
+src/app/api/checkout/cod/route.ts(141,18): error TS18047: 'result' is possibly 'null'.
+src/app/api/checkout/cod/route.ts(142,18): error TS18047: 'result' is possibly 'null'.
+src/app/api/checkout/cod/route.ts(143,20): error TS18047: 'result' is possibly 'null'.
+src/app/api/checkout/cod/route.ts(144,16): error TS18047: 'result' is possibly 'null'.
+src/app/api/checkout/quote/route.ts(42,68): error TS2345: Argument of type '{ payload: { address: { city: string; province: string; }; shipping_zone_id: string | null; }; }' is not assignable to parameter of type 'undefined'.
+src/app/api/checkout/quote/route.ts(67,32): error TS2339: Property 'products' does not exist on type 'never'.
+src/app/api/checkout/quote/route.ts(69,32): error TS2339: Property 'purchasable' does not exist on type 'never'.
+src/app/api/checkout/quote/route.ts(69,78): error TS2339: Property 'price_paisa' does not exist on type 'never'.
+src/app/api/checkout/quote/route.ts(75,32): error TS2339: Property 'price_paisa' does not exist on type 'never'.
+src/app/api/checkout/quote/route.ts(79,26): error TS2339: Property 'options' does not exist on type 'never'.
+src/app/api/checkout/quote/route.ts(98,17): error TS2339: Property 'ok' does not exist on type 'never'.
+src/app/api/checkout/quote/route.ts(99,20): error TS2339: Property 'error' does not exist on type 'never'.
+src/app/api/checkout/quote/route.ts(100,22): error TS2339: Property 'message' does not exist on type 'never'.
+src/app/api/checkout/quote/route.ts(110,15): error TS2339: Property 'ok' does not exist on type 'never'.
+src/app/api/reviews/route.ts(35,22): error TS2339: Property 'id' does not exist on type 'never'.
+src/app/api/reviews/route.ts(38,73): error TS2345: Argument of type 'ReviewRow' is not assignable to parameter of type 'never[]'.
+  Type 'ReviewRow' is missing the following properties from type 'never[]': length, pop, push, concat, and 35 more.
+src/app/sitemap.ts(21,43): error TS2339: Property 'slug' does not exist on type 'never'.
+src/lib/auth/staff-directory.ts(27,88): error TS2339: Property 'user_id' does not exist on type 'never'.
+src/lib/auth/staff-directory.ts(31,19): error TS2339: Property 'user_id' does not exist on type 'never'.
+src/lib/auth/staff-directory.ts(33,17): error TS2339: Property 'role' does not exist on type 'never'.
+src/lib/auth/staff-directory.ts(34,19): error TS2339: Property 'is_active' does not exist on type 'never'.
+src/lib/auth/staff-directory.ts(35,22): error TS2339: Property 'created_at' does not exist on type 'never'.
+src/lib/auth/staff.ts(59,31): error TS2339: Property 'is_active' does not exist on type 'never'.
+src/lib/auth/staff.ts(64,16): error TS2339: Property 'role' does not exist on type 'never'.
+src/lib/auth/staff.ts(93,31): error TS2339: Property 'is_active' does not exist on type 'never'.
+src/lib/auth/staff.ts(97,21): error TS2339: Property 'role' does not exist on type 'never'.
+src/lib/catalog/reviews-server.ts(25,48): error TS2339: Property 'id' does not exist on type 'never'.
+src/lib/catalog/reviews-server.ts(25,62): error TS2339: Property 'author_name' does not exist on type 'never'.
+src/lib/catalog/reviews-server.ts(25,85): error TS2339: Property 'rating' does not exist on type 'never'.
+src/lib/catalog/reviews-server.ts(25,102): error TS2339: Property 'title' does not exist on type 'never'.
+src/lib/catalog/reviews-server.ts(25,117): error TS2339: Property 'body' does not exist on type 'never'.
+src/lib/catalog/reviews-server.ts(25,131): error TS2339: Property 'created_at' does not exist on type 'never'.
+src/lib/collections/storefront.ts(34,24): error TS2339: Property 'collection_products' does not exist on type 'never'.
+src/lib/collections/storefront.ts(35,22): error TS2339: Property 'rule' does not exist on type 'never'.
+src/lib/collections/storefront.ts(36,27): error TS2339: Property 'collection_type' does not exist on type 'never'.
+src/lib/collections/storefront.ts(46,17): error TS2339: Property 'slug' does not exist on type 'never'.
+src/lib/collections/storefront.ts(47,18): error TS2339: Property 'title' does not exist on type 'never'.
+src/lib/collections/storefront.ts(48,24): error TS2339: Property 'description' does not exist on type 'never'.
+src/lib/collections/storefront.ts(49,21): error TS2339: Property 'seo_title' does not exist on type 'never'.
+src/lib/collections/storefront.ts(50,27): error TS2339: Property 'seo_description' does not exist on type 'never'.
+src/lib/commerce/checkout-readiness-server.ts(37,29): error TS2339: Property 'value' does not exist on type 'never'.
+src/lib/commerce/checkout-readiness-server.ts(40,22): error TS2339: Property 'name' does not exist on type 'never'.
+src/lib/commerce/checkout-readiness-server.ts(41,19): error TS2339: Property 'is_active' does not exist on type 'never'.
+src/lib/commerce/checkout-readiness-server.ts(42,34): error TS2339: Property 'provinces' does not exist on type 'never'.
+src/lib/commerce/checkout-readiness-server.ts(42,50): error TS2339: Property 'provinces' does not exist on type 'never'.
+src/lib/content/reels-server.ts(24,17): error TS2339: Property 'id' does not exist on type 'never'.
+src/lib/content/reels-server.ts(25,20): error TS2339: Property 'title' does not exist on type 'never'.
+src/lib/content/reels-server.ts(26,22): error TS2339: Property 'caption' does not exist on type 'never'.
+src/lib/content/reels-server.ts(27,23): error TS2339: Property 'video_url' does not exist on type 'never'.
+src/lib/content/reels-server.ts(28,24): error TS2339: Property 'poster_url' does not exist on type 'never'.
+src/lib/content/reels-server.ts(29,29): error TS2339: Property 'products' does not exist on type 'never'.
+src/lib/content/reels-server.ts(30,26): error TS2339: Property 'creator_name' does not exist on type 'never'.
+src/lib/content/reels-server.ts(31,18): error TS2339: Property 'tag' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(29,37): error TS2339: Property 'value' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(52,35): error TS2339: Property 'order_addresses' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(52,56): error TS2339: Property 'order_addresses' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(52,79): error TS2339: Property 'order_addresses' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(53,22): error TS2339: Property 'order_items' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(56,20): error TS2339: Property 'id' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(57,19): error TS2339: Property 'status' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(58,22): error TS2339: Property 'created_at' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(118,18): error TS2339: Property 'products' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(119,15): error TS2339: Property 'kind' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(120,19): error TS2339: Property 'starts_at' does not exist on type 'never'.
+src/lib/content/social-proof-server.ts(121,17): error TS2339: Property 'ends_at' does not exist on type 'never'.
+src/lib/content/storefront-presentation-server.ts(22,48): error TS2339: Property 'value' does not exist on type 'never'.
+src/lib/notify/outbox.ts(87,13): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type 'never'.
+src/lib/notify/outbox.ts(181,88): error TS2345: Argument of type '{ p_limit: number; p_lease_seconds: number; p_order_id: string | null; p_max_attempts: number; p_retry_window_hours: number; p_manual: boolean; }' is not assignable to parameter of type 'undefined'.
+src/lib/security/rate-limit.ts(28,70): error TS2345: Argument of type '{ p_key: string; p_limit: number; p_window_seconds: number; }' is not assignable to parameter of type 'undefined'.

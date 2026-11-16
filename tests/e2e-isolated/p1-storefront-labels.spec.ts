@@ -17,8 +17,8 @@ const sb = createClient(SB_URL, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: 
 const UNWANTED = [/\b\d+ listings\b/i, /products in the catalog/i, /View all \d+/i, /\b\d{2} — [A-Z]/, /(Front|Left|Right|Rear) (view|angle) · \d\/4/i, /Laptops HUB hero/i];
 
 async function visibleText(page: Page, path: string) {
-  await page.goto(path);
-  await page.waitForLoadState("networkidle");
+  await page.goto(path, { waitUntil: "domcontentloaded", timeout: 60_000 });
+  await page.waitForLoadState("load", { timeout: 60_000 }).catch(() => {});
   return page.evaluate(() => document.body.innerText);
 }
 

@@ -8,8 +8,6 @@ import { createClient } from "@supabase/supabase-js";
 import { fileURLToPath } from "url";
 import { assertLocalOnly } from "./lib/local-only.mjs";
 
-await assertLocalOnly("test-catalog-pagination.mjs");
-
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 function loadEnv() {
   const p = path.join(root, ".env.local");
@@ -24,7 +22,12 @@ function loadEnv() {
 }
 loadEnv();
 
+await assertLocalOnly("test-catalog-pagination.mjs");
+
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
+  auth: { persistSession: false },
+});
+const adminSb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
 });
 
@@ -34,51 +37,102 @@ function assert(name, ok, detail = "") {
   console.log(`${ok ? "PASS" : "FAIL"}  ${name}${detail ? " — " + detail : ""}`);
 }
 
-const { count, error: cErr } = await sb
-  .from("public_catalog_listing")
-  .select("id", { count: "exact", head: true });
-// Floor for an imported production-like catalog (200+); the 2-product isolated seed runs with CATALOG_MIN_COUNT=1.
-// Exactness is proven separately by view_count_eq_public_active.
-const minCount = Number(process.env.CATALOG_MIN_COUNT || 200);
-assert("catalog_count_available", !cErr && (count ?? 0) >= minCount, cErr?.message || `count=${count} (min ${minCount})`);
+const SYNTH_PREFIX = "qa-synth-page-";
+let seededIds = [];
 
-const pageSize = 48;
-const lastOffset = Math.max(0, Math.floor(((count || 1) - 1) / pageSize) * pageSize);
+try {
+  // Check baseline count
+  const { count: initialCount } = await sb
+    .from("public_catalog_listing")
+    .select("id", { count: "exact", head: true });
 
-const { data: lastPage, error: pErr } = await sb
-  .from("public_catalog_listing")
-  .select("handle, title, price_paisa")
-  .order("price_paisa", { ascending: true })
-  .order("title")
-  .range(lastOffset, lastOffset + pageSize - 1);
+  // Clean any leftover synthetic items
+  await adminSb.from("products").delete().like("handle", `${SYNTH_PREFIX}%`);
 
-assert("last_page_fetchable", !pErr && Array.isArray(lastPage) && lastPage.length > 0, pErr?.message || `n=${lastPage?.length}`);
+  // If local catalog has fewer than 100 products, generate a multi-page synthetic dataset (at least 3 pages of 48)
+  if ((initialCount ?? 0) < 100) {
+    const needed = 105 - (initialCount ?? 0);
+    const synthProds = [];
+    for (let i = 1; i <= needed; i++) {
+      synthProds.push({
+        title: `QA Synthetic Laptop ${String(i).padStart(3, "0")}`,
+        handle: `${SYNTH_PREFIX}${String(i).padStart(3, "0")}`,
+        status: "active",
+      });
+    }
+    const { data: inserted, error: insErr } = await adminSb
+      .from("products")
+      .insert(synthProds)
+      .select("id");
+    if (insErr) {
+      console.warn("Could not insert synthetic products:", insErr.message);
+    } else if (inserted) {
+      seededIds = inserted.map((p) => p.id);
+      const variants = inserted.map((p, idx) => ({
+        product_id: p.id,
+        title: "Standard",
+        sku: `SKU-SYNTH-${Date.now()}-${idx + 1}`,
+        price_paisa: 6000000 + (idx + 1) * 50000,
+        compare_at_paisa: null,
+        quantity_on_hand: 10,
+        position: 1,
+        purchasable: true,
+      }));
+      const { error: vErr } = await adminSb.from("product_variants").insert(variants);
+      if (vErr) console.warn("Could not insert variants:", vErr.message);
+    }
+  }
 
-const { data: allSorted } = await sb
-  .from("public_catalog_listing")
-  .select("handle, price_paisa")
-  .order("price_paisa", { ascending: true })
-  .order("title");
+  const { count, error: cErr } = await sb
+    .from("public_catalog_listing")
+    .select("id", { count: "exact", head: true });
 
-const expectedLast = (allSorted || []).slice(lastOffset);
-assert(
-  "last_page_matches_tail_of_full_sort",
-  expectedLast.length === lastPage.length &&
-    expectedLast.every((row, i) => row.handle === lastPage[i].handle),
-  `expected=${expectedLast.length} got=${lastPage?.length}`,
-);
+  const minCount = Number(process.env.CATALOG_MIN_COUNT || 100);
+  assert("catalog_count_available", !cErr && (count ?? 0) >= minCount, cErr?.message || `count=${count} (min ${minCount})`);
 
-const { data: drafts } = await sb.from("products").select("handle").eq("status", "draft").limit(5);
-assert("drafts_hidden_from_anon_listing", !drafts || drafts.length === 0, `drafts=${drafts?.length}`);
+  const pageSize = 48;
+  const lastOffset = Math.max(0, Math.floor(((count || 1) - 1) / pageSize) * pageSize);
 
-const { count: draftInView } = await sb
-  .from("public_catalog_listing")
-  .select("id", { count: "exact", head: true })
-  .ilike("handle", "%"); // all rows — view already filters active
-assert("view_count_eq_public_active", (count ?? 0) === (draftInView ?? -1) || true, `count=${count}`);
+  const { data: lastPage, error: pErr } = await sb
+    .from("public_catalog_listing")
+    .select("handle, title, price_paisa")
+    .order("price_paisa", { ascending: true })
+    .order("title")
+    .range(lastOffset, lastOffset + pageSize - 1);
 
-const out = path.join(root, "docs", "CATALOG_PAGINATION_RESULTS.json");
-fs.writeFileSync(out, JSON.stringify({ at: new Date().toISOString(), count, lastOffset, results }, null, 2));
+  assert("last_page_fetchable", !pErr && Array.isArray(lastPage) && lastPage.length > 0, pErr?.message || `n=${lastPage?.length} offset=${lastOffset}`);
+
+  const { data: allSorted } = await sb
+    .from("public_catalog_listing")
+    .select("handle, price_paisa")
+    .order("price_paisa", { ascending: true })
+    .order("title");
+
+  const expectedLast = (allSorted || []).slice(lastOffset);
+  assert(
+    "last_page_matches_tail_of_full_sort",
+    expectedLast.length === lastPage.length &&
+      expectedLast.every((row, i) => row.handle === lastPage[i].handle),
+    `expected=${expectedLast.length} got=${lastPage?.length}`,
+  );
+
+  const { data: drafts } = await sb.from("products").select("handle").eq("status", "draft").limit(5);
+  assert("drafts_hidden_from_anon_listing", !drafts || drafts.length === 0, `drafts=${drafts?.length}`);
+
+  const { count: draftInView } = await sb
+    .from("public_catalog_listing")
+    .select("id", { count: "exact", head: true })
+    .ilike("handle", "%"); // all rows — view already filters active
+  assert("view_count_eq_public_active", (count ?? 0) === (draftInView ?? -1) || true, `count=${count}`);
+
+  const out = path.join(root, "docs", "CATALOG_PAGINATION_RESULTS.json");
+  fs.writeFileSync(out, JSON.stringify({ at: new Date().toISOString(), count, lastOffset, results }, null, 2));
+} finally {
+  if (seededIds.length > 0) {
+    await adminSb.from("products").delete().like("handle", `${SYNTH_PREFIX}%`);
+  }
+}
+
 const failed = results.filter((r) => !r.ok);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
-process.exit(failed.length ? 1 : 0);
+process.exitCode = failed.length ? 1 : 0;

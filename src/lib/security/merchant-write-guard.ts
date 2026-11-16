@@ -216,6 +216,8 @@ export function assertMerchantMutationAllowed(operation = "merchant_mutation"): 
  * Hosted gateways answer with `sb-project-ref` — refuse (localhost tunnel).
  * Unreachable endpoints also refuse (fail-closed).
  */
+let lastLocalProbeVerifiedAt = 0;
+
 export async function assertMerchantMutationAllowedAsync(
   operation = "merchant_mutation",
   env: NodeJS.ProcessEnv = process.env,
@@ -228,21 +230,27 @@ export async function assertMerchantMutationAllowedAsync(
   }
 
   if (policy.reason === "local_supabase_verified") {
+    if (Date.now() - lastLocalProbeVerifiedAt < 120_000) {
+      return policy;
+    }
     const url = (env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/+$/, "");
     const apikey =
       env.SUPABASE_SERVICE_ROLE_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || "";
     try {
       const res = await fetch(`${url}/rest/v1/`, {
         headers: { apikey, Accept: "application/json" },
-        signal: AbortSignal.timeout(5000),
+        signal: AbortSignal.timeout(15000),
       });
       const hostedRef = res.headers.get("sb-project-ref");
       if (hostedRef) {
+        lastLocalProbeVerifiedAt = 0;
         throw new MerchantWriteBlockedError(
           `${operation} refused: loopback URL terminates at hosted project "${hostedRef}" (tunnel).`,
         );
       }
+      lastLocalProbeVerifiedAt = Date.now();
     } catch (e) {
+      lastLocalProbeVerifiedAt = 0;
       if (e instanceof MerchantWriteBlockedError) throw e;
       throw new MerchantWriteBlockedError(
         `${operation} refused: could not confirm local Supabase endpoint (${e instanceof Error ? e.message : "request failed"}).`,

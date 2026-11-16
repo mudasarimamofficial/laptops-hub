@@ -1,0 +1,57 @@
+
+Running 82 tests using 1 worker
+
+  x   1 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/about renders complete copy (4.5s)
+  -   2 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/why-laptops-hub renders complete copy
+  -   3 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/contact renders complete copy
+  -   4 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/faq renders complete copy
+  -   5 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/condition-guide renders complete copy
+  -   6 tests\e2e-isolated\content-pages.spec.ts:30:9 › prepared content pages (isolated) › /pages/order-inquiries renders complete copy
+  -   7 tests\e2e-isolated\content-pages.spec.ts:38:7 › prepared content pages (isolated) › FAQ accordion works with the keyboard
+  -   8 tests\e2e-isolated\content-pages.spec.ts:50:7 › prepared content pages (isolated) › published contact page keeps the working contact form
+  x   9 tests\e2e-isolated\home-inquiry.spec.ts:34:9 › homepage inquiry (isolated) › section is visible before the footer at 375px, no horizontal scroll (3.4s)
+  -  10 tests\e2e-isolated\home-inquiry.spec.ts:34:9 › homepage inquiry (isolated) › section is visible before the footer at 820px, no horizontal scroll
+  -  11 tests\e2e-isolated\home-inquiry.spec.ts:34:9 › homepage inquiry (isolated) › section is visible before the footer at 1440px, no horizontal scroll
+  -  12 tests\e2e-isolated\home-inquiry.spec.ts:49:7 › homepage inquiry (isolated) › invalid input is refused in the browser and nothing is stored
+  -  13 tests\e2e-isolated\home-inquiry.spec.ts:68:7 › homepage inquiry (isolated) › valid inquiry is saved once (double click), staff see it and update its status
+  -  14 tests\e2e-isolated\home-inquiry.spec.ts:107:7 › homepage inquiry (isolated) › product inquiry dialog (inquiry-only listing) is saved once and reaches staff
+  -  15 tests\e2e-isolated\home-inquiry.spec.ts:132:7 › homepage inquiry (isolated) › bots, cross-site posts, server errors and offline submissions are handled truthfully
+  x  16 tests\e2e-isolated\launch-journey.spec.ts:65:7 › launch journeys (isolated) › customer: product → cart → checkout → confirmation (3ms)
+  -  17 tests\e2e-isolated\launch-journey.spec.ts:92:7 › launch journeys (isolated) › notifications: business alert + customer confirmation delivered once
+  -  18 tests\e2e-isolated\launch-journey.spec.ts:102:7 › launch journeys (isolated) › customer: track order by number + phone; wrong phone refused
+  -  19 tests\e2e-isolated\launch-journey.spec.ts:114:7 › launch journeys (isolated) › checkout: unserved address and invalid phone are refused
+  -  20 tests\e2e-isolated\launch-journey.spec.ts:133:7 › launch journeys (isolated) › duplicate submit: one order, one notification
+  -  21 tests\e2e-isolated\launch-journey.spec.ts:148:7 › launch journeys (isolated) › admin: editor cannot open orders
+  -  22 tests\e2e-isolated\launch-journey.spec.ts:154:7 › launch journeys (isolated) › admin: confirm → pack → dispatch with tracking → collect COD; customer sees it
+  -  23 tests\e2e-isolated\launch-journey.spec.ts:196:7 › launch journeys (isolated) › admin: cancellation by fulfillment staff
+  -  24 tests\e2e-isolated\launch-journey.spec.ts:210:7 › launch journeys (isolated) › notifications: provider outage → failed, staff retry → sent once
+  -  25 tests\e2e-isolated\launch-journey.spec.ts:231:7 › launch journeys (isolated) › cron endpoint requires the secret
+  x  26 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:49:9 › P0: admin isolation and checkout gates (isolated) › admin has no storefront chrome at 360px (5.3s)
+  -  27 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:49:9 › P0: admin isolation and checkout gates (isolated) › admin has no storefront chrome at 390px
+  -  28 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:49:9 › P0: admin isolation and checkout gates (isolated) › admin has no storefront chrome at 768px
+  -  29 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:49:9 › P0: admin isolation and checkout gates (isolated) › admin has no storefront chrome at 1280px
+  -  30 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:49:9 › P0: admin isolation and checkout gates (isolated) › admin has no storefront chrome at 1440px
+  -  31 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:72:7 › P0: admin isolation and checkout gates (isolated) › storefront keeps its chrome (home, collection, checkout)
+  -  32 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:81:7 › P0: admin isolation and checkout gates (isolated) › admin overview shows the server-side readiness matrix
+  -  33 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:97:7 › P0: admin isolation and checkout gates (isolated) › PKR 0 + 0 zone: 'Free delivery', total equals subtotal; restored afterwards
+  -  34 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:121:7 › P0: admin isolation and checkout gates (isolated) › nonzero fees render exactly; unserved city gives no clickable order
+  -  35 tests\e2e-isolated\p0-admin-isolation-and-checkout-gates.spec.ts:138:7 › P0: admin isolation and checkout gates (isolated) › a failing blocking gate (store setting off) makes storefront checkout non-clickable
+  x  36 tests\e2e-isolated\p0-inventory-oversell.spec.ts:61:7 › P0: oversell is owner/admin-only and honoured at checkout (isolated) › manager: control is read-only and a forged API change is refused (2.9s)
+  -  37 tests\e2e-isolated\p0-inventory-oversell.spec.ts:73:7 › P0: oversell is owner/admin-only and honoured at checkout (isolated) › owner: sets it in the matrix, it persists, and a save without the field keeps it
+  -  38 tests\e2e-isolated\p0-inventory-oversell.spec.ts:95:7 › P0: oversell is owner/admin-only and honoured at checkout (isolated) › checkout honours it: order at 0 stock succeeds, stock -1, ledger written
+  x  39 tests\e2e-isolated\p0-merchant-inventory-collections.spec.ts:60:7 › P0: collections, inventory desk and analytics (isolated) › manual collection: search, add, storefront shows exactly that product (3.4s)
+  -  40 tests\e2e-isolated\p0-merchant-inventory-collections.spec.ts:71:7 › P0: collections, inventory desk and analytics (isolated) › automated collection by brand: storefront shows matching products only
+  -  41 tests\e2e-isolated\p0-merchant-inventory-collections.spec.ts:79:7 › P0: collections, inventory desk and analytics (isolated) › inventory desk: receive, count, refuse below zero, history; editor refused
+  -  42 tests\e2e-isolated\p0-merchant-inventory-collections.spec.ts:129:7 › P0: collections, inventory desk and analytics (isolated) › analytics: all-time numbers match the database
+  x  43 tests\e2e-isolated\p0-staff-invitations.spec.ts:75:7 › P0: staff invitations, roles and deactivation (isolated) › owner invites an admin and a fulfillment person; each sets a password and gets exactly that role (2.7s)
+  -  44 tests\e2e-isolated\p0-staff-invitations.spec.ts:109:7 › P0: staff invitations, roles and deactivation (isolated) › admin limits: cannot grant admin, cannot touch owner, self or another admin
+  -  45 tests\e2e-isolated\p0-staff-invitations.spec.ts:125:9 › P0: staff invitations, roles and deactivation (isolated) › manager: Staff page and API refused
+  -  46 tests\e2e-isolated\p0-staff-invitations.spec.ts:125:9 › P0: staff invitations, roles and deactivation (isolated) › editor: Staff page and API refused
+  -  47 tests\e2e-isolated\p0-staff-invitations.spec.ts:125:9 › P0: staff invitations, roles and deactivation (isolated) › fulfillment: Staff page and API refused
+  -  48 tests\e2e-isolated\p0-staff-invitations.spec.ts:136:7 › P0: staff invitations, roles and deactivation (isolated) › anonymous: refused
+  -  49 tests\e2e-isolated\p0-staff-invitations.spec.ts:141:7 › P0: staff invitations, roles and deactivation (isolated) › deactivation ends access at once; reactivation restores it
+  x  50 tests\e2e-isolated\p1-image-fallback.spec.ts:7:5 › product cards fall back to 'No image' when the CDN photo is gone (4.7s)
+  x  51 tests\e2e-isolated\p1-reels-reviews-blog.spec.ts:46:7 › P1: reels, reviews, blog (isolated) › reels: no row by default; reference and unlicensed videos refused; published owned reel shows (5.7s)
+  -  52 tests\e2e-isolated\p1-reels-reviews-blog.spec.ts:102:7 › P1: reels, reviews, blog (isolated) › reviews: honest empty state; submission is pending until approved; then rating + JSON-LD
+  -  53 tests\e2e-isolated\p1-reels-reviews-blog.spec.ts:157:7 › P1: reels, reviews, blog (isolated) › blog: empty publish refused; published post is public and sanitised; draft is 404
+  -  54 tests\e2e-isolated\p1-reels-reviews-blog.spec.ts:202:7 › P1: reels, reviews, blog (isolated) › fulfillment staff cannot write posts or reels or moderate reviews

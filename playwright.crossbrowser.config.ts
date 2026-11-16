@@ -24,7 +24,7 @@ try {
 const chromePath = base.use?.launchOptions?.executablePath;
 export default defineConfig({
   testDir: "tests/e2e-isolated",
-  testMatch: ["cross-browser-storefront.spec.ts", "launch-journey.spec.ts"],
+  testMatch: ["cross-browser-storefront.spec.ts", "launch-journey.spec.ts", "cross-browser-home-sections.spec.ts"],
   timeout: 180_000, // six widths per page, first project runs on cold caches
   retries: 0,
   workers: 1,

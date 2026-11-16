@@ -5,7 +5,8 @@ import {
   createAuthorizedStaffWriter,
   staffErrorResponse,
 } from "@/lib/auth/staff";
-import { V5_HOMEPAGE_SECTIONS, type SectionInstance } from "@/lib/content/site-builder-schema";
+import { V5_HOMEPAGE_SECTIONS, withLaterSections, type SectionInstance } from "@/lib/content/site-builder-schema";
+import { homeSectionSettingProblems } from "@/lib/content/home-sections";
 
 const saveSchema = z.object({
   sections: z.array(
@@ -68,7 +69,8 @@ export async function GET() {
       .eq("template_key", "homepage")
       .maybeSingle();
 
-    const sections = (version?.sections as SectionInstance[] | undefined) || V5_HOMEPAGE_SECTIONS;
+    // Drafts saved before a section type existed get it appended (not published until the owner publishes).
+    const sections = withLaterSections((version?.sections as SectionInstance[] | undefined) || V5_HOMEPAGE_SECTIONS);
 
     return NextResponse.json(
       {
@@ -96,6 +98,10 @@ export async function PUT(request: Request) {
     const parsed = saveSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json({ error: "validation_failed" }, { status: 400 });
+    }
+    const problems = homeSectionSettingProblems(parsed.data.sections);
+    if (problems.length) {
+      return NextResponse.json({ error: "validation_failed", message: problems.join(" ") }, { status: 400 });
     }
 
     const { data: template, error: tErr } = await supabase

@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { verifiedUser } from "./verified-user";
 
 /**
  * Session refresh + coarse /admin gate.
@@ -27,9 +28,10 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Coarse gate only: refreshes an expired session (cookies above) and verifies the JWT's signature and expiry locally
+  // against the project's signing keys — no Auth-server round trip on every request. The authoritative check (which
+  // also refuses signed-out sessions) is requireStaff()/requireStaffPage() in every admin page and API route.
+  const user = await verifiedUser(supabase);
 
   const path = request.nextUrl.pathname;
 

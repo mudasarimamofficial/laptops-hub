@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "Page not found · Laptops HUB", robo
 
 export default function NotFound() {
   return (
-    <StorefrontLayout>
+    <StorefrontLayout after={null}>
       <NotFoundView title="This page doesn’t exist" msg="The link may be out of date. Try the catalog or search for a model." />
     </StorefrontLayout>
   );

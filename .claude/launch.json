@@ -4,23 +4,88 @@
     {
       "name": "laptops-hub-local",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["next", "start", "-p", "3000", "-H", "127.0.0.1"],
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3000",
+        "-H",
+        "127.0.0.1"
+      ],
       "port": 3000,
       "url": "http://127.0.0.1:3000"
     },
     {
       "name": "isolated-app",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["next", "start", "-p", "3001", "-H", "127.0.0.1"],
-      "env": { "THEME_PUBLISHED_ENABLED": "1" },
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3001",
+        "-H",
+        "127.0.0.1"
+      ],
+      "env": {
+        "THEME_PUBLISHED_ENABLED": "1"
+      },
       "port": 3001,
       "url": "http://127.0.0.1:3001"
     },
     {
       "name": "fake-resend",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["scripts/test-fixtures/fake-resend.mjs"],
+      "runtimeArgs": [
+        "scripts/test-fixtures/fake-resend.mjs"
+      ],
       "port": 4599
+    },
+    {
+      "name": "perf-proxy",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/perf/latency-proxy.mjs",
+        "54399",
+        "54321",
+        "110"
+      ],
+      "port": 54399
+    },
+    {
+      "name": "perf-before",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3101",
+        "-H",
+        "127.0.0.1"
+      ],
+      "env": {
+        "NEXT_DIST_DIR": ".next-perf-before",
+        "THEME_PUBLISHED_ENABLED": "1"
+      },
+      "port": 3101,
+      "url": "http://127.0.0.1:3101"
+    },
+    {
+      "name": "perf-after",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3102",
+        "-H",
+        "127.0.0.1"
+      ],
+      "env": {
+        "NEXT_DIST_DIR": ".next-perf-after",
+        "THEME_PUBLISHED_ENABLED": "1"
+      },
+      "port": 3102,
+      "url": "http://127.0.0.1:3102"
     }
   ]
 }

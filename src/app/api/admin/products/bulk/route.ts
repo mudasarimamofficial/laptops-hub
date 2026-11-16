@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
 import { withCatalogRefresh } from "@/lib/catalog/refresh";
+import { isCrossSite } from "@/lib/validation/contact";
 
 const itemSchema = z.object({
   handle: z.string().min(1),
@@ -20,6 +21,9 @@ const bodySchema = z.object({
 
 /** Bulk patch by handle. Price/inventory apply to the first variant of each product. */
 async function handlePOST(request: Request) {
+  if (isCrossSite(request.headers.get("origin"), request.url, request.headers.get("x-forwarded-host") || request.headers.get("host"))) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter(["owner", "admin", "manager", "editor"]);
     const parsed = bodySchema.safeParse(await request.json().catch(() => null));

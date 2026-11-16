@@ -2,7 +2,17 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useHydrated } from "@/lib/ui/use-hydrated";
-import { SECTION_REGISTRY, type SectionInstance, type SectionField } from "@/lib/content/site-builder-schema";
+import {
+  SECTION_REGISTRY,
+  V5_HOMEPAGE_SECTIONS,
+  type SectionInstance,
+  type SectionField,
+  type SectionType,
+} from "@/lib/content/site-builder-schema";
+
+/** Default settings of a section type (used to show the effective value of a field the draft has not set yet). */
+const registryDefaults = (type: SectionType): Record<string, unknown> =>
+  V5_HOMEPAGE_SECTIONS.find((d) => d.type === type)?.settings ?? {};
 import {
   HERO_IMAGE_PRESETS,
   STORY_ANGLE_PRESETS,
@@ -81,15 +91,6 @@ export function HomepageSectionEditor() {
 
   const selected = sections.find((s) => s.id === selectedId) || null;
   const registry = selected ? SECTION_REGISTRY[selected.type] : null;
-
-  function move(id: string, dir: -1 | 1) {
-    const idx = sections.findIndex((s) => s.id === id);
-    const swap = idx + dir;
-    if (idx < 0 || swap < 0 || swap >= sections.length) return;
-    const next = [...sections];
-    [next[idx], next[swap]] = [next[swap], next[idx]];
-    setSections(next);
-  }
 
   function updateSetting(key: string, value: unknown) {
     if (!selected) return;
@@ -391,14 +392,76 @@ export function HomepageSectionEditor() {
       );
     }
 
+    const help = f.help ? <span className="mt-1 block text-xs text-[var(--adm-ink-2)]">{f.help}</span> : null;
+
+    if (f.kind === "boolean") {
+      const fallback = (registryDefaults(selected.type)[f.key] as boolean | undefined) ?? false;
+      const checked = typeof val === "boolean" ? val : fallback;
+      return (
+        <div key={f.key} className="text-sm">
+          <label className="flex items-start gap-2">
+            <input
+              type="checkbox"
+              className="mt-0.5"
+              data-testid={`theme-field-${f.key}`}
+              checked={checked}
+              onChange={(e) => updateSetting(f.key, e.target.checked)}
+            />
+            <span className="font-medium">{f.label}</span>
+          </label>
+          {help}
+        </div>
+      );
+    }
+
+    if (f.kind === "select" && f.options) {
+      const fallback = String(registryDefaults(selected.type)[f.key] ?? f.options[0]?.value ?? "");
+      return (
+        <label key={f.key} className="block text-sm">
+          <span className="font-medium">{f.label}</span>
+          <select
+            className="mt-1 w-full rounded-lg border border-[var(--adm-border)] bg-white px-2 py-1.5 text-sm"
+            data-testid={`theme-field-${f.key}`}
+            value={typeof val === "string" ? val : fallback}
+            onChange={(e) => updateSetting(f.key, e.target.value)}
+          >
+            {f.options.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+          {help}
+        </label>
+      );
+    }
+
+    if (f.kind === "textarea") {
+      return (
+        <label key={f.key} className="block text-sm">
+          <span className="font-medium">{f.label}</span>
+          <textarea
+            className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-2 py-1.5 text-sm"
+            rows={3}
+            data-testid={`theme-field-${f.key}`}
+            value={String(val ?? "")}
+            onChange={(e) => updateSetting(f.key, e.target.value)}
+          />
+          {help}
+        </label>
+      );
+    }
+
     return (
       <label key={f.key} className="block text-sm">
         <span className="font-medium">{f.label}</span>
         <input
           className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-2 py-1.5 text-sm"
+          data-testid={`theme-field-${f.key}`}
           value={String(val ?? "")}
           onChange={(e) => updateSetting(f.key, e.target.value)}
         />
+        {help}
       </label>
     );
   }
@@ -543,22 +606,10 @@ export function HomepageSectionEditor() {
               <input type="checkbox" checked={selected.enabled} onChange={() => toggleEnabled(selected.id)} />
               Enabled
             </label>
-            <div className="mt-3 flex gap-2">
-              <button
-                type="button"
-                className="rounded border border-[var(--adm-border)] px-2 py-1 text-xs font-semibold"
-                onClick={() => move(selected.id, -1)}
-              >
-                Move up
-              </button>
-              <button
-                type="button"
-                className="rounded border border-[var(--adm-border)] px-2 py-1 text-xs font-semibold"
-                onClick={() => move(selected.id, 1)}
-              >
-                Move down
-              </button>
-            </div>
+            <p className="mt-3 text-xs text-[var(--adm-ink-2)]">
+              The order of the V5 homepage is fixed by its design. The customer reviews section has its own Position
+              setting below.
+            </p>
             {selected.type === "v5_cinematic_hero" ? (
               <button
                 type="button"

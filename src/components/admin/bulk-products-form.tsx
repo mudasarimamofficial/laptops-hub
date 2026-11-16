@@ -8,7 +8,7 @@ type Row = { handle: string; status: string; pricePkr: string; featured: string 
 export function BulkProductsForm({ initialHandles }: { initialHandles: string[] }) {
   const hydrated = useHydrated();
   const [rows, setRows] = useState<Row[]>(
-    initialHandles.slice(0, 50).map((handle) => ({
+    initialHandles.slice(0, 100).map((handle) => ({
       handle,
       status: "",
       pricePkr: "",

@@ -549,10 +549,10 @@ BEGIN
     SELECT 1 FROM public.admin_memberships m
     WHERE m.user_id = v_actor AND m.is_active AND m.role IN ('owner', 'admin')
   ) THEN
-    RAISE EXCEPTION 'forbidden' USING ERRCODE = 'P0001', MESSAGE = 'owner or admin required to publish';
+    RAISE EXCEPTION 'forbidden' USING ERRCODE = 'P0001', DETAIL = 'owner or admin required to publish';
   END IF;
   IF auth.uid() IS NOT NULL AND auth.uid() IS DISTINCT FROM v_actor THEN
-    RAISE EXCEPTION 'forbidden' USING ERRCODE = 'P0001', MESSAGE = 'actor mismatch';
+    RAISE EXCEPTION 'forbidden' USING ERRCODE = 'P0001', DETAIL = 'actor mismatch';
   END IF;
   SELECT * INTO v_template FROM public.theme_templates WHERE key = 'homepage';
   IF NOT FOUND THEN
@@ -581,6 +581,7 @@ BEGIN
     IF v_type IS NULL OR v_type NOT IN (
       'v5_cinematic_hero','v5_product_story','v5_featured_products','v5_brand_grid','v5_budget_bands',
       'v5_spec_filters','v5_new_gen','v5_chromebook','v5_compare_demo','v5_promo','v5_home_inquiry',
+      'v5_store_reviews','v5_store_map',
       'rich_text','image_banner'
     ) THEN
       RAISE EXCEPTION 'unsupported_section_type' USING ERRCODE = 'P0001';
@@ -897,10 +898,10 @@ BEGIN
     WHERE m.user_id = v_actor AND m.is_active
       AND m.role IN ('owner', 'admin', 'editor')
   ) THEN
-    RAISE EXCEPTION 'forbidden' USING ERRCODE = 'P0001', MESSAGE = 'draft edit requires owner, admin, or editor';
+    RAISE EXCEPTION 'forbidden' USING ERRCODE = 'P0001', DETAIL = 'draft edit requires owner, admin, or editor';
   END IF;
   IF auth.uid() IS NOT NULL AND auth.uid() IS DISTINCT FROM v_actor THEN
-    RAISE EXCEPTION 'forbidden' USING ERRCODE = 'P0001', MESSAGE = 'actor mismatch';
+    RAISE EXCEPTION 'forbidden' USING ERRCODE = 'P0001', DETAIL = 'actor mismatch';
   END IF;
   IF jsonb_typeof(v_sections) <> 'array' OR jsonb_array_length(v_sections) < 1 OR jsonb_array_length(v_sections) > 40 THEN
     RAISE EXCEPTION 'invalid_sections' USING ERRCODE = 'P0001';
@@ -914,9 +915,10 @@ BEGIN
     IF v_type NOT IN (
       'v5_cinematic_hero','v5_product_story','v5_featured_products','v5_brand_grid','v5_budget_bands',
       'v5_spec_filters','v5_new_gen','v5_chromebook','v5_compare_demo','v5_promo','v5_home_inquiry',
+      'v5_store_reviews','v5_store_map',
       'rich_text','image_banner'
     ) THEN
-      RAISE EXCEPTION 'unsupported_section_type' USING ERRCODE = 'P0001', MESSAGE = v_type;
+      RAISE EXCEPTION 'unsupported_section_type' USING ERRCODE = 'P0001', DETAIL = v_type;
     END IF;
     -- Reject javascript: / data: asset URLs in common image keys
     FOR v_url IN
@@ -1821,6 +1823,41 @@ CREATE TABLE public.store_settings (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_by uuid
 );
+CREATE TABLE public.store_testimonials (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    author_name text NOT NULL,
+    rating smallint,
+    body text NOT NULL,
+    review_date date,
+    source text NOT NULL,
+    source_url text,
+    avatar_url text,
+    avatar_permission boolean DEFAULT false NOT NULL,
+    consent_confirmed boolean DEFAULT false NOT NULL,
+    verification_note text DEFAULT ''::text NOT NULL,
+    status text DEFAULT 'draft'::text NOT NULL,
+    show_on_homepage boolean DEFAULT true NOT NULL,
+    featured boolean DEFAULT false NOT NULL,
+    sort_order integer DEFAULT 0 NOT NULL,
+    created_by uuid,
+    updated_by uuid,
+    approved_by uuid,
+    published_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT store_testimonials_author_name_check CHECK (((char_length(btrim(author_name)) >= 2) AND (char_length(btrim(author_name)) <= 80))),
+    CONSTRAINT store_testimonials_avatar_needs_permission CHECK (((avatar_url IS NULL) OR avatar_permission)),
+    CONSTRAINT store_testimonials_avatar_url_check CHECK (((avatar_url IS NULL) OR ((char_length(avatar_url) <= 1000) AND (avatar_url ~* '^https://[^\s<>"'']+$'::text)))),
+    CONSTRAINT store_testimonials_body_check CHECK (((char_length(btrim(body)) >= 10) AND (char_length(btrim(body)) <= 2000))),
+    CONSTRAINT store_testimonials_google_needs_link CHECK (((source <> 'google'::text) OR ((source_url IS NOT NULL) AND (source_url ~* '^https://((www\.)?google\.(com|[a-z]{2})(\.[a-z]{2})?/maps|maps\.google\.(com|[a-z]{2})(\.[a-z]{2})?/|maps\.app\.goo\.gl/|g\.page/)'::text)))),
+    CONSTRAINT store_testimonials_publish_needs_consent CHECK (((status <> 'published'::text) OR consent_confirmed)),
+    CONSTRAINT store_testimonials_rating_check CHECK (((rating IS NULL) OR ((rating >= 1) AND (rating <= 5)))),
+    CONSTRAINT store_testimonials_sort_order_check CHECK (((sort_order >= '-100000'::integer) AND (sort_order <= 100000))),
+    CONSTRAINT store_testimonials_source_check CHECK ((source = ANY (ARRAY['google'::text, 'website'::text, 'merchant'::text]))),
+    CONSTRAINT store_testimonials_source_url_check CHECK (((source_url IS NULL) OR ((char_length(source_url) <= 1000) AND (source_url ~* '^https://[^\s<>"'']+$'::text)))),
+    CONSTRAINT store_testimonials_status_check CHECK ((status = ANY (ARRAY['draft'::text, 'pending'::text, 'published'::text, 'hidden'::text]))),
+    CONSTRAINT store_testimonials_verification_note_check CHECK ((char_length(verification_note) <= 1000))
+);
 CREATE TABLE public.theme_publications (
     template_key text NOT NULL,
     published_version_id uuid NOT NULL,
@@ -1920,6 +1957,8 @@ ALTER TABLE ONLY public.shipping_zones
     ADD CONSTRAINT shipping_zones_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.store_settings
     ADD CONSTRAINT store_settings_pkey PRIMARY KEY (key);
+ALTER TABLE ONLY public.store_testimonials
+    ADD CONSTRAINT store_testimonials_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.theme_publications
     ADD CONSTRAINT theme_publications_pkey PRIMARY KEY (template_key);
 ALTER TABLE ONLY public.theme_templates
@@ -1962,6 +2001,8 @@ CREATE INDEX products_status_updated_idx ON public.products USING btree (status,
 CREATE INDEX products_updated_by_idx ON public.products USING btree (updated_by);
 CREATE INDEX reels_product_id_idx ON public.reels USING btree (product_id);
 CREATE INDEX reels_public_order_idx ON public.reels USING btree (sort_order, created_at DESC) WHERE (status = 'published'::text);
+CREATE INDEX store_testimonials_public_idx ON public.store_testimonials USING btree (featured DESC, sort_order, published_at DESC) WHERE (status = 'published'::text);
+CREATE INDEX store_testimonials_queue_idx ON public.store_testimonials USING btree (status, updated_at DESC);
 CREATE INDEX theme_publications_published_version_id_idx ON public.theme_publications USING btree (published_version_id);
 CREATE INDEX theme_publications_updated_by_idx ON public.theme_publications USING btree (updated_by);
 CREATE INDEX theme_versions_created_by_idx ON public.theme_versions USING btree (created_by);
@@ -1972,6 +2013,7 @@ CREATE TRIGGER orders_updated_at BEFORE UPDATE ON public.orders FOR EACH ROW EXE
 CREATE TRIGGER product_badges_set_updated_at BEFORE UPDATE ON public.product_badges FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 CREATE TRIGGER products_updated_at BEFORE UPDATE ON public.products FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 CREATE TRIGGER reels_set_updated_at BEFORE UPDATE ON public.reels FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+CREATE TRIGGER store_testimonials_updated_at BEFORE UPDATE ON public.store_testimonials FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 CREATE TRIGGER theme_publications_guard BEFORE INSERT OR DELETE OR UPDATE ON public.theme_publications FOR EACH ROW EXECUTE FUNCTION public.theme_publications_guard();
 CREATE TRIGGER theme_versions_immutability BEFORE INSERT OR DELETE OR UPDATE ON public.theme_versions FOR EACH ROW EXECUTE FUNCTION public.theme_versions_immutability_guard();
 CREATE TRIGGER variants_updated_at BEFORE UPDATE ON public.product_variants FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
@@ -2103,6 +2145,8 @@ CREATE POLICY shipping_public_select ON public.shipping_zones FOR SELECT TO auth
 CREATE POLICY shipping_staff_all ON public.shipping_zones TO authenticated USING (public.is_staff()) WITH CHECK (public.is_staff());
 ALTER TABLE public.shipping_zones ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.store_settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.store_testimonials ENABLE ROW LEVEL SECURITY;
+CREATE POLICY store_testimonials_public_select ON public.store_testimonials FOR SELECT TO authenticated, anon USING ((status = 'published'::text));
 ALTER TABLE public.theme_publications ENABLE ROW LEVEL SECURITY;
 CREATE POLICY theme_publications_staff_select ON public.theme_publications FOR SELECT TO authenticated USING (public.is_staff());
 ALTER TABLE public.theme_templates ENABLE ROW LEVEL SECURITY;

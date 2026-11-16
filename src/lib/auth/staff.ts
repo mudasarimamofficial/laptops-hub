@@ -1,6 +1,8 @@
+import { cache } from "react";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
+import type { VerifiedUser } from "@/lib/supabase/verified-user";
 import {
   assertMerchantMutationAllowedAsync,
   MerchantWriteBlockedError,
@@ -25,7 +27,7 @@ export class StaffAuthError extends Error {
   }
 }
 
-async function extractAuthUser(supabase: Awaited<ReturnType<typeof createClient>>) {
+async function extractAuthUser(supabase: Awaited<ReturnType<typeof createClient>>): Promise<VerifiedUser | null> {
   try {
     const reqHeaders = await headers();
     const authHeader = reqHeaders.get("authorization");
@@ -33,35 +35,45 @@ async function extractAuthUser(supabase: Awaited<ReturnType<typeof createClient>
       const token = authHeader.replace(/^Bearer\s+/i, "").trim();
       if (token) {
         const res = await supabase.auth.getUser(token);
-        if (res.data?.user) return res.data.user;
+        if (res.data?.user) return { id: res.data.user.id, email: res.data.user.email ?? null };
       }
     }
   } catch {
     // headers() might not be available in non-request contexts
   }
-  const { data: { user } } = await supabase.auth.getUser();
-  return user ?? null;
+  // Authoritative check with the Auth server (not local JWT verification): a session that was signed out — even on
+  // another device — is refused immediately. Done once per request (lookupCurrentStaff is request-cached).
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user ? { id: user.id, email: user.email ?? null } : null;
 }
 
-/** Read membership for the current user. */
-export async function getStaffMembership(): Promise<StaffSession | null> {
+/**
+ * The signed-in user and their membership row, looked up ONCE per server request: the admin layout and the page both
+ * need it, and each lookup is two network round trips to Supabase (auth + membership). React `cache` scopes the
+ * result to the current request only (outside a request it is a plain call), so nothing is shared between visitors.
+ */
+const lookupCurrentStaff = cache(async () => {
   const supabase = await createClient();
   const user = await extractAuthUser(supabase);
-  if (!user) return null;
-
-  const serviceClient = createServiceClient();
-  const { data, error } = await serviceClient
+  if (!user) return { user: null, membership: null, failed: false };
+  const { data, error } = await createServiceClient()
     .from("admin_memberships")
     .select("role, is_active")
     .eq("user_id", user.id)
     .maybeSingle();
+  return { user, membership: data as { role: string; is_active: boolean } | null, failed: !!error };
+});
 
-  if (error || !data || !data.is_active) return null;
-
+/** Read membership for the current user. */
+export async function getStaffMembership(): Promise<StaffSession | null> {
+  const { user, membership, failed } = await lookupCurrentStaff();
+  if (!user || failed || !membership || !membership.is_active) return null;
   return {
     userId: user.id,
     email: user.email ?? null,
-    role: data.role as StaffRole,
+    role: membership.role as StaffRole,
   };
 }
 
@@ -76,25 +88,17 @@ function roleAllowed(actual: StaffRole, allowed?: StaffRole[]): boolean {
  * Throws StaffAuthError for API routes; use requireStaffPage for RSC redirects.
  */
 export async function requireStaff(allowedRoles?: StaffRole[]): Promise<StaffSession> {
-  const supabase = await createClient();
-  const user = await extractAuthUser(supabase);
+  const { user, membership, failed } = await lookupCurrentStaff();
 
   if (!user) {
     throw new StaffAuthError("unauthenticated", "Sign in required", 401);
   }
 
-  const serviceClient = createServiceClient();
-  const { data, error } = await serviceClient
-    .from("admin_memberships")
-    .select("role, is_active")
-    .eq("user_id", user.id)
-    .maybeSingle();
-
-  if (error || !data || !data.is_active) {
+  if (failed || !membership || !membership.is_active) {
     throw new StaffAuthError("forbidden", "Staff membership required", 403);
   }
 
-  const role = data.role as StaffRole;
+  const role = membership.role as StaffRole;
   if (!roleAllowed(role, allowedRoles)) {
     throw new StaffAuthError("forbidden_role", "Insufficient staff role", 403);
   }

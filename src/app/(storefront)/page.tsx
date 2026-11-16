@@ -1,4 +1,7 @@
 import { CinematicHero, type HeroShot } from "@/components/storefront/home/cinematic-hero";
+import { StoreReviews } from "@/components/storefront/home/store-reviews";
+import { getPublishedTestimonials } from "@/lib/content/testimonials-server";
+import { reviewsSettings, type ReviewsPlacement } from "@/lib/content/home-sections";
 import { ProductStory } from "@/components/storefront/home/product-story";
 import { ChromebookSection } from "@/components/storefront/home/home-client";
 import {
@@ -75,11 +78,12 @@ export default async function HomePage() {
   }
 
   // Optional published theme overrides (safe fallback to approved V5 defaults).
-  const [published, pres, reels, social] = await Promise.all([
+  const [published, pres, reels, social, testimonials] = await Promise.all([
     getPublishedHomepageSections(),
     getStorefrontPresentation(),
     getPublishedReels(),
     getSocialProofSettings(),
+    getPublishedTestimonials(),
   ]);
   const heroSec = published?.find((s) => s.type === "v5_cinematic_hero" && s.enabled);
   const storySec = published?.find((s) => s.type === "v5_product_story" && s.enabled);
@@ -113,6 +117,18 @@ export default async function HomePage() {
     const sec = published.find((s) => s.type === type);
     return !sec || sec.enabled;
   };
+  // Customer reviews: published store testimonials only; nothing renders when there are none.
+  const reviewsCfg = reviewsSettings(published?.find((s) => s.type === "v5_store_reviews")?.settings);
+  const reviewsBlock =
+    sectionOn("v5_store_reviews") && testimonials.length ? (
+      <StoreReviews
+        reviews={testimonials}
+        heading={reviewsCfg.heading}
+        intro={reviewsCfg.intro}
+        googleProfileUrl={reviewsCfg.googleProfileUrl}
+      />
+    ) : null;
+  const reviewsAt = (where: ReviewsPlacement) => (reviewsCfg.placement === where ? reviewsBlock : null);
   const hs = HM.specs;
   const os = hs["Operating system"];
   const storyRows = [
@@ -258,6 +274,7 @@ export default async function HomePage() {
       ) : null}
       {/* Only when published, rights-cleared reels exist (admin → Reels). */}
       <ReelsSection reels={reels} heading={social.reels.heading} autoplayMuted={social.reels.autoplayMuted} />
+      {reviewsAt("after_featured")}
       {sectionOn("v5_promo") ? <PromoSection promo={promo} pres={pres} /> : null}
       {sectionOn("v5_spec_filters") ? <SpecSection links={quickLinks} pres={pres} /> : null}
       {sectionOn("v5_new_gen") ? (
@@ -271,6 +288,8 @@ export default async function HomePage() {
         <BudgetSection tiles={["under-40k", "40k-60k", "over-60k"].map((id) => v5Link(P, id))} pres={pres} />
       ) : null}
       {sectionOn("v5_compare_demo") ? <CompareDemoSection demo={cmpDemo} pres={pres} /> : null}
+      {reviewsAt("after_compare")}
+      {reviewsAt("before_inquiry")}
       {sectionOn("v5_home_inquiry") ? (
         <HomeInquirySection
           phones={confirmedPhones().map((p) => ({ display: p.display, href: telHref(p) }))}

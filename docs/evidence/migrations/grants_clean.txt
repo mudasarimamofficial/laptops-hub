@@ -217,6 +217,13 @@ service_role store_settings SELECT
 service_role store_settings TRIGGER
 service_role store_settings TRUNCATE
 service_role store_settings UPDATE
+service_role store_testimonials DELETE
+service_role store_testimonials INSERT
+service_role store_testimonials REFERENCES
+service_role store_testimonials SELECT
+service_role store_testimonials TRIGGER
+service_role store_testimonials TRUNCATE
+service_role store_testimonials UPDATE
 service_role theme_publications DELETE
 service_role theme_publications INSERT
 service_role theme_publications REFERENCES

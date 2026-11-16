@@ -7,6 +7,7 @@ import {
   defaultHeroSectionSettings,
   defaultStorySectionSettings,
 } from "@/lib/content/homepage-image-presets";
+import { REVIEWS_PLACEMENTS, defaultMapSettings, defaultReviewsSettings } from "@/lib/content/home-sections";
 
 export type SectionType =
   | "v5_cinematic_hero"
@@ -20,6 +21,8 @@ export type SectionType =
   | "v5_compare_demo"
   | "v5_promo"
   | "v5_home_inquiry"
+  | "v5_store_reviews"
+  | "v5_store_map"
   | "rich_text"
   | "image_banner";
 
@@ -42,8 +45,11 @@ export type SectionField = {
     | "boolean"
     | "url"
     | "image_url"
-    | "angle_images";
+    | "angle_images"
+    | "select";
   help?: string;
+  /** For kind "select". */
+  options?: { value: string; label: string }[];
   /** When set, Reset restores this HTTPS URL. */
   defaultUrl?: string;
 };
@@ -158,6 +164,48 @@ export const SECTION_REGISTRY: Record<
     description: "Tell us what you are looking for",
     fields: [],
   },
+  v5_store_reviews: {
+    label: "Customer reviews",
+    description: "Full-width moving reviews. Entries come from Reviews → Store testimonials (published only).",
+    fields: [
+      { key: "heading", label: "Heading", kind: "text" },
+      { key: "intro", label: "Short introduction", kind: "textarea" },
+      {
+        key: "placement",
+        label: "Position on the homepage",
+        kind: "select",
+        options: REVIEWS_PLACEMENTS.map((p) => ({ value: p.value, label: p.label })),
+      },
+      {
+        key: "googleProfileUrl",
+        label: "Link to your Google Business Profile (optional)",
+        kind: "url",
+        help: "Shown as \"Our profile on Google\". Must be a Google Maps link. No rating or review count is copied.",
+      },
+    ],
+  },
+  v5_store_map: {
+    label: "Visit our store (map)",
+    description: "Google Map revealed from under the footer on the homepage.",
+    fields: [
+      { key: "heading", label: "Heading", kind: "text" },
+      { key: "intro", label: "Supporting text", kind: "textarea" },
+      {
+        key: "embedSrc",
+        label: "Google Maps embed link",
+        kind: "url",
+        help: "Google Maps → Share → Embed a map → copy only the src link (https://www.google.com/maps/embed?pb=…).",
+      },
+      { key: "mapsUrl", label: "\"Open in Google Maps\" link", kind: "url", help: "A google.com/maps or maps.app.goo.gl link." },
+      { key: "revealEffect", label: "Reveal from under the footer (desktop and phones)", kind: "boolean" },
+      {
+        key: "clickToLoad",
+        label: "Load the map only when the visitor taps \"Show map\"",
+        kind: "boolean",
+        help: "Use this if your privacy policy requires consent before loading Google content.",
+      },
+    ],
+  },
   rich_text: {
     label: "Rich text",
     description: "Sanitized HTML block",
@@ -199,4 +247,16 @@ export const V5_HOMEPAGE_SECTIONS: SectionInstance[] = [
   { id: "compare", type: "v5_compare_demo", enabled: true, label: "Compare demo", settings: {} },
   { id: "promo", type: "v5_promo", enabled: true, label: "Promo", settings: {} },
   { id: "inquiry", type: "v5_home_inquiry", enabled: true, label: "Inquiry", settings: {} },
+  { id: "reviews", type: "v5_store_reviews", enabled: true, label: "Customer reviews", settings: defaultReviewsSettings() },
+  { id: "map", type: "v5_store_map", enabled: true, label: "Visit our store (map)", settings: defaultMapSettings() },
 ];
+
+/** Section types added after the first published themes: appended to older drafts so the editor can show them. */
+export const LATER_SECTION_TYPES: SectionType[] = ["v5_store_reviews", "v5_store_map"];
+
+export function withLaterSections(sections: SectionInstance[]): SectionInstance[] {
+  const missing = V5_HOMEPAGE_SECTIONS.filter(
+    (d) => LATER_SECTION_TYPES.includes(d.type) && !sections.some((s) => s.type === d.type),
+  );
+  return missing.length ? [...sections, ...missing] : sections;
+}

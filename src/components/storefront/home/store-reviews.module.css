@@ -1,0 +1,309 @@
+/* Store reviews carousel — full-bleed (width:100% of the page, never 100vw, so no horizontal scrollbar). */
+.section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: clamp(56px, 7vw, 104px) 0 clamp(48px, 6vw, 88px);
+  background: linear-gradient(180deg, var(--lh-paper, #f6f8fb) 0%, #ffffff 100%);
+  border-top: 1px solid var(--lh-border);
+}
+
+.head {
+  max-width: 1360px;
+  margin: 0 auto 32px;
+  padding: 0 clamp(16px, 3vw, 32px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  flex-wrap: wrap;
+}
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--lh-ink-2);
+}
+.eyebrow::before {
+  content: "";
+  width: 12px;
+  height: 2px;
+  background: var(--lh-signal);
+}
+.title {
+  margin: 10px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 44px);
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  color: var(--lh-ink);
+}
+.lede {
+  margin: 10px 0 0;
+  max-width: 560px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--lh-ink-2);
+}
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.btn {
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: var(--lh-radius-pill, 999px);
+  border: 1px solid var(--lh-border-strong, var(--lh-border));
+  background: #ffffff;
+  color: var(--lh-ink);
+  font: 600 14px/1 var(--font-sans, inherit);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.btn:hover {
+  border-color: var(--lh-action);
+}
+.btn:focus-visible,
+.card a:focus-visible,
+.dialogClose:focus-visible {
+  outline: 2px solid var(--lh-action);
+  outline-offset: 2px;
+}
+
+/* Tracks: edge-to-edge, faded at the edges. */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+.track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+.copy {
+  display: flex;
+  gap: 18px;
+  padding: 8px 9px 14px;
+}
+.animated .track {
+  animation: lh-reviews-left var(--duration, 80s) linear infinite;
+}
+.animated .track[data-dir="right"] {
+  animation-name: lh-reviews-right;
+}
+.paused .track,
+.offscreen .track,
+.animated:hover .track,
+.animated:focus-within .track {
+  animation-play-state: paused;
+}
+@keyframes lh-reviews-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes lh-reviews-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Static row (few reviews, or reduced motion): centred, swipeable, no clones. */
+.static .rows {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.static .track {
+  width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+.static .copy {
+  margin: 0 auto;
+  padding-inline: clamp(16px, 3vw, 32px);
+}
+.static .card {
+  scroll-snap-align: center;
+}
+.static [data-clone] {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animated .track {
+    animation: none;
+    width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .animated .rows {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .animated [data-clone] {
+    display: none;
+  }
+  .animated .card {
+    scroll-snap-align: start;
+  }
+}
+
+.card {
+  flex: none;
+  width: clamp(264px, 80vw, 340px);
+  min-height: 228px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border-radius: var(--lh-radius-card, 16px);
+  background: #ffffff;
+  border: 1px solid var(--lh-border);
+  box-shadow: 0 1px 2px rgba(16, 32, 57, 0.04), 0 10px 28px -16px rgba(16, 32, 57, 0.22);
+}
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.stars {
+  display: inline-flex;
+  gap: 2px;
+  color: #f5b301;
+}
+.starOff {
+  color: #dfe3ea;
+}
+.date {
+  font-size: 12px;
+  color: var(--lh-ink-2);
+  white-space: nowrap;
+}
+.text {
+  margin: 0;
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--lh-ink);
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+.person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.avatar {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--lh-ice);
+  color: var(--lh-navy);
+  display: grid;
+  place-items: center;
+  font: 700 14px/1 var(--font-display);
+}
+.name {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--lh-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.source {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--lh-ink-2);
+}
+.source a {
+  color: var(--lh-action);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Dialog with every review in full. */
+.dialog {
+  width: min(760px, calc(100vw - 32px));
+  max-height: min(84vh, 900px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--lh-radius-frame, 20px);
+  box-shadow: 0 30px 80px -20px rgba(10, 23, 48, 0.45);
+}
+.dialog::backdrop {
+  background: rgba(10, 23, 48, 0.55);
+  backdrop-filter: blur(3px);
+}
+.dialogHead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--lh-border);
+}
+.dialogHead h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+}
+.dialogClose {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--lh-border);
+  background: #ffffff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.dialogList {
+  list-style: none;
+  margin: 0;
+  padding: 16px 20px 24px;
+  display: grid;
+  gap: 14px;
+}
+.dialogList .card {
+  width: 100%;
+  min-height: 0;
+  box-shadow: none;
+}
+.dialogList .text {
+  -webkit-line-clamp: unset;
+  display: block;
+}

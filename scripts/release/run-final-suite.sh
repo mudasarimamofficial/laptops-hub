@@ -42,6 +42,7 @@ run unit               npm run test:unit
 run sql-shipping-cod   sql scripts/db-tests/shipping-cod-matrix.sql
 run sql-merchandising  sql scripts/db-tests/merchandising-matrix.sql
 run sql-reels-reviews  sql scripts/db-tests/reels-reviews-matrix.sql
+run sql-testimonials  sql scripts/db-tests/testimonials-matrix.sql
 run sec-p0-probe       node scripts/security-p0-probe.mjs
 run sec-auth-matrix    node scripts/security-auth-matrix.mjs "$APP"
 run sec-role-matrix    node scripts/security-role-matrix.mjs "$APP"

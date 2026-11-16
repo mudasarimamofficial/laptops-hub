@@ -72,7 +72,10 @@ async function loadChrome(vis: Visibility, navConfig: NavigationConfig): Promise
 }
 
 /** Storefront layout: owns all public chrome. /admin has its own layout in app/(admin) and never renders this. */
-export default async function StorefrontLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function StorefrontLayout({
+  children,
+  after,
+}: Readonly<{ children: React.ReactNode; after: React.ReactNode }>) {
   const mode = siteMode();
   // Restricted pre-launch: no storefront chrome and no catalog query (the header's mega menu shows a product photo).
   if (mode === "restricted") {
@@ -105,6 +108,7 @@ export default async function StorefrontLayout({ children }: Readonly<{ children
         {children}
       </main>
       <SiteFooter totalCount={chrome.totalCount} showCounts={pres.showCatalogCounts} vis={vis} footerCols={publicFooterCols} />
+      {after}
       <CompareTray />
       <CartDrawer />
       <Toast />

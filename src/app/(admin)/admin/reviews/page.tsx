@@ -38,6 +38,14 @@ export default async function AdminReviewsPage({ searchParams }: { searchParams:
         Customer reviews appear on the product page only after you approve them. Approve honest reviews, good or bad; reject spam, abuse or
         personal data. Reviews cannot be edited or written by staff.
       </p>
+      <nav aria-label="Review type" className="mt-4 flex flex-wrap gap-2 text-sm">
+        <span aria-current="page" className="rounded-full border border-[var(--lh-action)] bg-[var(--lh-ice)] px-3 py-1 font-semibold">
+          Product reviews
+        </span>
+        <Link href="/admin/reviews/testimonials" className="rounded-full border border-[var(--lh-border)] bg-white px-3 py-1" data-testid="reviews-testimonials-tab">
+          Store testimonials (homepage)
+        </Link>
+      </nav>
       <nav aria-label="Review status" className="mt-4 flex flex-wrap gap-2 text-sm">
         {TABS.map(([k, l]) => (
           <Link

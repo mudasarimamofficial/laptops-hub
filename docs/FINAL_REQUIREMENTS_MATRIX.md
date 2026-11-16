@@ -20,9 +20,9 @@ Status legend: **PASS** (done and verified with evidence) · **BLOCKED** (needs 
 | 11 | Migration 28 + order verified; backup; restore rehearsal; 14→final; compatibility | PASS | `MIGRATION_VERIFICATION.md` — real production backup restored and upgraded; identical schema |
 | 11 | Apply production migrations | BLOCKED | Owner's explicit approval for this production change |
 | 12 | DNS/CRM safety; email records verified | PASS (no changes made) | `app.laptopshub.pk` → Hostinger, untouched. **No MX/SPF/DMARC/DKIM** — owner action |
-| 13–14 | Writable isolated staging; 50-step acceptance | PASS (isolated stack) / see E2E report | No paid resources created; a hosted writable staging would need a second Supabase project (paid decision) |
+| 13–14 | Writable isolated staging; 50-step acceptance | PASS (isolated local stack); hosted staging BLOCKED | No paid resources created; a hosted writable staging would need a second Supabase project (paid decision) |
 | 15–18 | Route QA, cross-browser, 320–1920 widths, SEO/a11y/perf | PASS (isolated) | final suite cross-browser; live baseline 267/267 sitemap URLs 200 |
-| 19 | Push branch, PR to main, branch protection, Vercel mapping; no force-push | see `PRODUCTION_DEPLOYMENT_MANIFEST.md` | |
+| 19 | Push branch, PR to main, Vercel mapping; no force-push | PASS | Fast-forward push `cb638b7..dc0180b`; PR #10; Preview only, sin1. `main` has no branch protection (merge deploys) |
 | 20 | Safe production deploy | BLOCKED | Owner approval (merge to `main` deploys) |
 | 21 | COD stays disabled without business approvals | PASS | Not changed |
 | 22–23 | Live QA and fix loop | BLOCKED until deploy | |

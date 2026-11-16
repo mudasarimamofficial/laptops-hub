@@ -3,7 +3,7 @@
 | Item | Value |
 |---|---|
 | Branch | `feat/merchant-operating-system` (fast-forward of the remote branch; no force-push) |
-| Release commit | see `git log -1` on the PR head (first release commit `2bb58d4`) |
+| Release commit | `dc0180b` (code `2bb58d4` + tests/docs); PR https://github.com/mudasarimamofficial/laptops-hub/pull/10 |
 | Currently in production | `cb638b7` (deployed 2026-11-14 from this branch; ancestor of the release) |
 | Production branch on Vercel | `main` (last `main` deploy `2b43236`, 2026-10-24) |
 | Vercel project | `laptops` · Hobby · Fluid compute · Node 24 |
@@ -28,8 +28,8 @@
 |---|---|
 | Full isolated suite on release HEAD | `docs/evidence/final-run/summary.json` |
 | Migration gates | PASS (`MIGRATION_VERIFICATION.md`) |
-| Old code (cb638b7) on the fully migrated schema | see `FINAL_E2E_REPORT.md` |
-| Preview build + region | see PR |
+| Old code (cb638b7) on the fully migrated schema | 20/20 (`docs/evidence/migrations/old_code_compat.json`) |
+| Preview build + region | `dpl_9gqgYg4ZPH33hyZhCaaGAuvaVn6i` READY, target preview (not production), regions `[sin1]`, `x-vercel-id …::sin1::`; home, PDP, collection, search, checkout page, admin login, sitemap, robots 200; map renders, reviews hidden |
 | Production migrations applied | pending owner approval |
 | Production deploy | pending owner approval |
 | Live QA | pending deploy |

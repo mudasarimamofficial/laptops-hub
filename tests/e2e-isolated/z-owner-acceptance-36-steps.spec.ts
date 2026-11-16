@@ -295,7 +295,7 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     step(22, { order: after, statusEvents: statuses, auditRows: audits });
   });
 
-  test("23–27: review, blog, reel, editorial badge, genuine sales indicators", async ({ page }) => {
+  test("23–27: review, blog, reel, editorial badge, genuine sales indicators", async ({ page, browser }) => {
     await page.goto(`/products/${HANDLE}`); // 23
     const box = page.getByTestId("pdp-reviews");
     await box.getByRole("button", { name: "Write a review" }).click();
@@ -392,9 +392,15 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     kinds = await page.getByTestId("merch-badge").evaluateAll((els) => els.map((e) => e.getAttribute("data-kind")));
     // One badge per product: the data-backed "Top seller" takes precedence over the editorial label.
     expect(kinds).toEqual(["top_seller"]);
-    await expect(page.getByTestId("purchase-activity")).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByTestId("purchase-activity")).not.toHaveText(/paid|bought|purchased/i);
-    await shot(page, "27-badges-activity");
+    // The notice is capped per browser session (maxPerSession); this long scenario has already used that session on
+    // earlier pages, so whether the cap is reached depended on timing. Check it as a new shopper would see it.
+    const shopper = await browser.newContext({ baseURL: page.url().replace(/\/products\/.*$/, "") });
+    const sp = await shopper.newPage();
+    await sp.goto(`/products/${HANDLE}`);
+    await expect(sp.getByTestId("purchase-activity")).toBeVisible({ timeout: 15_000 });
+    await expect(sp.getByTestId("purchase-activity")).not.toHaveText(/paid|bought|purchased/i);
+    await shot(sp, "27-badges-activity");
+    await shopper.close();
     step(27, { secondOrder: n2, badgesAfterTwoDeliveredUnits: kinds, oneUnitBadge: false, recentActivity: recent.items.filter((i: { handle: string }) => i.handle === HANDLE) });
   });
 

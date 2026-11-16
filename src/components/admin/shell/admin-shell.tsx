@@ -143,12 +143,11 @@ export function AdminShell({ staff, children }: Props) {
           <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-[var(--adm-sidebar-muted)]">
             {staff?.role ?? "—"}
           </p>
-          <Link
-            href="/admin/login"
-            className="mt-2 inline-block text-xs text-[var(--adm-sidebar-muted)] hover:text-white hover:underline"
-          >
-            Account / sign in
-          </Link>
+          <form action="/api/admin/account/sign-out" method="post" className="mt-2">
+            <button type="submit" className="text-xs text-[var(--adm-sidebar-muted)] hover:text-white hover:underline" data-testid="admin-sign-out">
+              Sign out
+            </button>
+          </form>
         </div>
       </aside>
 

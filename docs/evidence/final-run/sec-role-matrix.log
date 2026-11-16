@@ -1,4 +1,4 @@
-PASS  nonstaff_cannot_read_orders — ok
+PASS  nonstaff_cannot_read_orders — permission denied for table orders
 PASS  nonstaff_cannot_list_memberships — rows=0
 PASS  owner_membership_active_true
 PASS  owner_cod_rpc_not_found_not_forbidden — not_found
@@ -12,19 +12,6 @@ PASS  fulfillment_membership_active_true
 PASS  fulfillment_cod_rpc_not_found_not_forbidden — not_found
 PASS  editor_membership_active_false
 PASS  inactive_staff_rpc_forbidden — forbidden
-node:internal/modules/run_main:107
-    triggerUncaughtException(
-    ^
+PASS  anon_cod_api_401 — status=401
 
-[TypeError: fetch failed] {
-  [cause]: Error: connect ECONNREFUSED 127.0.0.1:3001
-      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1705:16) {
-    errno: -4078,
-    code: 'ECONNREFUSED',
-    syscall: 'connect',
-    address: '127.0.0.1',
-    port: 3001
-  }
-}
-
-Node.js v24.16.0
+15/15 passed · wrote docs\SECURITY_ROLE_MATRIX_RESULTS.json

@@ -1,6 +1,6 @@
 {
-  "at": "2026-11-16T00:54:14.629Z",
-  "orderNumber": "LH-SANDBOX-1794790440862",
+  "at": "2026-11-16T03:17:53.080Z",
+  "orderNumber": "LH-SANDBOX-1794799071169",
   "results": [
     {
       "name": "same_key_both_ok_or_one_ok",
@@ -20,7 +20,7 @@
     {
       "name": "diff_keys_no_double_money",
       "ok": true,
-      "detail": "ok=1 over=1 err=|over_collection"
+      "detail": "ok=1 over=1 err=over_collection|"
     },
     {
       "name": "final_collected_eq_total",
@@ -55,7 +55,7 @@
     {
       "name": "replay_after_completion",
       "ok": true,
-      "detail": "{\"first\":\"ok\",\"again\":{\"ok\":true,\"collection_id\":\"49eb8e9e-454a-4e68-9769-678ce3193e21\",\"payment_status\":\"partially_collected\",\"idempotent_replay\":true,\"amount_collected_paisa\":1300},\"rows\":1}"
+      "detail": "{\"first\":\"ok\",\"again\":{\"ok\":true,\"collection_id\":\"c04a02b6-b763-420c-948c-5f61ac74b2f8\",\"payment_status\":\"partially_collected\",\"idempotent_replay\":true,\"amount_collected_paisa\":1300},\"rows\":1}"
     },
     {
       "name": "same_key_different_amount_conflict",
@@ -70,7 +70,7 @@
     {
       "name": "cross_order_same_key_one_collection_one_conflict",
       "ok": true,
-      "detail": "bad rounds=0/10 outcomes=fresh|idempotency_conflict"
+      "detail": "bad rounds=0/10 outcomes=idempotency_conflict|fresh"
     },
     {
       "name": "same_order_different_amount_race_one_conflict",

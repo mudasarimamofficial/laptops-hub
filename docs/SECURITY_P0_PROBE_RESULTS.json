@@ -1,15 +1,15 @@
 {
-  "at": "2026-11-16T00:52:01.569Z",
+  "at": "2026-11-16T03:16:26.385Z",
   "results": [
     {
       "name": "anon_cannot_read_orders",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table orders"
     },
     {
       "name": "anon_cannot_read_inquiries",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table contact_inquiries"
     },
     {
       "name": "anon_cannot_select_inventory_columns",
@@ -34,7 +34,7 @@
     {
       "name": "anon_can_read_public_prices",
       "ok": true,
-      "detail": "rows=3"
+      "detail": "rows=2"
     },
     {
       "name": "service_role_can_read_inventory_for_staff_ops",

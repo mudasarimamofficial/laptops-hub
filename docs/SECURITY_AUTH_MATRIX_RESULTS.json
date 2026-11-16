@@ -1,66 +1,111 @@
 {
   "base": "http://127.0.0.1:3001",
-  "at": "2026-11-16T00:52:12.696Z",
+  "at": "2026-11-16T03:16:34.956Z",
   "results": [
     {
-      "name": "anon_PATCH_/api/admin/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
-      "ok": false,
-      "detail": "fetch failed"
+      "name": "anon_patch__api_admin_products_dell_latitude_7420_core_i5_1",
+      "ok": true,
+      "detail": "status=401"
     },
     {
-      "name": "anon_POST_/api/admin/orders/LH-TEST/status",
-      "ok": false,
-      "detail": "fetch failed"
+      "name": "anon_no_leak__api_admin_products_dell_latitude_7420_c",
+      "ok": true,
+      "detail": "ok"
     },
     {
-      "name": "anon_POST_/api/admin/cod-collections",
-      "ok": false,
-      "detail": "fetch failed"
+      "name": "anon_post__api_admin_orders_LH_TEST_status",
+      "ok": true,
+      "detail": "status=401"
     },
     {
-      "name": "anon_POST_/api/admin/shipping-zones",
-      "ok": false,
-      "detail": "fetch failed"
+      "name": "anon_no_leak__api_admin_orders_LH_TEST_status",
+      "ok": true,
+      "detail": "ok"
     },
     {
-      "name": "anon_page_/admin",
-      "ok": false,
-      "detail": "fetch failed"
+      "name": "anon_post__api_admin_cod_collections",
+      "ok": true,
+      "detail": "status=401"
     },
     {
-      "name": "anon_page_/admin/products",
-      "ok": false,
-      "detail": "fetch failed"
+      "name": "anon_no_leak__api_admin_cod_collections",
+      "ok": true,
+      "detail": "ok"
     },
     {
-      "name": "anon_page_/admin/orders",
-      "ok": false,
-      "detail": "fetch failed"
+      "name": "anon_post__api_admin_shipping_zones",
+      "ok": true,
+      "detail": "status=401"
     },
     {
-      "name": "anon_page_/admin/settings",
-      "ok": false,
-      "detail": "fetch failed"
+      "name": "anon_no_leak__api_admin_shipping_zones",
+      "ok": true,
+      "detail": "ok"
     },
     {
-      "name": "anon_page_/admin/inquiries",
-      "ok": false,
-      "detail": "fetch failed"
+      "name": "anon_redirect__admin",
+      "ok": true,
+      "detail": "status=307 loc=/admin/login"
+    },
+    {
+      "name": "anon_page_no_leak__admin",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_redirect__admin_products",
+      "ok": true,
+      "detail": "status=307 loc=/admin/login"
+    },
+    {
+      "name": "anon_page_no_leak__admin_products",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_redirect__admin_orders",
+      "ok": true,
+      "detail": "status=307 loc=/admin/login"
+    },
+    {
+      "name": "anon_page_no_leak__admin_orders",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_redirect__admin_settings",
+      "ok": true,
+      "detail": "status=307 loc=/admin/login"
+    },
+    {
+      "name": "anon_page_no_leak__admin_settings",
+      "ok": true,
+      "detail": "ok"
+    },
+    {
+      "name": "anon_redirect__admin_inquiries",
+      "ok": true,
+      "detail": "status=307 loc=/admin/login"
+    },
+    {
+      "name": "anon_page_no_leak__admin_inquiries",
+      "ok": true,
+      "detail": "ok"
     },
     {
       "name": "nonstaff_rls_orders",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table orders"
     },
     {
       "name": "nonstaff_rls_memberships",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table admin_memberships"
     },
     {
       "name": "nonstaff_rls_inquiries",
       "ok": true,
-      "detail": "rows=0"
+      "detail": "permission denied for table contact_inquiries"
     },
     {
       "name": "nonstaff_rls_drafts",
@@ -75,7 +120,7 @@
     {
       "name": "public_catalog_readable",
       "ok": true,
-      "detail": "n=3"
+      "detail": "n=2"
     }
   ]
 }

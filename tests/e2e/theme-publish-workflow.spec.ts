@@ -24,6 +24,8 @@ const PUBLISHED_A =
   "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111";
 const PUBLISHED_B = "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111";
 const DRAFT_ONLY = "https://example.com/e2e-draft-hero-main.webp";
+// 1×1 transparent PNG (served for DRAFT_ONLY in the preview test).
+const PNG_1PX = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
 
 async function ensureOwner() {
   const sb = admin();
@@ -183,6 +185,11 @@ test.describe.serial("theme publish/rollback browser workflow", () => {
     await page.getByRole("button", { name: /cinematic hero/i }).first().click();
     const mainInput = page.getByTestId("theme-image-mainImageUrl");
     await expect(mainInput).toHaveValue(/e2e-draft-hero-main/, { timeout: 20_000 });
+    // The draft URL is a placeholder on example.com (no such file). Serve a real image for it so the check does not
+    // depend on the public internet or on when a 404 arrives (a broken <img> may or may not have a box).
+    await page.context().route("https://example.com/e2e-draft-hero-main.webp", (route) =>
+      route.fulfill({ status: 200, contentType: "image/png", body: Buffer.from(PNG_1PX, "base64") }),
+    );
     const previewPromise = page.waitForEvent("popup");
     await page.getByTestId("theme-open-preview").click();
     const preview = await previewPromise;

@@ -6,8 +6,10 @@
       "test",
       "-c",
       "playwright.config.ts",
+      "tests/e2e/theme-publish-workflow.spec.ts",
+      "tests/e2e/merchant-admin-workflows.spec.ts",
       "tests/e2e/homepage-presets.spec.ts",
-      "tests/e2e/merchant-admin-workflows.spec.ts"
+      "tests/e2e/v5-correctness.spec.ts"
     ],
     "configFile": "D:\\Laptops Hub Vercel Development\\playwright.config.ts",
     "rootDir": "D:/Laptops Hub Vercel Development/tests/e2e",
@@ -125,12 +127,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 7502,
+                      "duration": 1498,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:57:15.841Z",
+                      "startTime": "2026-11-16T03:35:21.620Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -185,12 +187,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4695,
+                      "duration": 600,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:57:39.167Z",
+                      "startTime": "2026-11-16T03:35:24.144Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -237,12 +239,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 23809,
+                      "duration": 2644,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:57:45.943Z",
+                      "startTime": "2026-11-16T03:35:25.057Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -289,12 +291,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 18303,
+                      "duration": 2857,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:58:10.105Z",
+                      "startTime": "2026-11-16T03:35:27.757Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -341,12 +343,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 21470,
+                      "duration": 5722,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:58:28.929Z",
+                      "startTime": "2026-11-16T03:35:30.727Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -393,12 +395,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6731,
+                      "duration": 2622,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:58:50.881Z",
+                      "startTime": "2026-11-16T03:35:36.528Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -445,12 +447,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 14709,
+                      "duration": 3254,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:58:57.938Z",
+                      "startTime": "2026-11-16T03:35:39.242Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -497,12 +499,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 62713,
+                      "duration": 7009,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:59:13.064Z",
+                      "startTime": "2026-11-16T03:35:42.590Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -549,12 +551,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 32674,
+                      "duration": 5723,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T23:00:16.085Z",
+                      "startTime": "2026-11-16T03:35:49.679Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -601,12 +603,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 40465,
+                      "duration": 4576,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T23:00:48.908Z",
+                      "startTime": "2026-11-16T03:35:55.453Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -631,15 +633,894 @@
           ]
         }
       ]
+    },
+    {
+      "title": "theme-publish-workflow.spec.ts",
+      "file": "theme-publish-workflow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "theme publish/rollback browser workflow",
+          "file": "theme-publish-workflow.spec.ts",
+          "line": 135,
+          "column": 15,
+          "specs": [
+            {
+              "title": "seed published baseline A",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 564,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T03:36:00.142Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "13543266674abcaf3d4f-e66a66b2e366ca2cf261",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 140,
+              "column": 7
+            },
+            {
+              "title": "logged-out storefront shows published A (not draft)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 17343,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T03:36:00.808Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "13543266674abcaf3d4f-607513551449aa60546f",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 148,
+              "column": 7
+            },
+            {
+              "title": "owner changes image, saves draft; public unchanged",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 19130,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T03:36:18.181Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "13543266674abcaf3d4f-f74e94ca245925e271ef",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 157,
+              "column": 7
+            },
+            {
+              "title": "owner opens draft preview showing draft URL",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 18395,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('img[src*=\"e2e-draft-hero-main\"]')\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('img[src*=\"e2e-draft-hero-main\"]') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('img[src*=\"e2e-draft-hero-main\"]')\u001b[22m\n\u001b[2m    33 × locator resolved to <img alt=\"\" class=\"mt-1 h-28 w-auto object-contain\" src=\"https://example.com/e2e-draft-hero-main.webp\"/>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('img[src*=\"e2e-draft-hero-main\"]')\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('img[src*=\"e2e-draft-hero-main\"]') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('img[src*=\"e2e-draft-hero-main\"]')\u001b[22m\n\u001b[2m    33 × locator resolved to <img alt=\"\" class=\"mt-1 h-28 w-auto object-contain\" src=\"https://example.com/e2e-draft-hero-main.webp\"/>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts:191:70",
+                        "location": {
+                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                          "column": 70,
+                          "line": 191
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 189 |\u001b[39m     \u001b[36mawait\u001b[39m preview\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m\"domcontentloaded\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 190 |\u001b[39m     \u001b[36mawait\u001b[39m expect(preview\u001b[33m.\u001b[39mgetByText(\u001b[35m/draft preview only/i\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 191 |\u001b[39m     \u001b[36mawait\u001b[39m expect(preview\u001b[33m.\u001b[39mlocator(\u001b[32m`img[src*=\"e2e-draft-hero-main\"]`\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15\u001b[39m_000 })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 192 |\u001b[39m     \u001b[36mawait\u001b[39m preview\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m 193 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 194 |\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "column": 70,
+                            "line": 191
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('img[src*=\"e2e-draft-hero-main\"]')\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('img[src*=\"e2e-draft-hero-main\"]') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('img[src*=\"e2e-draft-hero-main\"]')\u001b[22m\n\u001b[2m    33 × locator resolved to <img alt=\"\" class=\"mt-1 h-28 w-auto object-contain\" src=\"https://example.com/e2e-draft-hero-main.webp\"/>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n\n  189 |     await preview.waitForLoadState(\"domcontentloaded\");\n  190 |     await expect(preview.getByText(/draft preview only/i)).toBeVisible();\n> 191 |     await expect(preview.locator(`img[src*=\"e2e-draft-hero-main\"]`)).toBeVisible({ timeout: 15_000 });\n      |                                                                      ^\n  192 |     await preview.close();\n  193 |   });\n  194 |\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts:191:70"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T03:36:37.349Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                            "line": 135,
+                            "column": 15
+                          }
+                        }
+                      ],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\theme-publish-workflow-the-ba531-t-preview-showing-draft-URL\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "column": 70,
+                        "line": 191
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "13543266674abcaf3d4f-961d7ef7323e166ebf10",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 179,
+              "column": 7
+            },
+            {
+              "title": "owner publishes; logged-out sees draft URL; snapshot immutable",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T03:36:56.026Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "13543266674abcaf3d4f-2775554cfa2c3faa310c",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 195,
+              "column": 7
+            },
+            {
+              "title": "owner rolls back; logged-out sees previous image",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T03:36:56.026Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "13543266674abcaf3d4f-5cfa03fb8a006d5c5a86",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 237,
+              "column": 7
+            },
+            {
+              "title": "editor cannot publish via API",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T03:36:56.026Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "13543266674abcaf3d4f-a877ee632e30ddefe843",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 254,
+              "column": 7
+            },
+            {
+              "title": "seven approved CDN presets still present after workflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "serial",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\theme-publish-workflow.spec.ts",
+                        "line": 135,
+                        "column": 15
+                      }
+                    }
+                  ],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-16T03:36:56.026Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "13543266674abcaf3d4f-adeb92db66e37f332ad9",
+              "file": "theme-publish-workflow.spec.ts",
+              "line": 262,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "v5-correctness.spec.ts",
+      "file": "v5-correctness.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "PDP curated specs + related images: dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 15959,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:36:56.607Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-ef06f82bc9c80efcdd66",
+          "file": "v5-correctness.spec.ts",
+          "line": 25,
+          "column": 7
+        },
+        {
+          "title": "PDP curated specs + related images: hp-chromebook-14-g5-4-32",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "handle not public in this database",
+                  "location": {
+                    "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
+                    "line": 27,
+                    "column": 10
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 596,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:37:12.969Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "handle not public in this database",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
+                        "line": 27,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-925e629ba2185dea87ee",
+          "file": "v5-correctness.spec.ts",
+          "line": 25,
+          "column": 7
+        },
+        {
+          "title": "PDP curated specs + related images: lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 26074,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:37:13.597Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-2b9413e791bb0fa086d3",
+          "file": "v5-correctness.spec.ts",
+          "line": 25,
+          "column": 7
+        },
+        {
+          "title": "draft product is not public",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 669,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:37:39.715Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-058ae8ed96e06bac47b3",
+          "file": "v5-correctness.spec.ts",
+          "line": 52,
+          "column": 5
+        },
+        {
+          "title": "public cards never show Add to cart without a purchasable variant",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 673,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts:68:23",
+                    "location": {
+                      "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
+                      "column": 23,
+                      "line": 68
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 66 |\u001b[39m     \u001b[36mconst\u001b[39m atc \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m c\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[35m/^(Add to cart|Added)$/\u001b[39m })\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n \u001b[90m 67 |\u001b[39m     \u001b[36mconst\u001b[39m ask \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m c\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Ask about this product\"\u001b[39m })\u001b[33m.\u001b[39mcount()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 68 |\u001b[39m     expect(atc \u001b[33m+\u001b[39m ask)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 69 |\u001b[39m   }\n \u001b[90m 70 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 71 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
+                        "column": 23,
+                        "line": 68
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\n\n  66 |     const atc = await c.getByRole(\"button\", { name: /^(Add to cart|Added)$/ }).count();\n  67 |     const ask = await c.getByRole(\"button\", { name: \"Ask about this product\" }).count();\n> 68 |     expect(atc + ask).toBe(1);\n     |                       ^\n  69 |   }\n  70 | });\n  71 |\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts:68:23"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:37:40.422Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Laptops Hub Vercel Development\\test-results\\v5-correctness-public-card-4a349-thout-a-purchasable-variant\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
+                    "column": 23,
+                    "line": 68
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-8924ab559dc1845c47c6",
+          "file": "v5-correctness.spec.ts",
+          "line": 59,
+          "column": 5
+        },
+        {
+          "title": "compare tray add/remove/persist/stale desktop-1440",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2561,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:37:41.997Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-ce14f50d3295e17ca9a6",
+          "file": "v5-correctness.spec.ts",
+          "line": 76,
+          "column": 7
+        },
+        {
+          "title": "compare tray add/remove/persist/stale mobile-390",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1920,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:37:45.038Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-fe7d4d1a936c019e7625",
+          "file": "v5-correctness.spec.ts",
+          "line": 76,
+          "column": 7
+        },
+        {
+          "title": "compare page still renders curated rows",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1605,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:37:46.996Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-0f31873b904889a2ff86",
+          "file": "v5-correctness.spec.ts",
+          "line": 119,
+          "column": 5
+        },
+        {
+          "title": "cart honours max_per_order on PDP, drawer and cart page",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 17540,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:37:48.638Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-08c168310b3100a25238",
+          "file": "v5-correctness.spec.ts",
+          "line": 131,
+          "column": 5
+        },
+        {
+          "title": "compare tray is keyboard operable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1214,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:38:06.226Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-4cd6898002a3831b1c63",
+          "file": "v5-correctness.spec.ts",
+          "line": 158,
+          "column": 5
+        },
+        {
+          "title": "COD checkout stays disabled",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "skip",
+                  "description": "this run's app has COD_CHECKOUT_ENABLED=true by design",
+                  "location": {
+                    "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
+                    "line": 177,
+                    "column": 8
+                  }
+                }
+              ],
+              "expectedStatus": "skipped",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "skipped",
+                  "duration": 8,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T03:38:07.496Z",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "this run's app has COD_CHECKOUT_ENABLED=true by design",
+                      "location": {
+                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e\\v5-correctness.spec.ts",
+                        "line": 177,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "skipped"
+            }
+          ],
+          "id": "343f6d1acd4c7d349bb8-2abc13682556b6f6f927",
+          "file": "v5-correctness.spec.ts",
+          "line": 174,
+          "column": 5
+        }
+      ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-15T22:57:06.341Z",
-    "duration": 380316.219,
-    "expected": 10,
-    "skipped": 0,
-    "unexpected": 0,
+    "startTime": "2026-11-16T03:35:20.590Z",
+    "duration": 167371.945,
+    "expected": 21,
+    "skipped": 6,
+    "unexpected": 2,
     "flaky": 0
   }
 }

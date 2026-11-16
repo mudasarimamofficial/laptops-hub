@@ -360,12 +360,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 65420,
+                  "duration": 32191,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:52:01.359Z",
+                  "startTime": "2026-11-16T03:38:10.532Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -394,12 +394,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 21410,
+                  "duration": 2068,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:53:14.626Z",
+                  "startTime": "2026-11-16T03:38:43.175Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -428,12 +428,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 15149,
+                  "duration": 16511,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:53:36.533Z",
+                  "startTime": "2026-11-16T03:38:45.277Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -462,12 +462,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11636,
+                  "duration": 2742,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:53:51.819Z",
+                  "startTime": "2026-11-16T03:39:01.816Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -496,12 +496,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 13200,
+                  "duration": 1839,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:54:03.709Z",
+                  "startTime": "2026-11-16T03:39:04.607Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -530,12 +530,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 15906,
+                  "duration": 2336,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:54:17.092Z",
+                  "startTime": "2026-11-16T03:39:06.484Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -564,12 +564,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 23469,
+                  "duration": 3924,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:54:33.592Z",
+                  "startTime": "2026-11-16T03:39:08.855Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -598,12 +598,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11627,
+                  "duration": 2827,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:54:57.458Z",
+                  "startTime": "2026-11-16T03:39:12.823Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -632,12 +632,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 14011,
+                  "duration": 3166,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:55:09.228Z",
+                  "startTime": "2026-11-16T03:39:15.693Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -666,12 +666,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 13236,
+                  "duration": 3396,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:55:23.657Z",
+                  "startTime": "2026-11-16T03:39:18.895Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -700,12 +700,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 13220,
+                  "duration": 2220,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:55:37.171Z",
+                  "startTime": "2026-11-16T03:39:22.323Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -734,12 +734,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 10453,
+                  "duration": 10136,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:59:34.872Z",
+                  "startTime": "2026-11-16T03:40:53.967Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -768,12 +768,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6025,
+                  "duration": 921,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:59:50.838Z",
+                  "startTime": "2026-11-16T03:41:04.554Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -802,12 +802,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7004,
+                  "duration": 15697,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T21:59:57.399Z",
+                  "startTime": "2026-11-16T03:41:05.506Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -836,12 +836,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5503,
+                  "duration": 927,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:00:04.868Z",
+                  "startTime": "2026-11-16T03:41:21.232Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -870,12 +870,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3807,
+                  "duration": 800,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:00:10.708Z",
+                  "startTime": "2026-11-16T03:41:22.187Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -904,12 +904,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7928,
+                  "duration": 1152,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:00:15.622Z",
+                  "startTime": "2026-11-16T03:41:23.029Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -938,12 +938,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 16929,
+                  "duration": 1236,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:00:24.592Z",
+                  "startTime": "2026-11-16T03:41:24.226Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -972,12 +972,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6245,
+                  "duration": 1163,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:00:41.971Z",
+                  "startTime": "2026-11-16T03:41:25.503Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1006,12 +1006,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4590,
+                  "duration": 1146,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:00:48.848Z",
+                  "startTime": "2026-11-16T03:41:26.717Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1040,12 +1040,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4959,
+                  "duration": 1405,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:00:53.727Z",
+                  "startTime": "2026-11-16T03:41:27.916Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1074,12 +1074,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5277,
+                  "duration": 1230,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:00:59.755Z",
+                  "startTime": "2026-11-16T03:41:29.361Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1108,12 +1108,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 117650,
+                  "duration": 65081,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:05:55.184Z",
+                  "startTime": "2026-11-16T03:43:05.927Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1142,12 +1142,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 55029,
+                  "duration": 5640,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:07:59.881Z",
+                  "startTime": "2026-11-16T03:44:11.212Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1176,12 +1176,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 58334,
+                  "duration": 5107,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:08:55.384Z",
+                  "startTime": "2026-11-16T03:44:16.896Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1210,12 +1210,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 64989,
+                  "duration": 2448,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:09:53.913Z",
+                  "startTime": "2026-11-16T03:44:22.049Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1244,12 +1244,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 51545,
+                  "duration": 1827,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:10:59.938Z",
+                  "startTime": "2026-11-16T03:44:24.532Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1278,12 +1278,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 76385,
+                  "duration": 1904,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:11:53.212Z",
+                  "startTime": "2026-11-16T03:44:26.386Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1312,12 +1312,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 59251,
+                  "duration": 2132,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:13:09.993Z",
+                  "startTime": "2026-11-16T03:44:28.314Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1346,12 +1346,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 78676,
+                  "duration": 1907,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:14:09.993Z",
+                  "startTime": "2026-11-16T03:44:30.473Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1380,12 +1380,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 73304,
+                  "duration": 2607,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:15:29.365Z",
+                  "startTime": "2026-11-16T03:44:32.413Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1414,12 +1414,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 31089,
+                  "duration": 2833,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:16:43.803Z",
+                  "startTime": "2026-11-16T03:44:35.043Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1448,12 +1448,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11680,
+                  "duration": 2526,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:17:15.015Z",
+                  "startTime": "2026-11-16T03:44:37.902Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1482,12 +1482,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11546,
+                  "duration": 4096,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:19:16.025Z",
+                  "startTime": "2026-11-16T03:45:18.579Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1516,12 +1516,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 19200,
+                  "duration": 936,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:19:28.072Z",
+                  "startTime": "2026-11-16T03:45:22.811Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1550,12 +1550,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 12766,
+                  "duration": 2089,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:19:47.634Z",
+                  "startTime": "2026-11-16T03:45:23.797Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1584,12 +1584,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4634,
+                  "duration": 728,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:20:00.694Z",
+                  "startTime": "2026-11-16T03:45:25.919Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1618,12 +1618,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3813,
+                  "duration": 689,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:20:05.433Z",
+                  "startTime": "2026-11-16T03:45:26.681Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1652,12 +1652,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 3439,
+                  "duration": 829,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:20:09.330Z",
+                  "startTime": "2026-11-16T03:45:27.415Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1686,12 +1686,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4802,
+                  "duration": 778,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:20:12.844Z",
+                  "startTime": "2026-11-16T03:45:28.265Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1720,12 +1720,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 4448,
+                  "duration": 844,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:20:17.697Z",
+                  "startTime": "2026-11-16T03:45:29.064Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1754,12 +1754,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5458,
+                  "duration": 908,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:20:22.207Z",
+                  "startTime": "2026-11-16T03:45:29.927Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1788,12 +1788,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 6108,
+                  "duration": 1125,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:20:27.731Z",
+                  "startTime": "2026-11-16T03:45:30.863Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1822,12 +1822,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 5548,
+                  "duration": 951,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:20:33.930Z",
+                  "startTime": "2026-11-16T03:45:32.038Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1856,12 +1856,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 116966,
+                  "duration": 12124,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:24:19.156Z",
+                  "startTime": "2026-11-16T03:46:11.724Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1890,12 +1890,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 30658,
+                  "duration": 4151,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:26:22.546Z",
+                  "startTime": "2026-11-16T03:46:25.176Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1924,12 +1924,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 16286,
+                  "duration": 4409,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:26:53.266Z",
+                  "startTime": "2026-11-16T03:46:29.363Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1958,12 +1958,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11545,
+                  "duration": 3622,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:27:09.606Z",
+                  "startTime": "2026-11-16T03:46:33.805Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -1992,12 +1992,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9575,
+                  "duration": 3090,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:27:21.219Z",
+                  "startTime": "2026-11-16T03:46:37.459Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2026,12 +2026,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 9724,
+                  "duration": 2937,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:27:30.839Z",
+                  "startTime": "2026-11-16T03:46:40.581Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2060,12 +2060,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 35483,
+                  "duration": 3406,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:27:40.613Z",
+                  "startTime": "2026-11-16T03:46:43.560Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2094,12 +2094,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 13746,
+                  "duration": 3266,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:28:16.155Z",
+                  "startTime": "2026-11-16T03:46:46.995Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2128,12 +2128,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 49153,
+                  "duration": 4078,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:28:30.026Z",
+                  "startTime": "2026-11-16T03:46:50.294Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2162,12 +2162,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 50376,
+                  "duration": 4035,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:29:19.298Z",
+                  "startTime": "2026-11-16T03:46:54.391Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2196,12 +2196,12 @@
                   "workerIndex": 4,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 72066,
+                  "duration": 3374,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-15T22:30:10.097Z",
+                  "startTime": "2026-11-16T03:46:58.444Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -2254,12 +2254,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 19747,
+                      "duration": 13496,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T21:55:54.022Z",
+                      "startTime": "2026-11-16T03:39:24.742Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2306,12 +2306,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 460,
+                      "duration": 29,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T21:56:19.550Z",
+                      "startTime": "2026-11-16T03:39:38.665Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2358,12 +2358,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 7120,
+                      "duration": 1043,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T21:56:20.066Z",
+                      "startTime": "2026-11-16T03:39:38.714Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2410,12 +2410,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 9991,
+                      "duration": 13208,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T21:56:27.517Z",
+                      "startTime": "2026-11-16T03:39:39.783Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2462,12 +2462,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 18089,
+                      "duration": 8864,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T21:56:37.833Z",
+                      "startTime": "2026-11-16T03:39:53.022Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2514,12 +2514,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 17791,
+                      "duration": 3074,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T21:56:56.287Z",
+                      "startTime": "2026-11-16T03:40:01.924Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2543,7 +2543,7 @@
             },
             {
               "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -2565,32 +2565,13 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 45860,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Fully collected.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Fully collected.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Fully collected.')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Fully collected.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Fully collected.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Fully collected.')\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:173:54",
-                        "location": {
-                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                          "column": 54,
-                          "line": 173
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 171 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Collector reference\"\u001b[39m)\u001b[33m.\u001b[39mfill(\u001b[32m\"rider-1\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 172 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Record collection\"\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 173 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Fully collected.\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 174 |\u001b[39m     \u001b[36mconst\u001b[39m { data\u001b[33m:\u001b[39m o } \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m sb\u001b[33m.\u001b[39m\u001b[36mfrom\u001b[39m(\u001b[32m\"orders\"\u001b[39m)\u001b[33m.\u001b[39mselect(\u001b[32m\"id, status, payment_status, amount_collected_paisa\"\u001b[39m)\u001b[33m.\u001b[39meq(\u001b[32m\"order_number\"\u001b[39m\u001b[33m,\u001b[39m orderNumber)\u001b[33m.\u001b[39msingle()\u001b[33m;\u001b[39m\n \u001b[90m 175 |\u001b[39m     expect(o)\u001b[33m.\u001b[39mtoMatchObject({ status\u001b[33m:\u001b[39m \u001b[32m\"shipped\"\u001b[39m\u001b[33m,\u001b[39m payment_status\u001b[33m:\u001b[39m \u001b[32m\"collected\"\u001b[39m\u001b[33m,\u001b[39m amount_collected_paisa\u001b[33m:\u001b[39m \u001b[33mTOTAL\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 176 |\u001b[39m     \u001b[36mconst\u001b[39m { count\u001b[33m:\u001b[39m events } \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m sb\u001b[33m.\u001b[39m\u001b[36mfrom\u001b[39m(\u001b[32m\"order_events\"\u001b[39m)\u001b[33m.\u001b[39mselect(\u001b[32m\"id\"\u001b[39m\u001b[33m,\u001b[39m { count\u001b[33m:\u001b[39m \u001b[32m\"exact\"\u001b[39m\u001b[33m,\u001b[39m head\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39meq(\u001b[32m\"order_id\"\u001b[39m\u001b[33m,\u001b[39m o\u001b[33m!\u001b[39m\u001b[33m.\u001b[39mid)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "column": 54,
-                            "line": 173
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Fully collected.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Fully collected.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Fully collected.')\u001b[22m\n\n\n  171 |     await page.getByLabel(\"Collector reference\").fill(\"rider-1\");\n  172 |     await page.getByRole(\"button\", { name: \"Record collection\" }).click();\n> 173 |     await expect(page.getByText(\"Fully collected.\")).toBeVisible();\n      |                                                      ^\n  174 |     const { data: o } = await sb.from(\"orders\").select(\"id, status, payment_status, amount_collected_paisa\").eq(\"order_number\", orderNumber).single();\n  175 |     expect(o).toMatchObject({ status: \"shipped\", payment_status: \"collected\", amount_collected_paisa: TOTAL });\n  176 |     const { count: events } = await sb.from(\"order_events\").select(\"id\", { count: \"exact\", head: true }).eq(\"order_id\", o!.id);\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:173:54"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 12297,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T21:57:14.332Z",
+                      "startTime": "2026-11-16T03:40:05.046Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2601,21 +2582,10 @@
                           }
                         }
                       ],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-97c54-ollect-COD-customer-sees-it-chromium-desktop\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "column": 54,
-                        "line": 173
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-680447ae856ced466bd5",
@@ -2645,25 +2615,34 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 19625,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T21:59:23.295Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:40:17.435Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-e3f21140f6458121a7d5",
               "file": "launch-journey.spec.ts",
-              "line": 187,
+              "line": 193,
               "column": 7
             },
             {
@@ -2688,25 +2667,34 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 15606,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T21:59:23.297Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:40:37.130Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-74dd7b4b67a6bf264f9a",
               "file": "launch-journey.spec.ts",
-              "line": 200,
+              "line": 208,
               "column": 7
             },
             {
@@ -2731,25 +2719,34 @@
                   "projectName": "chromium-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 108,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T21:59:23.297Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:40:52.780Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-2895ce30692c80cc9e11",
               "file": "launch-journey.spec.ts",
-              "line": 221,
+              "line": 229,
               "column": 7
             },
             {
@@ -2777,12 +2774,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 16769,
+                      "duration": 21701,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:01:12.073Z",
+                      "startTime": "2026-11-16T03:41:30.745Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2829,12 +2826,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 453,
+                      "duration": 27,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:01:31.658Z",
+                      "startTime": "2026-11-16T03:41:52.726Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2881,12 +2878,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 9147,
+                      "duration": 1075,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:01:32.685Z",
+                      "startTime": "2026-11-16T03:41:52.772Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2933,12 +2930,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 7906,
+                      "duration": 13412,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:01:42.144Z",
+                      "startTime": "2026-11-16T03:41:53.875Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -2985,12 +2982,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 11284,
+                      "duration": 12489,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:01:50.456Z",
+                      "startTime": "2026-11-16T03:42:07.330Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3037,12 +3034,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 35056,
+                      "duration": 2377,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:02:02.031Z",
+                      "startTime": "2026-11-16T03:42:19.838Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3089,12 +3086,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 45326,
+                      "duration": 8679,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:02:37.553Z",
+                      "startTime": "2026-11-16T03:42:22.250Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3141,12 +3138,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 33536,
+                      "duration": 17070,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:03:23.100Z",
+                      "startTime": "2026-11-16T03:42:30.990Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3165,12 +3162,12 @@
               ],
               "id": "6d0152bf536f153b62e1-c5204ec208d736fa49ff",
               "file": "launch-journey.spec.ts",
-              "line": 187,
+              "line": 193,
               "column": 7
             },
             {
               "title": "notifications: provider outage → failed, staff retry → sent once",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -3192,32 +3189,13 @@
                     {
                       "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 31455,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/Accepted 1 · failed 0/)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/Accepted 1 · failed 0/) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/Accepted 1 · failed 0/)\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/Accepted 1 · failed 0/)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/Accepted 1 · failed 0/) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/Accepted 1 · failed 0/)\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:214:59",
-                        "location": {
-                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                          "column": 59,
-                          "line": 214
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 212 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"notification-status\"\u001b[39m))\u001b[33m.\u001b[39mtoHaveText(\u001b[32m\"failed\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 213 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Retry sending\"\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 214 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[35m/Accepted 1 · failed 0/\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 215 |\u001b[39m     \u001b[36mconst\u001b[39m rows \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m outboxFor(n)\u001b[33m;\u001b[39m\n \u001b[90m 216 |\u001b[39m     expect(rows[\u001b[35m0\u001b[39m])\u001b[33m.\u001b[39mtoMatchObject({ status\u001b[33m:\u001b[39m \u001b[32m\"accepted\"\u001b[39m\u001b[33m,\u001b[39m attempts\u001b[33m:\u001b[39m \u001b[35m2\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 217 |\u001b[39m     \u001b[36mconst\u001b[39m log \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m fakeLog()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "column": 59,
-                            "line": 214
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText(/Accepted 1 · failed 0/)\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText(/Accepted 1 · failed 0/) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/Accepted 1 · failed 0/)\u001b[22m\n\n\n  212 |     await expect(page.getByTestId(\"notification-status\")).toHaveText(\"failed\");\n  213 |     await page.getByRole(\"button\", { name: \"Retry sending\" }).click();\n> 214 |     await expect(page.getByText(/Accepted 1 · failed 0/)).toBeVisible();\n      |                                                           ^\n  215 |     const rows = await outboxFor(n);\n  216 |     expect(rows[0]).toMatchObject({ status: \"accepted\", attempts: 2 });\n  217 |     const log = await fakeLog();\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:214:59"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 16384,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:03:56.867Z",
+                      "startTime": "2026-11-16T03:42:48.123Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3228,26 +3206,15 @@
                           }
                         }
                       ],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-522af-led-staff-retry-→-sent-once-chromium-mobile\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "column": 59,
-                        "line": 214
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-8180912cdee9b571c94a",
               "file": "launch-journey.spec.ts",
-              "line": 200,
+              "line": 208,
               "column": 7
             },
             {
@@ -3272,25 +3239,34 @@
                   "projectName": "chromium-mobile",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 97,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:05:48.754Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:43:04.583Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-95cc355c176add22c10c",
               "file": "launch-journey.spec.ts",
-              "line": 221,
+              "line": 229,
               "column": 7
             },
             {
@@ -3318,12 +3294,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 52185,
+                      "duration": 4005,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:17:27.433Z",
+                      "startTime": "2026-11-16T03:44:40.671Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3370,12 +3346,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 264,
+                      "duration": 29,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:18:20.919Z",
+                      "startTime": "2026-11-16T03:44:44.967Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3422,12 +3398,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 25528,
+                      "duration": 1542,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:18:21.290Z",
+                      "startTime": "2026-11-16T03:44:45.010Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3451,7 +3427,7 @@
             },
             {
               "title": "checkout: unserved address and invalid phone are refused",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -3473,32 +3449,13 @@
                     {
                       "workerIndex": 2,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 24443,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('We do not currently deliver COD to this city/province.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('We do not currently deliver COD to this city/province.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('We do not currently deliver COD to this city/province.')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('We do not currently deliver COD to this city/province.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('We do not currently deliver COD to this city/province.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('We do not currently deliver COD to this city/province.')\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:120:92",
-                        "location": {
-                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                          "column": 92,
-                          "line": 120
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 118 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"City\"\u001b[39m)\u001b[33m.\u001b[39mfill(\u001b[32m\"Quetta\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 119 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Province\"\u001b[39m)\u001b[33m.\u001b[39mselectOption(\u001b[32m\"Balochistan\"\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 120 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"We do not currently deliver COD to this city/province.\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 121 |\u001b[39m     \u001b[36mconst\u001b[39m r \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mrequest\u001b[33m.\u001b[39mpost(\u001b[32m\"/api/checkout/cod\"\u001b[39m\u001b[33m,\u001b[39m {\n \u001b[90m 122 |\u001b[39m       headers\u001b[33m:\u001b[39m { origin\u001b[33m:\u001b[39m \u001b[32m\"http://127.0.0.1:3001\"\u001b[39m }\u001b[33m,\u001b[39m\n \u001b[90m 123 |\u001b[39m       data\u001b[33m:\u001b[39m { idempotencyKey\u001b[33m:\u001b[39m \u001b[32m`iso-${randomUUID()}`\u001b[39m\u001b[33m,\u001b[39m customerName\u001b[33m:\u001b[39m \u001b[32m\"Bad Phone\"\u001b[39m\u001b[33m,\u001b[39m customerPhone\u001b[33m:\u001b[39m \u001b[32m\"12345\"\u001b[39m\u001b[33m,\u001b[39m shippingZoneId\u001b[33m:\u001b[39m fx\u001b[33m.\u001b[39mzone\u001b[33m.\u001b[39mid\u001b[33m,\u001b[39m confirmCod\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m\u001b[33m,\u001b[39m address\u001b[33m:\u001b[39m { line1\u001b[33m:\u001b[39m \u001b[32m\"x street\"\u001b[39m\u001b[33m,\u001b[39m city\u001b[33m:\u001b[39m \u001b[32m\"Lahore\"\u001b[39m\u001b[33m,\u001b[39m province\u001b[33m:\u001b[39m \u001b[32m\"Punjab\"\u001b[39m }\u001b[33m,\u001b[39m lines\u001b[33m:\u001b[39m [{ variantId\u001b[33m:\u001b[39m \u001b[33mP\u001b[39m\u001b[33m.\u001b[39mvariantId\u001b[33m,\u001b[39m quantity\u001b[33m:\u001b[39m \u001b[35m1\u001b[39m }] }\u001b[33m,\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "column": 92,
-                            "line": 120
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('We do not currently deliver COD to this city/province.')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('We do not currently deliver COD to this city/province.') with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByText('We do not currently deliver COD to this city/province.')\u001b[22m\n\n\n  118 |     await page.getByLabel(\"City\").fill(\"Quetta\");\n  119 |     await page.getByLabel(\"Province\").selectOption(\"Balochistan\");\n> 120 |     await expect(page.getByText(\"We do not currently deliver COD to this city/province.\")).toBeVisible();\n      |                                                                                            ^\n  121 |     const r = await page.request.post(\"/api/checkout/cod\", {\n  122 |       headers: { origin: \"http://127.0.0.1:3001\" },\n  123 |       data: { idempotencyKey: `iso-${randomUUID()}`, customerName: \"Bad Phone\", customerPhone: \"12345\", shippingZoneId: fx.zone.id, confirmCod: true, address: { line1: \"x street\", city: \"Lahore\", province: \"Punjab\" }, lines: [{ variantId: P.variantId, quantity: 1 }] },\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:120:92"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3095,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:18:46.920Z",
+                      "startTime": "2026-11-16T03:44:46.567Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3509,21 +3466,10 @@
                           }
                         }
                       ],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-f8ece-d-invalid-phone-are-refused-webkit-desktop\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "column": 92,
-                        "line": 120
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-16bc4e8e4f95dcf2bf05",
@@ -3553,20 +3499,29 @@
                   "projectName": "webkit-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2414,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:19:12.174Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:44:49.682Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-586b8cb0369bc351d165",
@@ -3596,20 +3551,29 @@
                   "projectName": "webkit-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2535,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:19:12.183Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:44:52.118Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-821c6e9e910cc2eb7962",
@@ -3639,20 +3603,29 @@
                   "projectName": "webkit-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 9435,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:19:12.186Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:44:54.675Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-78c1dc6bfbcb219c27c3",
@@ -3682,25 +3655,34 @@
                   "projectName": "webkit-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7626,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:19:12.186Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:45:04.153Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-fcb0191f4316b380939e",
               "file": "launch-journey.spec.ts",
-              "line": 187,
+              "line": 193,
               "column": 7
             },
             {
@@ -3725,25 +3707,34 @@
                   "projectName": "webkit-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5606,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:19:12.186Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:45:11.817Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-04d67b8e79e1cd3e6764",
               "file": "launch-journey.spec.ts",
-              "line": 200,
+              "line": 208,
               "column": 7
             },
             {
@@ -3768,25 +3759,34 @@
                   "projectName": "webkit-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 114,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:19:12.187Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:45:17.468Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-23fb3fc0d7df4ab4f496",
               "file": "launch-journey.spec.ts",
-              "line": 221,
+              "line": 229,
               "column": 7
             },
             {
@@ -3814,12 +3814,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 49079,
+                      "duration": 4198,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:20:40.336Z",
+                      "startTime": "2026-11-16T03:45:33.134Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3866,12 +3866,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 198,
+                      "duration": 26,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:21:30.787Z",
+                      "startTime": "2026-11-16T03:45:37.554Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3918,12 +3918,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 25263,
+                      "duration": 1273,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:21:31.060Z",
+                      "startTime": "2026-11-16T03:45:37.594Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -3970,12 +3970,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 26414,
+                      "duration": 3947,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:21:56.507Z",
+                      "startTime": "2026-11-16T03:45:38.895Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4022,12 +4022,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 10673,
+                      "duration": 3821,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:22:23.243Z",
+                      "startTime": "2026-11-16T03:45:42.877Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4074,12 +4074,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 24293,
+                      "duration": 2250,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:22:34.034Z",
+                      "startTime": "2026-11-16T03:45:46.713Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4126,12 +4126,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 38858,
+                      "duration": 8274,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:22:58.399Z",
+                      "startTime": "2026-11-16T03:45:48.997Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4155,7 +4155,7 @@
             },
             {
               "title": "admin: cancellation by fulfillment staff",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -4177,32 +4177,13 @@
                     {
                       "workerIndex": 3,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 37786,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: cancelled')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: cancelled') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: cancelled')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: cancelled')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: cancelled') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: cancelled')\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:195:56",
-                        "location": {
-                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                          "column": 56,
-                          "line": 195
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 193 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Next status\"\u001b[39m)\u001b[33m.\u001b[39mselectOption(\u001b[32m\"cancelled\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 194 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Update status\"\u001b[39m })\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 195 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Current: cancelled\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15\u001b[39m_000 })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 196 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m`/order/success/${accessToken}`\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 197 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"order-status\"\u001b[39m))\u001b[33m.\u001b[39mtoHaveText(\u001b[32m\"Cancelled\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 198 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "column": 56,
-                            "line": 195
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByText('Current: cancelled')\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" getByText('Current: cancelled') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for getByText('Current: cancelled')\u001b[22m\n\n\n  193 |     await page.getByLabel(\"Next status\").selectOption(\"cancelled\");\n  194 |     await page.getByRole(\"button\", { name: \"Update status\" }).click();\n> 195 |     await expect(page.getByText(\"Current: cancelled\")).toBeVisible({ timeout: 15_000 });\n      |                                                        ^\n  196 |     await page.goto(`/order/success/${accessToken}`);\n  197 |     await expect(page.getByTestId(\"order-status\")).toHaveText(\"Cancelled\");\n  198 |   });\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:195:56"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 5977,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:23:37.330Z",
+                      "startTime": "2026-11-16T03:45:57.303Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4213,26 +4194,15 @@
                           }
                         }
                       ],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-84e50-lation-by-fulfillment-staff-webkit-mobile\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "column": 56,
-                        "line": 195
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-3c7fbf0149174d572236",
               "file": "launch-journey.spec.ts",
-              "line": 187,
+              "line": 193,
               "column": 7
             },
             {
@@ -4257,25 +4227,34 @@
                   "projectName": "webkit-mobile",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7128,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:24:16.151Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:46:03.305Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-1bccde5f3bcd19a89317",
               "file": "launch-journey.spec.ts",
-              "line": 200,
+              "line": 208,
               "column": 7
             },
             {
@@ -4300,25 +4279,34 @@
                   "projectName": "webkit-mobile",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 127,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:24:16.152Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:46:10.490Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-2a604845711e7a23437b",
               "file": "launch-journey.spec.ts",
-              "line": 221,
+              "line": 229,
               "column": 7
             },
             {
@@ -4346,12 +4334,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 52189,
+                      "duration": 3879,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:31:27.434Z",
+                      "startTime": "2026-11-16T03:47:01.947Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4398,12 +4386,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 821,
+                      "duration": 31,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:32:24.994Z",
+                      "startTime": "2026-11-16T03:47:06.114Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4450,12 +4438,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 34300,
+                      "duration": 1588,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:32:26.754Z",
+                      "startTime": "2026-11-16T03:47:06.171Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4502,12 +4490,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 33598,
+                      "duration": 2833,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:33:01.479Z",
+                      "startTime": "2026-11-16T03:47:07.790Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4554,12 +4542,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 16482,
+                      "duration": 2616,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:33:35.452Z",
+                      "startTime": "2026-11-16T03:47:10.665Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4606,12 +4594,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 36769,
+                      "duration": 3796,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:33:52.081Z",
+                      "startTime": "2026-11-16T03:47:13.359Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4635,7 +4623,7 @@
             },
             {
               "title": "admin: confirm → pack → dispatch with tracking → collect COD; customer sees it",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -4657,32 +4645,13 @@
                     {
                       "workerIndex": 4,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 65803,
-                      "error": {
-                        "message": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/bb37fe49-099c-400a-9869-0988ba1ebe0a\", waiting until \"load\"\u001b[22m\n",
-                        "stack": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/bb37fe49-099c-400a-9869-0988ba1ebe0a\", waiting until \"load\"\u001b[22m\n\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:181:16",
-                        "location": {
-                          "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                          "column": 16,
-                          "line": 181
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 179 |\u001b[39m     expect(audits)\u001b[33m.\u001b[39mtoBeGreaterThanOrEqual(\u001b[35m4\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 180 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 181 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(orderUrl)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 182 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByTestId(\u001b[32m\"order-status\"\u001b[39m))\u001b[33m.\u001b[39mtoHaveText(\u001b[32m\"Dispatched\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 183 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Test Courier · TEST-123\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 184 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByText(\u001b[32m\"Paid — cash collected\"\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                            "column": 16,
-                            "line": 181
-                          },
-                          "message": "Error: page.goto: NS_BINDING_ABORTED\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/order/success/bb37fe49-099c-400a-9869-0988ba1ebe0a\", waiting until \"load\"\u001b[22m\n\n\n  179 |     expect(audits).toBeGreaterThanOrEqual(4);\n  180 |\n> 181 |     await page.goto(orderUrl);\n      |                ^\n  182 |     await expect(page.getByTestId(\"order-status\")).toHaveText(\"Dispatched\");\n  183 |     await expect(page.getByText(\"Test Courier · TEST-123\")).toBeVisible();\n  184 |     await expect(page.getByText(\"Paid — cash collected\")).toBeVisible();\n    at D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts:181:16"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 11387,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:34:29.853Z",
+                      "startTime": "2026-11-16T03:47:17.196Z",
                       "annotations": [
                         {
                           "type": "serial",
@@ -4693,21 +4662,10 @@
                           }
                         }
                       ],
-                      "attachments": [
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "D:\\Laptops Hub Vercel Development\\test-results\\launch-journey-launch-jour-97c54-ollect-COD-customer-sees-it-firefox-desktop\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
-                        "column": 16,
-                        "line": 181
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-7eb082b077f9e2868125",
@@ -4737,25 +4695,34 @@
                   "projectName": "firefox-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 8222,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:35:45.734Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:47:28.631Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-d32634e2309e32e24b80",
               "file": "launch-journey.spec.ts",
-              "line": 187,
+              "line": 193,
               "column": 7
             },
             {
@@ -4780,25 +4747,34 @@
                   "projectName": "firefox-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7765,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:35:45.748Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:47:36.915Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-93f0b67412340f5a5be7",
               "file": "launch-journey.spec.ts",
-              "line": 200,
+              "line": 208,
               "column": 7
             },
             {
@@ -4823,25 +4799,34 @@
                   "projectName": "firefox-desktop",
                   "results": [
                     {
-                      "workerIndex": -1,
-                      "parallelIndex": -1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 85,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-15T22:35:45.748Z",
-                      "annotations": [],
+                      "startTime": "2026-11-16T03:47:44.772Z",
+                      "annotations": [
+                        {
+                          "type": "serial",
+                          "location": {
+                            "file": "D:\\Laptops Hub Vercel Development\\tests\\e2e-isolated\\launch-journey.spec.ts",
+                            "line": 59,
+                            "column": 15
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6d0152bf536f153b62e1-d18221f4e368ec766a46",
               "file": "launch-journey.spec.ts",
-              "line": 221,
+              "line": 229,
               "column": 7
             }
           ]
@@ -4851,11 +4836,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-15T21:51:52.485Z",
-    "duration": 2634320.342,
-    "expected": 85,
-    "skipped": 15,
-    "unexpected": 5,
+    "startTime": "2026-11-16T03:38:09.598Z",
+    "duration": 576203.394,
+    "expected": 105,
+    "skipped": 0,
+    "unexpected": 0,
     "flaky": 0
   }
 }

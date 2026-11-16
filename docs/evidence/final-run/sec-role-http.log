@@ -1,16 +1,128 @@
-node:internal/modules/run_main:107
-    triggerUncaughtException(
-    ^
+PASS  anon PATCH /api/admin/content/about — status=401
+PASS  anon PATCH /api/admin/products/iso-http-none — status=401
+PASS  anon POST /api/admin/shipping-zones — status=401
+PASS  anon POST /api/admin/cod-collections — status=401
+PASS  anon POST /api/admin/orders/LH-NONE/status — status=401
+PASS  anon PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 — status=401
+PASS  anon POST /api/admin/notifications/retry — status=401
+PASS  anon PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 — status=401
+PASS  anon GET /admin/content — 307 /admin/login
+PASS  anon GET /admin/products — 307 /admin/login
+PASS  anon GET /admin/orders — 307 /admin/login
+PASS  anon GET /admin/inquiries — 307 /admin/login
+PASS  anon GET /admin/settings — 307 /admin/login
+PASS  owner PATCH /api/admin/content/about → allowed — status=400
+PASS  owner PATCH /api/admin/products/iso-http-none → allowed — status=404
+PASS  owner POST /api/admin/shipping-zones → allowed — status=400
+PASS  owner POST /api/admin/cod-collections → allowed — status=400
+PASS  owner POST /api/admin/orders/LH-NONE/status → allowed — status=400
+PASS  owner PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → allowed — status=400
+PASS  owner POST /api/admin/notifications/retry → allowed — status=400
+PASS  owner PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → allowed — status=400
+PASS  owner GET /admin/content → 200 — 200 
+PASS  owner GET /admin/products → 200 — 200 
+PASS  owner GET /admin/orders → 200 — 200 
+PASS  owner GET /admin/inquiries → 200 — 200 
+PASS  owner GET /admin/settings → 200 — 200 
+PASS  admin PATCH /api/admin/content/about → allowed — status=400
+PASS  admin PATCH /api/admin/products/iso-http-none → allowed — status=404
+PASS  admin POST /api/admin/shipping-zones → allowed — status=400
+PASS  admin POST /api/admin/cod-collections → allowed — status=400
+PASS  admin POST /api/admin/orders/LH-NONE/status → allowed — status=400
+PASS  admin PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → allowed — status=400
+PASS  admin POST /api/admin/notifications/retry → allowed — status=400
+PASS  admin PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → allowed — status=400
+PASS  admin GET /admin/content → 200 — 200 
+PASS  admin GET /admin/products → 200 — 200 
+PASS  admin GET /admin/orders → 200 — 200 
+PASS  admin GET /admin/inquiries → 200 — 200 
+PASS  admin GET /admin/settings → 200 — 200 
+PASS  manager PATCH /api/admin/content/about → allowed — status=400
+PASS  manager PATCH /api/admin/products/iso-http-none → allowed — status=404
+PASS  manager POST /api/admin/shipping-zones → allowed — status=400
+PASS  manager POST /api/admin/cod-collections → allowed — status=400
+PASS  manager POST /api/admin/orders/LH-NONE/status → allowed — status=400
+PASS  manager PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → allowed — status=400
+PASS  manager POST /api/admin/notifications/retry → allowed — status=400
+PASS  manager PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → allowed — status=400
+PASS  manager GET /admin/content → 200 — 200 
+PASS  manager GET /admin/products → 200 — 200 
+PASS  manager GET /admin/orders → 200 — 200 
+PASS  manager GET /admin/inquiries → 200 — 200 
+PASS  manager GET /admin/settings → 200 — 200 
+PASS  editor PATCH /api/admin/content/about → allowed — status=400
+PASS  editor PATCH /api/admin/products/iso-http-none → allowed — status=404
+PASS  editor POST /api/admin/shipping-zones → denied — status=403
+PASS  editor POST /api/admin/cod-collections → denied — status=403
+PASS  editor POST /api/admin/orders/LH-NONE/status → denied — status=403
+PASS  editor PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied — status=403
+PASS  editor POST /api/admin/notifications/retry → denied — status=403
+PASS  editor PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → denied — status=403
+PASS  editor GET /admin/content → 200 — 200 
+PASS  editor GET /admin/products → 200 — 200 
+PASS  editor GET /admin/orders → redirect — 307 /admin/forbidden
+PASS  editor GET /admin/inquiries → redirect — 307 /admin/forbidden
+PASS  editor GET /admin/settings → redirect — 307 /admin/forbidden
+PASS  fulfillment PATCH /api/admin/content/about → denied — status=403
+PASS  fulfillment PATCH /api/admin/products/iso-http-none → denied — status=403
+PASS  fulfillment POST /api/admin/shipping-zones → denied — status=403
+PASS  fulfillment POST /api/admin/cod-collections → allowed — status=400
+PASS  fulfillment POST /api/admin/orders/LH-NONE/status → allowed — status=400
+PASS  fulfillment PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied — status=403
+PASS  fulfillment POST /api/admin/notifications/retry → allowed — status=400
+PASS  fulfillment PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → allowed — status=400
+PASS  fulfillment GET /admin/content → redirect — 307 /admin/forbidden
+PASS  fulfillment GET /admin/products → redirect — 307 /admin/forbidden
+PASS  fulfillment GET /admin/orders → 200 — 200 
+PASS  fulfillment GET /admin/inquiries → 200 — 200 
+PASS  fulfillment GET /admin/settings → redirect — 307 /admin/forbidden
+PASS  manager(inactive) PATCH /api/admin/content/about → denied — status=403
+PASS  manager(inactive) PATCH /api/admin/products/iso-http-none → denied — status=403
+PASS  manager(inactive) POST /api/admin/shipping-zones → denied — status=403
+PASS  manager(inactive) POST /api/admin/cod-collections → denied — status=403
+PASS  manager(inactive) POST /api/admin/orders/LH-NONE/status → denied — status=403
+PASS  manager(inactive) PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied — status=403
+PASS  manager(inactive) POST /api/admin/notifications/retry → denied — status=403
+PASS  manager(inactive) PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → denied — status=403
+PASS  manager(inactive) GET /admin/content → redirect — 307 /admin/forbidden
+PASS  manager(inactive) GET /admin/products → redirect — 307 /admin/forbidden
+PASS  manager(inactive) GET /admin/orders → redirect — 307 /admin/forbidden
+PASS  manager(inactive) GET /admin/inquiries → redirect — 307 /admin/forbidden
+PASS  manager(inactive) GET /admin/settings → redirect — 307 /admin/forbidden
+PASS  nonstaff PATCH /api/admin/content/about → denied — status=403
+PASS  nonstaff PATCH /api/admin/products/iso-http-none → denied — status=403
+PASS  nonstaff POST /api/admin/shipping-zones → denied — status=403
+PASS  nonstaff POST /api/admin/cod-collections → denied — status=403
+PASS  nonstaff POST /api/admin/orders/LH-NONE/status → denied — status=403
+PASS  nonstaff PATCH /api/admin/shipping-zones/00000000-0000-4000-8000-000000000000 → denied — status=403
+PASS  nonstaff POST /api/admin/notifications/retry → denied — status=403
+PASS  nonstaff PATCH /api/admin/inquiries/00000000-0000-4000-8000-000000000000 → denied — status=403
+PASS  nonstaff GET /admin/content → redirect — 307 /admin/forbidden
+PASS  nonstaff GET /admin/products → redirect — 307 /admin/forbidden
+PASS  nonstaff GET /admin/orders → redirect — 307 /admin/forbidden
+PASS  nonstaff GET /admin/inquiries → redirect — 307 /admin/forbidden
+PASS  nonstaff GET /admin/settings → redirect — 307 /admin/forbidden
+PASS  editor cannot legally approve a policy page — status=403
+PASS  editor cannot publish a policy page — status=403
+PASS  publishing a policy page without legal approval is refused — status=409
+PASS  owner can approve and publish a policy page — status=200 {"status":"published","legal_approved":true,"legal_approved_by":"933d559a-7a20-4c58-96f7-7242e4103b84"}
+PASS  published policy renders CMS body — status=200
+PASS  product page: published delivery policy is linked, untagged — <span style="font-size:14px;font-weight:700">Delivery</span><span style="font-family:var(--font-mono);font-size:10px;let
+PASS  footer links a published policy
+PASS  approver id is not readable by anon — permission denied for table content_pages
+PASS  withdrawn policy is gone immediately (404, text not served) — status=404
+PASS  product page: withdrawn delivery policy is no longer linked
+PASS  footer no longer links the withdrawn policy
+PASS  empty-body publish refused for a template with pending sections — status=409
+PASS  unpublished page answers 404 (no placeholder page)
+PASS  empty-body publish refused for a template with unanswered FAQ items — status=409
+PASS  empty-body publish needs explicit template approval — status=409
+PASS  approved template publishes (comparison-guide) — status=200/200
+PASS  published template is in the sitemap, unpublished pages are not
+PASS  unpublished template is gone again (404)
+PASS  collection recorded once via route — 200 {"ok":true,"idempotentReplay":false,"amountCollectedPaisa":100000,"paymentStatus":"partially_collected","collectionId":"623c1274-df35-49f5-b705-ce86de3d2fb6"} collected=100000
+PASS  retry with same key replays — 200 {"ok":true,"idempotentReplay":true,"amountCollectedPaisa":100000,"paymentStatus":"partially_collected","collectionId":"623c1274-df35-49f5-b705-ce86de3d2fb6"}
+PASS  same key, different amount → 409 conflict, no constraint leak — 409 {"error":"idempotency_conflict","message":"This collection key was already used for a different order or amount. Nothing was recorded."}
+PASS  editor cannot record collections — status=403
 
-[TypeError: fetch failed] {
-  [cause]: Error: connect ECONNREFUSED 127.0.0.1:3001
-      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1705:16) {
-    errno: -4078,
-    code: 'ECONNREFUSED',
-    syscall: 'connect',
-    address: '127.0.0.1',
-    port: 3001
-  }
-}
-
-Node.js v24.16.0
+126/126 passed · docs\SECURITY_ROLE_HTTP_RESULTS.json

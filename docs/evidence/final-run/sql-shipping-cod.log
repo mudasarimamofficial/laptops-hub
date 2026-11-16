@@ -2,7 +2,7 @@ BEGIN
 DO
 CREATE TABLE
 INSERT 0 1
-UPDATE 6
+UPDATE 1
 INSERT 0 1
 INSERT 0 3
 INSERT 0 3
@@ -44,13 +44,13 @@ PASS|authenticated cannot execute create_cod_order|permission denied for functio
 PASS|db switch off refuses|checkout_disabled
 PASS|draft product refused|product_not_purchasable
 PASS|excluded city (normalised) is unserviceable|{"ok": false, "error": "unserviceable", "message": "We do not currently deliver COD to this city/province.", "options": 
-PASS|idempotent replay (no duplicate order)|{"ok": true, "order_id": "a7cb1e2c-d34d-4762-80ac-c24f817b86f8", "duplicate": true, "access_token": "efee0b7f-84fb-4ebb-
+PASS|idempotent replay (no duplicate order)|{"ok": true, "order_id": "2d29381d-cc95-4ef0-a0fe-4bbcdbb60a6e", "duplicate": true, "access_token": "9e65855b-000e-4ef3-
 PASS|missing zone refused (never free by default)|shipping_required
-PASS|order 0+0 total = subtotal|{"ok": true, "order_id": "b489d7cb-9407-41d4-85f0-343e08bb94ee", "duplicate": false, "access_token": "8fe30390-8b0d-4902
-PASS|order 360+50 total = subtotal+360+50|{"ok": true, "order_id": "a7cb1e2c-d34d-4762-80ac-c24f817b86f8", "duplicate": false, "access_token": "efee0b7f-84fb-4ebb
+PASS|order 0+0 total = subtotal|{"ok": true, "order_id": "95089665-24e2-4b0b-90dd-e57c5b10d2c5", "duplicate": false, "access_token": "2380f454-637f-4ee1
+PASS|order 360+50 total = subtotal+360+50|{"ok": true, "order_id": "2d29381d-cc95-4ef0-a0fe-4bbcdbb60a6e", "duplicate": false, "access_token": "9e65855b-000e-4ef3
 PASS|order above threshold: stored delivery 0, COD fee 50|0/5000
-PASS|order above threshold: total = subtotal + COD fee|{"ok": true, "order_id": "2f81fb20-4f9f-4b0d-a570-13a104fa34e7", "duplicate": false, "access_token": "b8fb030d-6943-4957
-PASS|order below threshold: full 360+50|{"ok": true, "order_id": "8b4c205c-0646-4dc5-b450-17a5c7ecaddb", "duplicate": false, "access_token": "01d7a5ac-057f-4ea8
+PASS|order above threshold: total = subtotal + COD fee|{"ok": true, "order_id": "4d99f519-b8f6-4223-8aae-0e6b27a2aa2c", "duplicate": false, "access_token": "0a58a009-d404-409d
+PASS|order below threshold: full 360+50|{"ok": true, "order_id": "065f8c76-88d8-4a17-a5f4-0c63743ece33", "duplicate": false, "access_token": "18570bb9-fc11-43a7
 PASS|order has item+address+event+outbox|
 PASS|order is unpaid COD (not collected)|unpaid_cod/cod
 PASS|other city in same province still served|{"ok": true, "options": [{"id": "00000000-0000-4000-8000-000000000001", "name": "All Over PK", "notes": "", "cod_fee_pai

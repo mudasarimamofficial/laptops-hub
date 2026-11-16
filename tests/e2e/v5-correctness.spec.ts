@@ -56,7 +56,7 @@ test("draft product is not public", async ({ page }) => {
   expect((await api.json()).items).toEqual([]);
 });
 
-test("public cards never show Add to cart without a purchasable variant", async ({ page }) => {
+test("public cards show exactly one action: Add to cart (one purchasable variant), Choose options, or Ask", async ({ page }) => {
   await page.goto(`${base}/collections/laptops`, { waitUntil: "load" });
   const cards = page.locator("article");
   const count = await cards.count();
@@ -65,7 +65,9 @@ test("public cards never show Add to cart without a purchasable variant", async 
     const c = cards.nth(i);
     const atc = await c.getByRole("button", { name: /^(Add to cart|Added)$/ }).count();
     const ask = await c.getByRole("button", { name: "Ask about this product" }).count();
-    expect(atc + ask).toBe(1);
+    // Products with options (RAM/storage variants) send the shopper to the PDP to choose one exact variant.
+    const choose = await c.getByTestId("card-choose-options").count();
+    expect(atc + ask + choose).toBe(1);
   }
 });
 

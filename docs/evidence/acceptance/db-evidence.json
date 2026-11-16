@@ -1,25 +1,25 @@
 {
-  "run": "mwinuom1",
+  "run": "mwipkhyw",
   "supabase": "http://127.0.0.1:54321",
   "app": "http://127.0.0.1:3001",
   "step_01": {
     "role": "owner",
-    "email": "iso-owner-1794794933706@lh-test.local"
+    "email": "iso-owner-1794798206699@lh-test.local"
   },
   "step_02": {
-    "productId": "bbeabe10-edd3-4f46-8acd-30a9ac8c5080",
-    "handle": "qa-acceptance-laptop-mwinuom1",
+    "productId": "c26f56ca-ffa5-426d-b642-8b5708b258be",
+    "handle": "qa-acceptance-laptop-mwipkhyw",
     "status": "draft"
   },
   "step_03": {
     "variants": [
       {
         "title": "16GB",
-        "sku": "QA-ACC-MWINUOM1-16GB"
+        "sku": "QA-ACC-MWIPKHYW-16GB"
       },
       {
         "title": "8GB",
-        "sku": "QA-ACC-MWINUOM1-8GB"
+        "sku": "QA-ACC-MWIPKHYW-8GB"
       }
     ]
   },
@@ -38,22 +38,22 @@
   "step_06": {
     "media": {
       "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111",
-      "alt": "QA Acceptance Laptop mwinuom1 front view",
+      "alt": "QA Acceptance Laptop mwipkhyw front view",
       "position": 1,
       "approval": "pending"
     },
     "note": "Rights flag stays 'pending' until the owner approves it (never auto-approved)."
   },
   "step_07": {
-    "collection": "qa-acceptance-mwinuom1"
+    "collection": "qa-acceptance-mwipkhyw"
   },
   "step_08": {
     "status": "active"
   },
   "step_09": {
-    "pdp": "/products/qa-acceptance-laptop-mwinuom1",
+    "pdp": "/products/qa-acceptance-laptop-mwipkhyw",
     "collectionShows": [
-      "qa-acceptance-laptop-mwinuom1"
+      "qa-acceptance-laptop-mwipkhyw"
     ]
   },
   "step_12": {
@@ -66,11 +66,11 @@
     "totalDue": 8545000
   },
   "step_13": {
-    "orderNumber": "LH-261116-78C11D"
+    "orderNumber": "LH-261116-BE84E9"
   },
   "step_14": {
     "order": {
-      "id": "c5731ac0-b481-443b-acce-58935b01b023",
+      "id": "df7c04e9-c100-4c38-a18d-1b1e752d7214",
       "status": "placed",
       "payment_status": "unpaid_cod",
       "subtotal_paisa": 8500000,
@@ -80,7 +80,7 @@
     },
     "items": [
       {
-        "variant_id": "1fe3e6cf-aebd-4017-9b08-72a5279c5a67",
+        "variant_id": "0c0b5fdf-4ef1-4d7a-8e27-ca73448f4347",
         "quantity": 1,
         "unit_price_paisa": 8500000
       }
@@ -95,7 +95,7 @@
         "quantity_after": 3,
         "reason": "order_placed",
         "reference_type": "order",
-        "reference_id": "c5731ac0-b481-443b-acce-58935b01b023"
+        "reference_id": "df7c04e9-c100-4c38-a18d-1b1e752d7214"
       }
     ],
     "emails": [
@@ -103,13 +103,13 @@
         "to": [
           "owner@lh-test.local"
         ],
-        "subject": "New COD order LH-261116-78C11D — Rs 85,450"
+        "subject": "New COD order LH-261116-BE84E9 — Rs 85,450"
       },
       {
         "to": [
           "acceptance-buyer@lh-test.local"
         ],
-        "subject": "Laptops HUB order LH-261116-78C11D received"
+        "subject": "Laptops HUB order LH-261116-BE84E9 received"
       }
     ]
   },
@@ -125,7 +125,7 @@
     "collections": [
       {
         "amount_paisa": 8545000,
-        "collector_ref": "rider-mwinuom1"
+        "collector_ref": "rider-mwipkhyw"
       }
     ]
   },
@@ -151,85 +151,14 @@
     "rating": 5
   },
   "step_24": {
-    "guide": "/guides/qa-acceptance-guide-mwinuom1",
+    "guide": "/guides/qa-acceptance-guide-mwipkhyw",
     "listed": true
   },
   "step_25": {
-    "reel": "QA acceptance reel mwinuom1",
+    "reel": "QA acceptance reel mwipkhyw",
     "rights": "owned (synthetic test pattern)"
   },
   "step_26": {
     "label": "staff_pick"
-  },
-  "step_27": {
-    "secondOrder": "LH-261116-2F99EA",
-    "badgesAfterTwoDeliveredUnits": [
-      "top_seller"
-    ],
-    "oneUnitBadge": false,
-    "recentActivity": [
-      {
-        "handle": "qa-acceptance-laptop-mwinuom1",
-        "title": "QA Acceptance Laptop mwinuom1",
-        "imageUrl": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111",
-        "when": "today",
-        "city": null
-      }
-    ]
-  },
-  "step_29": {
-    "draftHero": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111",
-    "publicStill": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111"
-  },
-  "step_30": {
-    "preview": "draft visible to staff only"
-  },
-  "step_31": {
-    "publishedVersion": "9768c4e3-2259-4948-a280-8233b8bec5c3"
-  },
-  "step_32": {
-    "rolledBackTo": "e2fbc740-ca5b-4cad-afbb-237756d65a48",
-    "baseline": "e2fbc740-ca5b-4cad-afbb-237756d65a48",
-    "publicHero": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111"
-  },
-  "step_33": {
-    "role": "fulfillment"
-  },
-  "step_34": {
-    "/admin/products": "forbidden",
-    "/admin/settings": "forbidden",
-    "/admin/online-store": "forbidden",
-    "/admin/staff": "forbidden",
-    "/admin/inventory": "forbidden",
-    "POST /api/admin/products": 403,
-    "PUT /api/admin/products/qa-acceptance-laptop-mwinuom1/variants": 403,
-    "POST /api/admin/theme/homepage/publish": 403,
-    "PUT /api/admin/social-proof": 403,
-    "POST /api/admin/staff": 403,
-    "POST /api/admin/inventory/adjust": 403
-  },
-  "step_35": {
-    "viewport": "390x844",
-    "noHorizontalOverflow": {
-      "/": true,
-      "/products/qa-acceptance-laptop-mwinuom1": true,
-      "/collections/qa-acceptance-mwinuom1": true,
-      "/checkout": true,
-      "/order/success/d602624b-e96c-4eaa-ae43-40c462dcf880": true,
-      "/admin": true,
-      "/admin/orders": true,
-      "/admin/orders/LH-261116-78C11D": true,
-      "/admin/inventory": true,
-      "/admin/products/qa-acceptance-laptop-mwinuom1": true
-    }
-  },
-  "step_36": {
-    "supabase": "http://127.0.0.1:54321",
-    "app": "http://127.0.0.1:3001",
-    "emailRecipients": [
-      "owner@lh-test.local",
-      "acceptance-buyer@lh-test.local"
-    ],
-    "production": "checked separately, read-only: see docs/LAPTOPS_HUB_STAGING_CERTIFICATION_REPORT.md §production-untouched"
   }
 }

@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 
-export function AdminLoginForm({ justReset }: { justReset: boolean }) {
+export function AdminLoginForm({ justReset, signedOut = false }: { justReset: boolean; signedOut?: boolean }) {
   const router = useRouter();
   const hydrated = useHydrated();
   const [error, setError] = useState<string | null>(null);
@@ -39,6 +39,10 @@ export function AdminLoginForm({ justReset }: { justReset: boolean }) {
         {justReset ? (
           <p role="status" className="mt-4 text-sm text-[var(--lh-success)]">
             Password changed. All devices were signed out — sign in with the new password.
+          </p>
+        ) : signedOut ? (
+          <p role="status" className="mt-4 text-sm text-[var(--lh-success)]">
+            You are signed out on this device.
           </p>
         ) : null}
         <label className="mt-6 block text-sm">

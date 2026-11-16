@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-16T01:58:44.268Z",
+  "at": "2026-11-16T03:17:43.617Z",
   "supabase": "http://127.0.0.1:54321",
   "results": [
     {
@@ -920,7 +920,7 @@
     {
       "name": "anon reads variant availability (boolean only)",
       "ok": true,
-      "detail": "[{\"variant_id\":\"1e99831e-8c92-4927-8664-8c27ad5d627b\",\"available\":true}]"
+      "detail": "[{\"product_id\":\"c5ed80e3-a7cb-4be1-b045-3c39ba01c66f\",\"variant_id\":\"022ad8d7-185a-46cf-817d-c78c396a8de0\",\"available\":true}]"
     },
     {
       "name": "customer reads public product + variants + media",
@@ -940,7 +940,7 @@
     {
       "name": "customer reads variant availability (boolean only)",
       "ok": true,
-      "detail": "[{\"variant_id\":\"1e99831e-8c92-4927-8664-8c27ad5d627b\",\"available\":true}]"
+      "detail": "[{\"product_id\":\"c5ed80e3-a7cb-4be1-b045-3c39ba01c66f\",\"variant_id\":\"022ad8d7-185a-46cf-817d-c78c396a8de0\",\"available\":true}]"
     },
     {
       "name": "editor reads public product + variants + media",
@@ -960,7 +960,7 @@
     {
       "name": "editor reads variant availability (boolean only)",
       "ok": true,
-      "detail": "[{\"variant_id\":\"1e99831e-8c92-4927-8664-8c27ad5d627b\",\"available\":true}]"
+      "detail": "[{\"product_id\":\"c5ed80e3-a7cb-4be1-b045-3c39ba01c66f\",\"variant_id\":\"022ad8d7-185a-46cf-817d-c78c396a8de0\",\"available\":true}]"
     },
     {
       "name": "anon can still submit a contact inquiry (insert only)",

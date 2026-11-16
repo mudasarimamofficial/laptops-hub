@@ -1,0 +1,566 @@
+{
+  "at": "2026-11-16T15:46:08.734Z",
+  "base": "https://www.laptopshub.pk",
+  "routes": [
+    "/",
+    "/collections/all",
+    "/collections/laptops",
+    "/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+    "/search?q=dell",
+    "/cart",
+    "/checkout",
+    "/track-order",
+    "/admin/login",
+    "/this-page-does-not-exist"
+  ],
+  "passed": 78,
+  "total": 78,
+  "results": [
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "GET /",
+      "ok": true,
+      "detail": "status 200, 1389 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "home: no unpublished reviews, no rating claims",
+      "ok": true,
+      "detail": "reviews 0, claims 0"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "home: map lazy, loads at bottom, Open in Google Maps reachable",
+      "ok": true,
+      "detail": "before unset, after set, link reachable true"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "GET /collections/all",
+      "ok": true,
+      "detail": "status 200, 670 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "GET /collections/laptops",
+      "ok": true,
+      "detail": "status 200, 507 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "GET /products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "ok": true,
+      "detail": "status 200, 1234 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "GET /search?q=dell",
+      "ok": true,
+      "detail": "status 200, 511 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "GET /cart",
+      "ok": true,
+      "detail": "status 200, 287 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "GET /checkout",
+      "ok": true,
+      "detail": "status 200, 663 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "checkout: public COD not offered",
+      "ok": true,
+      "detail": "place-order buttons 0, COD mentions 0"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "GET /track-order",
+      "ok": true,
+      "detail": "status 200, 605 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "GET /admin/login",
+      "ok": true,
+      "detail": "status 200, 733 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "desktop",
+      "check": "GET /this-page-does-not-exist",
+      "ok": true,
+      "detail": "status 404, 448 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "GET /",
+      "ok": true,
+      "detail": "status 200, 2585 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "home: no unpublished reviews, no rating claims",
+      "ok": true,
+      "detail": "reviews 0, claims 0"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "home: map lazy, loads at bottom, Open in Google Maps reachable",
+      "ok": true,
+      "detail": "before unset, after set, link reachable true"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "GET /collections/all",
+      "ok": true,
+      "detail": "status 200, 573 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "GET /collections/laptops",
+      "ok": true,
+      "detail": "status 200, 483 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "GET /products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "ok": true,
+      "detail": "status 200, 485 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "GET /search?q=dell",
+      "ok": true,
+      "detail": "status 200, 492 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "GET /cart",
+      "ok": true,
+      "detail": "status 200, 177 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "GET /checkout",
+      "ok": true,
+      "detail": "status 200, 406 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "checkout: public COD not offered",
+      "ok": true,
+      "detail": "place-order buttons 0, COD mentions 0"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "GET /track-order",
+      "ok": true,
+      "detail": "status 200, 345 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "GET /admin/login",
+      "ok": true,
+      "detail": "status 200, 434 ms, overflow 0px"
+    },
+    {
+      "engine": "chromium",
+      "vp": "phone",
+      "check": "GET /this-page-does-not-exist",
+      "ok": true,
+      "detail": "status 404, 206 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "GET /",
+      "ok": true,
+      "detail": "status 200, 971 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "home: no unpublished reviews, no rating claims",
+      "ok": true,
+      "detail": "reviews 0, claims 0"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "home: map lazy, loads at bottom, Open in Google Maps reachable",
+      "ok": true,
+      "detail": "before unset, after set, link reachable true"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "GET /collections/all",
+      "ok": true,
+      "detail": "status 200, 2652 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "GET /collections/laptops",
+      "ok": true,
+      "detail": "status 200, 669 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "GET /products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "ok": true,
+      "detail": "status 200, 2589 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "GET /search?q=dell",
+      "ok": true,
+      "detail": "status 200, 1447 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "GET /cart",
+      "ok": true,
+      "detail": "status 200, 474 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "GET /checkout",
+      "ok": true,
+      "detail": "status 200, 950 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "checkout: public COD not offered",
+      "ok": true,
+      "detail": "place-order buttons 0, COD mentions 0"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "GET /track-order",
+      "ok": true,
+      "detail": "status 200, 442 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "GET /admin/login",
+      "ok": true,
+      "detail": "status 200, 635 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "desktop",
+      "check": "GET /this-page-does-not-exist",
+      "ok": true,
+      "detail": "status 404, 362 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "GET /",
+      "ok": true,
+      "detail": "status 200, 1006 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "home: no unpublished reviews, no rating claims",
+      "ok": true,
+      "detail": "reviews 0, claims 0"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "home: map lazy, loads at bottom, Open in Google Maps reachable",
+      "ok": true,
+      "detail": "before unset, after set, link reachable true"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "GET /collections/all",
+      "ok": true,
+      "detail": "status 200, 2021 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "GET /collections/laptops",
+      "ok": true,
+      "detail": "status 200, 741 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "GET /products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "ok": true,
+      "detail": "status 200, 565 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "GET /search?q=dell",
+      "ok": true,
+      "detail": "status 200, 1233 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "GET /cart",
+      "ok": true,
+      "detail": "status 200, 398 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "GET /checkout",
+      "ok": true,
+      "detail": "status 200, 684 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "checkout: public COD not offered",
+      "ok": true,
+      "detail": "place-order buttons 0, COD mentions 0"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "GET /track-order",
+      "ok": true,
+      "detail": "status 200, 498 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "GET /admin/login",
+      "ok": true,
+      "detail": "status 200, 505 ms, overflow 0px"
+    },
+    {
+      "engine": "webkit",
+      "vp": "phone",
+      "check": "GET /this-page-does-not-exist",
+      "ok": true,
+      "detail": "status 404, 319 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "GET /",
+      "ok": true,
+      "detail": "status 200, 1923 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "home: no unpublished reviews, no rating claims",
+      "ok": true,
+      "detail": "reviews 0, claims 0"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "home: map lazy, loads at bottom, Open in Google Maps reachable",
+      "ok": true,
+      "detail": "before unset, after set, link reachable true"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "GET /collections/all",
+      "ok": true,
+      "detail": "status 200, 495 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "GET /collections/laptops",
+      "ok": true,
+      "detail": "status 200, 471 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "GET /products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "ok": true,
+      "detail": "status 200, 656 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "GET /search?q=dell",
+      "ok": true,
+      "detail": "status 200, 538 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "GET /cart",
+      "ok": true,
+      "detail": "status 200, 346 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "GET /checkout",
+      "ok": true,
+      "detail": "status 200, 499 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "checkout: public COD not offered",
+      "ok": true,
+      "detail": "place-order buttons 0, COD mentions 0"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "GET /track-order",
+      "ok": true,
+      "detail": "status 200, 298 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "GET /admin/login",
+      "ok": true,
+      "detail": "status 200, 436 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "desktop",
+      "check": "GET /this-page-does-not-exist",
+      "ok": true,
+      "detail": "status 404, 260 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "GET /",
+      "ok": true,
+      "detail": "status 200, 1653 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "home: no unpublished reviews, no rating claims",
+      "ok": true,
+      "detail": "reviews 0, claims 0"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "home: map lazy, loads at bottom, Open in Google Maps reachable",
+      "ok": true,
+      "detail": "before unset, after set, link reachable true"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "GET /collections/all",
+      "ok": true,
+      "detail": "status 200, 532 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "GET /collections/laptops",
+      "ok": true,
+      "detail": "status 200, 458 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "GET /products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "ok": true,
+      "detail": "status 200, 488 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "GET /search?q=dell",
+      "ok": true,
+      "detail": "status 200, 438 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "GET /cart",
+      "ok": true,
+      "detail": "status 200, 268 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "GET /checkout",
+      "ok": true,
+      "detail": "status 200, 497 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "checkout: public COD not offered",
+      "ok": true,
+      "detail": "place-order buttons 0, COD mentions 0"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "GET /track-order",
+      "ok": true,
+      "detail": "status 200, 501 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "GET /admin/login",
+      "ok": true,
+      "detail": "status 200, 646 ms, overflow 0px"
+    },
+    {
+      "engine": "firefox",
+      "vp": "phone",
+      "check": "GET /this-page-does-not-exist",
+      "ok": true,
+      "detail": "status 404, 388 ms, overflow 0px"
+    }
+  ]
+}

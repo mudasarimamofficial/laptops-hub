@@ -6,9 +6,17 @@ const nextConfig: NextConfig = {
   // Pre-launch modes (src/lib/site-url.ts): every response is `noindex` — matching the page meta (`noindex, follow`)
   // so headers and HTML never disagree. Crawling stays allowed (robots.ts) so the rule can be seen.
   async headers() {
+    // Staff-only homepage preview (drafts): never indexed, never stored by any cache.
+    const preview = {
+      source: "/preview/:path*",
+      headers: [
+        { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        { key: "Cache-Control", value: "private, no-store, max-age=0" },
+      ],
+    };
     const mode = (process.env.SITE_PRELAUNCH || "").trim().toLowerCase();
-    if (!["1", "true", "seo", "restricted"].includes(mode)) return [];
-    return [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex" }] }];
+    if (!["1", "true", "seo", "restricted"].includes(mode)) return [preview];
+    return [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex" }] }, preview];
   },
   images: {
     remotePatterns: [

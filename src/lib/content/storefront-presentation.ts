@@ -13,6 +13,11 @@ export type StorefrontPresentation = {
   showStoryAngleLabels: boolean;
   /** Numeric prefixes on homepage section labels, e.g. "02 — " in "02 — PRODUCT STORY". */
   showSectionNumbers: boolean;
+  /**
+   * Set per section by the homepage renderer: the section's number in the current layout order. Not stored; when
+   * absent the component's V5 number is used.
+   */
+  sectionNumber?: string;
 };
 
 export const STOREFRONT_PRESENTATION_KEY = "storefront_presentation";
@@ -26,7 +31,7 @@ export const DEFAULT_STOREFRONT_PRESENTATION: StorefrontPresentation = {
 /** Tolerant parse: only real booleans override defaults (a malformed row can never re-enable a label). */
 export function parseStorefrontPresentation(value: unknown): StorefrontPresentation {
   const v = value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
-  const pick = (k: keyof StorefrontPresentation) => (typeof v[k] === "boolean" ? (v[k] as boolean) : DEFAULT_STOREFRONT_PRESENTATION[k]);
+  const pick = (k: "showCatalogCounts" | "showStoryAngleLabels" | "showSectionNumbers") => (typeof v[k] === "boolean" ? (v[k] as boolean) : DEFAULT_STOREFRONT_PRESENTATION[k]);
   return {
     showCatalogCounts: pick("showCatalogCounts"),
     showStoryAngleLabels: pick("showStoryAngleLabels"),
@@ -35,6 +40,10 @@ export function parseStorefrontPresentation(value: unknown): StorefrontPresentat
 }
 
 /** "02 — PRODUCT STORY" → "PRODUCT STORY" unless section numbers are enabled. */
-export function sectionLabel(num: string, text: string, p: Pick<StorefrontPresentation, "showSectionNumbers">): string {
-  return p.showSectionNumbers ? `${num} — ${text}` : text;
+export function sectionLabel(
+  num: string,
+  text: string,
+  p: Pick<StorefrontPresentation, "showSectionNumbers" | "sectionNumber">,
+): string {
+  return p.showSectionNumbers ? `${p.sectionNumber ?? num} — ${text}` : text;
 }

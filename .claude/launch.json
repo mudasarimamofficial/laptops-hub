@@ -33,6 +33,20 @@
       "url": "http://127.0.0.1:3001"
     },
     {
+      "name": "isolated-noflag",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "next",
+        "start",
+        "-p",
+        "3002",
+        "-H",
+        "127.0.0.1"
+      ],
+      "port": 3002,
+      "url": "http://127.0.0.1:3002"
+    },
+    {
       "name": "fake-resend",
       "runtimeExecutable": "node",
       "runtimeArgs": [

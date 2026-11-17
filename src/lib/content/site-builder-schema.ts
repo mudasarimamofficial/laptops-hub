@@ -7,7 +7,7 @@ import {
   defaultHeroSectionSettings,
   defaultStorySectionSettings,
 } from "@/lib/content/homepage-image-presets";
-import { REVIEWS_PLACEMENTS, defaultMapSettings, defaultReviewsSettings } from "@/lib/content/home-sections";
+import { defaultMapSettings, defaultReviewsSettings } from "@/lib/content/home-sections";
 
 export type SectionType =
   | "v5_cinematic_hero"
@@ -121,7 +121,7 @@ export const SECTION_REGISTRY: Record<
   },
   v5_featured_products: {
     label: "Featured products",
-    description: "Featured carousel / grid from catalog flags",
+    description: "Featured laptops grid. Published reels (admin → Reels) appear right after it.",
     fields: [],
   },
   v5_brand_grid: {
@@ -156,8 +156,8 @@ export const SECTION_REGISTRY: Record<
   },
   v5_promo: {
     label: "Promo",
-    description: "Promotional strip — factual copy only",
-    fields: [{ key: "headline", label: "Headline", kind: "text" }],
+    description: "Featured configuration: the newest listed laptop with a display spec",
+    fields: [],
   },
   v5_home_inquiry: {
     label: "Home inquiry",
@@ -170,12 +170,6 @@ export const SECTION_REGISTRY: Record<
     fields: [
       { key: "heading", label: "Heading", kind: "text" },
       { key: "intro", label: "Short introduction", kind: "textarea" },
-      {
-        key: "placement",
-        label: "Position on the homepage",
-        kind: "select",
-        options: REVIEWS_PLACEMENTS.map((p) => ({ value: p.value, label: p.label })),
-      },
       {
         key: "googleProfileUrl",
         label: "Link to your Google Business Profile (optional)",
@@ -222,7 +216,10 @@ export const SECTION_REGISTRY: Record<
   },
 };
 
-/** Default V5 homepage section order — matches src/app/page.tsx composition. */
+/**
+ * Default V5 homepage sections, in the approved V5 order (see homepage-layout.ts: hero always first, map always
+ * last, everything else can be reordered or hidden in the editor).
+ */
 export const V5_HOMEPAGE_SECTIONS: SectionInstance[] = [
   {
     id: "hero",
@@ -238,16 +235,16 @@ export const V5_HOMEPAGE_SECTIONS: SectionInstance[] = [
     label: "Product story",
     settings: defaultStorySectionSettings(),
   },
-  { id: "featured", type: "v5_featured_products", enabled: true, label: "Featured", settings: {} },
+  { id: "chromebook", type: "v5_chromebook", enabled: true, label: "Chromebook", settings: {} },
   { id: "brands", type: "v5_brand_grid", enabled: true, label: "Brands", settings: {} },
-  { id: "budget", type: "v5_budget_bands", enabled: true, label: "Budget", settings: {} },
+  { id: "featured", type: "v5_featured_products", enabled: true, label: "Featured", settings: {} },
+  { id: "promo", type: "v5_promo", enabled: true, label: "Promo", settings: {} },
   { id: "specs", type: "v5_spec_filters", enabled: true, label: "Specs", settings: {} },
   { id: "newgen", type: "v5_new_gen", enabled: true, label: "New gen", settings: {} },
-  { id: "chromebook", type: "v5_chromebook", enabled: true, label: "Chromebook", settings: {} },
+  { id: "budget", type: "v5_budget_bands", enabled: true, label: "Budget", settings: {} },
   { id: "compare", type: "v5_compare_demo", enabled: true, label: "Compare demo", settings: {} },
-  { id: "promo", type: "v5_promo", enabled: true, label: "Promo", settings: {} },
-  { id: "inquiry", type: "v5_home_inquiry", enabled: true, label: "Inquiry", settings: {} },
   { id: "reviews", type: "v5_store_reviews", enabled: true, label: "Customer reviews", settings: defaultReviewsSettings() },
+  { id: "inquiry", type: "v5_home_inquiry", enabled: true, label: "Inquiry", settings: {} },
   { id: "map", type: "v5_store_map", enabled: true, label: "Visit our store (map)", settings: defaultMapSettings() },
 ];
 

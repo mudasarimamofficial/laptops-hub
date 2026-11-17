@@ -3,7 +3,7 @@
 **Date:** 2026-11-17 (reconciled)  
 **Auditor:** Primary release owner session (reconciles Cursor + Claude audit docs)  
 **Production (live):** `dpl_8YQ3HoEmaw5bqAv4rxBS1Z5eSz3N` @ `585c8e9` on `www.laptopshub.pk`  
-**PR #14 head (not production):** `c59b1f9` (+ pending follow-up commit) · Preview `dpl_FYurRSfAy5JD6nUMxJuuvUzExpx2`
+**PR #14 head (not production):** `6095e21` · Preview `dpl_C5MdxeDDbe5TzLZ5zYSdjVwxAGA8` READY
 
 ## Classification (evidence-honest)
 
@@ -24,7 +24,7 @@ Live commerce remains correctly gated. Several admin workflows are source-verifi
 | Soft-deleted QA product | 1 archived + soft-deleted; 2 tracked variants (preserved) |
 | Live COD API | 403 `checkout_disabled` |
 | CRM `app.laptopshub.pk` | HTTP 200 · DNS `45.130.228.253` · untouched |
-| PR #14 linear history | `585c8e9` → `d29cc90` → `c59b1f9` · MERGEABLE |
+| PR #14 linear history | `585c8e9` → `d29cc90` → `c59b1f9` → `6095e21` · MERGEABLE |
 
 ## Certification matrix (graded by evidence type)
 
@@ -77,9 +77,11 @@ Optional staging remains a process recommendation, not a migration replay.
 | No fabricated reviews/videos | Yes |
 | No force-push | Yes |
 
-## Next release action
+## Next release action (owner gate)
 
-1. Finish PR #14 acceptance on Preview `dpl_FYurRSf…` / final SHA.  
-2. Merge only after focused + broader suites pass.  
-3. Deploy code **without** enabling COD or `THEME_PUBLISHED_ENABLED`.  
-4. Re-verify production inventory counts + shortcuts after deploy.
+**READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED**
+
+1. Owner signs into Preview admin and confirms inventory shows **0 tracked / 232 untracked** (not 2).  
+2. Owner confirms `?` / G-chord shortcuts on Preview.  
+3. Explicit approval to merge PR #14 → production **without** enabling COD or theme publish.  
+4. Post-deploy: re-verify inventory header, shortcuts, both domains, CRM untouched, migrations still 29/29.

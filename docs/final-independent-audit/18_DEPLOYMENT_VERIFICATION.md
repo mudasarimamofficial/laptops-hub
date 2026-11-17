@@ -41,9 +41,12 @@
 | Item | Value |
 |---|---|
 | Branch | `audit/final-independent-certification` |
-| Commits | `d29cc90` (code) → `c59b1f9` (docs) |
-| Latest Preview | `dpl_FYurRSfAy5JD6nUMxJuuvUzExpx2` READY |
-| Contains | DEF-016 inventory counts · DEF-017 shortcuts · audit docs |
+| Linear commits | `585c8e9` → `d29cc90` → `c59b1f9` → **`6095e21`** |
+| Latest Preview | `dpl_C5MdxeDDbe5TzLZ5zYSdjVwxAGA8` READY @ `6095e21` · region `sin1` |
+| Prior Preview | `dpl_FYurRSfAy5JD6nUMxJuuvUzExpx2` @ `c59b1f9` |
+| Contains | DEF-016 · DEF-017 role/modal harden · `.next` path restore · audit corrections |
+| Storefront smoke | V5 homepage loads via share link; no empty reels/testimonials fabricated |
+| Admin Preview | Requires separate staff login (SSO share ≠ admin session) |
 | Must not | Enable COD · set `THEME_PUBLISHED_ENABLED` · reapply migrations |
 
 ## Corrected note on merchant-operating-system
@@ -54,4 +57,4 @@ Do **not** treat `feat/merchant-operating-system` as an undeployed migration sou
 ## Verdict
 
 **PASS** — production healthy and gated.  
-**PR #14** — Preview READY; production promotion pending acceptance gates.
+**PR #14** — Preview READY @ `6095e21` / `dpl_C5Mdxe…`; **MERGEABLE**; production promotion needs explicit owner approval (no COD/theme enable).

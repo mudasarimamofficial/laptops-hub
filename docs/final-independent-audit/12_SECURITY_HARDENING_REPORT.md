@@ -10,7 +10,7 @@
 | `Strict-Transport-Security` | PASS (`max-age=63072000`) | Vercel default; keep |
 | `X-Content-Type-Options` | MISSING | Add `nosniff` |
 | `X-Frame-Options` | MISSING | Add `DENY` (no iframe embedding needed) |
-| `Content-Security-Policy` | MISSING | Add restrictive policy (P2) |
+| `Content-Security-Policy` | MISSING | P2 — **do not** ship a generic lock-down CSP without testing Maps embeds, Cloudinary/images, fonts, video, and admin. Prefer staged headers (`X-Content-Type-Options`, `Referrer-Policy`, `poweredByHeader: false`) first. |
 | `Referrer-Policy` | MISSING | Add `strict-origin-when-cross-origin` |
 | `Permissions-Policy` | MISSING | Restrict camera, microphone, geolocation |
 | `X-Powered-By` | LEAKS `Next.js` | Set `poweredByHeader: false` in `next.config.js` |
@@ -51,10 +51,11 @@ Admin, API, cart, checkout, orders, preview and search paths all disallowed. PAS
 
 ## Remediation priority
 
-1. **P2:** Add security headers via `next.config.js` `headers()` config
-2. **P2:** Set `poweredByHeader: false`
-3. **P2:** Owner enable Supabase leaked-password protection
-4. **P3:** Consider Vercel WAF rules for production
+1. **P2:** Add non-CSP headers + `poweredByHeader: false` first; verify storefront/admin
+2. **P2:** Design CSP allowlists for Google Maps, image/CDN hosts, fonts, video — then test
+3. **P2:** Owner enable Supabase leaked-password protection (dashboard toggle)
+4. **P3:** Consider Vercel WAF rules for production (paid — needs approval)
+5. **Do not** revoke storefront RPC grants indiscriminately; migration 28 already least-privileged staff writes
 
 ## Verdict
 

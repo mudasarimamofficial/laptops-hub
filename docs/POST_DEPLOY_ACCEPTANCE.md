@@ -4,11 +4,30 @@ Production now: merge `7e406df` (PR #11) → `dpl_2XLaqxjUnsWb8FGrT6TgmTaUJ8KQ`,
 and `www.laptopshub.pk`. Previous release `772276b` (`dpl_ErqN6evfpCNXoidJrp5xGVAqiDnC`) remains in Vercel for rollback.
 Database 29/29. Public COD disabled. `app.laptopshub.pk` CRM untouched (200).
 
-Method: the owner's existing signed-in session in the desktop app's browser. **Read-only only.** No password was
-requested, typed or stored. No production data was created, changed or deleted, because write tests need the owner's
-specific authorization (see "Needs the owner").
+Method: the owner's existing signed-in session in the desktop app's browser. No password was requested, typed or
+stored, and the session was never ended. The acceptance ran in two separate passes:
 
-## 1. Authenticated admin acceptance (read-only)
+- **Pass A, read-only audit** (§1.1): page loads, navigation, search and timings. Nothing was created, changed or
+  deleted.
+- **Pass B, authorized write tests** (§1.2), after the owner's specific approval on 2026-11-17: clearly named
+  "QA TEST" data only, run through the real admin UI, then cleaned up.
+
+### State after both passes (read back from the production database, 2026-11-17)
+
+| Item | State |
+|---|---|
+| Catalog | Unchanged: 226 active products and 6 drafts, as before the tests |
+| Test product "QA TEST — do not sell" | **Archived and soft-deleted, not erased.** Its row and its 3 stock-ledger rows remain, because the ledger is append-only audit history. It is not purchasable (`create_cod_order` refuses non-active products), its page answers 404 and it is not in the sitemap |
+| Audit log | Every test action is recorded (`product.create`, `products.variants.sync`, `inventory.adjust`, `products.bulk_patch`, `testimonial.*`, `post.*`, `theme.homepage.draft_save`, `product.soft_delete`) |
+| Orders | 0. No order was created |
+| Public COD | Disabled. No live COD test was run |
+| Store testimonials | 0. The QA draft was deleted; nothing was ever published |
+| Theme | Nothing published (0 publications) and nothing activated: `THEME_PUBLISHED_ENABLED` is not set, so visitors see the V5 default |
+| Owner session | Preserved (never signed out) |
+
+## 1. Authenticated admin acceptance
+
+### 1.1 Pass A: read-only audit
 
 | Department | Result |
 |---|---|
@@ -24,9 +43,9 @@ specific authorization (see "Needs the owner").
 | Staff | Owner active. **Finding:** a leftover test account `cod-sandbox-…@lh-test.local` (manager, deactivated, never signed in, 0 sessions) |
 | Global search (Ctrl+K) and keyboard | Ctrl+K opens search; "dell 5400" finds the product; Enter opens it |
 | Logout / cookie replay | **Not run on production**: it would end the owner's session. Verified on the isolated stack (4/4) |
-| Write journeys (create, publish, bulk apply, theme publish/rollback, staff invite/revoke) | **Not run on production**: needs owner authorization for test data. All covered on the isolated stack (36-step acceptance, 108/108) |
+| Write journeys | Not part of this pass; see §1.2 |
 
-### Real authenticated latency (production, from Pakistan)
+#### Real authenticated latency (production, from Pakistan)
 
 `docs/evidence/admin-perf/production-authenticated-2026-11-17.json`
 
@@ -36,7 +55,7 @@ specific authorization (see "Needs the owner").
 - No interaction was reproducibly slow (none > 1 s), so no performance change was made. This replaces the modelled
   365 ms figure: the real figure includes the Pakistan ↔ Singapore network round trip.
 
-### Production write tests (owner-authorized 2026-11-17, clearly named test data, cleaned up)
+### 1.2 Pass B: production write tests (owner-authorized 2026-11-17, clearly named test data, cleaned up)
 
 Run in the owner's session through the real admin UI. No customer-facing change; email not configured; COD off.
 
@@ -52,12 +71,11 @@ Run in the owner's session through the real admin UI. No customer-facing change;
 | Cleanup: Danger zone → type handle → Soft-delete | PASS: product archived + soft-deleted, PDP 404, not in sitemap; `create_cod_order` refuses non-active products | `product.soft_delete` |
 
 Left on production by design: the archived, soft-deleted test product row and its 3 stock-ledger rows (the ledger is
-append-only audit history), plus the audit-log entries above.
+append-only audit history), plus the audit-log entries above. The product was not erased.
 
-Observations (not defects, no change made):
-- "Open draft preview" opens a page that shows only the hero and product-story images. Other section edits (map,
-  reviews, text) are visible only in the editor inspector, or on the storefront after a publish with
-  `THEME_PUBLISHED_ENABLED=1`.
+Observations:
+- "Open draft preview" showed only the hero and product-story images. Other section edits (map, reviews, text, order)
+  were visible only after a publish. **Followed up in §7** (full preview, real ordering).
 - Not tested on production: theme **publish/rollback** (the first publish would become the live pointer if the theme
   flag is ever turned on), staff invite/revoke (needs email; the only other account is the deactivated test account),
   order lifecycle (no orders; COD off), collections create (no delete path, so it would leave permanent data). All are
@@ -97,6 +115,10 @@ sessions (isolated test). The test account above has none.
 |---|---|
 | Reviews section | Hidden (0 published). Wiring verified: published testimonials are read with the anon key (display columns only); every publish/unpublish clears the cache tag; homepage revalidates ≤ 60 s. With the theme flag off, the section renders automatically once a genuine testimonial is published |
 | Old 4.9 / 157 rating | Absent from the live page |
+| Attribution | Only `google` entries show "Posted on Google", and they require the link to the original review. Website and store-given entries are labelled as such. No aggregate rating is computed |
+| Zero reviews | Intentional: nothing renders (no placeholder), on the homepage and in the theme preview |
+| Unpublished reviews | Staff see each entry as the homepage card while editing (Reviews → Store testimonials). The theme preview shows published entries only, as customers would. Tests use synthetic "QA" entries on the isolated stack only; none were published on production |
+| Carousel (isolated, 8 synthetic entries) | Full viewport width, no horizontal overflow, pause button, "all reviews" dialog with Escape; 5 browser projects |
 | Map embed | `google.com/maps/embed?pb=…` pin "LAPTOPS HUB", Bahawalpur; "Open in Google Maps" → `maps.google.com/?cid=7987323353592411341` |
 | Mouse / scroll reveal | PASS (3 browsers × desktop + phone) |
 | Touch (phone, hasTouch) | PASS: link tappable at the bottom |
@@ -135,10 +157,38 @@ gates.
 
 ## 6. Needs the owner
 
-1. ~~Production write tests~~: done 2026-11-17 (see "Production write tests" above).
-   a draft testimonial, a theme draft publish + rollback), or run them yourself. No customer notification can fire,
-   because email is not configured and COD is off.
+1. ~~Production write tests~~: done 2026-11-17 (§1.2).
 2. Approve **deleting the leftover test account** `cod-sandbox-…@lh-test.local` (deactivated; irreversible).
 3. Decide on **leaked-password protection** in Supabase Auth (plan-dependent).
 4. Sign out once and back in yourself to confirm logout on production. The agent won't, because it can't sign back in.
 5. Supply genuine **reviews with consent**, the **email provider** and recipients, and the **COD inputs** in §5.
+
+## 7. Theme editor: findings and fixes (branch `feat/merchant-operating-system`, not yet deployed)
+
+Found while preparing the theme for the owner. Fixed and tested on the isolated stack. **Production runs the previous
+code until the owner approves a release.**
+
+| # | Finding | Fix | Evidence |
+|---|---|---|---|
+| 1 | The draft preview showed only hero/story images, on a separate admin page | `/preview/homepage` shows the real storefront: header, footer, every section, and the map after the footer. It is rendered by the same code as the homepage. Draft / Published / V5 default switch, "Back to editor", works at phone width. Also embedded in the editor at desktop, tablet and phone width | `docs/evidence/theme/*.png` |
+| 2 | Preview privacy | 404 for visitors and for staff without theme rights (manager, fulfillment). `X-Robots-Tag: noindex, nofollow`; `Cache-Control: private, no-store`; disallowed in `robots.txt`. Drafts are read only after the staff check | isolated E2E "preview is private" |
+| 3 | Section order was fixed in code; the editor showed a numbered list it could not change. Reviews had a separate "position" setting | Real ordering: Move up/down buttons (keyboard focus kept, screen-reader announcement) and hide/show. Preview, publish and rollback all use the order. The hero stays first and the map stays after the footer (structural). The API refuses other placements. Removed two controls that had no effect: the promo "headline", and the reviews "position" (replaced by moving the section) | isolated E2E "invalid placements", "reorder + hide + edit → … → rollback" |
+| 4 | Older drafts stored the registry order, which never matched the page | Layouts saved before ordering existed are read in the approved V5 order, so publishing one cannot reshuffle the homepage | unit `homepage-layout.test.ts` |
+| 5 | **Defect:** with `THEME_PUBLISHED_ENABLED=1`, regenerating the cached homepage failed ("static to dynamic at runtime, reason: cookies"). Building with the flag on would instead have left the homepage uncached on every request | Published sections are read without cookies (anon key) and cached under a `homepage-theme` tag. Publish and rollback expire that tag, so changes show immediately and `/` stays cached | server log before/after; publish → public check in E2E; build route table shows `/` static with the flag on |
+| 6 | The admin did not explain whether the flag is on | The editor states whether customers see the published version or the V5 default, and what publishing does in each case | `editor-desktop.png` |
+
+No visual change: with the flag off and with the flag on, the homepage HTML from the new code equals the previous
+build. Only React's generated element ids differ. The V5 default, saved and published as a theme, renders exactly like
+the built-in default (isolated E2E "publishing the default layout changes nothing visible").
+
+Activation is an owner decision and has not been done. Deploying this code changes nothing for customers while
+`THEME_PUBLISHED_ENABLED` is unset. Turning the flag on also changes nothing until a version is published. The first
+publish then becomes what customers see.
+
+Admin UX inspection (read-only, production, 2026-11-17) covered products, inventory, collections, reviews,
+testimonials, blog, theme, staff, settings and orders:
+- no console errors, and all API requests returned 200;
+- no horizontal overflow at 375 px;
+- the search dialog moves focus inside, closes on Escape and returns focus to its trigger.
+
+No reproducible defect was found, so nothing was changed.

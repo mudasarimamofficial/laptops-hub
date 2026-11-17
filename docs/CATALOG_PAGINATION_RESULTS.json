@@ -1,8 +1,8 @@
 {
-  "at": "2026-11-16T11:24:14.439Z",
+  "at": "2026-11-17T05:05:37.893Z",
   "app": "http://127.0.0.1:3001",
   "synthetic": 105,
-  "total": 109,
+  "total": 111,
   "pageSize": 12,
   "results": [
     {
@@ -13,7 +13,7 @@
     {
       "name": "view_lists_every_synthetic_active_product",
       "ok": true,
-      "detail": "synthetic=105 total=109"
+      "detail": "synthetic=105 total=111"
     },
     {
       "name": "view_hides_draft",
@@ -23,7 +23,7 @@
     {
       "name": "view_last_page_equals_tail_of_full_sort",
       "ok": true,
-      "detail": "offset=96 expected=13 got=13"
+      "detail": "offset=96 expected=15 got=15"
     },
     {
       "name": "view_first_rows_are_synthetic_in_price_order",
@@ -38,7 +38,7 @@
     {
       "name": "storefront_load_more_reaches_every_product",
       "ok": true,
-      "detail": "10 pages, p1:200/12+more p2:200/24+more p3:200/36+more p4:200/48+more p5:200/60+more p6:200/72+more p7:200/84+more p8:200/96+more p9:200/108+more p10:200/109"
+      "detail": "10 pages, p1:200/12+more p2:200/24+more p3:200/36+more p4:200/48+more p5:200/60+more p6:200/72+more p7:200/84+more p8:200/96+more p9:200/108+more p10:200/111"
     },
     {
       "name": "storefront_final_page_has_all_synthetic_in_order",

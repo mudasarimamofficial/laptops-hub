@@ -1,11 +1,11 @@
 PASS  one_off_race_exactly_one_order — ok=1 insufficient_stock=7
 PASS  one_off_stock_zero_not_negative — qoh=0
-PASS  one_off_single_ledger_row — [{"delta":-1,"quantity_after":0,"reason":"order_placed","reference_id":"350ec399-d681-47b4-b0bd-15c870d53230"}]
+PASS  one_off_single_ledger_row — [{"delta":-1,"quantity_after":0,"reason":"order_placed","reference_id":"89135286-1b01-4d24-969a-94ffb30bc5ba"}]
 PASS  duplicate_submit_deducts_once — qoh=3 ledger=1
 PASS  failed_order_rolls_back_everything — insufficient_stock qoh=3/3
 PASS  sold_out_refused — insufficient_stock
 PASS  untracked_sold_no_stock_or_ledger
-PASS  oversell_allowed_variant_goes_negative_with_ledger — [{"delta":-2,"quantity_after":-2,"reason":"order_placed","reference_id":"46012d14-608f-469b-9aee-a0e823f94183"}]
+PASS  oversell_allowed_variant_goes_negative_with_ledger — [{"delta":-2,"quantity_after":-2,"reason":"order_placed","reference_id":"6d77461d-a7d6-42f4-a56c-a324b84f9c8c"}]
 PASS  cancel_before_shipping_restocks — qoh=5 rows=1
 PASS  repeat_cancel_refused_no_double_restock — invalid_transition
 PASS  status_changes_never_rededuct — after_order=4 after_transitions=4

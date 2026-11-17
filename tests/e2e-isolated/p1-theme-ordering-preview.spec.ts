@@ -8,6 +8,7 @@ import { createClient } from "@supabase/supabase-js";
 import fs from "fs";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
 import { normalizeHomepageLayout } from "../../src/lib/content/homepage-layout";
+import { beginGuardedRun, endGuardedRun } from "./helpers/run-guard";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("isolated tests need a local Supabase");
@@ -39,6 +40,34 @@ async function renderedOrder(page: Page) {
   }, KICKERS);
 }
 
+const GUARD = "theme-ordering-preview";
+const APP = process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3001";
+type Baseline = { draft: unknown[] | null; publication: string | null };
+
+async function readBaseline(): Promise<Baseline> {
+  const { data: tpl } = await sb.from("theme_templates").select("id").eq("key", "homepage").single();
+  const { data: draft } = await sb.from("theme_versions").select("sections").eq("template_id", tpl!.id).eq("label", "working-draft").maybeSingle();
+  const { data: pub } = await sb.from("theme_publications").select("published_version_id").eq("template_key", "homepage").maybeSingle();
+  return { draft: (draft?.sections as unknown[]) ?? null, publication: pub?.published_version_id ?? null };
+}
+
+/** Puts the draft and the publication back through the real admin API (owner bearer token; survives a dead browser). */
+async function restoreBaseline(b: Baseline) {
+  const anonSb = createClient(SB_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, { auth: { persistSession: false } });
+  const { data, error } = await anonSb.auth.signInWithPassword({ email: fx.staff.owner.email, password: fx.staff.owner.password });
+  if (error || !data.session) throw error ?? new Error("owner sign-in failed");
+  const headers = { authorization: `Bearer ${data.session.access_token}`, "content-type": "application/json", origin: APP };
+  if (b.draft) {
+    const r = await fetch(`${APP}/api/admin/theme/homepage`, { method: "PUT", headers, body: JSON.stringify({ sections: b.draft }) });
+    if (!r.ok) throw new Error(`draft restore failed: ${r.status} ${await r.text()}`);
+  }
+  const { data: pub } = await sb.from("theme_publications").select("published_version_id").eq("template_key", "homepage").maybeSingle();
+  if (b.publication && pub?.published_version_id !== b.publication) {
+    const r = await fetch(`${APP}/api/admin/theme/homepage/rollback`, { method: "POST", headers, body: JSON.stringify({ confirmRollback: true, targetVersionId: b.publication }) });
+    if (!r.ok) throw new Error(`publication restore failed: ${r.status} ${await r.text()}`);
+  }
+}
+
 async function anon(browser: Browser) {
   const ctx = await browser.newContext();
   return { ctx, page: await ctx.newPage() };
@@ -52,11 +81,11 @@ test.describe.serial("Theme ordering + full preview (isolated)", () => {
   test.beforeAll(async ({ browser }) => {
     await assertLocalOnly("theme ordering + preview");
     fs.mkdirSync(OUT, { recursive: true });
-    const { data: tpl } = await sb.from("theme_templates").select("id").eq("key", "homepage").single();
-    const { data: draft } = await sb.from("theme_versions").select("sections").eq("template_id", tpl!.id).eq("label", "working-draft").maybeSingle();
-    savedDraft = (draft?.sections as unknown[]) ?? null;
-    const { data: pub } = await sb.from("theme_publications").select("published_version_id").eq("template_key", "homepage").maybeSingle();
-    baselinePublication = pub?.published_version_id ?? null;
+    const g = await beginGuardedRun<Baseline>(GUARD, readBaseline, restoreBaseline);
+    savedDraft = g.baseline.draft;
+    baselinePublication = g.baseline.publication;
+    // Explicit baseline: no synthetic map heading from an earlier run is in the draft or on the public page.
+    expect(JSON.stringify(savedDraft ?? [])).not.toContain("QA map heading");
     const a = await anon(browser);
     await a.page.goto("/");
     publicBefore = await renderedOrder(a.page);
@@ -65,22 +94,9 @@ test.describe.serial("Theme ordering + full preview (isolated)", () => {
     expect(publicBefore.indexOf("FEATURED")).toBeLessThan(publicBefore.indexOf("FEATURED CONFIGURATION"));
   });
 
-  test.afterAll(async ({ browser }) => {
-    const ctx = await browser.newContext();
-    const page = await ctx.newPage();
-    await signIn(page, "owner");
-    if (savedDraft) {
-      const r = await page.request.put("/api/admin/theme/homepage", { data: { sections: savedDraft } });
-      expect(r.status(), await r.text()).toBe(200);
-    }
-    if (baselinePublication) {
-      const { data: pub } = await sb.from("theme_publications").select("published_version_id").eq("template_key", "homepage").single();
-      if (pub!.published_version_id !== baselinePublication) {
-        const r = await page.request.post("/api/admin/theme/homepage/rollback", { data: { confirmRollback: true, targetVersionId: baselinePublication } });
-        expect(r.status(), await r.text()).toBe(200);
-      }
-    }
-    await ctx.close();
+  test.afterAll(async () => {
+    await restoreBaseline({ draft: savedDraft, publication: baselinePublication });
+    endGuardedRun(GUARD);
   });
 
   test("preview is private: 404, noindex and no-store for visitors and non-theme staff", async ({ browser }) => {

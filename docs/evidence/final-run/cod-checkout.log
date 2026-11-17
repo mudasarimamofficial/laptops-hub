@@ -1,5 +1,5 @@
 PASS  forged_price_ignored — total=9035000 expected=9035000 
-PASS  new_order_unpaid_cod — {"id":"e11b76ef-756c-4385-8de2-1f5f9d37524c","total_due_paisa":9035000,"subtotal_paisa":9000000,"payment_status":"unpaid_cod","status":"placed"}
+PASS  new_order_unpaid_cod — {"id":"84e8c27d-8aeb-4827-8caa-ef4c55eb9459","total_due_paisa":9035000,"subtotal_paisa":9000000,"payment_status":"unpaid_cod","status":"placed"}
 PASS  same_key_one_order — orders=1
 PASS  same_key_responses — errors=["duplicate key value violates unique constraint \"orders_idempotency_key_uidx\"","duplicate key value violates unique constraint \"orders_idempotency_key_uidx\"","duplicate key value violates unique constraint \"orders_idempotency_key_uidx\"","duplicate key value violates unique constraint \"orders_idempotency_key_uidx\""]
 PASS  same_key_replay_returns_duplicate — {"ok":true,"duplicate":true}

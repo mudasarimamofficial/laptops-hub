@@ -3,7 +3,7 @@
 **Date:** 2026-11-17 (reconciled)  
 **Auditor:** Primary release owner session (reconciles Cursor + Claude audit docs)  
 **Production (live):** `dpl_8YQ3HoEmaw5bqAv4rxBS1Z5eSz3N` @ `585c8e9` on `www.laptopshub.pk`  
-**PR #14 head (not production):** `6095e21` · Preview `dpl_C5MdxeDDbe5TzLZ5zYSdjVwxAGA8` READY
+**PR #14 head (not production):** `8672cfb` (docs) atop code `6095e21` · Preview for code: `dpl_C5MdxeDDbe5TzLZ5zYSdjVwxAGA8` READY
 
 ## Classification (evidence-honest)
 

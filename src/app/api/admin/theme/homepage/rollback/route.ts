@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { evaluateMerchantWritePolicy } from "@/lib/security/merchant-write-guard";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { HOMEPAGE_THEME_TAG } from "@/lib/content/published-homepage";
 
 export const dynamic = "force-dynamic";
 
@@ -83,6 +84,7 @@ export async function POST(request: Request) {
       },
     });
 
+    revalidateTag(HOMEPAGE_THEME_TAG, { expire: 0 });
     revalidatePath("/");
     revalidatePath("/admin/online-store");
 

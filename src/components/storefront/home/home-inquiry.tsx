@@ -24,10 +24,13 @@ export function HomeInquirySection({
   phones,
   privacyHref,
   showSectionNumbers = false,
+  sectionNumber,
 }: {
   phones: Phone[];
   privacyHref: string | null;
   showSectionNumbers?: boolean;
+  /** Number in the current homepage order (default V5 "11"). */
+  sectionNumber?: string;
 }) {
   const id = useId();
   const hydrated = useHydrated();
@@ -122,7 +125,7 @@ export function HomeInquirySection({
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".12em", color: "var(--lh-ink-2)" }}>
             <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
-            {sectionLabel("11", "NEED HELP CHOOSING?", { showSectionNumbers })}
+            {sectionLabel("11", "NEED HELP CHOOSING?", { showSectionNumbers, sectionNumber })}
           </span>
           <h2 id={`${id}-h`} style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(30px,3.2vw,48px)", letterSpacing: "-.04em", lineHeight: 1.04, fontWeight: 700 }}>
             Tell us what you&apos;re looking for.

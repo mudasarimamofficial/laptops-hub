@@ -1,0 +1,139 @@
+▲ Next.js 16.4.5 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 93ms
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 26.5s
+  Running TypeScript ...
+  Finished TypeScript in 18.3s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/43) ...
+  Generating static pages using 7 workers (10/43) 
+  Generating static pages using 7 workers (21/43) 
+  Generating static pages using 7 workers (32/43) 
+✓ Generating static pages using 7 workers (43/43) in 2.1s
+  Finalizing page optimization ...
+
+Route (app)                                 Revalidate  Expire
+┌ ○ /                                               1m      1y
+├ ○ /_not-found                                     1m      1y
+├ ƒ /admin
+├ ƒ /admin/[...missing]
+├ ƒ /admin/activity
+├ ƒ /admin/analytics
+├ ƒ /admin/auth/confirm
+├ ƒ /admin/blog
+├ ƒ /admin/blog/[id]
+├ ƒ /admin/blog/new
+├ ƒ /admin/collections
+├ ƒ /admin/collections/[slug]
+├ ƒ /admin/collections/new
+├ ƒ /admin/content
+├ ƒ /admin/customers
+├ ƒ /admin/forbidden
+├ ƒ /admin/forgot-password
+├ ƒ /admin/help
+├ ƒ /admin/inquiries
+├ ƒ /admin/inventory
+├ ƒ /admin/login
+├ ƒ /admin/media
+├ ƒ /admin/merchandising
+├ ƒ /admin/navigation
+├ ƒ /admin/online-store
+├ ƒ /admin/online-store/preview
+├ ƒ /admin/orders
+├ ƒ /admin/orders/[orderNumber]
+├ ƒ /admin/products
+├ ƒ /admin/products/[handle]
+├ ƒ /admin/products/bulk
+├ ƒ /admin/products/export
+├ ƒ /admin/products/import
+├ ƒ /admin/products/new
+├ ƒ /admin/reels
+├ ƒ /admin/reset-password
+├ ƒ /admin/reviews
+├ ƒ /admin/reviews/testimonials
+├ ƒ /admin/seo
+├ ƒ /admin/settings
+├ ƒ /admin/staff
+├ ƒ /api/activity/recent
+├ ƒ /api/admin/account/password
+├ ƒ /api/admin/account/recover
+├ ƒ /api/admin/account/sign-out
+├ ƒ /api/admin/cod-collections
+├ ƒ /api/admin/collections
+├ ƒ /api/admin/collections/[slug]
+├ ƒ /api/admin/content/[slug]
+├ ƒ /api/admin/inquiries/[id]
+├ ƒ /api/admin/inventory/adjust
+├ ƒ /api/admin/navigation
+├ ƒ /api/admin/notifications/retry
+├ ƒ /api/admin/orders/[orderNumber]/status
+├ ƒ /api/admin/posts
+├ ƒ /api/admin/posts/[id]
+├ ƒ /api/admin/product-badges
+├ ƒ /api/admin/products
+├ ƒ /api/admin/products/[handle]
+├ ƒ /api/admin/products/[handle]/duplicate
+├ ƒ /api/admin/products/[handle]/media
+├ ƒ /api/admin/products/[handle]/variants
+├ ƒ /api/admin/products/bulk
+├ ƒ /api/admin/products/export
+├ ƒ /api/admin/products/import
+├ ƒ /api/admin/products/import/jobs
+├ ƒ /api/admin/products/search
+├ ƒ /api/admin/reels
+├ ƒ /api/admin/reels/[id]
+├ ƒ /api/admin/reviews/[id]
+├ ƒ /api/admin/search
+├ ƒ /api/admin/shipping-zones
+├ ƒ /api/admin/shipping-zones/[id]
+├ ƒ /api/admin/social-proof
+├ ƒ /api/admin/staff
+├ ƒ /api/admin/staff/[userId]
+├ ƒ /api/admin/store-settings
+├ ƒ /api/admin/testimonials
+├ ƒ /api/admin/testimonials/[id]
+├ ƒ /api/admin/theme/homepage
+├ ƒ /api/admin/theme/homepage/publish
+├ ƒ /api/admin/theme/homepage/rollback
+├ ƒ /api/catalog/compare
+├ ƒ /api/catalog/compare-summary
+├ ƒ /api/catalog/product
+├ ƒ /api/catalog/search
+├ ƒ /api/checkout/cod
+├ ƒ /api/checkout/quote
+├ ƒ /api/contact
+├ ƒ /api/cron/notifications
+├ ƒ /api/orders/lookup
+├ ƒ /api/reviews
+├ ○ /cart                                           1m      1y
+├ ƒ /checkout
+├ ƒ /collections/[slug]
+├ ƒ /collections/all
+├ ƒ /coming-soon
+├ ○ /compare                                        1m      1y
+├ ƒ /guides
+├ ƒ /guides/[slug]
+├ ƒ /order/success/[token]
+├ ƒ /pages/[slug]
+├ ƒ /preview/homepage
+├ ƒ /products/[handle]
+├ ○ /robots.txt
+├ ƒ /search
+├ ○ /sitemap.xml                                    1m      1y
+└ ○ /track-order                                    1m      1y
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+next build rc=0

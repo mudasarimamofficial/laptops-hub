@@ -15,6 +15,7 @@ import { formatPkr } from "../../src/lib/money";
 import { fmtPkr } from "../../src/lib/catalog/v5-model";
 import { DEFAULT_SOCIAL_PROOF, type SocialProofSettings } from "../../src/lib/content/social-proof";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
+import { beginGuardedRun, endGuardedRun } from "./helpers/run-guard";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const LOOPBACK = /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/;
@@ -51,6 +52,7 @@ const state: {
   baselineThemeId?: string;
   hadPublication?: boolean;
   savedSocial?: unknown;
+  baselinePublication?: string | null;
 } = { variants: {} };
 
 const shot = (page: Page, name: string, fullPage = false) => page.screenshot({ path: `${OUT}/${name}.png`, fullPage });
@@ -80,32 +82,73 @@ async function publicContext(browser: Browser) {
   return { ctx, page: await ctx.newPage() };
 }
 
+const GUARD = "owner-acceptance-36";
+type Baseline = { social: unknown; publication: string | null };
+const APP = process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:3001";
+
+async function readBaseline(): Promise<Baseline> {
+  const { data: sp } = await sb.from("store_settings").select("value").eq("key", "social_proof").maybeSingle();
+  const { data: pub } = await sb.from("theme_publications").select("published_version_id").eq("template_key", "homepage").maybeSingle();
+  return { social: sp?.value ?? null, publication: pub?.published_version_id ?? null };
+}
+
+/** Removes every synthetic record this scenario creates (fixed prefixes), including leftovers of an interrupted run. */
+async function sweepSyntheticRecords() {
+  const { data: prods } = await sb.from("products").select("id").like("handle", "qa-acceptance-laptop-%");
+  const ids = (prods || []).map((p) => p.id);
+  if (ids.length) {
+    const { data: lines } = await sb.from("order_items").select("order_id").in("product_id", ids);
+    const orderIds = Array.from(new Set((lines || []).map((l) => l.order_id)));
+    if (orderIds.length) await sb.from("orders").delete().in("id", orderIds);
+    await sb.from("product_badges").delete().in("product_id", ids);
+    await sb.from("products").update({ status: "archived" }).in("id", ids).neq("status", "archived");
+  }
+  await sb.from("reels").delete().like("title", "QA acceptance reel %");
+  await sb.from("product_reviews").delete().like("author_name", "QA Acceptance Reviewer %");
+  await sb.from("articles").delete().like("slug", "qa-acceptance-guide-%");
+  await sb.from("collections").delete().like("slug", "qa-acceptance-%");
+}
+
+async function restoreBaseline(b: Baseline) {
+  if (b.social === null) await sb.from("store_settings").delete().eq("key", "social_proof");
+  else await sb.from("store_settings").upsert({ key: "social_proof", value: b.social });
+  const { data: pub } = await sb.from("theme_publications").select("published_version_id").eq("template_key", "homepage").maybeSingle();
+  if (b.publication && pub?.published_version_id !== b.publication) {
+    // Through the real admin API (the publication pointer is only changed by the audited rollback RPC).
+    const anon = createClient(SB_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, { auth: { persistSession: false } });
+    const { data } = await anon.auth.signInWithPassword({ email: fx.staff.owner.email, password: fx.staff.owner.password });
+    const r = await fetch(`${APP}/api/admin/theme/homepage/rollback`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${data.session!.access_token}`, "content-type": "application/json", origin: APP },
+      body: JSON.stringify({ confirmRollback: true, targetVersionId: b.publication }),
+    });
+    if (!r.ok) throw new Error(`theme rollback during restore failed: ${r.status} ${await r.text()}`);
+  }
+  await sweepSyntheticRecords();
+}
+
 test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => {
   test.beforeAll(async () => {
     await assertLocalOnly("36-step acceptance scenario");
     fs.mkdirSync(OUT, { recursive: true });
     await fetch(`${FAKE}/_reset`, { method: "POST" });
     await sb.from("rate_limit_buckets").delete().like("bucket_key", "review:%");
-    const { data: sp } = await sb.from("store_settings").select("value").eq("key", "social_proof").maybeSingle();
-    state.savedSocial = sp?.value ?? null;
+    const g = await beginGuardedRun<Baseline>(GUARD, readBaseline, restoreBaseline);
+    evidence.recoveredFromInterruptedRun = g.recoveredFromInterruptedRun;
+    await sweepSyntheticRecords();
+    state.savedSocial = g.baseline.social;
+    state.baselinePublication = g.baseline.publication;
+    // Explicit baseline: nothing synthetic from an earlier run is still public.
+    const { count } = await sb.from("products").select("id", { count: "exact", head: true }).like("handle", "qa-acceptance-laptop-%").neq("status", "archived");
+    expect(count).toBe(0);
   });
 
   test.afterAll(async () => {
     fs.writeFileSync(`${OUT}/db-evidence.json`, JSON.stringify(evidence, null, 2));
-    if (state.savedSocial === null) await sb.from("store_settings").delete().eq("key", "social_proof");
-    else await sb.from("store_settings").update({ value: state.savedSocial }).eq("key", "social_proof");
-    await sb.from("reels").delete().eq("title", REEL);
-    await sb.from("product_reviews").delete().eq("author_name", REVIEWER);
-    await sb.from("articles").delete().eq("slug", POST_SLUG);
-    if (state.collectionSlug) await sb.from("collections").delete().eq("slug", state.collectionSlug);
-    if (state.productId) {
-      // Orders placed for this run's product (steps 13 and 27) are removed so no later suite or rerun counts them.
-      const { data: lines } = await sb.from("order_items").select("order_id").eq("product_id", state.productId);
-      const ids = Array.from(new Set((lines || []).map((l) => l.order_id)));
-      if (ids.length) await sb.from("orders").delete().in("id", ids);
-      await sb.from("product_badges").delete().eq("product_id", state.productId);
-      await sb.from("products").update({ status: "archived" }).eq("id", state.productId);
-    }
+    // Restores settings + the theme publication and removes every synthetic record (orders of the test product
+    // included, so no later suite counts them). The guard file is removed only after that succeeded.
+    await restoreBaseline({ social: state.savedSocial ?? null, publication: state.baselinePublication ?? null });
+    endGuardedRun(GUARD);
   });
 
   test("1–5: owner creates a laptop with two variants, prices and real (synthetic) stock", async ({ page }) => {
@@ -308,7 +351,14 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     await page.goto("/admin/reviews");
     const row = page.getByTestId("review-row").filter({ hasText: REVIEWER });
     await row.getByRole("button", { name: "Approve" }).click();
-    await expect(row.getByRole("button", { name: "Approve" })).toHaveAttribute("aria-pressed", "true");
+    // Approving refreshes the Pending queue, so the row leaves it (how fast depends on the router); check the stored
+    // status, that it left the queue, and that the Approved tab shows it as approved.
+    await expect
+      .poll(async () => (await sb.from("product_reviews").select("status").eq("author_name", REVIEWER).single()).data?.status)
+      .toBe("approved");
+    await expect(row).toHaveCount(0);
+    await page.goto("/admin/reviews?status=approved");
+    await expect(page.getByTestId("review-row").filter({ hasText: REVIEWER }).getByRole("button", { name: "Approve" })).toHaveAttribute("aria-pressed", "true");
     await page.goto(`/products/${HANDLE}`);
     await expect(page.getByTestId("pdp-reviews").getByTestId("review-summary")).toContainText("5.0 out of 5 · 1 review");
     const { data: rv } = await sb.from("product_reviews").select("status, rating").eq("author_name", REVIEWER).single();

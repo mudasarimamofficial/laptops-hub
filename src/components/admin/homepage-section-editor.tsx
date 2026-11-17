@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import {
   SECTION_REGISTRY,
@@ -9,6 +10,9 @@ import {
   type SectionField,
   type SectionType,
 } from "@/lib/content/site-builder-schema";
+import { FIXED_REASON, canMove, moveSection, normalizeHomepageLayout } from "@/lib/content/homepage-layout";
+
+const PREVIEW_URL = "/preview/homepage?v=draft";
 
 /** Default settings of a section type (used to show the effective value of a field the draft has not set yet). */
 const registryDefaults = (type: SectionType): Record<string, unknown> =>
@@ -32,6 +36,7 @@ type PublishedVersion = {
 
 export function HomepageSectionEditor() {
   const hydrated = useHydrated();
+  const router = useRouter();
   const [sections, setSections] = useState<SectionInstance[]>([]);
   const [savedSnapshot, setSavedSnapshot] = useState("[]");
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -45,6 +50,11 @@ export function HomepageSectionEditor() {
   const [busy, setBusy] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [migrationRequired, setMigrationRequired] = useState(false);
+  const [themesLive, setThemesLive] = useState(false);
+  const [announce, setAnnounce] = useState("");
+  const [frameKey, setFrameKey] = useState(0);
+  const moveRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const pendingFocus = useRef<string | null>(null);
 
   const dirty = useMemo(() => JSON.stringify(sections) !== savedSnapshot, [sections, savedSnapshot]);
 
@@ -59,7 +69,7 @@ export function HomepageSectionEditor() {
           return;
         }
         if (cancelled) return;
-        const next = (data.sections || []) as SectionInstance[];
+        const next = normalizeHomepageLayout((data.sections || []) as SectionInstance[]);
         setSections(next);
         setSavedSnapshot(JSON.stringify(next));
         setSource(data.source || "");
@@ -67,8 +77,9 @@ export function HomepageSectionEditor() {
         setLivePublishedVersionId(data.livePublishedVersionId || null);
         setPublishedVersions(data.publishedVersions || []);
         setMigrationRequired(!!data.migrationRequired);
+        setThemesLive(!!data.publishedThemesEnabled);
         setNotice(data.notice || null);
-        setSelectedId(data.sections?.[0]?.id ?? null);
+        setSelectedId(next[0]?.id ?? null);
         setLoaded(true);
       } catch {
         if (!cancelled) setErr("Network error loading theme draft");
@@ -155,6 +166,25 @@ export function HomepageSectionEditor() {
     setSections((list) => list.map((s) => (s.id === id ? { ...s, enabled: !s.enabled } : s)));
   }
 
+  /** Move a section one place; keeps keyboard focus on the control that was used (or its pair at an edge). */
+  function move(index: number, dir: -1 | 1) {
+    const s = sections[index];
+    if (!s || !canMove(sections, index, dir)) return;
+    const next = moveSection(sections, index, dir);
+    setSections(next);
+    setSelectedId(s.id);
+    const pos = index + dir;
+    const stillMovable = canMove(next, pos, dir);
+    pendingFocus.current = `${s.id}:${stillMovable ? dir : -dir}`;
+    setAnnounce(`${s.label} moved to position ${pos + 1} of ${next.length}.`);
+  }
+
+  useEffect(() => {
+    if (!pendingFocus.current) return;
+    moveRefs.current[pendingFocus.current]?.focus();
+    pendingFocus.current = null;
+  }, [sections]);
+
   async function saveDraft() {
     setBusy(true);
     setErr(null);
@@ -168,16 +198,19 @@ export function HomepageSectionEditor() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setErr(data.message || data.error || `Save failed (${res.status})`);
-        return;
+        return false;
       }
       setVersionId(data.versionId || versionId);
       setSavedSnapshot(JSON.stringify(sections));
+      setFrameKey((k) => k + 1);
       setNotice(data.notice || "Draft saved. Public storefront unchanged until publish.");
+      return true;
     } catch {
       setErr("Network error");
     } finally {
       setBusy(false);
     }
+    return false;
   }
 
   async function publishDraft() {
@@ -188,7 +221,9 @@ export function HomepageSectionEditor() {
     if (dirty && !window.confirm("You have unsaved changes. Save draft and publish?")) return;
     if (
       !window.confirm(
-        "Publish creates a new immutable published snapshot (draft is never used as the live pointer). Continue?",
+        themesLive
+          ? "Publish this draft? Customers will see it on the homepage within about a minute. You can restore an earlier version afterwards."
+          : "Publish this draft as a new version? Customers keep seeing the V5 default until published themes are switched on (THEME_PUBLISHED_ENABLED).",
       )
     ) {
       return;
@@ -242,7 +277,9 @@ export function HomepageSectionEditor() {
   async function rollbackTo(targetVersionId: string) {
     if (
       !window.confirm(
-        "Roll back the live homepage pointer to this previously published snapshot? Visitors will see that version when THEME_PUBLISHED_ENABLED=1.",
+        themesLive
+          ? "Restore this published version? Customers will see it on the homepage within about a minute."
+          : "Restore this published version as the current publication? Customers keep seeing the V5 default until published themes are switched on.",
       )
     ) {
       return;
@@ -270,18 +307,18 @@ export function HomepageSectionEditor() {
     }
   }
 
-  function openDraftPreview() {
-    try {
-      // localStorage: popup opened with noopener cannot read the opener's sessionStorage.
-      localStorage.setItem(
-        "lh-theme-draft-preview",
-        JSON.stringify({ sections, viewport, savedAt: Date.now() }),
-      );
-    } catch {
-      setErr("Could not store draft preview payload in this browser.");
+  /** Full preview in a new tab. Unsaved changes are saved first, so the preview always shows what was edited. */
+  async function openDraftPreview(e: React.MouseEvent<HTMLAnchorElement>) {
+    if (!dirty) return; // plain link: opens the saved draft in a new tab
+    e.preventDefault();
+    const tab = window.open("about:blank", "_blank");
+    const ok = await saveDraft();
+    if (!ok) {
+      tab?.close();
       return;
     }
-    window.open("/admin/online-store/preview", "_blank", "noopener,noreferrer");
+    if (tab) tab.location.href = PREVIEW_URL;
+    else router.push(PREVIEW_URL);
   }
 
   function renderField(f: SectionField) {
@@ -474,22 +511,67 @@ export function HomepageSectionEditor() {
         <p className="px-2 text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">
           Sections {dirty ? "· unsaved" : ""}
         </p>
-        <ul className="mt-2 space-y-1">
-          {sections.map((s, i) => (
-            <li key={s.id}>
+        <p className="mt-1 px-2 text-xs text-[var(--adm-ink-2)]">
+          Homepage order, top to bottom. Use the arrows to move a section; the hero stays first and the map stays
+          last.
+        </p>
+        <p className="sr-only" role="status" aria-live="polite">
+          {announce}
+        </p>
+        <ol className="mt-2 space-y-1" data-testid="theme-section-list">
+          {sections.map((s, i) => {
+            const fixed = FIXED_REASON[s.type];
+            const arrow = (dir: -1 | 1) => (
               <button
                 type="button"
-                onClick={() => setSelectedId(s.id)}
-                className={`flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm ${
-                  selectedId === s.id ? "bg-[var(--lh-ice)] font-semibold" : "hover:bg-[var(--adm-surface-2)]"
-                } ${!s.enabled ? "opacity-50" : ""}`}
+                ref={(el) => {
+                  moveRefs.current[`${s.id}:${dir}`] = el;
+                }}
+                data-testid={`theme-move-${dir < 0 ? "up" : "down"}-${s.type}`}
+                aria-label={`Move ${s.label} ${dir < 0 ? "up" : "down"}`}
+                disabled={busy || !canMove(sections, i, dir)}
+                onClick={() => move(i, dir)}
+                className="grid h-7 w-7 place-items-center rounded border border-[var(--adm-border)] text-xs disabled:opacity-30"
               >
-                <span className="w-5 text-xs text-[var(--adm-ink-2)]">{i + 1}</span>
-                <span className="min-w-0 flex-1 truncate">{s.label}</span>
+                <span aria-hidden="true">{dir < 0 ? "↑" : "↓"}</span>
               </button>
-            </li>
-          ))}
-        </ul>
+            );
+            return (
+              <li
+                key={s.id}
+                data-testid={`theme-section-${s.type}`}
+                data-enabled={s.enabled ? "true" : "false"}
+                className="flex items-center gap-1"
+              >
+                <button
+                  type="button"
+                  onClick={() => setSelectedId(s.id)}
+                  aria-current={selectedId === s.id ? "true" : undefined}
+                  className={`flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-2 text-left text-sm ${
+                    selectedId === s.id ? "bg-[var(--lh-ice)] font-semibold" : "hover:bg-[var(--adm-surface-2)]"
+                  } ${!s.enabled ? "opacity-60" : ""}`}
+                >
+                  <span className="w-5 text-xs text-[var(--adm-ink-2)]">{i + 1}</span>
+                  <span className="min-w-0 flex-1 truncate">{s.label}</span>
+                  {!s.enabled ? (
+                    <span className="text-[10px] font-semibold uppercase text-[var(--adm-ink-2)]">Hidden</span>
+                  ) : null}
+                  {fixed ? (
+                    <span className="text-[10px] font-semibold uppercase text-[var(--adm-ink-2)]" title={fixed}>
+                      Fixed
+                    </span>
+                  ) : null}
+                </button>
+                {fixed ? null : (
+                  <>
+                    {arrow(-1)}
+                    {arrow(1)}
+                  </>
+                )}
+              </li>
+            );
+          })}
+        </ol>
         {publishedVersions.length ? (
           <div className="mt-4 border-t border-[var(--adm-border)] pt-3">
             <p className="px-2 text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">
@@ -541,11 +623,30 @@ export function HomepageSectionEditor() {
             ))}
           </div>
         </div>
-        <p className="mt-2 text-sm text-[var(--adm-ink-2)]">
-          Saving a draft never changes the public site. Publish always creates a new immutable{" "}
-          <code>published</code> snapshot — drafts are never used as the live pointer. Visitors read published
-          settings via a narrow RPC when THEME_PUBLISHED_ENABLED=1.
-        </p>
+        <div
+          data-testid="theme-live-state"
+          className={`mt-3 rounded-lg border p-3 text-sm ${
+            themesLive ? "border-[var(--adm-success)]" : "border-[var(--adm-warning)] bg-[var(--adm-surface-2)]"
+          }`}
+        >
+          {themesLive ? (
+            <p>
+              <strong>Published themes are on.</strong> Customers see the published version
+              {livePublishedVersionId ? "" : " (nothing published yet, so the V5 default)"}. Publishing or restoring a
+              version updates the live homepage within about a minute.
+            </p>
+          ) : (
+            <p>
+              <strong>Published themes are off</strong> (<code>THEME_PUBLISHED_ENABLED</code> is not set). Customers
+              see the built-in V5 homepage. Saving and publishing keep versions ready, but the live homepage changes
+              only after the owner switches published themes on in the hosting settings.
+            </p>
+          )}
+          <p className="mt-1 text-xs text-[var(--adm-ink-2)]">
+            Saving a draft never changes the public site. Publish creates a new immutable version; drafts are never
+            shown to customers.
+          </p>
+        </div>
 
         <div
           className="mx-auto mt-4 overflow-hidden rounded-lg border border-[var(--adm-border)] bg-[var(--adm-surface-2)] p-3"
@@ -582,17 +683,19 @@ export function HomepageSectionEditor() {
               })}
             </div>
           ) : null}
-          {!selected || (selected.type !== "v5_cinematic_hero" && selected.type !== "v5_product_story") ? (
-            <ol className="list-decimal space-y-2 pl-5 text-sm">
-              {sections
-                .filter((s) => s.enabled)
-                .map((s) => (
-                  <li key={s.id}>
-                    <strong>{s.label}</strong>{" "}
-                    <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--adm-ink-2)]">{s.type}</span>
-                  </li>
-                ))}
-            </ol>
+          <p className="mt-3 text-xs text-[var(--adm-ink-2)]" data-testid="theme-frame-note">
+            {dirty
+              ? "You have unsaved changes. The preview below shows the last saved draft; save to update it."
+              : "Saved draft, rendered by the real storefront (scroll inside the frame)."}
+          </p>
+          {loaded && !migrationRequired ? (
+            <iframe
+              key={frameKey}
+              src={`${PREVIEW_URL}&embed=1`}
+              title={`Homepage draft preview, ${viewport} width`}
+              data-testid="theme-preview-frame"
+              className="mt-2 h-[70vh] w-full rounded border border-[var(--adm-border)] bg-white"
+            />
           ) : null}
         </div>
       </section>
@@ -603,12 +706,21 @@ export function HomepageSectionEditor() {
             <h2 className="font-[family-name:var(--font-display)] text-base font-bold">{selected.label}</h2>
             <p className="mt-1 text-xs text-[var(--adm-ink-2)]">{registry.description}</p>
             <label className="mt-3 flex items-center gap-2 text-sm">
-              <input type="checkbox" checked={selected.enabled} onChange={() => toggleEnabled(selected.id)} />
-              Enabled
+              <input
+                type="checkbox"
+                data-testid="theme-section-enabled"
+                checked={selected.enabled}
+                onChange={() => toggleEnabled(selected.id)}
+              />
+              Show on the homepage
             </label>
             <p className="mt-3 text-xs text-[var(--adm-ink-2)]">
-              The order of the V5 homepage is fixed by its design. The customer reviews section has its own Position
-              setting below.
+              {FIXED_REASON[selected.type] ??
+                `Position ${sections.findIndex((s) => s.id === selected.id) + 1} of ${sections.length}. Move it with the arrows in the section list.`}
+              {selected.type === "v5_store_reviews"
+                ? " Shown only when at least one store testimonial is published (Reviews → Store testimonials)."
+                : ""}
+              {selected.type === "v5_featured_products" ? " Published reels follow this section." : ""}
             </p>
             {selected.type === "v5_cinematic_hero" ? (
               <button
@@ -634,15 +746,26 @@ export function HomepageSectionEditor() {
         >
           {migrationRequired ? "Save blocked (migration)" : busy ? "Working…" : dirty ? "Save draft *" : "Save draft"}
         </button>
-        <button
-          type="button"
-          data-testid="theme-open-preview"
-          disabled={!hydrated || !loaded || busy || migrationRequired || sections.length < 1}
-          onClick={openDraftPreview}
-          className="mt-2 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2 text-sm font-semibold disabled:opacity-50"
-        >
-          Open draft preview
-        </button>
+        {!hydrated || !loaded || busy || migrationRequired || sections.length < 1 ? (
+          <span
+            aria-disabled="true"
+            className="mt-2 block w-full rounded-lg border border-[var(--adm-border)] px-3 py-2 text-center text-sm font-semibold opacity-50"
+          >
+            Open full preview
+          </span>
+        ) : (
+          <a
+            href={PREVIEW_URL}
+            target="_blank"
+            rel="noopener"
+            data-testid="theme-open-preview"
+            onClick={openDraftPreview}
+            className="mt-2 block w-full rounded-lg border border-[var(--adm-border)] px-3 py-2 text-center text-sm font-semibold"
+          >
+            {dirty ? "Save and open full preview" : "Open full preview"}
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+        )}
         <button
           type="button"
           data-testid="theme-publish"

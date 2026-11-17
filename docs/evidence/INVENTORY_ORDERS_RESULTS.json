@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-16T11:22:28.280Z",
+  "generatedAt": "2026-11-17T05:03:59.199Z",
   "results": [
     {
       "name": "one_off_race_exactly_one_order",
@@ -14,7 +14,7 @@
     {
       "name": "one_off_single_ledger_row",
       "ok": true,
-      "detail": "[{\"delta\":-1,\"quantity_after\":0,\"reason\":\"order_placed\",\"reference_id\":\"350ec399-d681-47b4-b0bd-15c870d53230\"}]"
+      "detail": "[{\"delta\":-1,\"quantity_after\":0,\"reason\":\"order_placed\",\"reference_id\":\"89135286-1b01-4d24-969a-94ffb30bc5ba\"}]"
     },
     {
       "name": "duplicate_submit_deducts_once",
@@ -39,7 +39,7 @@
     {
       "name": "oversell_allowed_variant_goes_negative_with_ledger",
       "ok": true,
-      "detail": "[{\"delta\":-2,\"quantity_after\":-2,\"reason\":\"order_placed\",\"reference_id\":\"46012d14-608f-469b-9aee-a0e823f94183\"}]"
+      "detail": "[{\"delta\":-2,\"quantity_after\":-2,\"reason\":\"order_placed\",\"reference_id\":\"6d77461d-a7d6-42f4-a56c-a324b84f9c8c\"}]"
     },
     {
       "name": "cancel_before_shipping_restocks",

@@ -1,37 +1,48 @@
-import { createClient } from "@/lib/supabase/server";
+import { unstable_cache } from "next/cache";
+import { createPublicClient } from "@/lib/supabase/server";
 import { V5_HOMEPAGE_SECTIONS, type SectionInstance } from "./site-builder-schema";
 
+/** Cache tag expired by theme publish and rollback (api/admin/theme/homepage/publish|rollback). */
+export const HOMEPAGE_THEME_TAG = "homepage-theme";
+
 /**
- * Load published homepage sections when explicitly enabled.
- * Uses SECURITY DEFINER RPC `get_published_homepage_sections` so anon/logged-out
- * customers never need SELECT on theme_* tables (drafts stay private).
- * Default: return null so callers keep the approved V5 hardcoded composition.
+ * Published homepage sections via the SECURITY DEFINER RPC `get_published_homepage_sections`, read with the anon key
+ * (no cookies), so logged-out customers never need SELECT on theme_* tables (drafts stay private) and the homepage
+ * stays statically cached. Cached 60 s under `homepage-theme`, which every publish/rollback expires.
+ */
+const readPublishedSections = unstable_cache(
+  async (): Promise<SectionInstance[] | null> => {
+    try {
+      const { data, error } = await createPublicClient().rpc("get_published_homepage_sections");
+      if (error || data == null) return null;
+      const sections = data as SectionInstance[];
+      if (!Array.isArray(sections) || !sections.length) return null;
+      // Defense in depth: only accept known section shapes (no scriptable payload execution)
+      return sections.filter(
+        (s) =>
+          s &&
+          typeof s === "object" &&
+          typeof s.id === "string" &&
+          typeof s.type === "string" &&
+          typeof s.enabled === "boolean" &&
+          s.settings &&
+          typeof s.settings === "object",
+      );
+    } catch {
+      return null;
+    }
+  },
+  ["published-homepage-sections"],
+  { revalidate: 60, tags: [HOMEPAGE_THEME_TAG] },
+);
+
+/**
+ * Load published homepage sections when explicitly enabled (THEME_PUBLISHED_ENABLED=1).
+ * Default: null, so callers render the approved V5 default layout.
  */
 export async function getPublishedHomepageSections(): Promise<SectionInstance[] | null> {
   if (process.env.THEME_PUBLISHED_ENABLED !== "1") return null;
-
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase.rpc("get_published_homepage_sections");
-    if (error || data == null) return null;
-
-    const sections = data as SectionInstance[];
-    if (!Array.isArray(sections) || !sections.length) return null;
-
-    // Defense in depth: only accept known section shapes (no scriptable payload execution)
-    return sections.filter(
-      (s) =>
-        s &&
-        typeof s === "object" &&
-        typeof s.id === "string" &&
-        typeof s.type === "string" &&
-        typeof s.enabled === "boolean" &&
-        s.settings &&
-        typeof s.settings === "object",
-    );
-  } catch {
-    return null;
-  }
+  return readPublishedSections();
 }
 
 /** Safe defaults if published payload is corrupt. */

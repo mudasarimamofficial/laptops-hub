@@ -5,8 +5,12 @@ import {
   createAuthorizedStaffWriter,
   staffErrorResponse,
 } from "@/lib/auth/staff";
-import { V5_HOMEPAGE_SECTIONS, withLaterSections, type SectionInstance } from "@/lib/content/site-builder-schema";
+import { type SectionInstance } from "@/lib/content/site-builder-schema";
 import { homeSectionSettingProblems } from "@/lib/content/home-sections";
+import { homepageLayoutProblems, normalizeHomepageLayout } from "@/lib/content/homepage-layout";
+
+/** What customers see right now, for the editor's explanation. */
+const liveState = () => ({ publishedThemesEnabled: process.env.THEME_PUBLISHED_ENABLED === "1" });
 
 const saveSchema = z.object({
   sections: z.array(
@@ -39,7 +43,8 @@ export async function GET() {
         {
           source: "code_defaults",
           migrationRequired: true,
-          sections: V5_HOMEPAGE_SECTIONS,
+          sections: normalizeHomepageLayout(null),
+          ...liveState(),
           notice: "theme_* tables not applied yet. Showing V5 code defaults. Apply local migration 20261025130000.",
         },
         { headers: { "Cache-Control": "no-store" } },
@@ -69,8 +74,8 @@ export async function GET() {
       .eq("template_key", "homepage")
       .maybeSingle();
 
-    // Drafts saved before a section type existed get it appended (not published until the owner publishes).
-    const sections = withLaterSections((version?.sections as SectionInstance[] | undefined) || V5_HOMEPAGE_SECTIONS);
+    // Ordered layout: older drafts are read in the V5 order and gain any newer section at its V5 position.
+    const sections = normalizeHomepageLayout((version?.sections as SectionInstance[] | undefined) ?? null);
 
     return NextResponse.json(
       {
@@ -81,6 +86,7 @@ export async function GET() {
         sections,
         themeSettings: version?.theme_settings ?? {},
         livePublishedVersionId: publication?.published_version_id ?? null,
+        ...liveState(),
         publishedVersions: publishedList || [],
       },
       { headers: { "Cache-Control": "no-store" } },
@@ -99,7 +105,10 @@ export async function PUT(request: Request) {
     if (!parsed.success) {
       return NextResponse.json({ error: "validation_failed" }, { status: 400 });
     }
-    const problems = homeSectionSettingProblems(parsed.data.sections);
+    const problems = [
+      ...homepageLayoutProblems(parsed.data.sections),
+      ...homeSectionSettingProblems(parsed.data.sections),
+    ];
     if (problems.length) {
       return NextResponse.json({ error: "validation_failed", message: problems.join(" ") }, { status: 400 });
     }
@@ -130,7 +139,8 @@ export async function PUT(request: Request) {
     const { data: saved, error: saveErr } = await supabase.rpc("save_homepage_draft", {
       payload: {
         actor_user_id: staff.userId,
-        sections: parsed.data.sections,
+        // Saved in the order given (validated above); marks the layout as ordered.
+        sections: normalizeHomepageLayout(parsed.data.sections as SectionInstance[]),
       },
     });
     if (saveErr) {

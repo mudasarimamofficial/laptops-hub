@@ -11,7 +11,7 @@ export default async function AdminOnlineStorePage() {
     <>
       <AdminPageHeader
         title="Customize homepage"
-        description="Draft section tree seeded from the approved V5 composition. Saving drafts never publishes. Live storefront stays on V5 code until an owner-approved publish."
+        description="Arrange, hide and edit the homepage sections of the approved V5 design, preview the full page, then publish. Saving a draft never changes the public site."
         breadcrumbs={[{ href: "/admin", label: "Overview" }, { label: "Online store" }]}
       />
       <HomepageSectionEditor />

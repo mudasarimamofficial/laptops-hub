@@ -105,7 +105,7 @@ PASS  nonstaff GET /admin/settings → redirect — 307 /admin/forbidden
 PASS  editor cannot legally approve a policy page — status=403
 PASS  editor cannot publish a policy page — status=403
 PASS  publishing a policy page without legal approval is refused — status=409
-PASS  owner can approve and publish a policy page — status=200 {"status":"published","legal_approved":true,"legal_approved_by":"2b1839a4-8329-4124-ae6f-e94ce1c78a25"}
+PASS  owner can approve and publish a policy page — status=200 {"status":"published","legal_approved":true,"legal_approved_by":"e87d1ea7-9cc7-40cc-821b-627e02b69ead"}
 PASS  published policy renders CMS body — status=200
 PASS  product page: published delivery policy is linked, untagged — <span style="font-size:14px;font-weight:700">Delivery</span><span style="font-family:var(--font-mono);font-size:10px;let
 PASS  footer links a published policy
@@ -120,8 +120,8 @@ PASS  empty-body publish needs explicit template approval — status=409
 PASS  approved template publishes (comparison-guide) — status=200/200
 PASS  published template is in the sitemap, unpublished pages are not
 PASS  unpublished template is gone again (404)
-PASS  collection recorded once via route — 200 {"ok":true,"idempotentReplay":false,"amountCollectedPaisa":100000,"paymentStatus":"partially_collected","collectionId":"351fff8d-5da8-402a-8329-40cd6e2d9ca3"} collected=100000
-PASS  retry with same key replays — 200 {"ok":true,"idempotentReplay":true,"amountCollectedPaisa":100000,"paymentStatus":"partially_collected","collectionId":"351fff8d-5da8-402a-8329-40cd6e2d9ca3"}
+PASS  collection recorded once via route — 200 {"ok":true,"idempotentReplay":false,"amountCollectedPaisa":100000,"paymentStatus":"partially_collected","collectionId":"796492ca-4746-4a82-adab-6bbf09a59d91"} collected=100000
+PASS  retry with same key replays — 200 {"ok":true,"idempotentReplay":true,"amountCollectedPaisa":100000,"paymentStatus":"partially_collected","collectionId":"796492ca-4746-4a82-adab-6bbf09a59d91"}
 PASS  same key, different amount → 409 conflict, no constraint leak — 409 {"error":"idempotency_conflict","message":"This collection key was already used for a different order or amount. Nothing was recorded."}
 PASS  editor cannot record collections — status=403
 

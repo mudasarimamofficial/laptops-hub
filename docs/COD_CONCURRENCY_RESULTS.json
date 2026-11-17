@@ -1,6 +1,6 @@
 {
-  "at": "2026-11-16T11:22:24.478Z",
-  "orderNumber": "LH-SANDBOX-1794828143463",
+  "at": "2026-11-17T05:03:55.557Z",
+  "orderNumber": "LH-SANDBOX-1794891834380",
   "results": [
     {
       "name": "same_key_both_ok_or_one_ok",
@@ -20,7 +20,7 @@
     {
       "name": "diff_keys_no_double_money",
       "ok": true,
-      "detail": "ok=1 over=1 err=over_collection|"
+      "detail": "ok=1 over=1 err=|over_collection"
     },
     {
       "name": "final_collected_eq_total",
@@ -55,7 +55,7 @@
     {
       "name": "replay_after_completion",
       "ok": true,
-      "detail": "{\"first\":\"ok\",\"again\":{\"ok\":true,\"collection_id\":\"0be43148-b4f2-422a-a117-087f5102412f\",\"payment_status\":\"partially_collected\",\"idempotent_replay\":true,\"amount_collected_paisa\":1300},\"rows\":1}"
+      "detail": "{\"first\":\"ok\",\"again\":{\"ok\":true,\"collection_id\":\"a0066f58-22f5-474b-83b2-cbdc37e2ba78\",\"payment_status\":\"partially_collected\",\"idempotent_replay\":true,\"amount_collected_paisa\":1300},\"rows\":1}"
     },
     {
       "name": "same_key_different_amount_conflict",

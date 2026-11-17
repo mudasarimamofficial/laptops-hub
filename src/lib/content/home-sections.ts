@@ -11,6 +11,10 @@ export const STORE_MAP_EMBED_SRC =
 /** Same place by its Google customer id (0x6ed8ac457d0eb4cd) — opens the listing (directions, hours, reviews). */
 export const STORE_MAPS_URL = "https://maps.google.com/?cid=7987323353592411341";
 
+/**
+ * Legacy reviews "placement" setting (before section ordering existed). Read only to place reviews correctly when an
+ * old draft or published snapshot is rendered (homepage-layout.ts); the editor now moves the section itself.
+ */
 export const REVIEWS_PLACEMENTS = [
   { value: "before_inquiry", label: "Near the end, before \"Tell us what you need\" (recommended)" },
   { value: "after_featured", label: "After the featured laptops and reels" },
@@ -41,7 +45,6 @@ export function defaultReviewsSettings(): Record<string, unknown> {
   return {
     heading: "What our customers say",
     intro: "Shared by Laptops HUB customers. Each review shows where it was posted.",
-    placement: "before_inquiry",
     googleProfileUrl: STORE_MAPS_URL,
   };
 }

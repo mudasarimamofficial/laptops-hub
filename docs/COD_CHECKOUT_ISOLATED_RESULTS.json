@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "app": "http://127.0.0.1:3001",
-  "at": "2026-11-16T11:22:26.883Z",
+  "at": "2026-11-17T05:03:57.935Z",
   "results": [
     {
       "name": "forged_price_ignored",
@@ -11,7 +11,7 @@
     {
       "name": "new_order_unpaid_cod",
       "ok": true,
-      "detail": "{\"id\":\"e11b76ef-756c-4385-8de2-1f5f9d37524c\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
+      "detail": "{\"id\":\"84e8c27d-8aeb-4827-8caa-ef4c55eb9459\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
     },
     {
       "name": "same_key_one_order",

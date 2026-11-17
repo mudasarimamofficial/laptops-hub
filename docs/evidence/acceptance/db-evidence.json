@@ -1,25 +1,26 @@
 {
-  "run": "mwj7cmog",
+  "run": "mwk93jzq",
   "supabase": "http://127.0.0.1:54321",
   "app": "http://127.0.0.1:3001",
+  "recoveredFromInterruptedRun": false,
   "step_01": {
     "role": "owner",
     "email": "iso-owner-1794828017489@lh-test.local"
   },
   "step_02": {
-    "productId": "7772d9fb-ae73-4f70-84cb-57806dc53d17",
-    "handle": "qa-acceptance-laptop-mwj7cmog",
+    "productId": "769b726a-f9ab-42d1-a0e1-a88b0964aeeb",
+    "handle": "qa-acceptance-laptop-mwk93jzq",
     "status": "draft"
   },
   "step_03": {
     "variants": [
       {
         "title": "16GB",
-        "sku": "QA-ACC-MWJ7CMOG-16GB"
+        "sku": "QA-ACC-MWK93JZQ-16GB"
       },
       {
         "title": "8GB",
-        "sku": "QA-ACC-MWJ7CMOG-8GB"
+        "sku": "QA-ACC-MWK93JZQ-8GB"
       }
     ]
   },
@@ -38,22 +39,22 @@
   "step_06": {
     "media": {
       "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111",
-      "alt": "QA Acceptance Laptop mwj7cmog front view",
+      "alt": "QA Acceptance Laptop mwk93jzq front view",
       "position": 1,
       "approval": "pending"
     },
     "note": "Rights flag stays 'pending' until the owner approves it (never auto-approved)."
   },
   "step_07": {
-    "collection": "qa-acceptance-mwj7cmog"
+    "collection": "qa-acceptance-mwk93jzq"
   },
   "step_08": {
     "status": "active"
   },
   "step_09": {
-    "pdp": "/products/qa-acceptance-laptop-mwj7cmog",
+    "pdp": "/products/qa-acceptance-laptop-mwk93jzq",
     "collectionShows": [
-      "qa-acceptance-laptop-mwj7cmog"
+      "qa-acceptance-laptop-mwk93jzq"
     ]
   },
   "step_12": {
@@ -66,11 +67,11 @@
     "totalDue": 8545000
   },
   "step_13": {
-    "orderNumber": "LH-261116-0EEDAD"
+    "orderNumber": "LH-261117-A9C8C4"
   },
   "step_14": {
     "order": {
-      "id": "624fe46e-5ddb-4529-8511-df01944aa22a",
+      "id": "8672f94a-4e50-49e3-a428-7a2650376541",
       "status": "placed",
       "payment_status": "unpaid_cod",
       "subtotal_paisa": 8500000,
@@ -80,7 +81,7 @@
     },
     "items": [
       {
-        "variant_id": "717eed86-9b2d-4b6f-a277-454900a83c7a",
+        "variant_id": "9c90c3bb-4b9b-44ee-8ace-b28d99bed849",
         "quantity": 1,
         "unit_price_paisa": 8500000
       }
@@ -95,7 +96,7 @@
         "quantity_after": 3,
         "reason": "order_placed",
         "reference_type": "order",
-        "reference_id": "624fe46e-5ddb-4529-8511-df01944aa22a"
+        "reference_id": "8672f94a-4e50-49e3-a428-7a2650376541"
       }
     ],
     "emails": [
@@ -103,13 +104,13 @@
         "to": [
           "owner@lh-test.local"
         ],
-        "subject": "New COD order LH-261116-0EEDAD — Rs 85,450"
+        "subject": "New COD order LH-261117-A9C8C4 — Rs 85,450"
       },
       {
         "to": [
           "acceptance-buyer@lh-test.local"
         ],
-        "subject": "Laptops HUB order LH-261116-0EEDAD received"
+        "subject": "Laptops HUB order LH-261117-A9C8C4 received"
       }
     ]
   },
@@ -125,7 +126,7 @@
     "collections": [
       {
         "amount_paisa": 8545000,
-        "collector_ref": "rider-mwj7cmog"
+        "collector_ref": "rider-mwk93jzq"
       }
     ]
   },
@@ -151,26 +152,26 @@
     "rating": 5
   },
   "step_24": {
-    "guide": "/guides/qa-acceptance-guide-mwj7cmog",
+    "guide": "/guides/qa-acceptance-guide-mwk93jzq",
     "listed": true
   },
   "step_25": {
-    "reel": "QA acceptance reel mwj7cmog",
+    "reel": "QA acceptance reel mwk93jzq",
     "rights": "owned (synthetic test pattern)"
   },
   "step_26": {
     "label": "staff_pick"
   },
   "step_27": {
-    "secondOrder": "LH-261116-7983B3",
+    "secondOrder": "LH-261117-47E620",
     "badgesAfterTwoDeliveredUnits": [
       "top_seller"
     ],
     "oneUnitBadge": false,
     "recentActivity": [
       {
-        "handle": "qa-acceptance-laptop-mwj7cmog",
-        "title": "QA Acceptance Laptop mwj7cmog",
+        "handle": "qa-acceptance-laptop-mwk93jzq",
+        "title": "QA Acceptance Laptop mwk93jzq",
         "imageUrl": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111",
         "when": "today",
         "city": null
@@ -185,11 +186,11 @@
     "preview": "draft visible to staff only"
   },
   "step_31": {
-    "publishedVersion": "6c872540-037a-4ffc-bcaa-eedc2b012bea"
+    "publishedVersion": "9a60f32c-8f73-4cbc-9417-abb1ff9a6ca6"
   },
   "step_32": {
-    "rolledBackTo": "ac208db6-b0e7-4f44-9219-ac578635246d",
-    "baseline": "ac208db6-b0e7-4f44-9219-ac578635246d",
+    "rolledBackTo": "f2d008ea-8fed-4541-9049-4e048aba7158",
+    "baseline": "f2d008ea-8fed-4541-9049-4e048aba7158",
     "publicHero": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111"
   },
   "step_33": {
@@ -202,7 +203,7 @@
     "/admin/staff": "forbidden",
     "/admin/inventory": "forbidden",
     "POST /api/admin/products": 403,
-    "PUT /api/admin/products/qa-acceptance-laptop-mwj7cmog/variants": 403,
+    "PUT /api/admin/products/qa-acceptance-laptop-mwk93jzq/variants": 403,
     "POST /api/admin/theme/homepage/publish": 403,
     "PUT /api/admin/social-proof": 403,
     "POST /api/admin/staff": 403,
@@ -212,15 +213,15 @@
     "viewport": "390x844",
     "noHorizontalOverflow": {
       "/": true,
-      "/products/qa-acceptance-laptop-mwj7cmog": true,
-      "/collections/qa-acceptance-mwj7cmog": true,
+      "/products/qa-acceptance-laptop-mwk93jzq": true,
+      "/collections/qa-acceptance-mwk93jzq": true,
       "/checkout": true,
-      "/order/success/e048865b-6bc4-4c35-a82f-83e3a46995e2": true,
+      "/order/success/c8224cc5-80e8-42b8-bf79-123de1a57de1": true,
       "/admin": true,
       "/admin/orders": true,
-      "/admin/orders/LH-261116-0EEDAD": true,
+      "/admin/orders/LH-261117-A9C8C4": true,
       "/admin/inventory": true,
-      "/admin/products/qa-acceptance-laptop-mwj7cmog": true
+      "/admin/products/qa-acceptance-laptop-mwk93jzq": true
     }
   },
   "step_36": {

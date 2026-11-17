@@ -1,5 +1,6 @@
 import { StoreMap } from "@/components/storefront/home/store-map";
 import { mapSettings } from "@/lib/content/home-sections";
+import { normalizeHomepageLayout } from "@/lib/content/homepage-layout";
 import { getPublishedHomepageSections } from "@/lib/content/published-homepage";
 
 /**
@@ -9,7 +10,7 @@ import { getPublishedHomepageSections } from "@/lib/content/published-homepage";
  */
 export default async function HomeAfterFooter() {
   const published = await getPublishedHomepageSections();
-  const sec = published?.find((s) => s.type === "v5_store_map");
+  const sec = published ? normalizeHomepageLayout(published).find((s) => s.type === "v5_store_map") : undefined;
   if (sec && !sec.enabled) return null;
   return <StoreMap cfg={mapSettings(sec?.settings as Record<string, unknown> | undefined)} />;
 }

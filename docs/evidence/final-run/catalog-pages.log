@@ -1,10 +1,10 @@
 PASS  synthetic_dataset_seeded — 105 active + 1 draft
-PASS  view_lists_every_synthetic_active_product — synthetic=105 total=109
+PASS  view_lists_every_synthetic_active_product — synthetic=105 total=111
 PASS  view_hides_draft — rows=0
-PASS  view_last_page_equals_tail_of_full_sort — offset=96 expected=13 got=13
+PASS  view_last_page_equals_tail_of_full_sort — offset=96 expected=15 got=15
 PASS  view_first_rows_are_synthetic_in_price_order — price-asc
 PASS  storefront_page1_shows_first_12_synthetic — status=200
-PASS  storefront_load_more_reaches_every_product — 10 pages, p1:200/12+more p2:200/24+more p3:200/36+more p4:200/48+more p5:200/60+more p6:200/72+more p7:200/84+more p8:200/96+more p9:200/108+more p10:200/109
+PASS  storefront_load_more_reaches_every_product — 10 pages, p1:200/12+more p2:200/24+more p3:200/36+more p4:200/48+more p5:200/60+more p6:200/72+more p7:200/84+more p8:200/96+more p9:200/108+more p10:200/111
 PASS  storefront_final_page_has_all_synthetic_in_order — synthetic=105
 PASS  draft_pdp_is_404 — status=404
 

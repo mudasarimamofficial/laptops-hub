@@ -505,9 +505,11 @@ export function HomepageSectionEditor() {
 
   const previewWidth = viewport === "mobile" ? 390 : viewport === "tablet" ? 768 : 1200;
 
+  // lg: list + settings side by side, preview full width below; xl+: three columns. Fixed tracks at lg overflowed the
+  // ~700px admin content area (1024px window with the admin sidebar).
   return (
-    <div className="grid gap-4 lg:grid-cols-[260px_1fr_320px]">
-      <aside className="rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-3 shadow-[var(--adm-shadow)]">
+    <div data-testid="theme-editor-grid" className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)_320px]">
+      <aside className="min-w-0 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-3 shadow-[var(--adm-shadow)]">
         <p className="px-2 text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">
           Sections {dirty ? "· unsaved" : ""}
         </p>
@@ -602,7 +604,7 @@ export function HomepageSectionEditor() {
         ) : null}
       </aside>
 
-      <section className="rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]">
+      <section className="min-w-0 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)] lg:order-last lg:col-span-2 xl:order-none xl:col-span-1">
         <div className="flex flex-wrap items-center gap-2">
           <p className="text-xs uppercase tracking-wide text-[var(--adm-ink-2)]">
             Draft inspector · source {source || "—"}
@@ -700,7 +702,7 @@ export function HomepageSectionEditor() {
         </div>
       </section>
 
-      <aside className="rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)]">
+      <aside className="min-w-0 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)]">
         {selected && registry ? (
           <>
             <h2 className="font-[family-name:var(--font-display)] text-base font-bold">{selected.label}</h2>

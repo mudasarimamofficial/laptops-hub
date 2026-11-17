@@ -119,6 +119,23 @@ test.describe.serial("Theme ordering + full preview (isolated)", () => {
     }
   });
 
+  test("editor fits the window at 1024, 1280 and 1440 px (no horizontal overflow)", async ({ page }) => {
+    await signIn(page, "owner");
+    for (const width of [1024, 1280, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto("/admin/online-store");
+      await expect(page.getByTestId("theme-editor-grid")).toBeVisible();
+      await expect(page.locator('[data-testid^="theme-section-"][data-enabled]')).toHaveCount(13);
+      const m = await page.evaluate(() => {
+        const g = document.querySelector('[data-testid="theme-editor-grid"]')!.getBoundingClientRect();
+        const kids = [...document.querySelector('[data-testid="theme-editor-grid"]')!.children].map((c) => c.getBoundingClientRect().right);
+        return { doc: document.documentElement.scrollWidth, win: window.innerWidth, gridRight: g.right, maxChildRight: Math.max(...kids) };
+      });
+      expect(m.doc, `document overflow at ${width}px`).toBeLessThanOrEqual(m.win);
+      expect(m.maxChildRight, `editor column outside its grid at ${width}px`).toBeLessThanOrEqual(m.gridRight + 1);
+    }
+  });
+
   test("invalid placements are refused by the API", async ({ page }) => {
     await signIn(page, "owner");
     const cur = await (await page.request.get("/api/admin/theme/homepage")).json();

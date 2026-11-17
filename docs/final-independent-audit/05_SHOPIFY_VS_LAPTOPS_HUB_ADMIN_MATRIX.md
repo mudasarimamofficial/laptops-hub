@@ -1,9 +1,9 @@
 # 05 — Shopify vs Laptops HUB admin matrix
 
-**Date:** 2026-11-17  
-**Shopify surface:** `admin.shopify.com/store/laptopshub-2` (authenticated)  
-**LH surface:** `www.laptopshub.pk/admin` (owner session `laptopshubofficial@gmail.com`)  
-**Production code:** `585c8e9`
+**Date:** 2026-11-17 (reconciled)  
+**Shopify surface:** `admin.shopify.com/store/laptopshub-2` (authenticated; original URL redirected here — intended test store)  
+**LH surface:** `www.laptopshub.pk/admin` (owner session) · PR #14 Preview for DEF-016/017  
+**Production code:** `585c8e9` · **PR head:** see `19_FINAL_CERTIFICATION.md`
 
 Classifications: **Required parity** · **Strong UX parity** · **Optional** · **Shopify-only / N/A** · **Owner decision** · **External integration**
 
@@ -11,13 +11,13 @@ Classifications: **Required parity** · **Strong UX parity** · **Optional** · 
 |---|---|---|---|---|---|---|---|---|---|
 | Home / readiness | Home | Overview + COD readiness panel | Yes | Live gates (4 blocking) | Strong — truthful blockers | Shopify uses marketing cards; LH uses commerce gates | Keep LH model | — | — |
 | Global search | Ctrl K | Ctrl/⌘ K admin search | Yes | Products/orders/sections | Good | Shopify broader (customers, settings) | Extend search targets if gaps found | P2 | M |
-| Keyboard shortcuts | `?` map | Partial (search documented) | Partial | Search yes; full G/A map no | Weaker | Power users slower | Add help sheet of G-/A- style shortcuts | P2 | S |
+| Keyboard shortcuts | `?` map + G chords | `?` sheet + G→letter (role-filtered) | Yes (PR #14) | Help + Go-to; ignores typing/modals; `/` ≠ Shift+/ | Strong parity for COD admin | A-chords / every Settings subpage not cloned | Keep; do not add unavailable role targets | P2 | S |
 | Orders list | Orders | `/admin/orders` | Yes | Present | TBD deep test | COD states differ from paid | Verify filters/timeline | P1 | — |
 | Draft orders | Orders → Drafts | None | No | — | — | Draft invoices less critical for COD guest | Optional later | Optional | L |
 | Abandoned checkouts | Orders | N/A (COD gated) | N/A | — | — | Different model | Shopify-only | N/A | — |
 | Products list | Products | `/admin/products` | Yes | 233/226/6/1 shown on Overview | Strong IA | Counts match DB | Deep control test | P1 | — |
 | Collections | Products → Collections | `/admin/collections` | Yes | Present | TBD | — | Verify rules | P1 | — |
-| Inventory | Products → Inventory | `/admin/inventory` | Yes | Present | TBD | Tracked=2 variants | Verify ledger | P1 | — |
+| Inventory | Products → Inventory | `/admin/inventory` | Yes | Live desk + ledger | Prod bug: 2 tracked = soft-deleted QA | DEF-016 excludes deleted; expect 0 tracked / 232 untracked live | Deploy PR #14 then re-verify | P0 | S |
 | Purchase orders / Transfers | Products children | None | No | — | — | Wholesale ops | Shopify-only for now | N/A | — |
 | Gift cards | Products | None | No | — | — | Not COD catalog | Shopify-only | N/A | — |
 | Customers | Customers | `/admin/customers` | Yes | Present | TBD | Privacy-critical | Verify PII + export limits | P1 | — |
@@ -35,9 +35,22 @@ Classifications: **Required parity** · **Strong UX parity** · **Optional** · 
 | Reviews / testimonials | — | Reviews + testimonials | Yes | Empty public | Correct hide | Owner content | Content | Owner decision | — |
 | Sign out | Profile | Sidebar Sign out | Yes | Visible | Good | — | Verify POST works | P2 | S |
 
+## Evidence depth (honest)
+
+| Area | Shopify observation depth | LH comparison depth |
+|---|---|---|
+| Home / Products / Inventory / Orders / Customers nav | Authenticated page load + IA notes | Production smoke + DB counts |
+| Settings / Shipping / Staff / Notifications / Privacy / Policies | Settings→General loaded; sidebar lists Payments/Checkout/Shipping/Notifications/Privacy/Policies (read-only) | LH consolidated Settings PARTIAL — do not clone Shopify Payments |
+| Discounts / Markets / Gift cards / Draft orders | Confirmed Shopify-only — **out of COD scope** | Intentionally absent |
+| Checkout / Online Store deep editors | Read-only; no Shopify write tests without approval | Theme draft PARTIAL; publish gated |
+| Analytics accuracy | Not re-certified against Shopify reports | Must not invent revenue |
+
+Page load ≠ PASS for merchant efficiency. Remaining work is persistence / validation / error-recovery certification on LH, not cloning Shopify catalog.
+
 ## Summary
 
-- **IA parity:** Strong — LH Operations / Catalog / Customers / Online store / Insights / System mirrors Shopify job groups without cloning payment/market/gift-card modules.
-- **Highest remaining UX gaps:** exhaustive keyboard shortcut map; broader global search; optional discounts (owner decision).
-- **Highest operational gaps:** COD gates + policies + email (owner), not missing menu items.
+- **IA parity:** Strong — LH mirrors Shopify job groups without Payments/Markets/Gift cards.
+- **Shipped in PR #14:** `?` + G-chord shortcuts (role-aware); inventory soft-delete count fix.
+- **Highest remaining UX gaps:** broader search targets; Settings deep persistence; optional discounts (owner decision).
+- **Highest operational gaps:** COD gates + policies + email (owner).
 - **Do not** add Shopify Payments, Markets, Gift cards, or Abandoned-checkout paid recovery.

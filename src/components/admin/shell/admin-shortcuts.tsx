@@ -1,54 +1,51 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import type { StaffRole } from "@/lib/auth/staff";
+import { ADMIN_NAV, navVisibleForRole } from "./nav";
 
 const isTyping = (t: EventTarget | null) => {
   const el = t as HTMLElement | null;
   return !!el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
 };
 
-type ShortcutRow = { keys: string; action: string };
+/** True when another modal dialog (search, confirmations, etc.) owns the UI. */
+const otherModalOpen = () => {
+  if (typeof document === "undefined") return false;
+  return !!document.querySelector('[role="dialog"][aria-modal="true"]:not([data-testid="admin-shortcuts-dialog"])');
+};
 
-const SHORTCUTS: { group: string; rows: ShortcutRow[] }[] = [
-  {
-    group: "Search & help",
-    rows: [
-      { keys: "Ctrl K", action: "Open admin search" },
-      { keys: "/", action: "Open admin search" },
-      { keys: "?", action: "Show this shortcuts sheet" },
-      { keys: "Esc", action: "Close dialog or drawer" },
-    ],
-  },
-  {
-    group: "Go to (press G, then the letter)",
-    rows: [
-      { keys: "G H", action: "Overview" },
-      { keys: "G O", action: "Orders" },
-      { keys: "G P", action: "Products" },
-      { keys: "G I", action: "Inventory" },
-      { keys: "G C", action: "Customers" },
-      { keys: "G T", action: "Online store (theme)" },
-      { keys: "G S", action: "Settings" },
-    ],
-  },
+type GoTarget = { letter: string; keys: string; action: string; href: string };
+
+const GO_TARGETS: GoTarget[] = [
+  { letter: "h", keys: "G H", action: "Overview", href: "/admin" },
+  { letter: "o", keys: "G O", action: "Orders", href: "/admin/orders" },
+  { letter: "p", keys: "G P", action: "Products", href: "/admin/products" },
+  { letter: "i", keys: "G I", action: "Inventory", href: "/admin/inventory" },
+  { letter: "c", keys: "G C", action: "Customers", href: "/admin/customers" },
+  { letter: "t", keys: "G T", action: "Online store (theme)", href: "/admin/online-store" },
+  { letter: "s", keys: "G S", action: "Settings", href: "/admin/settings" },
 ];
 
-const GO_MAP: Record<string, string> = {
-  h: "/admin",
-  o: "/admin/orders",
-  p: "/admin/products",
-  i: "/admin/inventory",
-  c: "/admin/customers",
-  t: "/admin/online-store",
-  s: "/admin/settings",
-};
+function hrefAllowed(href: string, role: StaffRole | null): boolean {
+  if (href === "/admin") return true;
+  for (const section of ADMIN_NAV) {
+    for (const item of section.items) {
+      if (item.href === href) return navVisibleForRole(item, role);
+      for (const child of item.children || []) {
+        if (child.href === href) return navVisibleForRole(child, role) && navVisibleForRole(item, role);
+      }
+    }
+  }
+  return false;
+}
 
 /**
  * Shopify-parity merchant shortcuts: `?` opens help; `G` then a letter navigates.
- * Does not steal keys while typing in fields.
+ * Ignores keys while typing, while another modal is open, and destinations the role cannot open.
  */
-export function AdminShortcuts() {
+export function AdminShortcuts({ role }: { role: StaffRole | null }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const openRef = useRef(false);
@@ -57,6 +54,10 @@ export function AdminShortcuts() {
   const goTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const titleId = useId();
+  const goRef = useRef<GoTarget[]>([]);
+
+  const allowedGo = useMemo(() => GO_TARGETS.filter((t) => hrefAllowed(t.href, role)), [role]);
+  goRef.current = allowedGo;
 
   const show = useCallback(() => {
     returnFocus.current = document.activeElement as HTMLElement | null;
@@ -84,6 +85,7 @@ export function AdminShortcuts() {
       if (isTyping(e.target)) return;
 
       if (e.key === "?" || (e.key === "/" && e.shiftKey)) {
+        if (otherModalOpen() && !openRef.current) return;
         e.preventDefault();
         if (openRef.current) close();
         else show();
@@ -96,6 +98,11 @@ export function AdminShortcuts() {
           e.preventDefault();
           close();
         }
+        return;
+      }
+
+      if (otherModalOpen()) {
+        clearGo();
         return;
       }
 
@@ -119,11 +126,11 @@ export function AdminShortcuts() {
         return;
       }
 
-      const href = GO_MAP[letter];
+      const target = goRef.current.find((t) => t.letter === letter);
       clearGo();
-      if (href) {
+      if (target) {
         e.preventDefault();
-        router.push(href);
+        router.push(target.href);
       }
     };
 
@@ -137,6 +144,25 @@ export function AdminShortcuts() {
   useEffect(() => {
     if (open) closeBtnRef.current?.focus();
   }, [open]);
+
+  const sections = useMemo(
+    () => [
+      {
+        group: "Search & help",
+        rows: [
+          { keys: "Ctrl K", action: "Open admin search" },
+          { keys: "/", action: "Open admin search" },
+          { keys: "?", action: "Show this shortcuts sheet" },
+          { keys: "Esc", action: "Close dialog or drawer" },
+        ],
+      },
+      {
+        group: "Go to (press G, then the letter)",
+        rows: allowedGo.map((t) => ({ keys: t.keys, action: t.action })),
+      },
+    ],
+    [allowedGo],
+  );
 
   return (
     <>
@@ -181,26 +207,30 @@ export function AdminShortcuts() {
               </button>
             </div>
             <div className="max-h-[60vh] space-y-4 overflow-y-auto px-4 py-4">
-              {SHORTCUTS.map((section) => (
+              {sections.map((section) => (
                 <div key={section.group}>
                   <p className="mb-2 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.14em] text-[var(--adm-ink-2)]">
                     {section.group}
                   </p>
-                  <ul className="space-y-1.5">
-                    {section.rows.map((row) => (
-                      <li key={row.keys} className="flex items-baseline justify-between gap-4 text-sm">
-                        <span className="text-[var(--adm-ink)]">{row.action}</span>
-                        <kbd className="shrink-0 rounded border border-[var(--adm-border)] bg-[var(--adm-surface-2)] px-2 py-0.5 font-[family-name:var(--font-mono)] text-[11px] text-[var(--adm-ink)]">
-                          {row.keys}
-                        </kbd>
-                      </li>
-                    ))}
-                  </ul>
+                  {section.rows.length === 0 ? (
+                    <p className="text-sm text-[var(--adm-ink-2)]">No go-to shortcuts for this role.</p>
+                  ) : (
+                    <ul className="space-y-1.5">
+                      {section.rows.map((row) => (
+                        <li key={row.keys} className="flex items-baseline justify-between gap-4 text-sm">
+                          <span className="text-[var(--adm-ink)]">{row.action}</span>
+                          <kbd className="shrink-0 rounded border border-[var(--adm-border)] bg-[var(--adm-surface-2)] px-2 py-0.5 font-[family-name:var(--font-mono)] text-[11px] text-[var(--adm-ink)]">
+                            {row.keys}
+                          </kbd>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               ))}
             </div>
             <p className="border-t border-[var(--adm-border)] px-4 py-2 text-xs text-[var(--adm-ink-2)]">
-              Shortcuts are ignored while typing in a field. Esc closes this sheet.
+              Shortcuts are ignored while typing, and while another dialog is open. Esc closes this sheet.
             </p>
           </div>
         </div>

@@ -63,7 +63,16 @@ export function AdminSearch({ role }: { role: StaffRole | null }) {
         e.preventDefault();
         if (open) close();
         else show();
-      } else if (e.key === "/" && !open && !e.ctrlKey && !e.metaKey && !e.altKey && !isTyping(e.target)) {
+      } else if (
+        e.key === "/" &&
+        !e.shiftKey &&
+        !open &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        !e.altKey &&
+        !isTyping(e.target)
+      ) {
+        // Bare "/" opens search; Shift+/ is "?" for the shortcuts sheet.
         e.preventDefault();
         show();
       }

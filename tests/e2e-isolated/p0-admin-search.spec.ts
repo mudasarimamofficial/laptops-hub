@@ -143,7 +143,7 @@ test.describe.serial("P0: global admin search and shortcuts (isolated)", () => {
     await page.goto("/admin");
     await expect(page.getByTestId("admin-shortcuts-open")).toBeVisible();
 
-    await page.keyboard.press("Shift+/"); // "?"
+    await page.keyboard.press("?");
     await expect(page.getByTestId("admin-shortcuts-dialog")).toBeVisible();
     await expect(page.getByRole("heading", { name: "Keyboard shortcuts" })).toBeVisible();
     await page.keyboard.press("Escape");

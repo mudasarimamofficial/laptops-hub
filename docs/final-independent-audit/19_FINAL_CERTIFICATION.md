@@ -1,96 +1,85 @@
 # 19 — Final independent certification
 
-**Date:** 2026-11-17  
-**Auditor:** Independent forensic audit session  
-**Production:** `dpl_8YQ3HoEmaw5bqAv4rxBS1Z5eSz3N` @ `585c8e9` on `www.laptopshub.pk`
+**Date:** 2026-11-17 (reconciled)  
+**Auditor:** Primary release owner session (reconciles Cursor + Claude audit docs)  
+**Production (live):** `dpl_8YQ3HoEmaw5bqAv4rxBS1Z5eSz3N` @ `585c8e9` on `www.laptopshub.pk`  
+**PR #14 head (not production):** `c59b1f9` (+ pending follow-up commit) · Preview `dpl_FYurRSfAy5JD6nUMxJuuvUzExpx2`
 
-## Classification
+## Classification (evidence-honest)
 
-**ENGINEERING COMPLETE — LAUNCH BLOCKED ON OWNER INPUTS**
+**PRODUCTION VERIFIED — MERCHANT INPUTS PENDING**  
+**PR #14 ENGINEERING FIXES AWAITING MERGE** (DEF-016 inventory counts · DEF-017 shortcuts)
 
-The platform's engineering is sound, secure, and functional. Production is live-serving a catalog storefront with correct commerce gates. Launch is blocked on owner-side decisions and content, not engineering defects.
+Do **not** read this as “engineering completely finished” or “ready to enable COD.”  
+Live commerce remains correctly gated. Several admin workflows are source-verified / smoke-checked rather than full persistence-certified in production.
 
-## Certification matrix
+## What was independently re-verified this reconciliation
 
-| Dimension | Grade | Evidence |
+| Fact | Result |
+|---|---|
+| Production SHA / deploy | `585c8e9` / `dpl_8YQ3HoEmaw5bqAv4rxBS1Z5eSz3N` READY |
+| Function region | `sin1` |
+| Next.js | 16.4.5 |
+| Supabase migrations | **29 / 29 applied** (local = remote). **Do not reapply 15–29.** |
+| Soft-deleted QA product | 1 archived + soft-deleted; 2 tracked variants (preserved) |
+| Live COD API | 403 `checkout_disabled` |
+| CRM `app.laptopshub.pk` | HTTP 200 · DNS `45.130.228.253` · untouched |
+| PR #14 linear history | `585c8e9` → `d29cc90` → `c59b1f9` · MERGEABLE |
+
+## Certification matrix (graded by evidence type)
+
+| Dimension | Grade | Evidence type |
 |---|---|---|
-| Project identity | PASS | Vercel project, GitHub repo, Supabase ref all verified and aligned |
-| Infrastructure | PASS | Node 24.x, sin1 region, SSO-protected previews, correct domain routing |
-| Production deployment | PASS | READY, 10/10 recent deploys healthy, rollback available |
-| Catalog integrity | PASS | 226 public products, 6 drafts, 964 media, 16 collections |
-| Commerce gates | PASS | COD 403, checkout disabled, theme publish gated — all by design |
-| Authentication | PASS | Admin requires login, POST-only sign-out, no public registration |
-| API security | PASS | Prior: 193/193 direct-access, 126/126 role HTTP, 24/24 auth matrix, 9/9 P0 probe |
-| Test suites | PASS (local) | 25/25 suites rc=0 (from 2026-11-16 closeout) |
-| Storefront UX | PASS | Homepage, PDP, cart, compare, inquiry form all functional |
-| SEO | PASS | Sitemap, robots.txt, page titles, noindex on drafts |
-| Accessibility | PASS (lab) | Lighthouse 100/100 on home and PDP |
-| Edge caching | PASS | Vercel cache HIT, ISR configured, immutable chunks |
-| CRM isolation | PASS | `app.laptopshub.pk` untouched, resolves independently |
+| Project identity | PASS | MCP + CLI + HTTP |
+| Infrastructure (Vercel/domains/region) | PASS | MCP + live probes |
+| Production catalog serving | PASS | Live HTTP + DB counts |
+| Commerce gates (COD / theme) | PASS (gated) | Live API 403 + admin readiness |
+| Database migration ledger | PASS | `supabase migration list --linked` 29/29 |
+| Authentication (admin requires login) | PASS | Live browser + prior matrices |
+| Isolated COD / variant journey | PASS | This audit: `p0-variant-order-journey` 9/9 |
+| Inventory soft-delete count fix | PASS (isolated + code) | DEF-016; prod still shows 2 tracked until merge; DB tracked_live=0 |
+| Admin keyboard shortcuts | PASS (isolated) | `p0-admin-search` 5/5; `/` ignores Shift+?; role-filtered G targets |
+| Shopify benchmark | PARTIAL | Store `laptopshub-2` confirmed; Home + `?` shortcut map verified; Settings deep pages not persistence-tested |
+| Merchant admin control matrix | PARTIAL | Reels/Reviews empty-state honesty verified live; many depts still smoke-only |
+| Focused isolated suites (this SHA) | PASS | search/shortcuts 5/5 · inventory/collections 4/4 · variant COD journey 9/9 |
+| Security headers on production | OPEN (P2) | Missing CSP / frame options — evaluate carefully |
+| Production real COD order | BLOCKED | Owner gates |
+| Transactional email | BLOCKED | Env vars unset |
+| Published reels / store testimonials | N/A content | 0 published — honest empty state |
 
-## Blockers for production launch
+## Corrected blockers (owner / ops)
 
-| # | Blocker | Owner action required |
+| # | Blocker | Notes |
 |---|---|---|
-| 1 | Content pages (about, contact, privacy, terms, warranty) return 404 | Write and publish content; legal review for policies |
-| 2 | Transactional email not configured (Resend API key, sender/notify addresses) | Configure Resend, set Vercel env vars |
-| 3 | COD checkout disabled | Configure shipping zones/fees, review policies, then enable |
-| 4 | Media rights: 0/232 products cleared | Clear OEM image rights |
-| 5 | No staging environment | Create staging Supabase + Vercel custom environment |
-| 6 | 14 pending migrations on `feat/merchant-operating-system` (including security migration 28) | Review, approve, and merge branch; apply migrations |
+| 1 | Policy / company content unpublished | Write + legal review; do not invent |
+| 2 | Transactional email unset | Resend + `STORE_*` / `CRON_SECRET` |
+| 3 | COD disabled | Intentional until shipping/policies approved |
+| 4 | Media rights uncleared | 964 remote refs |
+| 5 | GitHub `main` unprotected | Owner enables branch protection |
+| 6 | ~~14 pending migrations / apply 15–28~~ | **INVALID — already applied (29/29).** Do not replay. |
 
-## Improvements recommended (non-blocking)
+Optional staging remains a process recommendation, not a migration replay.
 
-| # | Item | Priority |
-|---|---|---|
-| 1 | Add HTTP security headers (CSP, X-Frame-Options, etc.) | P2 |
-| 2 | Remove `X-Powered-By` header | P3 |
-| 3 | Enable GitHub branch protection on `main` | P2 |
-| 4 | Enable Supabase leaked-password protection | P2 |
-| 5 | Enable Vercel Analytics / Speed Insights | P3 |
-| 6 | Optimize hero images (~740KB savings) | P3 |
-| 7 | Configure Vercel WAF rules | P3 |
+## Superseded false claims (do not follow)
 
-## Deliverable documents
+- “14 pending migrations on `feat/merchant-operating-system`” — stale closeout language; PR #10–#13 already merged migrations into production.
+- “Apply migrations 15–28 / security migration 28 not on production” — **false** as of linked ledger 2026-11-17.
+- Blanket “ENGINEERING COMPLETE” without distinguishing Preview vs production vs owner gates.
 
-| # | Document | Status |
-|---|---|---|
-| 00 | Project identity and baseline | Complete |
-| 01 | Vercel infrastructure audit | Complete |
-| 02 | Supabase security/data audit | Complete (partial — MCP access denied) |
-| 03 | GitHub/codebase forensic audit | Complete |
-| 04 | Shopify admin forensic audit | Complete |
-| 05 | Shopify vs Laptops HUB admin matrix | Complete |
-| 06 | Merchant admin interaction matrix | Complete |
-| 07 | Storefront route and element audit | Complete |
-| 08 | Video/reels acceptance | Complete |
-| 09 | Reviews/testimonials acceptance | Complete |
-| 10 | Theme editor/map acceptance | Complete |
-| 11 | Customer order E2E report | Complete |
-| 12 | Security hardening report | Complete |
-| 13 | Performance baseline | Complete |
-| 14 | Accessibility baseline | Complete |
-| 15 | Master defect register | Complete (26 entries) |
-| 16 | Regression test summary | Complete |
-| 17 | Engineering remediation log | Complete |
-| 18 | Deployment verification | Complete |
-| 19 | Final certification (this document) | Complete |
-| 20 | Owner decisions and go-live gates | Complete |
-
-## Safety contract compliance
+## Safety contract
 
 | Constraint | Compliant |
 |---|---|
-| No production DB writes | Yes |
-| No secrets printed or logged | Yes |
-| No CRM modification | Yes |
+| No production DB writes this reconciliation | Yes |
+| No secrets logged | Yes |
+| No CRM / DNS changes | Yes |
 | No COD bypass | Yes |
-| No fabricated data | Yes |
-| No force-push or destructive git | Yes |
-| No new repository or Supabase project | Yes |
+| No fabricated reviews/videos | Yes |
+| No force-push | Yes |
 
-## Signed
+## Next release action
 
-This certification reflects the state of the platform as observed on 2026-11-17 through Vercel MCP API, live HTTP probes, codebase analysis, and prior engineering evidence. The Supabase production database was audited via linked CLI in a prior session; MCP access was denied in this session.
-
-The platform is ready for owner decisions and content. Engineering can proceed to launch once the 6 blockers above are cleared.
+1. Finish PR #14 acceptance on Preview `dpl_FYurRSf…` / final SHA.  
+2. Merge only after focused + broader suites pass.  
+3. Deploy code **without** enabling COD or `THEME_PUBLISHED_ENABLED`.  
+4. Re-verify production inventory counts + shortcuts after deploy.

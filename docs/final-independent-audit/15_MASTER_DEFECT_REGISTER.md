@@ -26,7 +26,8 @@ Status: **OPEN** · **FIXED** · **VERIFIED** · **BLOCKED** (owner/external) ·
 | DEF-014 | Hygiene | P3 | OPEN | Web Analytics / Speed Insights Plus not enabled | Vercel overview | Optional; no paid upgrade without approval |
 | DEF-015 | Local vs prod | P2 | OPEN | Local `feat/merchant-operating-system` may hold unverified closeout commits not on `main` | Branch comparison in progress | Diff before any cherry-pick; never force-push |
 | DEF-016 | Inventory | P1 | FIXED (pending deploy) | Desk header counted soft-deleted tracked QA variants (2) while list excluded them → empty “Nothing matches” | Prod SQL: both tracked SKUs on soft-deleted `qa-test-do-not-sell-20261117`; code used `.is(products.deleted_at,null)` only on list | Counts now use same live-product filter; checkout readiness purchasable/tracked counts aligned |
-| DEF-017 | Admin UX | P2 | FIXED (pending deploy) | No keyboard shortcut help / G-key navigation vs Shopify | Shopify Settings + Home show Ctrl K + `?` map | Added `AdminShortcuts` (`?` sheet + G H/O/P/I/C/T/S) + isolated e2e |
+| DEF-017 | Admin UX | P2 | FIXED (pending deploy) | No keyboard shortcut help / G-key navigation vs Shopify | Shopify Settings + Home show Ctrl K + `?` map | Added `AdminShortcuts` (`?` sheet + role-filtered G-nav + modal guard) + isolated e2e |
+| DEF-026 | Docs | P1 (process) | FIXED | Audit docs claimed migrations 15–28 pending / “ENGINEERING COMPLETE” | Linked ledger 29/29; PR #10–13 already merged | Corrected `19`/`21`/`18`/`17`; classification → PRODUCTION VERIFIED — MERCHANT INPUTS PENDING |
 
 | DEF-018 | Security | P2 | OPEN | Missing `Content-Security-Policy` header | Live HEAD probe 2026-11-17 | Add via `next.config.js` headers or middleware |
 | DEF-019 | Security | P3 | OPEN | Missing `X-Content-Type-Options: nosniff` | Live HEAD probe | Add to security headers config |

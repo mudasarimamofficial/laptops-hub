@@ -1,8 +1,8 @@
 # 18 — Deployment verification
 
-**Date:** 2026-11-17  
+**Date:** 2026-11-17 (reconciled)  
 **Production deployment:** `dpl_8YQ3HoEmaw5bqAv4rxBS1Z5eSz3N`  
-**Commit:** `585c8e9` (Merge PR #13: theme editor overflow at 1024-1279px; release record)  
+**Commit:** `585c8e9` (Merge PR #13)  
 **Branch:** `main`
 
 ## Production deployment state
@@ -13,42 +13,45 @@
 | Target | Production |
 | Rollback candidate | Yes (`dpl_2gJc3wmKpE5hxJrQywnCrLRBrcay` / PR #12 also available) |
 | Node.js | 24.x |
-| Framework | Next.js |
+| Framework | Next.js 16.4.5 |
 | Region | `sin1` (Singapore) |
+| DB migrations | **29/29 applied** — unchanged by this PR |
 
 ## Domain resolution
 
 | Domain | Status | Redirect |
 |---|---|---|
-| `www.laptopshub.pk` | Verified | Primary (no redirect) |
+| `www.laptopshub.pk` | Verified | Primary |
 | `laptopshub.pk` | Verified | 308 → `www.laptopshub.pk` |
 | `laptopshubpk.vercel.app` | Verified | 308 → `www.laptopshub.pk` |
+| `app.laptopshub.pk` | CRM (Hostinger) | Do not modify |
 
-## Live verification (2026-11-17)
+## Live verification (production)
 
-| Check | HTTP | Console errors | Assessment |
-|---|---|---|---|
-| Homepage | 200 | None | PASS |
-| Cart (empty) | 200 | None | PASS |
-| PDP (Dell 7420) | 200 | None | PASS |
-| Admin login | 200 (via 302) | None | PASS |
-| COD API | 403 | — | PASS (gate working) |
-| Sitemap | 200 | — | PASS |
-| Robots.txt | 200 | — | PASS |
+| Check | HTTP | Assessment |
+|---|---|---|
+| Homepage | 200 | PASS |
+| Cart | 200 | PASS |
+| Admin login / session | 200 | PASS (owner session used in audit) |
+| COD API | 403 | PASS (gate) |
+| Sitemap / robots | 200 | PASS |
 
-## Recent deployment history (all 10 READY)
+## PR #14 Preview (not production)
 
-No ERROR or CANCELED deployments in recent history. Production deployments correspond to merged PRs only (#11, #12, #13). Preview deployments build correctly from feature branches.
+| Item | Value |
+|---|---|
+| Branch | `audit/final-independent-certification` |
+| Commits | `d29cc90` (code) → `c59b1f9` (docs) |
+| Latest Preview | `dpl_FYurRSfAy5JD6nUMxJuuvUzExpx2` READY |
+| Contains | DEF-016 inventory counts · DEF-017 shortcuts · audit docs |
+| Must not | Enable COD · set `THEME_PUBLISHED_ENABLED` · reapply migrations |
 
-## What is NOT deployed
+## Corrected note on merchant-operating-system
 
-The `audit/final-independent-certification` branch (`d29cc90`) builds successfully as a preview deployment (`dpl_HpnVn5P…`, READY) but is NOT promoted to production. It contains:
-- Inventory count fix (DEF-016)
-- Shortcut help (DEF-017)
-- All audit documentation
-
-The `feat/merchant-operating-system` branch contains significant engineering work (variants, security migration 28, admin features, test suites) that is also NOT on production.
+PR #10–#13 already merged merchant OS / migrations / theme work into `main`.  
+Do **not** treat `feat/merchant-operating-system` as an undeployed migration source for production. Remaining PR #14 delta is inventory/shortcuts + audit documentation.
 
 ## Verdict
 
-**PASS** — production deployment is healthy, all domains resolve correctly, all critical routes respond as expected, COD gate is enforced.
+**PASS** — production healthy and gated.  
+**PR #14** — Preview READY; production promotion pending acceptance gates.

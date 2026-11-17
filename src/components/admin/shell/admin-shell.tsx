@@ -167,7 +167,7 @@ export function AdminShell({ staff, children }: Props) {
             </svg>
           </button>
           <AdminSearch role={role} />
-          <AdminShortcuts />
+          <AdminShortcuts role={role} />
           <p className="hidden truncate text-sm text-[var(--adm-ink-2)] md:block">
             Merchant console · <span className="text-[var(--adm-ink)]">PKR</span> · COD only
           </p>

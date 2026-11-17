@@ -1,0 +1,175 @@
+{
+  "A": "https://www.laptopshub.pk",
+  "B": "https://<preview>",
+  "at": "2026-11-17T05:43:44.756Z",
+  "results": [
+    {
+      "case": "desktop",
+      "A": {
+        "status": 200,
+        "file": "docs/evidence/visual-regression/desktop-A.png",
+        "cls": 0,
+        "overflow": false,
+        "height": 10854,
+        "reviews": false,
+        "map": true,
+        "mapPosition": "sticky",
+        "mapAfterFooter": true,
+        "sections": "section#top section#story section#chromebooks section#brands section section section section section section section#ask",
+        "focusOk": true
+      },
+      "B": {
+        "status": 200,
+        "file": "docs/evidence/visual-regression/desktop-B.png",
+        "cls": 0,
+        "overflow": false,
+        "height": 10854,
+        "reviews": false,
+        "map": true,
+        "mapPosition": "sticky",
+        "mapAfterFooter": true,
+        "sections": "section#top section#story section#chromebooks section#brands section section section section section section section#ask",
+        "focusOk": true
+      },
+      "diff": {
+        "sameSize": true,
+        "sizeA": [
+          1440,
+          10854
+        ],
+        "sizeB": [
+          1440,
+          10854
+        ],
+        "diffPixels": 0,
+        "diffRatio": 0
+      }
+    },
+    {
+      "case": "desktop-reduced",
+      "A": {
+        "status": 200,
+        "file": "docs/evidence/visual-regression/desktop-reduced-A.png",
+        "cls": 0,
+        "overflow": false,
+        "height": 9400,
+        "reviews": false,
+        "map": true,
+        "mapPosition": "relative",
+        "mapAfterFooter": true,
+        "sections": "section#top section#story section#chromebooks section#brands section section section section section section section#ask",
+        "focusOk": true
+      },
+      "B": {
+        "status": 200,
+        "file": "docs/evidence/visual-regression/desktop-reduced-B.png",
+        "cls": 0,
+        "overflow": false,
+        "height": 9400,
+        "reviews": false,
+        "map": true,
+        "mapPosition": "relative",
+        "mapAfterFooter": true,
+        "sections": "section#top section#story section#chromebooks section#brands section section section section section section section#ask",
+        "focusOk": true
+      },
+      "diff": {
+        "sameSize": true,
+        "sizeA": [
+          1440,
+          9400
+        ],
+        "sizeB": [
+          1440,
+          9400
+        ],
+        "diffPixels": 0,
+        "diffRatio": 0
+      }
+    },
+    {
+      "case": "phone",
+      "A": {
+        "status": 200,
+        "file": "docs/evidence/visual-regression/phone-A.png",
+        "cls": 0,
+        "overflow": false,
+        "height": 17391,
+        "reviews": false,
+        "map": true,
+        "mapPosition": "sticky",
+        "mapAfterFooter": true,
+        "sections": "section#top section#story section#chromebooks section#brands section section section section section section section#ask",
+        "focusOk": true
+      },
+      "B": {
+        "status": 200,
+        "file": "docs/evidence/visual-regression/phone-B.png",
+        "cls": 0,
+        "overflow": false,
+        "height": 17391,
+        "reviews": false,
+        "map": true,
+        "mapPosition": "sticky",
+        "mapAfterFooter": true,
+        "sections": "section#top section#story section#chromebooks section#brands section section section section section section section#ask",
+        "focusOk": true
+      },
+      "diff": {
+        "sameSize": true,
+        "sizeA": [
+          390,
+          17391
+        ],
+        "sizeB": [
+          390,
+          17391
+        ],
+        "diffPixels": 23,
+        "diffRatio": 0.000003
+      }
+    },
+    {
+      "case": "phone-reduced",
+      "A": {
+        "status": 200,
+        "file": "docs/evidence/visual-regression/phone-reduced-A.png",
+        "cls": 0,
+        "overflow": false,
+        "height": 16447,
+        "reviews": false,
+        "map": true,
+        "mapPosition": "relative",
+        "mapAfterFooter": true,
+        "sections": "section#top section#story section#chromebooks section#brands section section section section section section section#ask",
+        "focusOk": true
+      },
+      "B": {
+        "status": 200,
+        "file": "docs/evidence/visual-regression/phone-reduced-B.png",
+        "cls": 0,
+        "overflow": false,
+        "height": 16447,
+        "reviews": false,
+        "map": true,
+        "mapPosition": "relative",
+        "mapAfterFooter": true,
+        "sections": "section#top section#story section#chromebooks section#brands section section section section section section section#ask",
+        "focusOk": true
+      },
+      "diff": {
+        "sameSize": true,
+        "sizeA": [
+          390,
+          16447
+        ],
+        "sizeB": [
+          390,
+          16447
+        ],
+        "diffPixels": 0,
+        "diffRatio": 0
+      }
+    }
+  ]
+}

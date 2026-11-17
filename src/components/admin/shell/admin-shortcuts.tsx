@@ -53,11 +53,15 @@ export function AdminShortcuts({ role }: { role: StaffRole | null }) {
   const awaitingGo = useRef(false);
   const goTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const goRef = useRef<GoTarget[]>([]);
 
   const allowedGo = useMemo(() => GO_TARGETS.filter((t) => hrefAllowed(t.href, role)), [role]);
-  goRef.current = allowedGo;
+
+  useEffect(() => {
+    goRef.current = allowedGo;
+  }, [allowedGo]);
 
   const show = useCallback(() => {
     returnFocus.current = document.activeElement as HTMLElement | null;
@@ -141,8 +145,40 @@ export function AdminShortcuts({ role }: { role: StaffRole | null }) {
     };
   }, [show, close, router]);
 
+  // Focus the Close control on open and keep Tab/Shift+Tab inside the dialog.
   useEffect(() => {
-    if (open) closeBtnRef.current?.focus();
+    if (!open) return;
+    closeBtnRef.current?.focus();
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    const focusables = () =>
+      Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+
+    const onTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const list = focusables();
+      if (!list.length) {
+        e.preventDefault();
+        return;
+      }
+      const first = list[0]!;
+      const last = list[list.length - 1]!;
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onTab, true);
+    return () => document.removeEventListener("keydown", onTab, true);
   }, [open]);
 
   const sections = useMemo(
@@ -186,6 +222,7 @@ export function AdminShortcuts({ role }: { role: StaffRole | null }) {
           onMouseDown={(e) => e.target === e.currentTarget && close()}
         >
           <div
+            ref={panelRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}

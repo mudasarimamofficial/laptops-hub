@@ -163,10 +163,11 @@ gates.
 4. Sign out once and back in yourself to confirm logout on production. The agent won't, because it can't sign back in.
 5. Supply genuine **reviews with consent**, the **email provider** and recipients, and the **COD inputs** in §5.
 
-## 7. Theme editor: findings and fixes (branch `feat/merchant-operating-system`, not yet deployed)
+## 7. Theme editor: findings and fixes (deployed 2026-11-17 in `7abb680`, `dpl_2gJc3wmKpE5hxJrQywnCrLRBrcay`)
 
-Found while preparing the theme for the owner. Fixed and tested on the isolated stack. **Production runs the previous
-code until the owner approves a release.**
+Found while preparing the theme for the owner. Fixed and tested on the isolated stack. Released with the Next 16.4.5
+security patch (PR #12). The live QA record is in `FINAL_CLIENT_HANDOVER.md`. One further admin layout fix (editor
+overflow at 1024–1279 px) is in PR #13 and awaits owner approval.
 
 | # | Finding | Fix | Evidence |
 |---|---|---|---|

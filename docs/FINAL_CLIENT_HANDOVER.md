@@ -1,18 +1,57 @@
-# Client handover — release 2026-11-16, theme editor update 2026-11-17
+# Client handover — release 2026-11-16, security patch and theme editor release 2026-11-17
 
 Release classification: see the end of `FINAL_E2E_REPORT.md`. Deployed to production 2026-11-16 (`772276b`), with an
 accessibility fix on 2026-11-17 (`7e406df`, `dpl_2XLaqxjUnsWb8FGrT6TgmTaUJ8KQ`). Database at 29/29 migrations.
 Post-deploy acceptance: `POST_DEPLOY_ACCEPTANCE.md`.
 
-**Theme editor update** (full homepage preview, real section ordering, a cache fix for published themes):
-- Built and tested on the feature branch, on the isolated stack (`POST_DEPLOY_ACCEPTANCE.md` §7).
-- **Not deployed.** It needs no database change. It changes nothing for customers until published themes are switched on.
+## Security-patch release, 2026-11-17 (deployed)
+
+### What was released
+
+| Item | Value |
+|---|---|
+| PR | mudasarimamofficial/laptops-hub#12, merged to `main` as **`7abb680`** |
+| Production deployment | **`dpl_2gJc3wmKpE5hxJrQywnCrLRBrcay`** (READY, region `sin1`, aliases www.laptopshub.pk and laptopshub.pk) |
+| Next.js | **16.4.5** (Vercel build log). `eslint-config-next` 16.4.5. Lockfile committed. |
+| Rollback target | `dpl_2XLaqxjUnsWb8FGrT6TgmTaUJ8KQ` (`7e406df`), via Vercel instant rollback |
+| Database | 29/29 migrations, none pending, none applied by this release |
+| Unchanged | `THEME_PUBLISHED_ENABLED` unset everywhere (the homepage is still the built-in V5 default); public COD setting; Hostinger CRM at `app.laptopshub.pk` (200, Hostinger IP); owner session |
+
+### Checks before release
+
+| Check | Result |
+|---|---|
+| Audit | Production dependencies: **0**. Dev-only: **7 moderate, not resolved** (`minimatch` via typescript-eslint, lint tooling only). See `SECURITY_PATCH_NEXT_16_4_5.md`. |
+| Release suite (`docs/evidence/final-run/summary.json`) | Verdict **PASS**, 0 failed stages. Isolated E2E 114, legacy 27, cross-browser 115. Security matrices, COD, inventory, theme publish/rollback, tsc, lint (0 errors), build rc 0. |
+| Test isolation | Crash-safe baselines added. A SIGKILL in the middle of a run was recovered to the exact baseline. See `TEST_ISOLATION.md`. |
+| Preview `dpl_8vsnW2ev…` | Next 16.4.5. Anonymous `/preview/homepage` returns 404 with `noindex, nofollow` and `private, no-store`. |
+| Visual comparison, production vs Preview (`docs/evidence/visual-regression/`) | Desktop, desktop with reduced motion, and phone with reduced motion: **0 px** difference. Phone: 23 px (0.0003%), all inside the hero photo (resampling). Section order, CLS 0, no overflow, map sticky/plain and after the footer, and map focus all identical. |
+
+### Live QA after deploy (read-only; no orders, settings or testimonials created)
+
+**Storefront**
+- Homepage: no console errors, no overflow at desktop or 375 px, map present. Reviews hidden because no testimonials are published (correct).
+- Product page, `/collections/dell` (24 products), search (24 results), cart, empty checkout, track-order and compare all respond 200.
+- `/products` and `/guides` index pages return 404, the same as the previous deployment (no index pages exist). Not a regression.
+
+**Admin** (owner session)
+- The theme editor loads 13 sections in V5 order and shows the "published themes are off" explanation.
+- The embedded draft preview renders the full homepage with the map.
+- Every admin route prefetch returns 200. Warm responses take about 0.4–0.8 s.
+
+**Defect found** (it predates this release): at 1024–1279 px windows the theme editor's settings panel overflowed the window by 117 px.
+- Fixed in mudasarimamofficial/laptops-hub#13, with a regression test at 1024, 1280 and 1440 px.
+- Admin only. **Production needs owner approval for the #13 deploy.**
+
+**Not verified live:** checkout payment options with an item in the cart. The browser pane could not take input. The COD flags were not changed and checkout code was not touched by this release.
+
+This is **not** live-commerce certification. COD go-live, stock accuracy, reviews, legal text and email delivery remain merchant requirements (below).
 
 ## Decisions waiting for the owner (approval gates)
 
 | # | Decision | What happens | Reversible |
 |---|---|---|---|
-| A | Release the theme editor update to production (merge the PR to `main`) | The admin gets the full preview and ordering. The homepage stays identical (HTML verified), because `THEME_PUBLISHED_ENABLED` stays unset | Yes: Vercel instant rollback to `dpl_2XLaqxjUnsWb8FGrT6TgmTaUJ8KQ` |
+| A | ~~Release the theme editor update~~ **Done 2026-11-17** (`7abb680`, `dpl_2gJc3wmK…`) | The admin has the full preview and ordering. The homepage is unchanged (`THEME_PUBLISHED_ENABLED` unset) | Yes: Vercel instant rollback to `dpl_2XLaqxjUnsWb8FGrT6TgmTaUJ8KQ` |
 | B | Switch published themes on: set `THEME_PUBLISHED_ENABLED=1` in Vercel Production and redeploy | Nothing changes until a version is published (no publication exists today). After that, the homepage shows the published version | Yes: remove the variable and redeploy, or restore an earlier version in the editor |
 | C | First publish from the editor | Customers see that layout within about a minute. Publish only after reviewing it in the full preview | Yes: "Restore this version" in Published history |
 

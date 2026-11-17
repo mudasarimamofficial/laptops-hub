@@ -308,7 +308,14 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     await page.goto("/admin/reviews");
     const row = page.getByTestId("review-row").filter({ hasText: REVIEWER });
     await row.getByRole("button", { name: "Approve" }).click();
-    await expect(row.getByRole("button", { name: "Approve" })).toHaveAttribute("aria-pressed", "true");
+    // Approving refreshes the Pending queue, so the row leaves it (how fast depends on the router); check the stored
+    // status, that it left the queue, and that the Approved tab shows it as approved.
+    await expect
+      .poll(async () => (await sb.from("product_reviews").select("status").eq("author_name", REVIEWER).single()).data?.status)
+      .toBe("approved");
+    await expect(row).toHaveCount(0);
+    await page.goto("/admin/reviews?status=approved");
+    await expect(page.getByTestId("review-row").filter({ hasText: REVIEWER }).getByRole("button", { name: "Approve" })).toHaveAttribute("aria-pressed", "true");
     await page.goto(`/products/${HANDLE}`);
     await expect(page.getByTestId("pdp-reviews").getByTestId("review-summary")).toContainText("5.0 out of 5 · 1 review");
     const { data: rv } = await sb.from("product_reviews").select("status, rating").eq("author_name", REVIEWER).single();

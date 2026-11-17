@@ -28,6 +28,16 @@ Status: **OPEN** · **FIXED** · **VERIFIED** · **BLOCKED** (owner/external) ·
 | DEF-016 | Inventory | P1 | FIXED (pending deploy) | Desk header counted soft-deleted tracked QA variants (2) while list excluded them → empty “Nothing matches” | Prod SQL: both tracked SKUs on soft-deleted `qa-test-do-not-sell-20261117`; code used `.is(products.deleted_at,null)` only on list | Counts now use same live-product filter; checkout readiness purchasable/tracked counts aligned |
 | DEF-017 | Admin UX | P2 | FIXED (pending deploy) | No keyboard shortcut help / G-key navigation vs Shopify | Shopify Settings + Home show Ctrl K + `?` map | Added `AdminShortcuts` (`?` sheet + G H/O/P/I/C/T/S) + isolated e2e |
 
+| DEF-018 | Security | P2 | OPEN | Missing `Content-Security-Policy` header | Live HEAD probe 2026-11-17 | Add via `next.config.js` headers or middleware |
+| DEF-019 | Security | P3 | OPEN | Missing `X-Content-Type-Options: nosniff` | Live HEAD probe | Add to security headers config |
+| DEF-020 | Security | P3 | OPEN | Missing `X-Frame-Options: DENY` | Live HEAD probe | Add to security headers config |
+| DEF-021 | Security | P3 | OPEN | Missing `Referrer-Policy` header | Live HEAD probe | Add `strict-origin-when-cross-origin` |
+| DEF-022 | Security | P3 | OPEN | Missing `Permissions-Policy` header | Live HEAD probe | Add restrictive policy |
+| DEF-023 | Security | P3 | OPEN | `X-Powered-By: Next.js` exposes technology stack | Live HEAD probe | Set `poweredByHeader: false` in `next.config.js` |
+| DEF-024 | Ops | P2 | OPEN | No staging/custom Vercel environment exists | MCP `list_project_custom_environments` → 0 | Owner creates staging Supabase + Vercel env |
+| DEF-025 | Content | P1 | BLOCKED | 5 content pages return 404: about, contact, privacy, terms, warranty | Live HTTP probe 2026-11-17 | Owner content + legal review required |
+| DEF-026 | Supabase MCP | — | BLOCKED | Supabase MCP permission denied — cannot audit remotely | MCP error `-32600` | Owner authorize via `/mcp` |
+
 ## Live smoke (this session, production)
 
 | Check | Result |

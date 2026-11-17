@@ -21,12 +21,17 @@ export async function loadCheckoutReadiness(): Promise<Readiness> {
     const [setting, zoneRows, purchasable, tracked, staff, vis] = await Promise.all([
       supabase.from("store_settings").select("value").eq("key", "cod_checkout").maybeSingle(),
       supabase.from("shipping_zones").select("name, is_active, provinces"),
-      supabase.from("product_variants").select("id", { count: "exact", head: true }).eq("purchasable", true),
       supabase
         .from("product_variants")
-        .select("id", { count: "exact", head: true })
+        .select("id, products!inner(deleted_at)", { count: "exact", head: true })
         .eq("purchasable", true)
-        .eq("inventory_mode", "tracked"),
+        .is("products.deleted_at", null),
+      supabase
+        .from("product_variants")
+        .select("id, products!inner(deleted_at)", { count: "exact", head: true })
+        .eq("purchasable", true)
+        .eq("inventory_mode", "tracked")
+        .is("products.deleted_at", null),
       supabase
         .from("admin_memberships")
         .select("user_id", { count: "exact", head: true })

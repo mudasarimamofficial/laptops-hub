@@ -17,7 +17,7 @@ const sb = createClient(SB_URL, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: 
 const TAG = Date.now().toString(36);
 const DELL = fx.products[0].handle as string;
 const LENOVO = fx.products[1].handle as string;
-const created: { collections: string[]; product?: string } = { collections: [] };
+const created: { collections: string[]; product?: string; ghostProduct?: string } = { collections: [] };
 
 async function signIn(page: Page, role: "owner" | "manager" | "editor") {
   await page.goto("/admin/login");
@@ -55,6 +55,7 @@ test.describe.serial("P0: collections, inventory desk and analytics (isolated)",
   test.afterAll(async () => {
     for (const slug of created.collections) await sb.from("collections").delete().eq("slug", slug);
     if (created.product) await sb.from("products").update({ status: "archived" }).eq("id", created.product);
+    if (created.ghostProduct) await sb.from("products").delete().eq("id", created.ghostProduct);
   });
 
   test("manual collection: search, add, storefront shows exactly that product", async ({ page }) => {
@@ -83,7 +84,36 @@ test.describe.serial("P0: collections, inventory desk and analytics (isolated)",
     const v = await sb.from("product_variants").insert({ product_id: created.product, title: "Default", sku, price_paisa: 5_000_000, inventory_mode: "tracked", quantity_on_hand: 3 }).select("id").single();
     expect(v.error).toBeNull();
 
+    // Soft-deleted tracked variants must not inflate the desk summary or empty-state copy.
+    const ghost = await sb
+      .from("products")
+      .insert({
+        handle: `qa-inv-ghost-${TAG}`,
+        title: `QA Ghost Inventory ${TAG}`,
+        status: "archived",
+        category: "Laptop",
+        deleted_at: new Date().toISOString(),
+      })
+      .select("id")
+      .single();
+    expect(ghost.error).toBeNull();
+    created.ghostProduct = ghost.data!.id;
+    await sb.from("product_variants").insert({
+      product_id: created.ghostProduct,
+      title: "Default",
+      sku: `QA-GHOST-${TAG}`,
+      price_paisa: 1_000_000,
+      inventory_mode: "tracked",
+      quantity_on_hand: 1,
+    });
+
     await signIn(page, "manager");
+    await page.goto("/admin/inventory?filter=all");
+    await expect(page.getByRole("heading", { name: "Inventory" })).toBeVisible();
+    await expect(page.locator("main")).toContainText(/[1-9]\d* variants track stock/);
+    await expect(page.getByText("Nothing matches this filter.")).toHaveCount(0);
+    await expect(page.locator(`[data-testid=inventory-row][data-sku="QA-GHOST-${TAG}"]`)).toHaveCount(0);
+
     await page.goto(`/admin/inventory?q=${encodeURIComponent(sku)}`);
     const row = page.locator(`[data-testid=inventory-row][data-sku="${sku}"]`);
     await expect(row.getByTestId("inventory-qty")).toHaveText("3 · In stock");

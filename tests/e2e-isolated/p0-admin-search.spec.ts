@@ -137,4 +137,22 @@ test.describe.serial("P0: global admin search and shortcuts (isolated)", () => {
     await expect(options(page, "Products")).toHaveCount(0);
     await expect(options(page, "Go to").filter({ hasText: "All products" })).toHaveCount(0);
   });
+
+  test("owner: ? opens shortcuts help; G then O goes to Orders", async ({ page }) => {
+    await signIn(page, "owner");
+    await page.goto("/admin");
+    await expect(page.getByTestId("admin-shortcuts-open")).toBeVisible();
+
+    await page.keyboard.press("Shift+/"); // "?"
+    await expect(page.getByTestId("admin-shortcuts-dialog")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Keyboard shortcuts" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByTestId("admin-shortcuts-dialog")).toHaveCount(0);
+
+    // Chord navigation (Shopify-style): press G, then the destination letter.
+    await page.locator("body").click({ position: { x: 8, y: 8 } });
+    await page.keyboard.press("g");
+    await page.keyboard.press("o");
+    await page.waitForURL(/\/admin\/orders$/);
+  });
 });

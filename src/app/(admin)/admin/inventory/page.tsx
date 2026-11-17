@@ -46,6 +46,22 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
   const q = (sp.q || "").trim().slice(0, 80);
   const sb = createServiceClient();
 
+  // Counts must use the same soft-delete filter as the list. Soft-deleted QA/archived products
+  // still have tracked variants in the DB; including them made the header say "2 track stock"
+  // while the desk showed an empty "Nothing matches" state.
+  const liveTracked = () =>
+    sb
+      .from("product_variants")
+      .select("id, products!inner(deleted_at)", { count: "exact", head: true })
+      .eq("inventory_mode", "tracked")
+      .is("products.deleted_at", null);
+  const liveUntracked = () =>
+    sb
+      .from("product_variants")
+      .select("id, products!inner(deleted_at)", { count: "exact", head: true })
+      .eq("inventory_mode", "untracked")
+      .is("products.deleted_at", null);
+
   let query = sb
     .from("product_variants")
     .select("id, sku, title, quantity_on_hand, allow_oversell, products!inner(title, handle, deleted_at)")
@@ -60,10 +76,10 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
 
   const [{ data }, { count: tracked }, { count: untracked }, { count: lowCount }, { count: outCount }, { data: history }] = await Promise.all([
     query,
-    sb.from("product_variants").select("id", { count: "exact", head: true }).eq("inventory_mode", "tracked"),
-    sb.from("product_variants").select("id", { count: "exact", head: true }).eq("inventory_mode", "untracked"),
-    sb.from("product_variants").select("id", { count: "exact", head: true }).eq("inventory_mode", "tracked").gt("quantity_on_hand", 0).lte("quantity_on_hand", LOW_STOCK_AT),
-    sb.from("product_variants").select("id", { count: "exact", head: true }).eq("inventory_mode", "tracked").lte("quantity_on_hand", 0),
+    liveTracked(),
+    liveUntracked(),
+    liveTracked().gt("quantity_on_hand", 0).lte("quantity_on_hand", LOW_STOCK_AT),
+    liveTracked().lte("quantity_on_hand", 0),
     sb
       .from("inventory_ledger")
       .select("id, delta, quantity_after, reason, reference_type, reference_id, created_at, product_variants(sku)")

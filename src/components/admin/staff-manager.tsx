@@ -65,14 +65,14 @@ export function StaffInviteForm({ grantable }: { grantable: string[] }) {
   }
 
   return (
-    <form onSubmit={submit} method="post" className="mt-4 grid gap-3 rounded-2xl border border-[var(--lh-border)] bg-white p-4 sm:grid-cols-[1fr_200px_auto] sm:items-end">
+    <form onSubmit={submit} method="post" className="mt-4 grid gap-3 rounded-2xl border border-[var(--adm-border)] bg-white p-4 sm:grid-cols-[1fr_200px_auto] sm:items-end">
       <div className="grid gap-1 text-sm">
         <label htmlFor={`${ids}-email`} className="font-semibold">Email address</label>
-        <input ref={emailRef} id={`${ids}-email`} type="email" required autoComplete="off" value={email} onChange={(e) => setEmail(e.target.value)} className="rounded-xl border border-[var(--lh-border)] px-3 py-2" />
+        <input ref={emailRef} id={`${ids}-email`} type="email" required autoComplete="off" value={email} onChange={(e) => setEmail(e.target.value)} className="rounded-xl border border-[var(--adm-border)] px-3 py-2" />
       </div>
       <div className="grid gap-1 text-sm">
         <label htmlFor={`${ids}-role`} className="font-semibold">Role</label>
-        <select ref={roleRef} id={`${ids}-role`} value={role} onChange={(e) => setRole(e.target.value)} className="rounded-xl border border-[var(--lh-border)] px-3 py-2">
+        <select ref={roleRef} id={`${ids}-role`} value={role} onChange={(e) => setRole(e.target.value)} className="rounded-xl border border-[var(--adm-border)] px-3 py-2">
           {grantable.map((r) => (
             <option key={r} value={r}>
               {r[0].toUpperCase() + r.slice(1)}
@@ -83,7 +83,7 @@ export function StaffInviteForm({ grantable }: { grantable: string[] }) {
       <button type="submit" disabled={busy || !email} className="lh-btn lh-btn-primary h-10">
         {busy ? "Sending…" : "Send invitation"}
       </button>
-      <p className="text-xs text-[var(--lh-ink-2)] sm:col-span-3">{ROLE_HELP[role]}</p>
+      <p className="text-xs text-[var(--adm-ink-2)] sm:col-span-3">{ROLE_HELP[role]}</p>
       {msg ? (
         <p role={msg.kind === "error" ? "alert" : "status"} className={`text-sm sm:col-span-3 ${msg.kind === "error" ? "text-[var(--lh-error)]" : "text-[var(--lh-success,#1F7A4D)]"}`}>
           {msg.text}
@@ -121,7 +121,7 @@ export function StaffRowActions({ row, grantable, editable }: { row: Row; granta
         value={row.role}
         disabled={busy || !row.active}
         onChange={(e) => act({ action: "role", role: e.target.value })}
-        className="rounded-xl border border-[var(--lh-border)] px-2 py-1"
+        className="rounded-xl border border-[var(--adm-border)] px-2 py-1"
       >
         {!grantable.includes(row.role) ? <option value={row.role}>{row.role}</option> : null}
         {grantable.map((r) => (
@@ -135,21 +135,21 @@ export function StaffRowActions({ row, grantable, editable }: { row: Row; granta
           type="button"
           disabled={busy}
           onClick={() => act({ action: "deactivate" }, `Remove admin access for ${row.email}? They are signed out everywhere and cannot sign in until reactivated.`)}
-          className="rounded-full border border-[var(--lh-border)] bg-white px-3 py-1"
+          className="rounded-full border border-[var(--adm-border)] bg-white px-3 py-1"
         >
           Deactivate
         </button>
       ) : (
-        <button type="button" disabled={busy} onClick={() => act({ action: "activate" })} className="rounded-full border border-[var(--lh-border)] bg-white px-3 py-1">
+        <button type="button" disabled={busy} onClick={() => act({ action: "activate" })} className="rounded-full border border-[var(--adm-border)] bg-white px-3 py-1">
           Reactivate
         </button>
       )}
       {row.active && row.invitePending ? (
-        <button type="button" disabled={busy} onClick={() => act({ action: "resend" })} className="rounded-full border border-[var(--lh-border)] bg-white px-3 py-1">
+        <button type="button" disabled={busy} onClick={() => act({ action: "resend" })} className="rounded-full border border-[var(--adm-border)] bg-white px-3 py-1">
           Resend invitation
         </button>
       ) : null}
-      {msg ? <span role="status" className="text-[var(--lh-ink-2)]">{msg}</span> : null}
+      {msg ? <span role="status" className="text-[var(--adm-ink-2)]">{msg}</span> : null}
     </div>
   );
 }

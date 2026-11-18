@@ -57,7 +57,7 @@ export default async function AdminAnalyticsPage({ searchParams }: { searchParam
             key={k}
             href={`/admin/analytics?range=${k}`}
             aria-current={win[0] === k ? "page" : undefined}
-            className={`rounded-full border px-3 py-1 ${win[0] === k ? "border-[var(--lh-action)] bg-[var(--lh-ice)] font-semibold" : "border-[var(--adm-border)] bg-white"}`}
+            className={`rounded-full border px-3 py-1 ${win[0] === k ? "border-[var(--adm-action)] bg-[var(--adm-info-bg)] font-semibold" : "border-[var(--adm-border)] bg-[var(--adm-surface)]"}`}
           >
             {l}
           </Link>

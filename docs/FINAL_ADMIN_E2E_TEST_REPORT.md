@@ -3,14 +3,14 @@
 Admin surface: `https://www.laptopshub.pk/admin/*`  
 Authenticated session: owner `laptopshubofficial@gmail.com` (IDE browser)  
 Skill: `.cursor/skills/laptops-hub-admin-excellence/SKILL.md`  
-Production under test: `dpl_EncXa4CfSW6bHEAPdWo5PYwd1cKb` @ `db7d263`
+Production under test: `dpl_46n9waS5kkd5q7QQsP5s8yiQisJV` @ `3fb15a7` (+ email env redeploy)
 
 ## Route inventory
 
 | Area | Route(s) | Authenticated load | Critical action |
 |---|---|---|---|
-| Overview | `/admin` | PASS — Ordering open; email offline banner; KPIs 0/0/0/964; products 233/226/6/1 | PASS (read) |
-| Orders | `/admin/orders` | PASS — empty state; email-not-configured banner | PASS (empty list) |
+| Overview | `/admin` | PASS — Ordering open; KPIs | PASS (read) |
+| Orders | `/admin/orders` | PASS — empty state; email-not-configured banner **cleared** after Resend env | PASS (empty list) |
 | Inquiries | `/admin/inquiries` | PASS (HTTP 200) | NOT TESTED write |
 | Products | `/admin/products` | PASS — 233 products, page 1/5 | SKU search `SKU-00233` → 1× Dell 5400 **PASS** |
 | Collections | `/admin/collections` | PASS (HTTP 200) | NOT TESTED write |
@@ -23,8 +23,18 @@ Production under test: `dpl_EncXa4CfSW6bHEAPdWo5PYwd1cKb` @ `db7d263`
 | Badges / merchandising | `/admin/merchandising` | PASS (HTTP 200) | NOT TESTED write |
 | Navigation / Media / Analytics / SEO / Help | respective | PASS (HTTP 200) | NOT TESTED deep |
 | Settings | `/admin/settings` | PASS — All Over PK Delivery **360** / COD **50**; COD readiness Ready | PASS (read; no fee mutation this pass) |
-| Staff | `/admin/staff` | PASS — 2 people; invite blocked without Resend; inactive sandbox membership present | Invite BLOCKED |
+| Staff | `/admin/staff` | PASS — invite + deactivate QA editor | PASS (invite email delivered via Resend) |
 | Activity log | `/admin/activity` | PASS (HTTP 200) | NOT TESTED pagination deep |
+
+## Staff invitation (controlled)
+
+| Step | Verdict |
+|---|---|
+| Role assignment (editor) | PASS |
+| Invitation email via app Resend path | PASS — UI “Invitation sent”; Resend `last_event=delivered` |
+| Deactivate after proof | PASS |
+| One-time link → password setup → login | NOT TESTED (inbox link not opened this session) |
+| Client business mailbox invite | BLOCKED — no separate client email in authorized records |
 
 ## Permissions / ops signals
 
@@ -33,9 +43,9 @@ Production under test: `dpl_EncXa4CfSW6bHEAPdWo5PYwd1cKb` @ `db7d263`
 | Owner session active | PASS |
 | COD triad Ready in Overview + Settings | PASS |
 | Untracked inventory Attention (intentional launch model) | PASS (expected) |
-| Email transport Attention / offline banners | PASS (honest; Resend BLOCKED) |
+| Email transport configured (cron + Orders banner) | PASS |
 | Preview merchant mutations disabled (env) | PASS (configured) |
-| Client staff invite without Resend | BLOCKED |
+| GH notification-retry with `CRON_SECRET` | PASS |
 
 ## Save-and-reload / responsive / a11y
 
@@ -49,8 +59,8 @@ Production under test: `dpl_EncXa4CfSW6bHEAPdWo5PYwd1cKb` @ `db7d263`
 
 | ID | Severity | Finding | Disposition |
 |---|---|---|---|
-| A-02 | P1 | Resend / STORE_* unset — invites + order email offline | BLOCKED |
-| A-03 | P2 | Client staff invite not deliverable | BLOCKED on Resend |
+| A-02 | P1 | Resend / STORE_* unset | **RESOLVED** — Production env + verified `send.laptopshub.pk` |
+| A-03 | P2 | Client staff invite not deliverable | **RESOLVED** for transport; client mailbox still BLOCKED |
 | A-04 | P3 | Reels empty | BLOCKED on licensed media |
 | A-05 | P3 | Media rights pending 964 remote refs | Advisory — existing CDN refs |
 

@@ -1,8 +1,8 @@
 # Final customer E2E test report — 2026-11-18
 
 Production storefront: `https://www.laptopshub.pk`  
-Production deployment under test: `dpl_EncXa4CfSW6bHEAPdWo5PYwd1cKb` @ `db7d263`  
-Method: authenticated IDE browser + HTTP probes + quote API. No invented customer PII.
+Production deployment under test: `dpl_46n9waS5kkd5q7QQsP5s8yiQisJV` @ `3fb15a7` (+ email env redeploy)  
+Method: authenticated IDE browser + HTTP probes + quote API + Resend provider tests. No invented customer PII.
 
 ## Viewport / devices
 
@@ -27,6 +27,8 @@ Method: authenticated IDE browser + HTTP probes + quote API. No invented custome
 | Apex → www | `laptopshub.pk` → 308 `https://www.laptopshub.pk/` | PASS |
 | Policy pages | `/pages/shipping|returns|privacy|terms|warranty|about|faq|contact` → 200 | PASS |
 | Guides | `/guides` → 200 | PASS |
+| Customer confirmation template (provider) | Resend accepted + `last_event=delivered` to owner mailbox | PASS |
+| Customer outbox on live order | Requires live order + optional `NOTIFY_CUSTOMER_EMAIL` | NOT TESTED |
 | Controlled live COD submit | Owner-controlled QA identity **not found** in project records | BLOCKED |
 | Order cancel / no-dispatch | Depends on live order | NOT APPLICABLE |
 
@@ -47,7 +49,7 @@ Matches DB zone: All Over PK `flat_fee_paisa=36000`, `cod_fee_paisa=5000`.
 |---|---|
 | Homepage HTTP 200 | PASS |
 | Quote API ok=true | PASS |
-| Cron unauthorized 401 | PASS (auth bound) |
+| Cron unauthorized 401 / authorized 200 configured | PASS |
 | Broken footer policy URLs | Correct slugs all 200 | PASS |
 
 ## Real order status

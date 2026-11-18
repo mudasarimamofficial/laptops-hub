@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 
-/** Seeds the six Generation Laptops HUB preset drafts without overwriting existing titles. */
+/** Seeds the six Generation Laptops HUB preset drafts by stable preset_key (never overwrites existing). */
 export function SeedReelsPresetsButton() {
   const router = useRouter();
   const hydrated = useHydrated();
@@ -12,7 +12,11 @@ export function SeedReelsPresetsButton() {
   const [msg, setMsg] = useState<string | null>(null);
 
   async function onClick() {
-    if (!window.confirm("Add the six preset draft reels (if missing)? Nothing is published. Blocked third-party media stays unpublished until you replace it.")) {
+    if (
+      !window.confirm(
+        "Add the six Generation Laptops HUB reference presets if missing? They stay drafts. Existing presets and merchant-edited reels are not overwritten.",
+      )
+    ) {
       return;
     }
     setBusy(true);
@@ -24,7 +28,12 @@ export function SeedReelsPresetsButton() {
         setMsg(data.message || "Seed failed");
         return;
       }
-      setMsg(`Added ${data.inserted || 0}, skipped ${data.skipped || 0} existing.`);
+      const invalid = Array.isArray(data.results)
+        ? data.results.filter((r: { action?: string }) => r.action === "skipped_invalid").length
+        : 0;
+      setMsg(
+        `Added ${data.inserted || 0}, skipped ${data.skipped || 0}${invalid ? ` (${invalid} invalid)` : ""}. Drafts only — confirm rights before publish.`,
+      );
       router.refresh();
     } catch {
       setMsg("Network error");

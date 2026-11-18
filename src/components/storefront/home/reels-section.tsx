@@ -159,7 +159,6 @@ export function ReelsSection({ reels, heading = "Generation Laptops HUB", autopl
                     }}
                     data-reel-id={r.id}
                     data-testid="reel-video"
-                    src={r.videoUrl}
                     muted={!hasSound}
                     playsInline
                     loop
@@ -171,7 +170,10 @@ export function ReelsSection({ reels, heading = "Generation Laptops HUB", autopl
                     onError={() => setFailed((s) => (s.has(r.id) ? s : new Set(s).add(r.id)))}
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
                   >
-                    {/* A failed <source> fires its own error event (not the video's): show the unavailable state either way. */}
+                    {/* Prefer HLS when present; browsers that cannot play it fall through to MP4. */}
+                    {r.hlsUrl ? (
+                      <source src={r.hlsUrl} type="application/x-mpegURL" onError={() => setFailed((s) => new Set(s).add(r.id))} />
+                    ) : null}
                     <source src={r.videoUrl} onError={() => setFailed((s) => new Set(s).add(r.id))} />
                   </video>
                 )}
@@ -237,6 +239,10 @@ export function ReelsSection({ reels, heading = "Generation Laptops HUB", autopl
                 {r.productHandle ? (
                   <Link href={`/products/${encodeURIComponent(r.productHandle)}`} style={{ display: "inline-flex", alignItems: "center", minHeight: 44, fontWeight: 600, fontSize: 14, color: "var(--lh-action)" }}>
                     View this laptop →
+                  </Link>
+                ) : r.linkPath ? (
+                  <Link href={r.linkPath} style={{ display: "inline-flex", alignItems: "center", minHeight: 44, fontWeight: 600, fontSize: 14, color: "var(--lh-action)" }}>
+                    Browse laptops →
                   </Link>
                 ) : null}
               </figcaption>

@@ -8,36 +8,48 @@ import { AdminMediaPicker } from "@/components/admin/ui/admin-media-picker";
 export type ReelFormValues = {
   title: string;
   caption: string;
+  mediaSource: "uploaded" | "external_file" | "external_stream";
   videoUrl: string;
+  hlsUrl: string;
   posterUrl: string;
+  avatarUrl: string;
   productHandle: string;
+  linkPath: string;
   rightsStatus: "pending" | "owned" | "licensed";
   rightsNote: string;
+  sourceAttribution: string;
   status: "draft" | "published" | "archived";
   sortOrder: number;
   creatorName: string;
   creatorConsent: boolean;
   tag: string;
+  presetKey: string;
 };
 
 export const EMPTY_REEL: ReelFormValues = {
   title: "",
   caption: "",
+  mediaSource: "external_file",
   videoUrl: "",
+  hlsUrl: "",
   posterUrl: "",
+  avatarUrl: "",
   productHandle: "",
+  linkPath: "",
   rightsStatus: "pending",
   rightsNote: "",
+  sourceAttribution: "",
   status: "draft",
   sortOrder: 0,
   creatorName: "",
   creatorConsent: false,
   tag: "",
+  presetKey: "",
 };
 
 const input = "mt-1 w-full min-w-0 rounded-lg border border-[var(--adm-border)] bg-white px-3 py-2";
 
-/** Create or edit one reel. Publishing is refused (here, in the API and in the DB) until rights are confirmed. */
+/** Create or edit one reel. Publishing is refused until rights are confirmed — independent of media host. */
 export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues }) {
   const router = useRouter();
   const hydrated = useHydrated();
@@ -102,28 +114,118 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
         <span className="font-medium">Caption (optional)</span>
         <input className={input} value={v.caption} onChange={(e) => set("caption", e.target.value)} maxLength={300} />
       </label>
+
       <label className="block sm:col-span-2">
-        <span className="font-medium">Video file link</span>
-        <input className={input} type="url" inputMode="url" value={v.videoUrl} onChange={(e) => set("videoUrl", e.target.value)} required placeholder="https://…/reel.mp4" />
+        <span className="font-medium">Media source</span>
+        <select
+          className={input}
+          value={v.mediaSource}
+          onChange={(e) => set("mediaSource", e.target.value as ReelFormValues["mediaSource"])}
+        >
+          <option value="uploaded">Uploaded file (Laptops HUB storage URL)</option>
+          <option value="external_file">External video URL (HTTPS MP4 / WebM / MOV)</option>
+          <option value="external_stream">External streaming URL (HLS .m3u8 + MP4 fallback)</option>
+        </select>
         <span className="mt-1 block text-xs text-[var(--adm-ink-2)]">
-          Direct .mp4, .webm or .mov HTTPS file that Laptops HUB owns or has licensed. Missing third-party videos stay a content dependency — paste a real host URL when assets are ready. Videos from other shops cannot be used.
+          Use a direct HTTPS media file. External hosts are allowed. Hotlinking may fail if the remote server blocks it — preview below to check.
         </span>
+      </label>
+
+      <label className="block sm:col-span-2">
+        <span className="font-medium">Video URL (MP4 / WebM / MOV)</span>
+        <input
+          className={input}
+          type="url"
+          inputMode="url"
+          value={v.videoUrl}
+          onChange={(e) => set("videoUrl", e.target.value)}
+          required
+          placeholder="https://…/reel.mp4"
+        />
         {fieldErr("videoUrl")}
       </label>
+
+      <label className="block sm:col-span-2">
+        <span className="font-medium">HLS URL (optional .m3u8)</span>
+        <input
+          className={input}
+          type="url"
+          inputMode="url"
+          value={v.hlsUrl}
+          onChange={(e) => set("hlsUrl", e.target.value)}
+          placeholder="https://…/reel.m3u8"
+        />
+        <span className="mt-1 block text-xs text-[var(--adm-ink-2)]">
+          Used when the browser supports HLS; MP4 remains the fallback. Not all CDNs allow cross-origin streaming.
+        </span>
+        {fieldErr("hlsUrl")}
+      </label>
+
+      {v.videoUrl ? (
+        <div className="sm:col-span-2">
+          <p className="mb-1 text-sm font-medium">Preview</p>
+          <video
+            key={v.videoUrl}
+            controls
+            playsInline
+            preload="metadata"
+            poster={v.posterUrl || undefined}
+            className="max-h-80 w-full rounded-[var(--adm-radius)] border border-[var(--adm-border)] bg-black"
+            src={v.videoUrl}
+          >
+            {v.hlsUrl ? <source src={v.hlsUrl} type="application/x-mpegURL" /> : null}
+            <source src={v.videoUrl} />
+          </video>
+          <p className="mt-1 text-xs text-[var(--adm-ink-2)]">
+            If preview fails, the remote file may be missing, blocked for hotlinking, or an unsupported format — not because of the domain name alone.
+          </p>
+        </div>
+      ) : null}
+
       <div className="sm:col-span-2">
         <AdminMediaPicker
-          label="Poster / cover image (optional)"
+          label="Poster / cover image"
           value={v.posterUrl}
           onChange={(url) => set("posterUrl", url)}
-          hint="Upload or pick a still frame shown before play. Prefer a Laptops HUB-owned image."
+          hint="Upload, pick from library, or paste an HTTPS image URL."
         />
         {fieldErr("posterUrl")}
       </div>
+
+      <label className="block sm:col-span-2">
+        <span className="font-medium">Avatar image URL (optional)</span>
+        <input
+          className={input}
+          type="url"
+          inputMode="url"
+          value={v.avatarUrl}
+          onChange={(e) => set("avatarUrl", e.target.value)}
+          placeholder="https://…/avatar.jpg"
+        />
+        {fieldErr("avatarUrl")}
+      </label>
+
       <label className="block">
         <span className="font-medium">Linked product handle (optional)</span>
-        <input className={input} value={v.productHandle} onChange={(e) => set("productHandle", e.target.value.trim())} placeholder="dell-latitude-7490" />
+        <input
+          className={input}
+          value={v.productHandle}
+          onChange={(e) => set("productHandle", e.target.value.trim())}
+          placeholder="dell-latitude-7490"
+        />
         {fieldErr("productHandle")}
       </label>
+      <label className="block">
+        <span className="font-medium">Or site path (optional)</span>
+        <input
+          className={input}
+          value={v.linkPath}
+          onChange={(e) => set("linkPath", e.target.value.trim())}
+          placeholder="/collections/all"
+        />
+        {fieldErr("linkPath")}
+      </label>
+
       <label className="block">
         <span className="font-medium">Video rights</span>
         <select className={input} value={v.rightsStatus} onChange={(e) => set("rightsStatus", e.target.value as ReelFormValues["rightsStatus"])}>
@@ -147,17 +249,43 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
           <option value="archived">Archived (not public)</option>
         </select>
         {v.rightsStatus === "pending" ? (
-          <span className="mt-1 block text-xs text-amber-800">Publishing stays disabled until rights are Owned or Licensed.</span>
+          <span className="mt-1 block text-xs text-amber-800">
+            Publishing stays disabled until rights are Owned or Licensed. An external URL alone is not permission.
+          </span>
         ) : null}
       </label>
+
       <label className="block sm:col-span-2">
         <span className="font-medium">Rights note</span>
-        <input className={input} value={v.rightsNote} onChange={(e) => set("rightsNote", e.target.value)} maxLength={500} placeholder="Who licensed it, date, terms" />
+        <input
+          className={input}
+          value={v.rightsNote}
+          onChange={(e) => set("rightsNote", e.target.value)}
+          maxLength={500}
+          placeholder="Who licensed it, date, terms"
+        />
         {fieldErr("rightsNote")}
       </label>
+      <label className="block sm:col-span-2">
+        <span className="font-medium">Source / attribution note</span>
+        <input
+          className={input}
+          value={v.sourceAttribution}
+          onChange={(e) => set("sourceAttribution", e.target.value)}
+          maxLength={500}
+          placeholder="Where the media came from (for staff)"
+        />
+      </label>
+
       <label className="block">
-        <span className="font-medium">Creator name (optional)</span>
-        <input className={input} value={v.creatorName} onChange={(e) => set("creatorName", e.target.value)} maxLength={80} placeholder="Shown on the reel" />
+        <span className="font-medium">Creator display name (optional)</span>
+        <input
+          className={input}
+          value={v.creatorName}
+          onChange={(e) => set("creatorName", e.target.value)}
+          maxLength={80}
+          placeholder="Shown on the reel"
+        />
         {fieldErr("creatorName")}
       </label>
       <label className="block">
@@ -168,21 +296,42 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
       <label className="flex items-start gap-2 sm:col-span-2">
         <input type="checkbox" className="mt-1" checked={v.creatorConsent} onChange={(e) => set("creatorConsent", e.target.checked)} />
         <span>
-          The person named above agreed in writing to be shown on the Laptops HUB website. Never name a creator or public figure without their
+          The person named above agreed in writing to be shown on the Laptops HUB website. Never name a creator without
           permission, and never suggest an endorsement they did not give.
           {fieldErr("creatorConsent")}
         </span>
       </label>
       <label className="block">
         <span className="font-medium">Order (lower shows first)</span>
-        <input className={input} type="number" min={-1000} max={1000} value={v.sortOrder} onChange={(e) => set("sortOrder", Number(e.target.value) || 0)} />
+        <input
+          className={input}
+          type="number"
+          min={-1000}
+          max={1000}
+          value={v.sortOrder}
+          onChange={(e) => set("sortOrder", Number(e.target.value) || 0)}
+        />
       </label>
+      {v.presetKey ? (
+        <p className="sm:col-span-2 text-xs text-[var(--adm-ink-2)]">
+          Preset key: <code className="font-[family-name:var(--font-mono)]">{v.presetKey}</code> (stable import id)
+        </p>
+      ) : null}
       <div className="flex flex-wrap items-end gap-3 sm:col-span-2">
-        <button type="submit" disabled={!hydrated || busy} className="rounded-lg bg-[var(--adm-action,#1748B5)] px-5 py-2 font-semibold text-white disabled:opacity-50">
+        <button
+          type="submit"
+          disabled={!hydrated || busy}
+          className="rounded-lg bg-[var(--adm-action,#1748B5)] px-5 py-2 font-semibold text-white disabled:opacity-50"
+        >
           {id ? "Save reel" : "Add reel"}
         </button>
         {id ? (
-          <button type="button" disabled={!hydrated || busy} onClick={onDelete} className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] px-4 py-2">
+          <button
+            type="button"
+            disabled={!hydrated || busy}
+            onClick={onDelete}
+            className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] px-4 py-2"
+          >
             Delete
           </button>
         ) : null}

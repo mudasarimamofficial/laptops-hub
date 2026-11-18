@@ -10,13 +10,15 @@ export const metadata = { title: "Reels", robots: { index: false, follow: false 
 
 const RIGHTS: Record<string, string> = { pending: "Rights not confirmed", owned: "Owned", licensed: "Licensed" };
 
-/** "Generation Laptops HUB" reels: the homepage row shows only published reels with confirmed rights. */
+/** "Generation Laptops HUB" reels: homepage shows only published reels with confirmed rights. */
 export default async function AdminReelsPage() {
   await requireStaffPage(REEL_STAFF_ROLES);
   const sb = createServiceClient();
   const { data } = await sb
     .from("reels")
-    .select("id, title, caption, video_url, poster_url, rights_status, rights_note, status, sort_order, creator_name, creator_consent, tag, products(handle)")
+    .select(
+      "id, title, caption, video_url, hls_url, poster_url, avatar_url, media_source, link_path, source_attribution, rights_status, rights_note, status, sort_order, creator_name, creator_consent, tag, preset_key, products(handle)",
+    )
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false })
     .limit(200);
@@ -28,7 +30,7 @@ export default async function AdminReelsPage() {
     <div>
       <AdminPageHeader
         title="Reels"
-        description='Short videos for the homepage “Generation Laptops HUB” row. The row appears only when at least one reel is published with owned or licensed rights. Do not use videos from other shops (for example ronin.pk). Host Laptops HUB’s own or licensed HTTPS .mp4 / .webm / .mov files.'
+        description='Short videos for the homepage “Generation Laptops HUB” row. Use uploaded files or external HTTPS MP4/WebM/MOV (optional HLS). External hosts are allowed. Publishing still requires confirmed owned/licensed rights — a public URL is not a license or endorsement.'
         breadcrumbs={[{ href: "/admin", label: "Admin" }, { label: "Reels" }]}
         actions={<SeedReelsPresetsButton />}
       />
@@ -56,8 +58,8 @@ export default async function AdminReelsPage() {
         >
           <p className="font-semibold text-[var(--adm-ink)]">No reels yet</p>
           <p className="mx-auto mt-2 max-w-xl text-sm text-[var(--adm-ink-2)]">
-            The homepage Generation Laptops HUB row stays hidden until you add a video Laptops HUB owns or has licensed in
-            writing, confirm rights, and publish. Paste a direct HTTPS file link — never hotlink another shop&apos;s media.
+            Restore the six Generation Laptops HUB reference presets, or add a reel with an HTTPS media URL. Presets stay
+            drafts until you confirm rights.
           </p>
         </div>
       ) : (
@@ -66,16 +68,22 @@ export default async function AdminReelsPage() {
             const initial: ReelFormValues = {
               title: r.title,
               caption: r.caption,
+              mediaSource: (r.media_source as ReelFormValues["mediaSource"]) || "external_file",
               videoUrl: r.video_url,
+              hlsUrl: r.hls_url || "",
               posterUrl: r.poster_url || "",
+              avatarUrl: r.avatar_url || "",
               productHandle: (r.products as { handle?: string } | null)?.handle || "",
+              linkPath: r.link_path || "",
               rightsStatus: r.rights_status as ReelFormValues["rightsStatus"],
               rightsNote: r.rights_note,
+              sourceAttribution: r.source_attribution || "",
               status: r.status as ReelFormValues["status"],
               sortOrder: r.sort_order,
               creatorName: r.creator_name ?? "",
               creatorConsent: r.creator_consent === true,
               tag: r.tag ?? "",
+              presetKey: r.preset_key || "",
             };
             return (
               <li
@@ -88,6 +96,7 @@ export default async function AdminReelsPage() {
                     <span className="font-semibold text-[var(--adm-ink)]">{r.title}</span>
                     <span className="text-xs text-[var(--adm-ink-2)]">
                       {r.status} · {RIGHTS[r.rights_status] ?? r.rights_status}
+                      {r.preset_key ? ` · ${r.preset_key}` : ""}
                     </span>
                   </summary>
                   <div className="mt-4">

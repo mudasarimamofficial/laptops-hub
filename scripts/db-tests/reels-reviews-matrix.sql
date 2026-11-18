@@ -1,6 +1,6 @@
--- Isolated LOCAL-ONLY test for migration 20261115100000 (reels + product_reviews): publish-requires-rights,
--- reference-asset ban, URL scheme rules, anon visibility (published+cleared reels, approved reviews only), private
--- review columns, and no anon/authenticated write path. Runs in one transaction and ROLLS BACK.
+-- Isolated LOCAL-ONLY test for migrations 20261115100000 + 20261118190000 (reels + product_reviews):
+-- publish-requires-rights, URL scheme rules (external hosts allowed), anon visibility, private review columns,
+-- and no anon/authenticated write path. Runs in one transaction and ROLLS BACK.
 -- Run: docker exec -i supabase_db_Laptops_Hub_Vercel_Development psql -U postgres -At < scripts/db-tests/reels-reviews-matrix.sql
 \set ON_ERROR_STOP 1
 BEGIN;
@@ -22,13 +22,22 @@ INSERT INTO products (id, handle, title, status) VALUES ('00000000-0000-4000-800
 CREATE TEMP TABLE cases (name text, sql text);
 INSERT INTO cases VALUES
   ('publish without rights is refused', $q$INSERT INTO reels (title, video_url, status) VALUES ('x', 'https://cdn.example.com/a.mp4', 'published')$q$),
-  ('ronin.pk video is refused', $q$INSERT INTO reels (title, video_url) VALUES ('x', 'https://ronin.pk/v/a.mp4')$q$),
-  ('ronin.pk subdomain video is refused', $q$INSERT INTO reels (title, video_url) VALUES ('x', 'https://cdn.ronin.pk/a.mp4')$q$),
-  ('ronin.pk poster is refused', $q$INSERT INTO reels (title, video_url, poster_url) VALUES ('x', 'https://cdn.example.com/a.mp4', 'https://www.ronin.pk/p.jpg')$q$),
   ('plain http (non-local) video is refused', $q$INSERT INTO reels (title, video_url) VALUES ('x', 'http://cdn.example.com/a.mp4')$q$),
   ('javascript: video is refused', $q$INSERT INTO reels (title, video_url) VALUES ('x', 'javascript:alert(1)')$q$),
   ('rating 6 is refused', $q$INSERT INTO product_reviews (product_id, author_name, rating, body) VALUES ('00000000-0000-4000-8000-0000000000c1', 'Ali', 6, 'Long enough body')$q$),
   ('too-short review body is refused', $q$INSERT INTO product_reviews (product_id, author_name, rating, body) VALUES ('00000000-0000-4000-8000-0000000000c1', 'Ali', 5, 'short')$q$);
+
+-- External hosts (including ronin.pk) must be accepted after 20261118190000.
+DO $$
+BEGIN
+  BEGIN
+    INSERT INTO reels (title, video_url, poster_url) VALUES
+      ('ronin ok', 'https://ronin.pk/cdn/x.mp4', 'https://www.ronin.pk/p.jpg');
+    INSERT INTO results VALUES ('external ronin.pk media is accepted', true, 'ok');
+  EXCEPTION WHEN OTHERS THEN
+    INSERT INTO results VALUES ('external ronin.pk media is accepted', false, SQLERRM);
+  END;
+END $$;
 DO $$
 DECLARE c record;
 BEGIN

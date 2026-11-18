@@ -10,7 +10,7 @@ PASS · FAIL · BLOCKED · NOT TESTED · NOT APPLICABLE
 
 | Item | Value | Verdict |
 |---|---|---|
-| GitHub `main` SHA | `3fb15a77d5990e8c41dff3178270f776a0522bc8` | PASS |
+| GitHub `main` SHA | `c0125853dcc4937d7993a35cc3f93584250200e5` (docs cert #19; email runtime redeploy `dpl_46n9waS5…`) | PASS |
 | App hardening baseline | `06b5ff3` via PR [#18](https://github.com/mudasarimamofficial/laptops-hub/pull/18) | PASS |
 | CI | `quality` success on main | PASS |
 | Vercel production | `dpl_46n9waS5kkd5q7QQsP5s8yiQisJV` READY (redeploy after email env) | PASS |

@@ -7,7 +7,7 @@ Evidence-based inventory. No secret values. Mandate baseline `3a00091` / 30 migr
 | Surface | Value | Verdict |
 |---|---|---|
 | GitHub | `mudasarimamofficial/laptops-hub` `main` | PASS |
-| Production commit | `3fb15a77d5990e8c41dff3178270f776a0522bc8` | PASS |
+| Production commit | `c0125853dcc4937d7993a35cc3f93584250200e5` | PASS |
 | Vercel | `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` / `dpl_46n9waS5kkd5q7QQsP5s8yiQisJV` READY | PASS |
 | Node / region | 24.x / `sin1` | PASS |
 | Supabase | `xvmmjkrkgznnakcobmww` ap-southeast-1 ACTIVE_HEALTHY | PASS |

@@ -322,7 +322,8 @@ export function TestimonialManager({
             </h2>
             <p className="text-xs text-[var(--adm-ink-2)]">
               Enter the customer&apos;s words exactly as given. Do not write or improve reviews. Google reviews may be saved as drafts
-              without a Maps link; the link, consent and avatar permission are required before publishing.
+              without a Maps link. Google entries need a Maps URL to publish (place listing URLs are allowed but labeled
+              honestly). Website/merchant entries also need recorded customer consent. Avatar permission is required when a photo is set.
             </p>
             <label className="block text-sm font-medium">
               Where did this review come from?
@@ -387,7 +388,10 @@ export function TestimonialManager({
             <label className="flex items-start gap-2 text-sm">
               <input type="checkbox" className="mt-1" checked={editing.form.consentConfirmed} onChange={(e) => set("consentConfirmed", e.target.checked)} data-testid="testimonial-consent" />
               <span>
-                The customer agreed to this review being shown on the Laptops HUB website (required to publish).{err("consentConfirmed")}
+                {editing.form.source === "google"
+                  ? "Optional for Google: only tick if the customer separately agreed to website display. Do not tick merely because text matched a GBP HTML export."
+                  : "The customer agreed to this review being shown on the Laptops HUB website (required to publish for website/merchant sources)."}
+                {err("consentConfirmed")}
               </span>
             </label>
             <label className="block text-sm font-medium">

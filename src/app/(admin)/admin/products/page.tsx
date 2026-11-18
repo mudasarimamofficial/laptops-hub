@@ -58,9 +58,17 @@ export default async function AdminProductsPage({ searchParams }: Props) {
 
   if (status !== "all") query = query.eq("status", status);
   if (q) {
-    query = query.or(
-      `title.ilike.%${q}%,handle.ilike.%${q}%,manufacturer.ilike.%${q}%`,
-    );
+    // Title / handle / brand first; also match SKUs via variant join (common merchant lookup).
+    const { data: skuHits } = await supabase
+      .from("product_variants")
+      .select("product_id")
+      .ilike("sku", `%${q}%`)
+      .limit(100);
+    const skuProductIds = [...new Set((skuHits || []).map((r) => r.product_id).filter(Boolean))];
+    const textOr = `title.ilike.%${q}%,handle.ilike.%${q}%,manufacturer.ilike.%${q}%`;
+    query = skuProductIds.length
+      ? query.or(`${textOr},id.in.(${skuProductIds.join(",")})`)
+      : query.or(textOr);
   }
 
   const { data, count } = await query;
@@ -111,7 +119,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
         <input
           name="q"
           defaultValue={q}
-          placeholder="Search title, handle, or brand"
+          placeholder="Search title, handle, brand, or SKU"
           className="min-w-[200px] flex-1 rounded-lg border border-[var(--adm-border)] bg-[var(--adm-surface)] px-3 py-2 text-sm"
           aria-label="Search products"
         />

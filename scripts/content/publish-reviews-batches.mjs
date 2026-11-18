@@ -1,9 +1,16 @@
+/**
+ * Generate SQL batches for Google review *draft* import from reconciliation JSON.
+ *
+ * Never auto-publishes. Never sets consent_confirmed=true (HTML snapshot match ≠ customer consent
+ * and ≠ independent Maps re-verification). Avatars omitted. Place listing URL only when that is
+ * all that is known — storefront labels must not claim an individual review permalink.
+ */
 import fs from "fs";
 
 const json = JSON.parse(fs.readFileSync("docs/client-delivery/google-reviews-reconciliation.json", "utf8"));
 const maps = "https://maps.google.com/?cid=7987323353592411341";
 const note =
-  "Verified against laptops-hub-google-reviews.source.html (owned GBP review export). Published with Google place attribution; avatars omitted pending photo permission.";
+  "Matched author/rating/text to owned GBP HTML export (laptops-hub-google-reviews.source.html). Source URL is the business place listing (cid), not an individual Maps review permalink. Avatars omitted. Import leaves consent_confirmed=false and status=draft — staff must publish deliberately.";
 
 function esc(s) {
   return String(s).replace(/\r\n|\r|\n/g, "\\n").replace(/'/g, "''");
@@ -17,7 +24,7 @@ for (let i = 0; i < json.candidates.length; i += 10) {
       const sort = i + idx + 1;
       const date = c.reviewDate ? `'${c.reviewDate}'::date` : "null::date";
       const rating = c.rating == null ? "null::int" : `${c.rating}::int`;
-      return `('${esc(c.authorName)}', ${rating}, '${esc(c.body)}', ${date}, 'google', '${maps}', null, false, true, '${esc(note)}', 'published', true, false, ${sort})`;
+      return `('${esc(c.authorName)}', ${rating}, '${esc(c.body)}', ${date}, 'google', '${maps}', null, false, false, '${esc(note)}', 'draft', true, false, ${sort})`;
     })
     .join(",\n");
   const sql = `with incoming(author_name, rating, body, review_date, source, source_url, avatar_url, avatar_permission, consent_confirmed, verification_note, status, show_on_homepage, featured, sort_order) as (
@@ -30,15 +37,15 @@ insert into public.store_testimonials (
 )
 select
   i.author_name, i.rating, i.body, i.review_date, i.source, i.source_url, i.avatar_url, i.avatar_permission,
-  i.consent_confirmed, i.verification_note, i.status, i.show_on_homepage, i.featured, i.sort_order, now(), now()
+  i.consent_confirmed, i.verification_note, i.status, i.show_on_homepage, i.featured, i.sort_order, null, now()
 from incoming i
 where not exists (
   select 1 from public.store_testimonials t
   where t.author_name = i.author_name and t.body = i.body
 );
-select count(*) as total, count(*) filter (where status='published') as published from store_testimonials;`;
+select count(*) as total, count(*) filter (where status='published') as published, count(*) filter (where status='draft') as drafts from store_testimonials;`;
   batches.push(sql);
   fs.writeFileSync(`scripts/content/_reviews_batch_${batches.length}.sql`, sql);
 }
-console.log("batches", batches.length);
+console.log("batches", batches.length, "(draft-only; consent_confirmed=false)");
 fs.writeFileSync("scripts/content/_reviews_batches.json", JSON.stringify(batches));

@@ -4,6 +4,8 @@ import {
   canTransition,
   formatReviewDate,
   initials,
+  googleSourceLinkLabel,
+  isGooglePlaceListingUrl,
   publishBlockers,
   splitRows,
   testimonialInputSchema,
@@ -37,12 +39,23 @@ assert.equal(
     avatar_url: null,
     avatar_permission: false,
   }),
-  "A Google review needs the link to it on Google Maps before publishing.",
+  "A Google review needs a Google Maps (or g.page / maps.app.goo.gl) link before publishing.",
 );
 assert.equal(
   publishBlockers({
     source: "google",
     source_url: "https://maps.app.goo.gl/abc123",
+    consent_confirmed: false,
+    avatar_url: null,
+    avatar_permission: false,
+  }),
+  null,
+  "public Google reviews may publish without consent_confirmed",
+);
+assert.equal(
+  publishBlockers({
+    source: "merchant",
+    source_url: null,
     consent_confirmed: false,
     avatar_url: null,
     avatar_permission: false,
@@ -59,6 +72,10 @@ assert.equal(
   }),
   null,
 );
+assert.equal(isGooglePlaceListingUrl("https://maps.google.com/?cid=7987323353592411341"), true);
+assert.equal(isGooglePlaceListingUrl("https://maps.app.goo.gl/abc123"), false);
+assert.equal(googleSourceLinkLabel("Ali", "https://maps.google.com/?cid=1").visible, "Google listing");
+assert.equal(googleSourceLinkLabel("Ali", "https://maps.app.goo.gl/abc").visible, "View");
 assert.equal(testimonialInputSchema.safeParse({ ...base, avatarUrl: "https://cdn.example/a.jpg" }).success, false, "avatar needs permission");
 assert.equal(testimonialInputSchema.safeParse({ ...base, avatarUrl: "https://cdn.example/a.jpg", avatarPermission: true }).success, true);
 assert.equal(testimonialInputSchema.safeParse({ ...base, avatarUrl: "javascript:alert(1)", avatarPermission: true }).success, false);

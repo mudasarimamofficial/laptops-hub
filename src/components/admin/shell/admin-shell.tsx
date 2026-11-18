@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import type { StaffRole } from "@/lib/auth/staff";
 import { AdminSearch } from "./admin-search";
+import { AdminShortcuts } from "./admin-shortcuts";
 import { ADMIN_NAV, isAdminGuestPath, isNavActive, navVisibleForRole } from "./nav";
 
 export type AdminShellStaff = {
@@ -166,6 +167,7 @@ export function AdminShell({ staff, children }: Props) {
             </svg>
           </button>
           <AdminSearch role={role} />
+          <AdminShortcuts role={role} />
           <p className="hidden truncate text-sm text-[var(--adm-ink-2)] md:block">
             Merchant console · <span className="text-[var(--adm-ink)]">PKR</span> · COD only
           </p>

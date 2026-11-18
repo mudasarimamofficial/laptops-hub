@@ -1,7 +1,7 @@
 # Final customer E2E test report — 2026-11-18
 
 Production storefront: `https://www.laptopshub.pk`  
-Production deployment under test: `dpl_E22FfdsVi8KcEJiwqLnmfBNNKVmz` @ `afed09a` (storefront behavior verified on prior READY `dpl_8sSU9AF…` @ `06b5ff3`)  
+Production deployment under test: `dpl_EncXa4CfSW6bHEAPdWo5PYwd1cKb` @ `db7d263`  
 Method: authenticated IDE browser + HTTP probes + quote API. No invented customer PII.
 
 ## Viewport / devices

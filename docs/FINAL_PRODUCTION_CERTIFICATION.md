@@ -1,6 +1,6 @@
 # Final production certification — 2026-11-18
 
-Honest operational certification for Laptops HUB after cloud hardening.
+Honest operational certification for Laptops HUB after cloud hardening + authenticated admin smoke.
 
 ## Labels used
 
@@ -10,66 +10,61 @@ PASS · FAIL · BLOCKED · NOT TESTED · NOT APPLICABLE
 
 | Item | Value | Verdict |
 |---|---|---|
-| GitHub `main` SHA | `afed09a808d4357aeff2d9375b40fb797e68546d` (app hardening `06b5ff3` + this certification) | PASS |
-| Hardening PR | [#18](https://github.com/mudasarimamofficial/laptops-hub/pull/18) — CI + cron URL + certification docs | PASS |
-| CI on main | Runs `44235107324` (`06b5ff3`) and `44236261618` (`afed09a`) — `quality` success | PASS |
-| Vercel production | `dpl_E22FfdsVi8KcEJiwqLnmfBNNKVmz` READY @ `afed09a` | PASS |
-| Production aliases | `www.laptopshub.pk`, `laptopshub.pk` → www (308) | PASS |
-| Supabase migrations | 31 aligned (local = remote) | PASS |
+| GitHub `main` SHA (at certification write) | `db7d26393164b8d64b5e706b3cc56811bbd7f4e2` | PASS |
+| App hardening baseline | `06b5ff3` via PR [#18](https://github.com/mudasarimamofficial/laptops-hub/pull/18) | PASS |
+| Mandate baseline (stale) | `3a00091` / `dpl_2daEN1…` — superseded | NOT APPLICABLE |
+| CI | `quality` success on main (`44236602968` and prior) | PASS |
+| Vercel production | `dpl_EncXa4CfSW6bHEAPdWo5PYwd1cKb` READY @ `db7d263` | PASS |
+| Aliases | `www.laptopshub.pk`, `laptopshub.pk` → www | PASS |
+| Supabase | `xvmmjkrkgznnakcobmww` ACTIVE_HEALTHY; **31** migrations aligned | PASS |
 | CRM `app.laptopshub.pk` | Untouched | PASS |
 
 ## Commerce readiness
 
 | Gate | Verdict |
 |---|---|
-| Live COD (env triad + `store_settings.cod_checkout`) | PASS |
-| Shipping All Over PK Rs 360 + COD Rs 50 | PASS (DB + quote API + checkout UI cash due Rs 147,410 on 3× Dell 5400) |
-| Policies published | PASS (8 CMS pages HTTP 200) |
-| Catalog purchasable (226 active) | PASS |
-| Isolated COD / security matrix | PASS (23/23) |
+| Live COD (env + store_settings + admin readiness) | PASS — Ordering open |
+| Shipping All Over PK Rs 360 + COD Rs 50 | PASS (DB + Settings UI + quote API + checkout) |
+| Policies / catalog | PASS (8 pages, 226 active) |
+| Isolated COD matrix | PASS (23/23) |
 | Unit tests | PASS |
-| Controlled live QA order | BLOCKED — no owner-controlled test identity |
-| Email notifications | BLOCKED — Resend / `STORE_*` absent |
-| Cron auth secret on Vercel Production | PASS (401 without valid bearer) |
-| GitHub 15‑min retry | Inactive until GH `CRON_SECRET` after Resend | PASS by design |
+| Authenticated merchant Overview / Settings / Products SKU / Orders / Staff | PASS (read smoke) |
+| Controlled live QA order | BLOCKED — no owner-controlled QA identity |
+| Email / invites / GH notification-retry secret | BLOCKED — Resend + GH `CRON_SECRET` |
+| Cron unauthorized gate | PASS (401) |
 
 ## Security
 
 | Item | Verdict |
 |---|---|
-| Service role not public | PASS |
-| Preview COD off + merchant mutations disabled | PASS |
-| Main force-push / deletion blocked + required `quality` check | PASS |
-| Leaked-password protection (Supabase Auth) | BLOCKED — dashboard toggle not enabled (avoid lockout without owner confirmation) |
-| SECURITY DEFINER storefront RPCs | PASS (intentional least-privilege design) |
-| Anon order RPC denied | PASS (isolated) |
+| Service role not public; Preview COD/mutations isolated | PASS |
+| Protect main: deletion, non-fast-forward, required `quality` | PASS |
+| Leaked-password protection | BLOCKED — not enabled (lockout risk without owner confirm) |
+| SECURITY DEFINER storefront RPCs | PASS (intentional) |
 
 ## Client staff
 
 | Item | Verdict |
 |---|---|
-| Staff invite / client account | BLOCKED — no authorized invite email provided |
+| Active owner account | PASS |
+| Additional client invite | BLOCKED — Resend required for invite delivery |
 
-## Rollback plan
+## Rollback
 
-1. Vercel → Deployments → Promote prior READY production (`dpl_2daEN1ms2GpUwnjJXsjPSfybVGF4` @ `3a00091`).
-2. Revert GitHub merge on `main` if needed (admin bypass on ruleset).
-3. Database: RLS initplan migration is behavior-preserving; reverse by restoring prior policy expressions from migration history if required.
-4. Env: remove or restore Vercel vars by key; never paste secrets into chat.
-5. CRM: no action (independent Hostinger).
+1. Promote prior READY production (e.g. `dpl_8sSU9AF…` @ `06b5ff3` or `dpl_2daEN1…` @ `3a00091`).
+2. Revert `main` with admin bypass if needed.
+3. Env restore by key; never paste secrets into chat.
+4. CRM: no action.
 
 ## Remaining external dependencies
 
-1. Resend account + verified sender → set `RESEND_API_KEY`, `STORE_FROM_EMAIL`, `STORE_NOTIFY_EMAIL` on Production → redeploy → set matching GitHub `CRON_SECRET` → enable notification-retry schedule.
+1. Resend + verified sender → `RESEND_API_KEY`, `STORE_FROM_EMAIL`, `STORE_NOTIFY_EMAIL` → redeploy → GH `CRON_SECRET` matching Vercel.
 2. Owner-controlled QA COD identity for one labeled live order + cancel.
-3. Optional: enable Supabase leaked-password protection.
-4. Licensed reel media before publishing reels.
-5. Authenticated staff session for full production admin deep E2E.
+3. Optional leaked-password protection.
+4. Licensed reel media.
 
-## Overall certification
+## Overall
 
-**Commerce storefront + COD quoting: PASS for day-to-day browsing and checkout readiness.**  
-**Cloud config (GitHub ruleset + CI + Vercel env/domains + Supabase ledger + cron auth gate): PASS.**  
-**Full ops loop (email + live QA order + authenticated admin deep E2E + client staff): BLOCKED on external inputs listed above.**  
-
-**Do not treat BLOCKED or NOT TESTED items as PASS.**
+**Storefront + COD quoting + cloud gates + authenticated admin smoke: PASS.**  
+**Email loop, live QA order, client invite: BLOCKED.**  
+Do not treat BLOCKED / NOT TESTED as PASS.

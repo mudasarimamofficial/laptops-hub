@@ -1,64 +1,59 @@
 # Final admin E2E test report — 2026-11-18
 
 Admin surface: `https://www.laptopshub.pk/admin/*`  
-Skill applied: `.cursor/skills/laptops-hub-admin-excellence/SKILL.md`  
-Constraint: no owner credential sharing; production writes limited to cloud config + DB migration ledger repair.
+Authenticated session: owner `laptopshubofficial@gmail.com` (IDE browser)  
+Skill: `.cursor/skills/laptops-hub-admin-excellence/SKILL.md`  
+Production under test: `dpl_EncXa4CfSW6bHEAPdWo5PYwd1cKb` @ `db7d263`
 
-## Route inventory (application)
+## Route inventory
 
-All existing admin pages under `src/app/(admin)/admin/`:
-
-| Area | Routes | Production auth UI | Write tests |
+| Area | Route(s) | Authenticated load | Critical action |
 |---|---|---|---|
-| Auth | `/admin/login`, forgot/reset, forbidden, confirm | Login page PASS (Staff sign in, Email/Password, Forgot password, no public registration) | N/A |
-| Overview | `/admin` | NOT TESTED (auth required) | Isolated prior |
-| Products | list, new, `[handle]`, import/export/bulk | NOT TESTED | Isolated prior + SKU search shipped PR #17 |
-| Collections | list, new, `[slug]` | NOT TESTED | Isolated prior |
-| Inventory | `/admin/inventory` | NOT TESTED | Soft-deleted QA exclusion shipped earlier |
-| Orders | list, `[orderNumber]` | NOT TESTED (0 live orders) | Email fallback monitor when Resend absent — PR #17 |
-| Customers | `/admin/customers` | NOT TESTED | Minimal module — NOT APPLICABLE as full CRM |
-| Shipping/settings | `/admin/settings` | NOT TESTED | DB zone verified All Over PK 360/50 |
-| Reviews / testimonials | `/admin/reviews*` | NOT TESTED | 37 published Google-attributed testimonials in DB |
-| Reels | `/admin/reels` | NOT TESTED | 0 published reels — media BLOCKED without licensed assets |
-| Blog / CMS | `/admin/blog*`, `/admin/content` | NOT TESTED | 8 published pages + 4 guides verified via storefront |
-| Merchandising | `/admin/merchandising` | NOT TESTED | — |
-| Theme / online store | `/admin/online-store*` | NOT TESTED | V5 design frozen |
-| Staff | `/admin/staff` | NOT TESTED | Client staff invite BLOCKED without recipient email |
-| Activity / analytics / media / SEO / help / navigation / inquiries | respective routes | NOT TESTED | — |
+| Overview | `/admin` | PASS — Ordering open; email offline banner; KPIs 0/0/0/964; products 233/226/6/1 | PASS (read) |
+| Orders | `/admin/orders` | PASS — empty state; email-not-configured banner | PASS (empty list) |
+| Inquiries | `/admin/inquiries` | PASS (HTTP 200) | NOT TESTED write |
+| Products | `/admin/products` | PASS — 233 products, page 1/5 | SKU search `SKU-00233` → 1× Dell 5400 **PASS** |
+| Collections | `/admin/collections` | PASS (HTTP 200) | NOT TESTED write |
+| Inventory | `/admin/inventory` | PASS (HTTP 200) | Untracked model preserved (readiness Attention) |
+| Reviews | `/admin/reviews*` | PASS (HTTP 200) | 37 published in DB — NOT TESTED mutate |
+| Customers | `/admin/customers` | PASS (HTTP 200) | Minimal module — NOT APPLICABLE as full CRM |
+| Customize / theme | `/admin/online-store*` | PASS (HTTP 200) | V5 frozen — NOT TESTED layout write |
+| Pages / Blog | `/admin/content`, `/admin/blog*` | PASS (HTTP 200) | 8 pages + 4 guides live on storefront |
+| Reels | `/admin/reels` | PASS (HTTP 200) | 0 published — BLOCKED on licensed media |
+| Badges / merchandising | `/admin/merchandising` | PASS (HTTP 200) | NOT TESTED write |
+| Navigation / Media / Analytics / SEO / Help | respective | PASS (HTTP 200) | NOT TESTED deep |
+| Settings | `/admin/settings` | PASS — All Over PK Delivery **360** / COD **50**; COD readiness Ready | PASS (read; no fee mutation this pass) |
+| Staff | `/admin/staff` | PASS — 2 people; invite blocked without Resend; inactive sandbox membership present | Invite BLOCKED |
+| Activity log | `/admin/activity` | PASS (HTTP 200) | NOT TESTED pagination deep |
 
-## Permissions matrix (architecture, not live session)
+## Permissions / ops signals
 
-| Role capability | Mechanism | Verdict |
-|---|---|---|
-| Public catalog read | Anon RLS + SECURITY DEFINER storefront RPCs | PASS (intentional) |
-| COD create | `create_cod_order` + env + store_settings triad | PASS (gates open in Production) |
-| Staff admin | `admin_memberships` + `is_staff()` | PASS (structure) |
-| Preview merchant writes | `MERCHANT_MUTATIONS_DISABLED=1` on Preview | PASS (configured 2026-11-18) |
-| Service role | Server-only `SUPABASE_SERVICE_ROLE_KEY` | PASS |
-| Anon create_cod_order / order insert | Denied in isolated suite | PASS |
+| Check | Verdict |
+|---|---|
+| Owner session active | PASS |
+| COD triad Ready in Overview + Settings | PASS |
+| Untracked inventory Attention (intentional launch model) | PASS (expected) |
+| Email transport Attention / offline banners | PASS (honest; Resend BLOCKED) |
+| Preview merchant mutations disabled (env) | PASS (configured) |
+| Client staff invite without Resend | BLOCKED |
 
 ## Save-and-reload / responsive / a11y
 
 | Check | Verdict |
 |---|---|
-| Production authenticated save-and-reload across every admin module | NOT TESTED (no staff session in this pass) |
-| Login accessibility labels (Email, Password, Forgot password) | PASS |
-| Mobile admin sidebar | NOT TESTED |
+| Production write save-and-reload across every module | NOT TESTED (avoid uncontrolled prod writes) |
+| Login + Overview accessible labels | PASS |
+| Mobile admin sidebar | NOT TESTED this pass |
 
-## Issues discovered
+## Issues
 
 | ID | Severity | Finding | Disposition |
 |---|---|---|---|
-| A-01 | P1 | Authenticated production admin deep E2E not executed without owner session | BLOCKED on credentials / SSO |
-| A-02 | P1 | Transactional email unset — Unsent notifications will accumulate after first order | BLOCKED on Resend |
-| A-03 | P2 | Client staff account not provisioned | BLOCKED on invite email |
+| A-02 | P1 | Resend / STORE_* unset — invites + order email offline | BLOCKED |
+| A-03 | P2 | Client staff invite not deliverable | BLOCKED on Resend |
 | A-04 | P3 | Reels empty | BLOCKED on licensed media |
+| A-05 | P3 | Media rights pending 964 remote refs | Advisory — existing CDN refs |
 
-## Issues fixed (adjacent)
+## Fixed earlier (still verified)
 
-| ID | Fix |
-|---|---|
-| Preview write risk | `MERCHANT_MUTATIONS_DISABLED=1` + COD false on Preview |
-| Cron URL | Point retries at `www.laptopshub.pk` |
-| RLS initplan | Migration `rls_initplan_perf` applied + ledger repaired |
-| Main CI gate | Ruleset requires `quality` status check |
+Preview COD off + `MERCHANT_MUTATIONS_DISABLED`; cron URL → www; CI + Protect main `quality`; RLS initplan.

@@ -7,8 +7,17 @@ assert.ok(LEGAL_CONTENT_SLUGS.has("privacy"));
 const scripty = sanitizeCmsHtml(`<p>Hi</p><script>alert(1)</script><img src=x onerror=alert(1)>`);
 assert.equal(scripty.includes("script"), false);
 assert.equal(scripty.includes("onerror"), false);
-assert.equal(scripty.includes("<img"), false);
+assert.equal(scripty.includes("<img"), false); // unsafe/non-https src discarded
 assert.match(scripty, /Hi/);
+
+const safeImg = sanitizeCmsHtml(`<p>pic</p><img src="https://cdn.example.com/a.jpg" alt="A" onerror="alert(1)">`);
+assert.match(safeImg, /<img[^>]+src="https:\/\/cdn\.example\.com\/a\.jpg"/);
+assert.match(safeImg, /alt="A"/);
+assert.equal(safeImg.includes("onerror"), false);
+
+const tableOk = sanitizeCmsHtml(`<table><thead><tr><th>A</th></tr></thead><tbody><tr><td>1</td></tr></tbody></table>`);
+assert.match(tableOk, /<table>/);
+assert.match(tableOk, /<th>/);
 
 const jsUrl = sanitizeCmsHtml(`<a href="javascript:alert(1)">x</a>`);
 assert.equal(/javascript:/i.test(jsUrl), false);

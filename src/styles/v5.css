@@ -376,6 +376,16 @@ button {
   height: 8px;
 }
 
+/* Premium carousels hide the native bar; progress track is rendered in the component. */
+.lh-premium-carousel-viewport {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.lh-premium-carousel-viewport::-webkit-scrollbar {
+  display: none;
+  height: 0;
+}
+
 .v5-m-flex {
   display: none !important;
 }

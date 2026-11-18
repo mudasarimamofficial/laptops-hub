@@ -6,17 +6,19 @@ Supabase Auth was using the **built-in** mailer (not Resend). Built-in Auth SMTP
 
 **Code fix (this release):** `POST /api/admin/account/recover` prefers Auth Admin `generateLink({ type: "recovery" })` and delivers the confirm URL through the existing Resend sender (`STORE_FROM_EMAIL` on `send.laptopshub.pk`). That bypasses the built-in Auth mailer when Resend is configured.
 
-**Platform fix (operator):** Authentication → Email → SMTP Settings:
+**Platform fix (completed 2026-11-18):** Authentication → Email → SMTP Settings saved via Management API:
 
 | Field | Value |
 |---|---|
 | Host | `smtp.resend.com` |
 | Port | `465` (SSL) |
 | Username | `resend` |
-| Password | Resend API key (same sending key family as production `RESEND_API_KEY`) |
-| Sender | verified address under `send.laptopshub.pk` (e.g. same as `STORE_FROM_EMAIL`) |
+| Password | Dedicated Resend API key `laptops-hub-supabase-auth-smtp` (sending_access; **not** the Vercel order-notification key) |
+| Sender email | `auth@send.laptopshub.pk` |
+| Sender name | `Laptops HUB` |
+| `rate_limit_email_sent` | `30` / hour (raised after custom SMTP enabled) |
 
-Keep rate limits enabled; raise Auth email rate modestly after custom SMTP is on (do not disable globally).
+Do not print or commit the SMTP password. App recovery via `generateLink` + Resend REST remains the primary staff recovery path; native Auth SMTP is now configured for built-in Auth mailer flows.
 
 ## Change password
 

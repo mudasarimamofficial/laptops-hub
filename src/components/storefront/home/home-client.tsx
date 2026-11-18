@@ -6,6 +6,7 @@ import { LHImg } from "@/components/storefront/v5/lh-img";
 import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
 import { DEFAULT_STOREFRONT_PRESENTATION, sectionLabel, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import { useCompare } from "@/lib/commerce/compare-store";
+import { PremiumHorizontalCarousel, useCarouselControls } from "@/components/storefront/ui/premium-horizontal-carousel";
 
 export type CbData = {
   text: string;
@@ -113,9 +114,9 @@ export function ChromebookSection({ cb, pres = DEFAULT_STOREFRONT_PRESENTATION }
   );
 }
 
-/** V5 "08 — Newer generations" scroll-snap row with prev/next buttons (±600px). */
+/** V5 "08 — Newer generations" scroll-snap row with premium progress (±600px). */
 export function NewGenRow({ count, children, pres = DEFAULT_STOREFRONT_PRESENTATION }: { count: number; children: ReactNode; pres?: StorefrontPresentation }) {
-  const row = useRef<HTMLDivElement>(null);
+  const { viewportRef, scrollLeft, scrollRight } = useCarouselControls(600);
   const btn = { width: 44, height: 44, borderRadius: "50%", border: "1px solid var(--lh-border)", background: "#FFFFFF", cursor: "pointer", display: "grid", placeItems: "center" } as const;
   return (
     <>
@@ -132,21 +133,37 @@ export function NewGenRow({ count, children, pres = DEFAULT_STOREFRONT_PRESENTAT
           <Link href="/collections/gen-10-plus" className="v5-hov-color-action" style={{ display: "inline-flex", alignItems: "center", minHeight: 44, fontWeight: 600, fontSize: 15, color: "var(--lh-action)", marginRight: 6, whiteSpace: "nowrap" }}>
             <span>{pres.showCatalogCounts ? `View all ${count} →` : "View all →"}</span>
           </Link>
-          <button type="button" aria-label="Scroll left" className="v5-hov-bd-action" style={btn} onClick={() => row.current?.scrollBy({ left: -600 })}>
+          <button type="button" aria-label="Scroll left" className="v5-hov-bd-action" style={btn} onClick={scrollLeft}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#102039" strokeWidth="2" aria-hidden="true">
               <path d="M15 6l-6 6 6 6" />
             </svg>
           </button>
-          <button type="button" aria-label="Scroll right" className="v5-hov-bd-action" style={btn} onClick={() => row.current?.scrollBy({ left: 600 })}>
+          <button type="button" aria-label="Scroll right" className="v5-hov-bd-action" style={btn} onClick={scrollRight}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#102039" strokeWidth="2" aria-hidden="true">
               <path d="M9 6l6 6-6 6" />
             </svg>
           </button>
         </div>
       </div>
-      <div ref={row} className="v5-row" style={{ display: "grid", gridAutoFlow: "column", gridAutoColumns: "minmax(270px,290px)", gap: 18, overflowX: "auto", scrollSnapType: "x mandatory", scrollBehavior: "smooth", padding: "6px 2px 12px", scrollbarWidth: "thin", scrollbarColor: "var(--lh-action) transparent" }}>
+      <PremiumHorizontalCarousel
+        viewportRef={viewportRef}
+        showArrows={false}
+        step={600}
+        aria-label="Newer generation laptops"
+        className="v5-row"
+        style={{
+          display: "grid",
+          gridAutoFlow: "column",
+          gridAutoColumns: "minmax(270px,290px)",
+          gap: 18,
+          overflowX: "auto",
+          scrollSnapType: "x mandatory",
+          scrollBehavior: "smooth",
+          padding: "6px 2px 4px",
+        }}
+      >
         {children}
-      </div>
+      </PremiumHorizontalCarousel>
     </>
   );
 }

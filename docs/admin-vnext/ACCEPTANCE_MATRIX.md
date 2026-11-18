@@ -4,7 +4,7 @@
 
 **Main SHA:** `6e683fac0fdc0251fbf5e5648f271a4b945702a1`  
 **Merged PRs this mandate wave:** #29 D2 · #30 E · #31 TipTap · #32 Reviews/Reels  
-**Production deploy (promote):** `dpl_GbnaeHReBLurhw4MtFSckJRDxhqw` (verify READY before smoke)  
+**Production deploy:** `dpl_GbnaeHReBLurhw4MtFSckJRDxhqw` — **READY** on `www.laptopshub.pk`  
 **Rollback checkpoint:** previous main `58572f6` / `dpl_B6a75f81JJ7rD4Z6xX25NtQEmpDT`
 
 Gate values: `PASS` · `PARTIAL` · `FAIL` · `NOT TESTED` · `BLOCKED`

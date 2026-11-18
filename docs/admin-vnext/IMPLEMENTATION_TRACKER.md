@@ -2,7 +2,7 @@
 
 **Production main (at last tracker sync):** `6e683fa` (Reviews/Reels #32)  
 **Prior TipTap:** `4a6b44e` (#31) · **Prior E:** `857a8b8` (#30) · **Prior D2:** `19998d8` (#29)  
-**Prod promote:** `dpl_GbnaeHReBLurhw4MtFSckJRDxhqw` (verify READY)  
+**Prod deploy READY:** `dpl_GbnaeHReBLurhw4MtFSckJRDxhqw` (`6e683fa`)  
 **Shopify benchmark:** `laptopshub-2`  
 **Updated:** 2026-11-18
 

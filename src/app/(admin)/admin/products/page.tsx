@@ -209,7 +209,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                             <p className="truncate font-medium">
                               {p.title}
                               {p.featured ? (
-                                <span className="ml-2 text-xs font-normal text-[var(--lh-action)]">
+                                <span className="ml-2 text-xs font-normal text-[var(--adm-action)]">
                                   featured
                                 </span>
                               ) : null}
@@ -257,7 +257,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
                       <td className="px-4 py-3 text-right">
                         <Link
                           href={`/admin/products/${p.handle}`}
-                          className="font-semibold text-[var(--lh-action)] hover:underline"
+                          className="font-semibold text-[var(--adm-action)] hover:underline"
                         >
                           Edit
                         </Link>
@@ -277,7 +277,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
           {page > 1 ? (
             <Link
               href={`/admin/products?q=${encodeURIComponent(q)}&status=${status}&page=${page - 1}`}
-              className="font-semibold text-[var(--lh-action)] hover:underline"
+              className="font-semibold text-[var(--adm-action)] hover:underline"
             >
               ← Previous
             </Link>
@@ -285,7 +285,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
           {page < pages ? (
             <Link
               href={`/admin/products?q=${encodeURIComponent(q)}&status=${status}&page=${page + 1}`}
-              className="font-semibold text-[var(--lh-action)] hover:underline"
+              className="font-semibold text-[var(--adm-action)] hover:underline"
             >
               Next →
             </Link>

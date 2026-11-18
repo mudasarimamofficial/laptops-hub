@@ -86,7 +86,7 @@ export default async function AdminCollectionsPage() {
                     <td className="px-4 py-3 font-medium">
                       {c.title}
                       {c.featured ? (
-                        <span className="ml-2 text-xs font-normal text-[var(--lh-action)]">featured</span>
+                        <span className="ml-2 text-xs font-normal text-[var(--adm-action)]">featured</span>
                       ) : null}
                     </td>
                     <td className="px-4 py-3 font-[family-name:var(--font-mono)] text-xs text-[var(--adm-ink-2)]">
@@ -98,7 +98,7 @@ export default async function AdminCollectionsPage() {
                       <StatusBadge status={c.published ? "published" : "draft"} />
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <Link href={`/admin/collections/${c.slug}`} className="font-semibold text-[var(--lh-action)] hover:underline">
+                      <Link href={`/admin/collections/${c.slug}`} className="font-semibold text-[var(--adm-action)] hover:underline">
                         Edit
                       </Link>
                     </td>

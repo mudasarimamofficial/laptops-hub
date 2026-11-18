@@ -1,13 +1,14 @@
 # Admin VNext — route inventory
 
-**Main:** `58572f6` · **Prod:** `dpl_B6a75f81JJ7rD4Z6xX25NtQEmpDT`  
+**Main:** `6e683fa` (#32) · **Prod promote in flight:** `dpl_GbnaeHReBLurhw4MtFSckJRDxhqw` (building)  
+**Prior certified prod cited in mandate:** `dpl_B6a75f81JJ7rD4Z6xX25NtQEmpDT`  
 Gates: Visual · Workflow · Functional · Persistence · Responsive · A11y  
 Values: `PASS` / `PARTIAL` / `FAIL` / `PENDING` / `BLOCKED`
 
 | Route | Merchant task | Rel | Impl | Deployed | Persist QA | Resp | Notes |
 |---|---|---|---|---|---|---|---|
 | `/admin` | Overview | F | PARTIAL | YES | PENDING | PENDING | |
-| `/admin/orders` | List COD | C | YES | YES | PENDING | PENDING | Labels improved |
+| `/admin/orders` | List COD | C | YES | YES | PENDING | PENDING | |
 | `/admin/orders/[n]` | Fulfill | C | YES | YES | PENDING | PENDING | Off lh-container |
 | `/admin/inquiries` | Inquiries | C | YES | YES | PENDING | PENDING | |
 | `/admin/customers` | Customers | C | PARTIAL | YES | PENDING | PENDING | |
@@ -19,20 +20,20 @@ Values: `PASS` / `PARTIAL` / `FAIL` / `PENDING` / `BLOCKED`
 | `/admin/products/export` | Export | B | PARTIAL | YES | PENDING | PENDING | |
 | `/admin/collections*` | Collections | B | PARTIAL | YES | PENDING | PENDING | |
 | `/admin/inventory` | Stock | B | PARTIAL | YES | PENDING | PENDING | |
-| `/admin/blog*` | Blog | A | YES | YES | PENDING | PENDING | Upload+RTE gaps |
+| `/admin/blog*` | Blog | A | YES | YES | PENDING | PENDING | TipTap #31; browser QA PENDING |
 | `/admin/content` | CMS pages | D | YES | YES | PENDING | PENDING | |
-| `/admin/reels` | Reels | D | PARTIAL | YES | PENDING | PENDING | |
-| `/admin/reviews*` | Reviews | D | PARTIAL | YES | PENDING | PENDING | |
-| `/admin/media` | Media | D | IN PROG | — | PENDING | PENDING | Upload added D2 |
-| `/admin/navigation` | Menus | D | IN PROG | YES | PENDING | PENDING | is_published fix |
-| `/admin/merchandising` | Badges | D | PARTIAL | YES | PENDING | PENDING | |
-| `/admin/online-store*` | Customize | D | PARTIAL | YES | PENDING | PENDING | |
-| `/admin/analytics` | Insights | E | PENDING | YES | PENDING | PENDING | |
-| `/admin/seo` | SEO | E | PENDING | YES | PENDING | PENDING | |
-| `/admin/settings` | Settings | E | PENDING | YES | PENDING | PENDING | |
-| `/admin/staff` | Staff | E | PENDING | YES | PENDING | PENDING | |
-| `/admin/activity` | Audit | E | PENDING | YES | PENDING | PENDING | |
-| `/admin/help` | Help | F | PENDING | YES | PENDING | PENDING | |
+| `/admin/reels` | Reels | D | YES | YES (#32) | PENDING | PENDING | Poster media picker |
+| `/admin/reviews*` | Reviews | D | YES | YES (#32) | PENDING | PENDING | Product + testimonials desks |
+| `/admin/media` | Media | D | YES | YES (#29) | PENDING | PENDING | cms-media upload |
+| `/admin/navigation` | Menus | D | YES | YES (#29) | PENDING | PENDING | status mapping + save bar |
+| `/admin/merchandising` | Badges | D | PARTIAL | YES | PENDING | PENDING | IA links; no fake metrics |
+| `/admin/online-store*` | Customize | D | PARTIAL | YES | PENDING | PENDING | Tokens/links; V5 preserved |
+| `/admin/analytics` | Insights | E | YES | YES (#30) | PENDING | PENDING | Honest COD metrics |
+| `/admin/seo` | SEO | E | YES | YES (#30) | PENDING | PENDING | No false indexing claims |
+| `/admin/settings` | Settings | E | YES | YES (#30) | PENDING | PENDING | Hub IA + COD readiness |
+| `/admin/staff` | Staff | E | YES | YES (#30) | PENDING | PENDING | Roles explained |
+| `/admin/activity` | Audit | E | YES | YES (#30) | PENDING | PENDING | Human labels |
+| `/admin/help` | Help | F | PARTIAL | YES | PENDING | PENDING | |
 | Auth routes | Login/reset | — | YES | YES | — | PENDING | |
 
-See `IMPLEMENTATION_TRACKER.md` for release SHAs and independent gates.
+See `IMPLEMENTATION_TRACKER.md` and `ACCEPTANCE_MATRIX.md` for independent gates. **Do not treat Impl=YES as Accepted.**

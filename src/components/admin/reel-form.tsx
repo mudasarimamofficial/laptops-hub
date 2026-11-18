@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
+import { AdminMediaPicker } from "@/components/admin/ui/admin-media-picker";
 
 export type ReelFormValues = {
   title: string;
@@ -46,7 +47,12 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
   const [err, setErr] = useState<string | null>(null);
   const [fe, setFe] = useState<Record<string, string>>({});
   const set = <K extends keyof ReelFormValues>(k: K, val: ReelFormValues[K]) => setV((x) => ({ ...x, [k]: val }));
-  const fieldErr = (k: string) => (fe[k] ? <span role="alert" className="mt-1 block text-xs text-[var(--lh-error)]">{fe[k]}</span> : null);
+  const fieldErr = (k: string) =>
+    fe[k] ? (
+      <span role="alert" className="mt-1 block text-xs text-[var(--adm-danger)]">
+        {fe[k]}
+      </span>
+    ) : null;
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -99,14 +105,20 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
       <label className="block sm:col-span-2">
         <span className="font-medium">Video file link</span>
         <input className={input} type="url" inputMode="url" value={v.videoUrl} onChange={(e) => set("videoUrl", e.target.value)} required placeholder="https://…/reel.mp4" />
-        <span className="mt-1 block text-xs text-[var(--lh-ink-2)]">Direct .mp4, .webm or .mov file that Laptops HUB owns or has licensed. Videos from other shops cannot be used.</span>
+        <span className="mt-1 block text-xs text-[var(--adm-ink-2)]">
+          Direct .mp4, .webm or .mov HTTPS file that Laptops HUB owns or has licensed. Missing third-party videos stay a content dependency — paste a real host URL when assets are ready. Videos from other shops cannot be used.
+        </span>
         {fieldErr("videoUrl")}
       </label>
-      <label className="block">
-        <span className="font-medium">Cover image link (optional)</span>
-        <input className={input} type="url" inputMode="url" value={v.posterUrl} onChange={(e) => set("posterUrl", e.target.value)} placeholder="https://…/cover.webp" />
+      <div className="sm:col-span-2">
+        <AdminMediaPicker
+          label="Poster / cover image (optional)"
+          value={v.posterUrl}
+          onChange={(url) => set("posterUrl", url)}
+          hint="Upload or pick a still frame shown before play. Prefer a Laptops HUB-owned image."
+        />
         {fieldErr("posterUrl")}
-      </label>
+      </div>
       <label className="block">
         <span className="font-medium">Linked product handle (optional)</span>
         <input className={input} value={v.productHandle} onChange={(e) => set("productHandle", e.target.value.trim())} placeholder="dell-latitude-7490" />
@@ -174,8 +186,8 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
             Delete
           </button>
         ) : null}
-        {err ? <p role="alert" className="text-[var(--lh-error)]">{err}</p> : null}
-        {msg ? <p role="status" className="text-emerald-700">{msg}</p> : null}
+        {err ? <p role="alert" className="text-[var(--adm-danger)]">{err}</p> : null}
+        {msg ? <p role="status" className="text-[var(--adm-success)]">{msg}</p> : null}
       </div>
     </form>
   );

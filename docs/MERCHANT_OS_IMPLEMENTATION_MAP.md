@@ -1,8 +1,9 @@
 # Merchant OS enhancement — implementation map
 
-**Branch:** `feat/merchant-os-enhancements`  
-**Feature base:** `d167c6e` / preview pin `db051f8`  
-**Baseline:** `951b95a` / tag `checkpoint/pre-merchant-os-951b95a`  
+**Shipped:** PR #23 → `main` @ `43368e3`  
+**Production:** `dpl_AZdpHMdwRjNe2uf2RGLH8kFbxZUw` → www.laptopshub.pk  
+**Feature tip:** `e1db50a`  
+**Rollback:** tag `checkpoint/pre-merchant-os-951b95a` / prior prod `dpl_B9bykg3S…` @ `951b95a`  
 **Release report:** `docs/FINAL_MERCHANT_OS_RELEASE_REPORT.md`  
 **Migration reconciliation:** `docs/MIGRATION_LEDGER_RECONCILIATION_2026-11-18.md`
 

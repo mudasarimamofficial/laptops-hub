@@ -78,7 +78,7 @@ export default async function TestimonialsPage({ searchParams }: { searchParams:
         <Link href="/admin/reviews" className="rounded-full border border-[var(--adm-border)] bg-white px-3 py-1">
           Product reviews
         </Link>
-        <span aria-current="page" className="rounded-full border border-[var(--lh-action)] bg-[var(--lh-ice)] px-3 py-1 font-semibold">
+        <span aria-current="page" className="rounded-full border border-[var(--adm-action)] bg-[var(--adm-info-bg)] px-3 py-1 font-semibold">
           Store testimonials
         </span>
       </nav>

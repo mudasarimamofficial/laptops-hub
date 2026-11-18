@@ -63,7 +63,7 @@ export function ReviewModeration({ id, status }: { id: string; status: string })
           {l}
         </button>
       ))}
-      {error ? <span role="alert" className="text-[var(--lh-error)]">{error}</span> : null}
+      {error ? <span role="alert" className="text-[var(--adm-danger)]">{error}</span> : null}
     </div>
   );
 }

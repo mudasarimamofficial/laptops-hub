@@ -1,9 +1,9 @@
 # Final production certification — operational acceptance
 
 **Date:** 2026-11-18  
-**Baseline:** GitHub `main` `30ac555af242bc713e4c4de108b3248a7ee7c7bd`  
-**Live production:** Vercel `dpl_9FUtP39LGYhv52rfKmzAJdeCMVfj` READY  
-**Aliases:** `www.laptopshub.pk` + `laptopshub.pk` → deployment above  
+**Acceptance baseline exercised:** `30ac555af242bc713e4c4de108b3248a7ee7c7bd` (`dpl_9FUtP39…`)  
+**Live production now:** GitHub `main` `c29801e55c7e6ae51689c9e728822da8c446c5fb` · Vercel `dpl_5YnLi4A3mEQo2aAcbCP3Np9ksr1f` READY (PR [#21](https://github.com/mudasarimamofficial/laptops-hub/pull/21))  
+**Aliases:** `www.laptopshub.pk` + `laptopshub.pk` → `dpl_5YnLi4A3…`  
 **Method:** Independent browser + API + isolated local suites. No invented customer PII. Hostinger CRM `app.laptopshub.pk` untouched.
 
 Labels: **PASS** · **FAIL** · **BLOCKED** · **NOT TESTED** · **NOT APPLICABLE**
@@ -14,7 +14,7 @@ Labels: **PASS** · **FAIL** · **BLOCKED** · **NOT TESTED** · **NOT APPLICABL
 
 | Gate | Verdict | Evidence |
 |---|---|---|
-| Newest READY production = `main` SHA `30ac555` | **PASS** | `list_deployments` + `vercel alias ls`: www → `laptops-m2nundh29…` = `dpl_9FUtP39…` meta `githubCommitSha=30ac555…` |
+| Newest READY production = `main` SHA | **PASS** | Acceptance on `30ac555`/`dpl_9FUtP39…`; post-fix live `c29801e`/`dpl_5YnLi4A3…` with www alias verified |
 | Protect main + required `quality` | **PASS** | Prior session; unchanged this pass |
 | Supabase `xvmmjkrkgznnakcobmww` | **PASS** | ACTIVE_HEALTHY; 31 migrations |
 | CRM `app.laptopshub.pk` | **PASS** | Independent Hostinger A; not modified |
@@ -29,7 +29,7 @@ Labels: **PASS** · **FAIL** · **BLOCKED** · **NOT TESTED** · **NOT APPLICABL
 | Password setup from invite link | **PASS** | QA editor set password and signed in |
 | Editor login | **PASS** | Session on `/admin` as editor |
 | Role permissions (editor vs Orders/Settings) | **PASS** | Editor denied Orders (403 / forbidden); isolated Playwright: editor cannot open Settings; fulfillment cannot customize theme |
-| Forbidden copy for wrong role | **PASS** (code) / **NOT TESTED** (prod until deploy) | Local change: `requireStaffPage` → `?reason=role|membership|denied` + reason-aware `/admin/forbidden` |
+| Forbidden copy for wrong role | **PASS** | Merged + deployed: `requireStaffPage` → `?reason=role|membership|denied` + reason-aware `/admin/forbidden` (`c29801e`) |
 | Password recovery UI | **PASS** | `/admin/forgot-password` loads and accepts email |
 | Recovery email via Resend | **NOT APPLICABLE** | Recovery uses Supabase Auth `resetPasswordForEmail` (not app Resend outbox) |
 | Supabase Auth SMTP delivery of recovery | **NOT TESTED** | No recovery message observed in Resend; Auth SMTP not verified this pass |
@@ -109,7 +109,7 @@ Skip-to-content / labeled form controls on checkout and admin login: **PASS**. N
 
 | ID | Severity | Finding | Disposition |
 |---|---|---|---|
-| OPS-01 | P1 | Forbidden page did not distinguish role vs membership | **FIX READY** — `staff.ts` + `forbidden/page.tsx` (this release) |
+| OPS-01 | P1 | Forbidden page did not distinguish role vs membership | **RESOLVED** — shipped in PR #21 / `c29801e` / `dpl_5YnLi4A3…` |
 | OPS-02 | — | Live COD submit | **BLOCKED** on QA identity (not a code defect) |
 | OPS-03 | — | Customer order emails | **NOT TESTED** — do not enable `NOTIFY_CUSTOMER_EMAIL` until a labeled live order proves outbox |
 | OPS-04 | P3 | Reels empty | **BLOCKED** on licensed media |

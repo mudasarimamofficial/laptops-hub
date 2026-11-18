@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import { AdminCard } from "@/components/admin/ui/admin-card";
 import { AdminField, admInputClass } from "@/components/admin/ui/admin-field";
+import { RichTextEditor } from "@/components/admin/rich-text-editor";
 
 type Props = {
   slug: string;
@@ -24,6 +25,7 @@ export function ContentEditForm(props: Props) {
   const [bodyHtml, setBodyHtml] = useState(props.bodyHtml);
   const [legalApproved, setLegalApproved] = useState(props.legalApproved);
   const [approveTemplate, setApproveTemplate] = useState(false);
+  const [showSource, setShowSource] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -85,17 +87,29 @@ export function ContentEditForm(props: Props) {
               Legal / business approval (required before public policy pages)
             </label>
           ) : null}
-          <AdminField
-            label="Body"
-            hint="Safe HTML — headings, lists, links. Leave empty only when you approve publishing the V5 template copy."
-          >
-            <textarea
-              className={`${admInputClass} font-[family-name:var(--font-mono)] text-xs`}
-              rows={8}
-              value={bodyHtml}
-              onChange={(e) => setBodyHtml(e.target.value)}
-            />
-          </AdminField>
+          <div className="space-y-2">
+            <RichTextEditor key={props.slug} value={bodyHtml} onChange={setBodyHtml} label="Body" />
+            <button
+              type="button"
+              className="text-xs font-semibold text-[var(--adm-action)] underline"
+              onClick={() => setShowSource((v) => !v)}
+            >
+              {showSource ? "Hide HTML source" : "Show HTML source (advanced)"}
+            </button>
+            {showSource ? (
+              <AdminField label="HTML source" hint="Rare fixes only. Content is sanitised again on save.">
+                <textarea
+                  className={`${admInputClass} font-[family-name:var(--font-mono)] text-xs`}
+                  rows={8}
+                  value={bodyHtml}
+                  onChange={(e) => setBodyHtml(e.target.value)}
+                />
+              </AdminField>
+            ) : null}
+            <p className="text-xs text-[var(--adm-ink-2)]">
+              Leave the body empty only when you approve publishing the V5 template copy for this page.
+            </p>
+          </div>
           {status === "published" && !bodyHtml.trim() ? (
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" checked={approveTemplate} onChange={(e) => setApproveTemplate(e.target.checked)} />

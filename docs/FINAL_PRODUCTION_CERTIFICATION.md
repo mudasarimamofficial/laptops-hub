@@ -10,10 +10,10 @@ PASS · FAIL · BLOCKED · NOT TESTED · NOT APPLICABLE
 
 | Item | Value | Verdict |
 |---|---|---|
-| GitHub `main` SHA | `06b5ff3f3c83c74ba8dae6d31a38a3f1866ab7c6` | PASS |
+| GitHub `main` SHA | `afed09a808d4357aeff2d9375b40fb797e68546d` (app hardening `06b5ff3` + this certification) | PASS |
 | Hardening PR | [#18](https://github.com/mudasarimamofficial/laptops-hub/pull/18) — CI + cron URL + certification docs | PASS |
-| CI on main | Run `44235107324` — `quality` success | PASS |
-| Vercel production | `dpl_8sSU9AFwebcSBwPt1hyqTV14CMcR` READY | PASS |
+| CI on main | Runs `44235107324` (`06b5ff3`) and `44236261618` (`afed09a`) — `quality` success | PASS |
+| Vercel production | `dpl_E22FfdsVi8KcEJiwqLnmfBNNKVmz` READY @ `afed09a` | PASS |
 | Production aliases | `www.laptopshub.pk`, `laptopshub.pk` → www (308) | PASS |
 | Supabase migrations | 31 aligned (local = remote) | PASS |
 | CRM `app.laptopshub.pk` | Untouched | PASS |

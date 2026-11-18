@@ -7,9 +7,9 @@ Evidence-based inventory of GitHub, Vercel, and Supabase for Laptops HUB. No sec
 | Surface | Value | Verdict |
 |---|---|---|
 | GitHub | `mudasarimamofficial/laptops-hub`, default `main`, public | PASS |
-| Production commit | `06b5ff3f3c83c74ba8dae6d31a38a3f1866ab7c6` | PASS |
+| Production commit | `afed09a808d4357aeff2d9375b40fb797e68546d` | PASS |
 | Vercel project | `laptops-hub` / `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` | PASS |
-| Production deployment | `dpl_8sSU9AFwebcSBwPt1hyqTV14CMcR` READY @ `06b5ff3` | PASS |
+| Production deployment | `dpl_E22FfdsVi8KcEJiwqLnmfBNNKVmz` READY @ `afed09a` | PASS |
 | Node / region | 24.x / `sin1` | PASS |
 | Framework | Next.js | PASS |
 | Supabase | `xvmmjkrkgznnakcobmww` (Laptops Hub, `ap-southeast-1`) ACTIVE_HEALTHY | PASS |

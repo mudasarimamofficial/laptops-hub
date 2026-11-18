@@ -4,10 +4,13 @@ import { NextResponse, type NextRequest } from "next/server";
 import { RESET_PASSWORD_PATH } from "@/lib/auth/recovery";
 
 /**
- * Landing point of the password-recovery email and of staff invitations (Admin → Staff). Accepts the recommended
- * `token_hash` link (works on any device) and the default-template PKCE `code` link (same browser that requested it).
- * Only recovery and invite links are accepted, and the destination is fixed ("Set a new password") — query
- * parameters cannot redirect elsewhere. Access to /admin still depends on an active admin_memberships row.
+ * Landing point for staff email links:
+ * - recovery / invite → set a new password (fixed destination)
+ * - magiclink → signed-in admin home (passwordless session for the same Auth user)
+ *
+ * Accepts the recommended `token_hash` link (any device) and the default-template PKCE `code` link
+ * (same browser that requested it). Query parameters cannot redirect off-site. Access to /admin still
+ * depends on an active admin_memberships row.
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -27,17 +30,20 @@ export async function GET(request: NextRequest) {
   });
 
   let ok = false;
-  if (tokenHash && (type === "recovery" || type === "invite")) {
+  let destination = "/admin/forgot-password?link=invalid";
+  if (tokenHash && (type === "recovery" || type === "invite" || type === "magiclink")) {
     ok = !(await supabase.auth.verifyOtp({ type, token_hash: tokenHash })).error;
+    if (ok) destination = type === "magiclink" ? "/admin" : RESET_PASSWORD_PATH;
   } else if (code) {
     ok = !(await supabase.auth.exchangeCodeForSession(code)).error;
+    if (ok) destination = RESET_PASSWORD_PATH;
   }
 
   // Relative Location: the browser stays on the exact host it arrived on, where the session cookie was set.
   const res = new NextResponse(null, {
     status: 303,
     headers: {
-      Location: ok ? RESET_PASSWORD_PATH : "/admin/forgot-password?link=invalid",
+      Location: ok ? destination : "/admin/forgot-password?link=invalid",
       "Cache-Control": "no-store",
       "Referrer-Policy": "no-referrer",
     },

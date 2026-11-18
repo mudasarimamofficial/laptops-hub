@@ -13,7 +13,7 @@
 
 1. **Supabase Auth** — existing owner user email updated via Auth Admin API (`updateUserById`). Same UUID. Legacy address no longer attached to any Auth user.
 2. **Vercel Production** — `STORE_NOTIFY_EMAIL` set to `infolaptopshub@gmail.com` (recipient). Sender remains `orders@send.laptopshub.pk` via `STORE_FROM_EMAIL`.
-3. **Code** — `src/lib/auth/owner-identity.ts` documents the permanent vs legacy addresses for tests and future checks.
+3. **Code** — `src/lib/auth/owner-identity.ts` documents the permanent owner address for tests and future checks. The retired mailbox is not kept as an active code constant.
 
 ## What was not rewritten
 

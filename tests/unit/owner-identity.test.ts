@@ -1,18 +1,13 @@
 import assert from "node:assert/strict";
-import {
-  isActiveOwnerEmail,
-  LEGACY_OWNER_EMAIL,
-  OWNER_EMAIL,
-} from "../../src/lib/auth/owner-identity";
+import { isActiveOwnerEmail, OWNER_EMAIL } from "../../src/lib/auth/owner-identity";
 import { presetToDraftReel, REELS_PRESET_KEYS } from "../../src/lib/content/reels-presets";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 assert.equal(OWNER_EMAIL, "infolaptopshub@gmail.com");
-assert.equal(LEGACY_OWNER_EMAIL, "laptopshubofficial@gmail.com");
 assert.equal(isActiveOwnerEmail(OWNER_EMAIL), true);
-assert.equal(isActiveOwnerEmail(LEGACY_OWNER_EMAIL), false);
 assert.equal(isActiveOwnerEmail("InfoLaptopsHub@gmail.com"), true);
+assert.equal(isActiveOwnerEmail("laptopshubofficial@gmail.com"), false);
 assert.equal(isActiveOwnerEmail(null), false);
 
 const manifest = JSON.parse(

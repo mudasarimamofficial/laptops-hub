@@ -4,6 +4,7 @@ import {
   canTransition,
   formatReviewDate,
   initials,
+  publishBlockers,
   splitRows,
   testimonialInputSchema,
   toRow,
@@ -24,11 +25,40 @@ const base = { authorName: "Ali Raza", body: "Bought a ThinkPad, works great and
 // --- Input validation and provenance -------------------------------------------------------------
 assert.equal(testimonialInputSchema.safeParse(base).success, true);
 const g1 = testimonialInputSchema.safeParse({ ...base, source: "google" });
-assert.equal(g1.success, false, "google source without a link is refused");
-assert.ok(!g1.success && g1.error.issues.some((i) => i.path[0] === "sourceUrl"));
+assert.equal(g1.success, true, "google draft may omit Maps URL until publish");
 assert.equal(testimonialInputSchema.safeParse({ ...base, source: "google", sourceUrl: "https://evil.example/maps" }).success, false);
 assert.equal(testimonialInputSchema.safeParse({ ...base, source: "google", sourceUrl: "https://maps.app.goo.gl/abc123" }).success, true);
 assert.equal(testimonialInputSchema.safeParse({ ...base, source: "google", sourceUrl: "https://www.google.com/maps/reviews/x" }).success, true);
+assert.equal(
+  publishBlockers({
+    source: "google",
+    source_url: null,
+    consent_confirmed: true,
+    avatar_url: null,
+    avatar_permission: false,
+  }),
+  "A Google review needs the link to it on Google Maps before publishing.",
+);
+assert.equal(
+  publishBlockers({
+    source: "google",
+    source_url: "https://maps.app.goo.gl/abc123",
+    consent_confirmed: false,
+    avatar_url: null,
+    avatar_permission: false,
+  }),
+  "Record the customer's consent (edit the entry) before publishing.",
+);
+assert.equal(
+  publishBlockers({
+    source: "google",
+    source_url: "https://maps.app.goo.gl/abc123",
+    consent_confirmed: true,
+    avatar_url: null,
+    avatar_permission: false,
+  }),
+  null,
+);
 assert.equal(testimonialInputSchema.safeParse({ ...base, avatarUrl: "https://cdn.example/a.jpg" }).success, false, "avatar needs permission");
 assert.equal(testimonialInputSchema.safeParse({ ...base, avatarUrl: "https://cdn.example/a.jpg", avatarPermission: true }).success, true);
 assert.equal(testimonialInputSchema.safeParse({ ...base, avatarUrl: "javascript:alert(1)", avatarPermission: true }).success, false);

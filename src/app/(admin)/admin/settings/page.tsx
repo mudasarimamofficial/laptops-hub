@@ -59,7 +59,11 @@ export default async function AdminSettingsPage() {
         }}
       />
 
-      <div className="mt-8">
+      <div id="shipping" className="mt-8 scroll-mt-24">
+        <p className="mb-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+          Saving delivery or COD fees does not open customer ordering. Production COD stays off until the owner approves
+          policies, fees and the COD enablement flags.
+        </p>
         <ShippingZoneForm />
       </div>
 

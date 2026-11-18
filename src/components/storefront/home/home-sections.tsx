@@ -136,12 +136,18 @@ export function SpecSection({ links, pres = DEFAULT_STOREFRONT_PRESENTATION }: {
           <Link key={q.href} href={q.href} className="v5-hov-spec" style={{ display: "flex", flexDirection: "column", gap: 14, padding: 20, background: "#FFFFFF", border: "1px solid var(--lh-border)", borderRadius: 18, color: "var(--lh-ink)", transition: "border-color .2s ease,box-shadow .2s ease,transform .2s ease" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
               <span style={{ fontFamily: "var(--font-display)", fontSize: 19, fontWeight: 600, letterSpacing: "-.02em" }}>{q.label}</span>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: 20, fontWeight: 500, color: "var(--lh-action)" }}>{q.count}</span>
+              {pres.showCatalogCounts ? (
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 20, fontWeight: 500, color: "var(--lh-action)" }}>{q.count}</span>
+              ) : null}
             </div>
-            <div style={{ height: 6, borderRadius: 999, background: "var(--lh-divider)", overflow: "hidden" }}>
-              <div style={{ width: q.bar, height: "100%", borderRadius: 999, background: "linear-gradient(90deg,var(--lh-action),var(--lh-electric))" }} />
-            </div>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-ink-2)" }}>{q.share}</span>
+            {pres.showCatalogCounts ? (
+              <div style={{ height: 6, borderRadius: 999, background: "var(--lh-divider)", overflow: "hidden" }}>
+                <div style={{ width: q.bar, height: "100%", borderRadius: 999, background: "linear-gradient(90deg,var(--lh-action),var(--lh-electric))" }} />
+              </div>
+            ) : null}
+            {pres.showCatalogCounts ? (
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-ink-2)" }}>{q.share}</span>
+            ) : null}
           </Link>
         ))}
       </div>
@@ -175,7 +181,11 @@ export function BudgetSection({ tiles, pres = DEFAULT_STOREFRONT_PRESENTATION }:
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: 18 }}>
         {tiles.map((b) => (
           <Link key={b.href} href={b.href} className="v5-hov-budget" style={{ position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 40, padding: 28, borderRadius: 22, background: "linear-gradient(160deg,#FFFFFF 40%,var(--lh-ice) 100%)", border: "1px solid var(--lh-border)", color: "var(--lh-ink)", minHeight: 200, transition: "border-color .2s ease,transform .2s ease" }}>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-ink-2)" }}>{b.count} laptops</span>
+            {pres.showCatalogCounts ? (
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-ink-2)" }}>{b.count} laptops</span>
+            ) : (
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-ink-2)" }}>Shop this range</span>
+            )}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 12 }}>
               <span style={{ fontFamily: "var(--font-display)", fontSize: "clamp(24px,2.2vw,30px)", fontWeight: 700, letterSpacing: "-.03em", lineHeight: 1.1, color: "var(--lh-ink)" }}>{b.label}</span>
               <span style={{ width: 44, height: 44, flexShrink: 0, borderRadius: "50%", display: "grid", placeItems: "center", background: "var(--lh-ink)", color: "var(--lh-electric)", fontSize: 18 }}>→</span>

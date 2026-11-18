@@ -34,7 +34,7 @@ export const EMPTY_REEL: ReelFormValues = {
   tag: "",
 };
 
-const input = "mt-1 w-full min-w-0 rounded-xl border border-[var(--lh-border)] px-3 py-2";
+const input = "mt-1 w-full min-w-0 rounded-lg border border-[var(--adm-border)] bg-white px-3 py-2";
 
 /** Create or edit one reel. Publishing is refused (here, in the API and in the DB) until rights are confirmed. */
 export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues }) {
@@ -123,11 +123,20 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
       </label>
       <label className="block">
         <span className="font-medium">Status</span>
-        <select className={input} value={v.status} onChange={(e) => set("status", e.target.value as ReelFormValues["status"])}>
+        <select
+          className={input}
+          value={v.rightsStatus === "pending" && v.status === "published" ? "draft" : v.status}
+          onChange={(e) => set("status", e.target.value as ReelFormValues["status"])}
+        >
           <option value="draft">Draft (not public)</option>
-          <option value="published">Published</option>
+          <option value="published" disabled={v.rightsStatus === "pending"}>
+            {v.rightsStatus === "pending" ? "Published (confirm rights first)" : "Published"}
+          </option>
           <option value="archived">Archived (not public)</option>
         </select>
+        {v.rightsStatus === "pending" ? (
+          <span className="mt-1 block text-xs text-amber-800">Publishing stays disabled until rights are Owned or Licensed.</span>
+        ) : null}
       </label>
       <label className="block sm:col-span-2">
         <span className="font-medium">Rights note</span>
@@ -157,7 +166,7 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
         <input className={input} type="number" min={-1000} max={1000} value={v.sortOrder} onChange={(e) => set("sortOrder", Number(e.target.value) || 0)} />
       </label>
       <div className="flex flex-wrap items-end gap-3 sm:col-span-2">
-        <button type="submit" disabled={!hydrated || busy} className="rounded-full bg-[var(--lh-action)] px-5 py-2 font-semibold text-white disabled:opacity-50">
+        <button type="submit" disabled={!hydrated || busy} className="rounded-lg bg-[var(--adm-action,#1748B5)] px-5 py-2 font-semibold text-white disabled:opacity-50">
           {id ? "Save reel" : "Add reel"}
         </button>
         {id ? (

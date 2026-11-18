@@ -254,17 +254,54 @@ export function TestimonialManager({
           </label>
           <button className={`${btn} border-[var(--adm-border)] bg-white`}>Apply</button>
         </form>
-        <button
-          type="button"
-          data-testid="testimonial-add"
-          className={`${btn} border-[var(--lh-action)] bg-[var(--lh-action)] text-white`}
-          onClick={() => {
-            setIssues({});
-            setEditing({ id: null, form: EMPTY });
-          }}
-        >
-          Add testimonial
-        </button>
+        <div className="flex flex-wrap gap-2">
+          {canApprove ? (
+            <button
+              type="button"
+              data-testid="testimonial-import-google-snapshot"
+              className={`${btn} border-[var(--adm-border)] bg-white`}
+              disabled={busy === "import"}
+              onClick={() => {
+                void (async () => {
+                  if (
+                    !window.confirm(
+                      "Import the Google review snapshot as unpublished drafts? Existing matching drafts are skipped. Nothing is published.",
+                    )
+                  ) {
+                    return;
+                  }
+                  setBusy("import");
+                  setNotice(null);
+                  const r = await send("/api/admin/testimonials/import-google-snapshot", "POST", {});
+                  setBusy(null);
+                  if (!r.ok) {
+                    setNotice({ tone: "err", text: r.json.message || "Import failed." });
+                    return;
+                  }
+                  const j = r.json as { inserted?: number; skipped?: number; message?: string };
+                  setNotice({
+                    tone: "ok",
+                    text: j.message || `Imported ${j.inserted ?? 0} draft(s); skipped ${j.skipped ?? 0}.`,
+                  });
+                  startTransition(() => router.refresh());
+                })();
+              }}
+            >
+              {busy === "import" ? "Importing…" : "Import Google snapshot drafts"}
+            </button>
+          ) : null}
+          <button
+            type="button"
+            data-testid="testimonial-add"
+            className={`${btn} border-[var(--lh-action)] bg-[var(--lh-action)] text-white`}
+            onClick={() => {
+              setIssues({});
+              setEditing({ id: null, form: EMPTY });
+            }}
+          >
+            Add testimonial
+          </button>
+        </div>
       </div>
 
       {editing ? (
@@ -284,8 +321,8 @@ export function TestimonialManager({
               {editing.id ? "Edit testimonial" : "Add a genuine testimonial"}
             </h2>
             <p className="text-xs text-[var(--adm-ink-2)]">
-              Enter the customer&apos;s words exactly as given. Do not write or improve reviews. Only genuine Google reviews may be
-              marked as Google, and they need the link to the review.
+              Enter the customer&apos;s words exactly as given. Do not write or improve reviews. Google reviews may be saved as drafts
+              without a Maps link; the link, consent and avatar permission are required before publishing.
             </p>
             <label className="block text-sm font-medium">
               Where did this review come from?
@@ -328,8 +365,11 @@ export function TestimonialManager({
                 {err("reviewDate")}
               </label>
               <label className="block text-sm font-medium">
-                {editing.form.source === "google" ? "Link to the review on Google Maps (required)" : "Source link (optional)"}
+                {editing.form.source === "google" ? "Link to the review on Google Maps (required to publish)" : "Source link (optional)"}
                 <input className={input} value={editing.form.sourceUrl} onChange={(e) => set("sourceUrl", e.target.value.trim())} placeholder="https://" data-testid="testimonial-source-url" />
+                {editing.form.source === "google" && !editing.form.sourceUrl ? (
+                  <span className="mt-1 block text-xs text-amber-800">Drafts can omit this; publishing is blocked until a Maps review link is set.</span>
+                ) : null}
                 {err("sourceUrl")}
               </label>
             </div>

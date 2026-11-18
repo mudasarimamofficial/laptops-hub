@@ -98,18 +98,31 @@ test.describe.serial("Store reviews + map (isolated)", () => {
     await page.getByTestId("testimonial-author").fill(EDITOR_NAME);
     await page.getByTestId("testimonial-body").fill("Bought a refurbished ThinkPad here; it arrived exactly as described.");
     await page.getByTestId("testimonial-consent").check();
-    // Google source needs the review link.
+    // Google drafts may omit the Maps link; publishing still requires it (and editor cannot publish).
     await page.getByTestId("testimonial-source").selectOption("google");
     await page.getByTestId("testimonial-submit").click();
-    await expect(page.getByText("A Google review needs the link to it on Google Maps.")).toBeVisible();
+    await expect(page.getByTestId("testimonial-notice")).toHaveText("Submitted for approval.");
+    const googleRow = page.getByTestId("testimonial-row").filter({ hasText: EDITOR_NAME });
+    await expect(googleRow).toHaveAttribute("data-status", "pending");
+    await expect(googleRow.getByTestId("testimonial-publish")).toHaveCount(0);
+
+    const { data: googleDraft } = await sb.from("store_testimonials").select("id").eq("author_name", EDITOR_NAME).single();
+    const publishBlocked = await page.request.patch(`/api/admin/testimonials/${googleDraft!.id}`, { data: { status: "published" } });
+    expect(publishBlocked.status()).toBe(403);
+
+    // Website path still works for a second editor entry (use unique name suffix via body already unique enough).
+    await page.getByTestId("testimonial-add").click();
+    await page.getByTestId("testimonial-author").fill(`${EDITOR_NAME} Web`);
+    await page.getByTestId("testimonial-body").fill("Bought a refurbished ThinkPad here; it arrived exactly as described.");
+    await page.getByTestId("testimonial-consent").check();
     await page.getByTestId("testimonial-source").selectOption("website");
     await page.getByTestId("testimonial-submit").click();
     await expect(page.getByTestId("testimonial-notice")).toHaveText("Submitted for approval.");
-    const row = page.getByTestId("testimonial-row").filter({ hasText: EDITOR_NAME });
+    const row = page.getByTestId("testimonial-row").filter({ hasText: `${EDITOR_NAME} Web` });
     await expect(row).toHaveAttribute("data-status", "pending");
     await expect(row.getByTestId("testimonial-publish")).toHaveCount(0);
 
-    const { data } = await sb.from("store_testimonials").select("id").eq("author_name", EDITOR_NAME).single();
+    const { data } = await sb.from("store_testimonials").select("id").eq("author_name", `${EDITOR_NAME} Web`).single();
     const r = await page.request.patch(`/api/admin/testimonials/${data!.id}`, { data: { status: "published" } });
     expect(r.status()).toBe(403);
     const del = await page.request.delete(`/api/admin/testimonials/${data!.id}`);
@@ -117,6 +130,8 @@ test.describe.serial("Store reviews + map (isolated)", () => {
     await page.goto("/");
     await expect(page.getByTestId("store-reviews")).toHaveCount(0);
     await signOut(page);
+    // Editor cannot delete; clear both pending rows via isolated service role.
+    await sb.from("store_testimonials").delete().in("author_name", [EDITOR_NAME, `${EDITOR_NAME} Web`]);
   });
 
   test("owner: approve → homepage shows it with honest labels; HTML stays text; hide removes it", async ({ page }) => {

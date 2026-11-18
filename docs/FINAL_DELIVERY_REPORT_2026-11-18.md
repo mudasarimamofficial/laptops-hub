@@ -7,9 +7,10 @@ Evidence-based status after owner mandate execution. Distinguish **technical com
 | Item | Value |
 |---|---|
 | Repo | `mudasarimamofficial/laptops-hub` |
-| Production baseline (main) | `082602490949ebc00811bc4603dab2aabdd26bd2` (merge of PR #15) |
+| Production commerce code (main pre-evidence) | `082602490949ebc00811bc4603dab2aabdd26bd2` (PR #15) |
+| Main after evidence PR #16 | `fecc04e21e4faead60ffa914eed8ad3737231189` |
 | PR #15 | Merged; client-delivery drafts, badges, reels admin, label gates |
-| Working branch (post-merge artifacts) | `feat/final-delivery-commerce-content` (docs/scripts/skill; no required code delta for COD flags) |
+| PR #16 | Merged; delivery report, admin skill, policy drafts, review source, publish scripts |
 
 ## 2. Vercel deployment
 

@@ -71,8 +71,9 @@ docs/visual-evidence/parity-preview/*.log
 docs/visual-evidence/parity-gated/**/*.png
 .next-local
 
-# Production schema backups (never commit)
-backups/
+# Production schema backups at repo root (never commit). Do not use a bare "backups/" pattern —
+# that also ignored src/app/api/admin/backups.
+/backups/
 
 # Isolated launch-journey fixtures (local test passwords)
 .isolated/

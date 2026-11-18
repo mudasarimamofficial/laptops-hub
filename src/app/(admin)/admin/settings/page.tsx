@@ -4,9 +4,16 @@ import { ShippingZoneForm, type ZoneRow } from "./shipping-form";
 import { formatPkr } from "@/lib/money";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { StoreSettingsForm } from "@/components/admin/store-settings-form";
+import { BackupsPanel } from "@/components/admin/backups-panel";
 import { CheckoutReadinessPanel } from "@/components/admin/checkout-readiness-panel";
 import { loadCheckoutReadiness } from "@/lib/commerce/checkout-readiness-server";
 import { parseStorefrontPresentation, STOREFRONT_PRESENTATION_KEY } from "@/lib/content/storefront-presentation";
+import {
+  INVENTORY_TRACKING_KEY,
+  STOREFRONT_CHECKOUT_KEY,
+  parseInventoryTracking,
+  parseStorefrontCheckout,
+} from "@/lib/commerce/store-commerce-settings";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -18,7 +25,7 @@ function readJson(settings: { key: string; value: unknown }[] | null, key: strin
 }
 
 export default async function AdminSettingsPage() {
-  await requireStaffPage(["owner", "admin", "manager"]);
+  const staff = await requireStaffPage(["owner", "admin", "manager"]);
 
   const supabase = createServiceClient();
   const { data: settings } = await supabase.from("store_settings").select("key, value");
@@ -31,12 +38,14 @@ export default async function AdminSettingsPage() {
   const identity = readJson(settings, "business_identity");
   const inventory = readJson(settings, "inventory_defaults");
   const seo = readJson(settings, "seo_defaults");
+  const tracking = parseInventoryTracking((settings || []).find((r) => r.key === INVENTORY_TRACKING_KEY)?.value);
+  const checkout = parseStorefrontCheckout((settings || []).find((r) => r.key === STOREFRONT_CHECKOUT_KEY)?.value);
 
   return (
     <>
       <AdminPageHeader
         title="Store settings"
-        description="Business identity, shipping, inventory defaults, and COD readiness. Privileged release controls stay env-gated."
+        description="Business identity, products & inventory, storefront checkout behavior, shipping, and COD readiness."
         breadcrumbs={[
           { href: "/admin", label: "Overview" },
           { label: "Settings" },
@@ -52,12 +61,18 @@ export default async function AdminSettingsPage() {
           businessName: String(identity.name || "Laptops HUB"),
           supportEmail: String(identity.support_email || ""),
           supportPhone: String(identity.support_phone || ""),
+          trackProductInventory: tracking.enabled,
           inventoryDefaultTracked: Boolean(inventory.tracked),
           lowStockDefault: Number(inventory.low_stock_threshold || 0),
+          pdpCta: checkout.pdpCta,
           seoTitleSuffix: String(seo.title_suffix || ""),
           ...parseStorefrontPresentation((settings || []).find((r) => r.key === STOREFRONT_PRESENTATION_KEY)?.value),
         }}
       />
+
+      {(staff.role === "owner" || staff.role === "admin") ? (
+        <BackupsPanel canRestore={staff.role === "owner"} />
+      ) : null}
 
       <div id="shipping" className="mt-8 scroll-mt-24">
         <p className="mb-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">

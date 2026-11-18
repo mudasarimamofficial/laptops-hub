@@ -13,6 +13,13 @@ export const postInputSchema = z.object({
   excerpt: z.string().trim().max(300).optional().default(""),
   bodyHtml: z.string().max(100_000).optional().default(""),
   status: z.enum(["draft", "published"]),
+  seoTitle: z.string().trim().max(70).optional().default(""),
+  seoDescription: z.string().trim().max(160).optional().default(""),
+  coverImageUrl: z.string().trim().max(500).optional().default(""),
+  ogImageUrl: z.string().trim().max(500).optional().default(""),
+  authorName: z.string().trim().max(80).optional().default(""),
+  category: z.string().trim().max(80).optional().default(""),
+  templateKey: z.string().trim().max(40).optional().default(""),
 });
 
 export type PostInput = z.infer<typeof postInputSchema>;

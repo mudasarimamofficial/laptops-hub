@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { cartSubtotalPaisa, useCart } from "@/lib/commerce/cart-store";
+import { clearBuyNowLines, readBuyNowLines } from "@/lib/commerce/buy-now-store";
 import { formatPkr } from "@/lib/money";
 import { PendingBlock } from "@/components/ui/pending-block";
 import { PK_PROVINCES } from "@/lib/commerce/pk-places";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import { deliveryFeeLabel } from "@/lib/commerce/checkout-readiness";
+import type { CartLine } from "@/types/catalog";
 
 
 type ShipOption = {
@@ -27,10 +29,19 @@ type ShipOption = {
 export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
   const checkoutEnabled = orderingOpen;
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const buyNowMode = searchParams.get("mode") === "buy_now";
   // Before hydration the submit stays disabled (and forms post): a click can never become a GET page reload.
   const hydrated = useHydrated();
-  const lines = useCart((s) => s.lines);
-  const clear = useCart((s) => s.clear);
+  const cartLines = useCart((s) => s.lines);
+  const clearCart = useCart((s) => s.clear);
+  const [buyNowLines, setBuyNowLines] = useState<CartLine[]>([]);
+  useEffect(() => {
+    if (!buyNowMode) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sessionStorage is client-only
+    setBuyNowLines(readBuyNowLines());
+  }, [buyNowMode]);
+  const lines = useMemo(() => (buyNowMode ? buyNowLines : cartLines), [buyNowMode, buyNowLines, cartLines]);
   const localSubtotal = cartSubtotalPaisa(lines);
   const [pending, setPending] = useState(false);
   const [quoting, setQuoting] = useState(false);
@@ -141,7 +152,8 @@ export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
         setError(json.message || "Your order could not be placed. Please try again.");
         return;
       }
-      clear();
+      if (buyNowMode) clearBuyNowLines();
+      else clearCart();
       router.push(`/order/success/${json.accessToken}`);
     } catch {
       setError("Network error — your order may still have been placed. Check Track order before trying again.");
@@ -150,10 +162,10 @@ export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
     }
   }
 
-  if (lines.length === 0) {
+  if (hydrated && lines.length === 0) {
     return (
       <div className="lh-content py-12">
-        <PendingBlock title="Your cart is empty" label="Checkout">
+        <PendingBlock title={buyNowMode ? "Nothing to check out" : "Your cart is empty"} label="Checkout">
           <Link href="/collections/all" className="text-[var(--lh-action)]">
             Browse products
           </Link>
@@ -171,6 +183,7 @@ export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
       <p className="mt-2 text-[var(--lh-ink-2)]">
         Cash on Delivery: you pay when the parcel arrives. Enter your city and province to see the delivery options and
         the exact amount due.
+        {buyNowMode ? " This checkout is for the item you chose with Buy now — your saved cart is unchanged." : null}
       </p>
 
       {!checkoutEnabled ? (

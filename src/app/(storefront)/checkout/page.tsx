@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { publicCheckoutAvailability } from "@/lib/commerce/checkout-readiness-server";
 import { CheckoutForm } from "./checkout-form";
 
@@ -8,5 +9,9 @@ export const dynamic = "force-dynamic";
 
 export default async function CheckoutPage() {
   const { open } = await publicCheckoutAvailability();
-  return <CheckoutForm orderingOpen={open} />;
+  return (
+    <Suspense fallback={<div className="lh-content py-12 text-sm text-[var(--lh-ink-2)]">Loading checkout…</div>}>
+      <CheckoutForm orderingOpen={open} />
+    </Suspense>
+  );
 }

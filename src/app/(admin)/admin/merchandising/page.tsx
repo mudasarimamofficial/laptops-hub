@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
+
 import { BADGE_STAFF_ROLES, MERCH_SETTINGS_ROLES } from "@/lib/content/admin-roles";
 import {
   computeTopSellers,
@@ -65,7 +67,12 @@ export default async function AdminMerchandisingPage() {
       <AdminPageHeader
         title="Badges & social proof"
         description="Product labels, the data-backed “Top seller” badge, recent order notices and the reels heading. Nothing here can invent sales."
-        breadcrumbs={[{ href: "/admin", label: "Overview" }, { label: "Online store" }, { label: "Badges & social proof" }]}
+        breadcrumbs={[{ href: "/admin", label: "Overview" }, { href: "/admin/online-store", label: "Online store" }, { label: "Badges & social proof" }]}
+        actions={
+          <Link href="/admin/online-store" className="text-sm font-semibold text-[var(--adm-action)] hover:underline">
+            Customize homepage →
+          </Link>
+        }
       />
 
       <section aria-labelledby="truth" className="mb-6 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 text-sm shadow-[var(--adm-shadow)]">

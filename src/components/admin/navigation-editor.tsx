@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import type { FooterNavColumn, NavigationConfig, NavigationItem } from "@/lib/content/navigation";
 import { StatusBadge } from "@/components/admin/ui/status-badge";
+import { AdminSaveBar } from "@/components/admin/ui/admin-save-bar";
 import { isLinkPublic, type Visibility } from "@/lib/content/links";
+
 
 type Props = {
   initialConfig: NavigationConfig;
@@ -47,12 +49,15 @@ export function NavigationEditor({
   const [colLinkLabel, setColLinkLabel] = useState("");
   const [colLinkHref, setColLinkHref] = useState("");
 
-  // Edit item state
-  const [editingItem, setEditingItem] = useState<{
-    target: "header" | "footer";
-    colId?: string;
-    item: NavigationItem;
-  } | null>(null);
+  useEffect(() => {
+    if (!dirty) return;
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [dirty]);
 
   // Move helpers
   function moveHeaderItem(index: number, direction: "up" | "down") {
@@ -242,7 +247,7 @@ export function NavigationEditor({
           <p className="font-semibold text-sm text-[var(--adm-ink)]">
             Storefront Menu Controls
             {dirty ? (
-              <span className="ml-2 rounded bg-[var(--lh-signal)] px-2 py-0.5 text-[11px] font-bold text-white uppercase tracking-wider">
+              <span className="ml-2 rounded bg-[var(--adm-warning)] px-2 py-0.5 text-[11px] font-bold text-white uppercase tracking-wider">
                 Unsaved changes
               </span>
             ) : null}
@@ -264,7 +269,7 @@ export function NavigationEditor({
             type="button"
             disabled={!hydrated || busy || !dirty}
             onClick={saveNavigation}
-            className="rounded-lg bg-[var(--lh-action)] px-4 py-2 text-xs font-semibold text-white hover:bg-[var(--lh-action-hover)] disabled:opacity-50"
+            className="rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 py-2 text-xs font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
           >
             {busy ? "Publishing…" : "Save & publish navigation"}
           </button>
@@ -323,7 +328,7 @@ export function NavigationEditor({
                     </td>
                     <td className="px-5 py-3">
                       {item.isNew ? (
-                        <span className="rounded bg-[var(--lh-signal)] px-1.5 py-0.5 text-[10px] font-bold text-white uppercase">
+                        <span className="rounded bg-[var(--adm-warning)] px-1.5 py-0.5 text-[10px] font-bold text-white uppercase">
                           New
                         </span>
                       ) : (
@@ -375,8 +380,9 @@ export function NavigationEditor({
         <form
           method="post"
           onSubmit={addHeaderItem}
-          className="rounded-[var(--adm-radius-lg)] border border-[var(--lh-action)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)] space-y-4"
+          className="space-y-4 rounded-[var(--adm-radius-lg)] border border-[var(--adm-action)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]"
         >
+
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-sm">Add Item to Header Menu</h3>
             <button
@@ -467,7 +473,7 @@ export function NavigationEditor({
 
           <button
             type="submit"
-            className="rounded bg-[var(--lh-action)] px-4 py-2 text-xs font-semibold text-white"
+            className="rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 py-2 text-xs font-semibold text-white hover:bg-[var(--adm-action-hover)]"
           >
             Add to Header Menu
           </button>
@@ -500,7 +506,7 @@ export function NavigationEditor({
           <form
             method="post"
             onSubmit={addFooterColumn}
-            className="mb-6 rounded-[var(--adm-radius-lg)] border border-[var(--lh-action)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)] space-y-3"
+            className="mb-6 rounded-[var(--adm-radius-lg)] border border-[var(--adm-action)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)] space-y-3"
           >
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-sm">Add New Footer Column</h3>
@@ -521,7 +527,7 @@ export function NavigationEditor({
             />
             <button
               type="submit"
-              className="rounded bg-[var(--lh-action)] px-3 py-1.5 text-xs font-semibold text-white"
+              className="rounded bg-[var(--adm-action)] px-3 py-1.5 text-xs font-semibold text-white"
             >
               Create Column
             </button>
@@ -533,7 +539,7 @@ export function NavigationEditor({
           <form
             method="post"
             onSubmit={addFooterLink}
-            className="mb-6 rounded-[var(--adm-radius-lg)] border border-[var(--lh-action)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)] space-y-3"
+            className="mb-6 rounded-[var(--adm-radius-lg)] border border-[var(--adm-action)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)] space-y-3"
           >
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-sm">
@@ -565,7 +571,7 @@ export function NavigationEditor({
             </div>
             <button
               type="submit"
-              className="rounded bg-[var(--lh-action)] px-3 py-1.5 text-xs font-semibold text-white"
+              className="rounded bg-[var(--adm-action)] px-3 py-1.5 text-xs font-semibold text-white"
             >
               Add Link
             </button>
@@ -580,7 +586,7 @@ export function NavigationEditor({
             >
               <div className="flex items-center justify-between border-b border-[var(--adm-divider)] bg-[var(--adm-surface-2)] px-4 py-3">
                 <input
-                  className="font-semibold text-sm text-[var(--adm-ink)] bg-transparent border-0 focus:ring-1 focus:ring-[var(--lh-action)] rounded px-1"
+                  className="font-semibold text-sm text-[var(--adm-ink)] bg-transparent border-0 focus:ring-1 focus:ring-[var(--adm-action)] rounded px-1"
                   value={col.title}
                   onChange={(e) => updateFooterColumnTitle(col.id, e.target.value)}
                 />
@@ -592,7 +598,7 @@ export function NavigationEditor({
                       setColLinkLabel("");
                       setColLinkHref("");
                     }}
-                    className="text-xs font-semibold text-[var(--lh-action)] hover:underline"
+                    className="text-xs font-semibold text-[var(--adm-action)] hover:underline"
                     title="Add link to column"
                   >
                     + Link
@@ -662,6 +668,25 @@ export function NavigationEditor({
           ))}
         </div>
       </div>
+
+      <AdminSaveBar
+        dirty={dirty}
+        busy={busy || !hydrated}
+        savedMessage={msg}
+        error={err}
+        onSave={() => void saveNavigation()}
+        saveLabel="Save & publish navigation"
+        secondary={
+          <button
+            type="button"
+            disabled={!hydrated || busy}
+            onClick={() => void restoreDefaults()}
+            className="inline-flex min-h-10 items-center rounded-[var(--adm-radius)] border border-[var(--adm-border)] px-4 text-sm font-semibold disabled:opacity-50"
+          >
+            Reset to V5 defaults
+          </button>
+        }
+      />
     </div>
   );
 }

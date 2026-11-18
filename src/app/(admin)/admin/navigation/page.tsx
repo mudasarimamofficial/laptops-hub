@@ -20,10 +20,16 @@ export default async function AdminNavigationPage() {
     .select("slug, title")
     .order("title");
 
-  const { data: pages } = await supabase
+  const { data: pagesRaw } = await supabase
     .from("content_pages")
-    .select("slug, title, is_published, legal_approved")
+    .select("slug, title, status, legal_approved")
     .order("title");
+  const pages = (pagesRaw || []).map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    is_published: p.status === "published",
+    legal_approved: !!p.legal_approved,
+  }));
 
   return (
     <>
@@ -47,7 +53,7 @@ export default async function AdminNavigationPage() {
         initialConfig={navConfig}
         visibility={visibility}
         availableCollections={collections || []}
-        availablePages={pages || []}
+        availablePages={pages}
       />
     </>
   );

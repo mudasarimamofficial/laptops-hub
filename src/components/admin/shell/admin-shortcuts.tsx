@@ -205,7 +205,7 @@ export function AdminShortcuts({ role }: { role: StaffRole | null }) {
       <button
         type="button"
         onClick={show}
-        className="hidden h-10 w-10 items-center justify-center rounded-lg border border-[var(--adm-border)] text-[var(--adm-ink-2)] hover:border-[var(--lh-action)] hover:text-[var(--adm-ink)] sm:inline-flex"
+        className="hidden h-10 w-10 items-center justify-center rounded-lg border border-[var(--adm-border)] text-[var(--adm-ink-2)] hover:border-[var(--adm-action)] hover:text-[var(--adm-ink)] sm:inline-flex"
         aria-keyshortcuts="?"
         title="Keyboard shortcuts"
         data-testid="admin-shortcuts-open"

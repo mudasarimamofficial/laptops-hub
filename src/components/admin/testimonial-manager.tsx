@@ -293,7 +293,7 @@ export function TestimonialManager({
           <button
             type="button"
             data-testid="testimonial-add"
-            className={`${btn} border-[var(--lh-action)] bg-[var(--lh-action)] text-white`}
+            className={`${btn} border-[var(--adm-action)] bg-[var(--adm-action)] text-white`}
             onClick={() => {
               setIssues({});
               setEditing({ id: null, form: EMPTY });
@@ -422,7 +422,7 @@ export function TestimonialManager({
                 </button>
               ) : null}
               {!editing.id && canApprove ? (
-                <button type="button" disabled={busy === "save"} className={`${btn} border-[var(--lh-action)] bg-[var(--lh-action)] text-white`} onClick={() => void save("published")} data-testid="testimonial-publish-new">
+                <button type="button" disabled={busy === "save"} className={`${btn} border-[var(--adm-action)] bg-[var(--adm-action)] text-white`} onClick={() => void save("published")} data-testid="testimonial-publish-new">
                   Save and publish
                 </button>
               ) : null}
@@ -452,7 +452,7 @@ export function TestimonialManager({
                   <p className="font-semibold">
                     {r.author_name}
                     {r.rating ? <span className="ml-2 text-sm text-amber-600">{"★".repeat(r.rating)}</span> : null}
-                    {r.featured ? <span className="ml-2 rounded bg-[var(--lh-ice)] px-1.5 py-0.5 text-xs">Featured</span> : null}
+                    {r.featured ? <span className="ml-2 rounded bg-[var(--adm-info-bg)] px-1.5 py-0.5 text-xs">Featured</span> : null}
                   </p>
                   <p className="mt-0.5 text-xs text-[var(--adm-ink-2)]">
                     {SOURCE_ADMIN_LABEL[r.source]}

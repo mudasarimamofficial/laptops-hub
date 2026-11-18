@@ -20,7 +20,7 @@ export function ModuleStatusPanel({ title, phase, summary, availableNow, nextSte
       {availableNow && availableNow.length > 0 ? (
         <div className="mt-5">
           <p className="text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">Available now</p>
-          <ul className="mt-2 space-y-1 text-sm font-semibold text-[var(--lh-action)]">
+          <ul className="mt-2 space-y-1 text-sm font-semibold text-[var(--adm-action)]">
             {availableNow.map((a) => (
               <li key={a.href}>
                 <Link href={a.href} className="hover:underline">

@@ -59,7 +59,7 @@ function StatCard({
     "rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]";
   if (href) {
     return (
-      <Link href={href} className={`${className} transition hover:border-[var(--lh-action)]`}>
+      <Link href={href} className={`${className} transition hover:border-[var(--adm-action)]`}>
         {inner}
       </Link>
     );
@@ -124,7 +124,7 @@ export default async function AdminHomePage() {
 
       <section className="mt-8 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5">
         <h2 className="font-[family-name:var(--font-display)] text-lg font-bold">Quick actions</h2>
-        <ul className="mt-3 grid gap-2 text-sm font-semibold text-[var(--lh-action)] sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-3 grid gap-2 text-sm font-semibold text-[var(--adm-action)] sm:grid-cols-2 lg:grid-cols-3">
           <li>
             <Link href="/admin/products/new" className="hover:underline">
               Add product

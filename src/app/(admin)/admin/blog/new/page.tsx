@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { POST_STAFF_ROLES } from "@/lib/content/admin-roles";
 import { PostForm } from "@/components/admin/post-form";
+import { AdminPageHeader } from "@/components/admin/ui/page-header";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "New post", robots: { index: false, follow: false } };
@@ -9,11 +10,21 @@ export const metadata = { title: "New post", robots: { index: false, follow: fal
 export default async function NewPostPage() {
   await requireStaffPage(POST_STAFF_ROLES);
   return (
-    <div className="lh-container max-w-3xl py-10">
-      <Link href="/admin/blog" className="text-sm text-[var(--lh-action)]">
-        ← Blog
-      </Link>
-      <h1 className="mt-2 mb-6 font-[family-name:var(--font-display)] text-3xl font-bold">New post</h1>
+    <div>
+      <AdminPageHeader
+        title="Add blog post"
+        description="Write a guide for customers. Drafts stay private until you make them visible."
+        breadcrumbs={[
+          { href: "/admin", label: "Admin" },
+          { href: "/admin/blog", label: "Blog posts" },
+          { label: "Add blog post" },
+        ]}
+        actions={
+          <Link href="/admin/blog" className="text-sm font-semibold text-[var(--adm-action)] hover:underline">
+            ← Blog posts
+          </Link>
+        }
+      />
       <PostForm
         initial={{
           slug: "",
@@ -28,6 +39,8 @@ export default async function NewPostPage() {
           authorName: "",
           category: "",
           templateKey: "",
+          tags: [],
+          scheduledFor: "",
         }}
       />
     </div>

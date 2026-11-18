@@ -14,6 +14,8 @@ export type PostRow = {
   author_name: string | null;
   category: string | null;
   template_key: string | null;
+  tags: string[];
+  scheduled_for: string | null;
 };
 type Built = { ok: true; row: PostRow; input: PostInput } | { ok: false; status: number; body: Record<string, unknown> };
 
@@ -37,6 +39,16 @@ export function postRowFromInput(body: unknown): Built {
   const clean = v.bodyHtml.trim() ? sanitizeCmsHtml(v.bodyHtml) : "";
   const problem = publishProblem({ status: v.status, bodyHtml: clean });
   if (problem) return { ok: false, status: 400, body: { error: "validation_failed", message: problem, fieldErrors: { bodyHtml: problem } } };
+
+  const tags = [...new Set(v.tags.map((t) => t.trim()).filter(Boolean))].slice(0, 20);
+  let scheduled_for: string | null = emptyToNull(v.scheduledFor);
+  if (scheduled_for) {
+    const ms = Date.parse(scheduled_for);
+    scheduled_for = Number.isNaN(ms) ? null : new Date(ms).toISOString();
+  }
+  // Draft posts clear schedule; published + future schedule = Scheduled visibility.
+  if (v.status === "draft") scheduled_for = null;
+
   return {
     ok: true,
     input: v,
@@ -53,6 +65,8 @@ export function postRowFromInput(body: unknown): Built {
       author_name: emptyToNull(v.authorName),
       category: emptyToNull(v.category),
       template_key: emptyToNull(v.templateKey),
+      tags,
+      scheduled_for,
     },
   };
 }

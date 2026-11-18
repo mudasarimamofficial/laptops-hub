@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import { isRenderableReel, reelInputSchema, reelUrlProblem } from "../../src/lib/content/reels";
 import { processReview, reviewSummary, type ReviewDeps, type ReviewRow } from "../../src/lib/validation/review";
-import { postInputSchema, publishProblem, readMinutes } from "../../src/lib/content/blog";
+import {
+  articleVisibilityLabel,
+  isArticlePubliclyVisible,
+  postInputSchema,
+  publishProblem,
+  readMinutes,
+} from "../../src/lib/content/blog";
 
 // ── Reels ──
 assert.equal(reelUrlProblem("https://cdn.example.com/v/a.mp4", "video"), null);
@@ -115,6 +121,42 @@ const run = (body: unknown, d: ReviewDeps, origin: string | null = "https://lapt
   assert.equal(publishProblem({ status: "published", bodyHtml: "" }), "Write the post before publishing it.", "no implicit template publishing");
   assert.equal(publishProblem({ status: "published", bodyHtml: "<p>Real text</p>" }), null);
   assert.equal(publishProblem({ status: "draft", bodyHtml: "" }), null);
+  assert.equal(articleVisibilityLabel({ status: "draft" }), "Draft");
+  assert.equal(articleVisibilityLabel({ status: "published" }), "Published");
+  assert.equal(
+    articleVisibilityLabel({ status: "published", scheduled_for: new Date(Date.now() + 86_400_000).toISOString() }),
+    "Scheduled",
+  );
+  assert.equal(isArticlePubliclyVisible({ status: "draft" }), false);
+  assert.equal(isArticlePubliclyVisible({ status: "published" }), true);
+  assert.equal(
+    isArticlePubliclyVisible({ status: "published", scheduled_for: new Date(Date.now() + 86_400_000).toISOString() }),
+    false,
+  );
+  assert.equal(
+    isArticlePubliclyVisible({ status: "published", scheduled_for: new Date(Date.now() - 86_400_000).toISOString() }),
+    true,
+  );
+  assert.equal(
+    postInputSchema.safeParse({
+      slug: "scheduled-guide",
+      title: "Scheduled guide",
+      status: "published",
+      bodyHtml: "<p>Ready</p>",
+      tags: ["ram", "buying"],
+      scheduledFor: new Date(Date.now() + 86_400_000).toISOString(),
+    }).success,
+    true,
+  );
+  assert.equal(
+    postInputSchema.safeParse({
+      slug: "bad-cover",
+      title: "Bad cover",
+      status: "draft",
+      coverImageUrl: "http://insecure.example/a.jpg",
+    }).success,
+    false,
+  );
   console.log("reels-reviews-blog: ok");
 })().catch((e) => {
   console.error(e);

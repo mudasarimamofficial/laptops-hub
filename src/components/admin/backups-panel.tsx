@@ -97,20 +97,9 @@ export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
   const last = valid[0];
 
   return (
-    <section
-      id="backups-recovery"
-      className="mt-10 scroll-mt-24 space-y-4 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]"
-    >
-      <div>
-        <h2 className="font-[family-name:var(--font-display)] text-lg font-bold">Backups &amp; Recovery</h2>
-        <p className="mt-1 text-sm text-[var(--adm-ink-2)]">
-          Application snapshots protect store settings, blog posts, reels, customer reviews and shipping zones. The
-          latest four valid snapshots are kept. This is <strong>not</strong> a full PostgreSQL backup and does not
-          include products, orders, customers or staff accounts.
-        </p>
-      </div>
+    <div className="space-y-4">
       <p className="text-sm" aria-live="polite">
-        Last successful backup:{" "}
+        Last successful CMS snapshot:{" "}
         {last ? (
           <strong>
             {new Date(last.created_at).toLocaleString("en-PK")} · {fmtBytes(last.payload_bytes)} · {last.status}
@@ -123,9 +112,9 @@ export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
         type="button"
         disabled={!hydrated || busy !== null}
         onClick={() => void createBackup()}
-        className="rounded-lg bg-[var(--lh-action)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        className="inline-flex min-h-10 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
       >
-        {busy === "create" ? "Creating backup…" : "Create backup now"}
+        {busy === "create" ? "Creating snapshot…" : "Create CMS snapshot now"}
       </button>
       {msg ? <p className="text-sm text-[var(--adm-success)]">{msg}</p> : null}
       {err ? (
@@ -159,6 +148,6 @@ export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
           ))
         )}
       </ul>
-    </section>
+    </div>
   );
 }

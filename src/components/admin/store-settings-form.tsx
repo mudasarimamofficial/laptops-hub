@@ -227,10 +227,12 @@ export function StoreSettingsForm({ initial }: Props) {
           <span>Show homepage section numbers (e.g. “02 — Product story”)</span>
         </label>
       </fieldset>
+      <div id="inventory" className="scroll-mt-24" />
+      <div id="checkout" className="scroll-mt-24" />
       <button
         type="submit"
         disabled={!hydrated || busy}
-        className="rounded-lg bg-[var(--lh-action)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+        className="inline-flex min-h-10 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
       >
         {busy ? "Saving…" : "Save settings"}
       </button>

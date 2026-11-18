@@ -176,12 +176,21 @@ test.describe.serial("merchant admin workflows", () => {
     if (!(await title.count())) return;
     const stamp = `E2E Blog ${Date.now()}`;
     await title.fill(stamp);
+    // TipTap surface (Release A2) — contenteditable with data-testid
+    const tipTap = page.getByTestId("blog-rich-editor");
+    if (await tipTap.count()) {
+      await tipTap.click();
+      await page.keyboard.type("TipTap body for isolated merchant QA.");
+    }
     const save = page.getByRole("button", { name: /save|publish|create/i }).first();
     if (await save.count()) {
       await save.click();
       await page.waitForTimeout(1500);
       await page.reload({ waitUntil: "domcontentloaded" });
       await expect(page.locator("body")).toContainText(new RegExp(stamp.slice(0, 12), "i"));
+      if (await tipTap.count()) {
+        await expect(page.getByTestId("blog-rich-editor")).toBeVisible();
+      }
     }
   });
 

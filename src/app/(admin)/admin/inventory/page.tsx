@@ -108,7 +108,7 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
             key={k}
             href={`/admin/inventory?filter=${k}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
             aria-current={filter === k ? "page" : undefined}
-            className={`rounded-full border px-3 py-1 ${filter === k ? "border-[var(--lh-action)] bg-[var(--lh-ice)] font-semibold" : "border-[var(--adm-border)] bg-white"}`}
+            className={`rounded-full border px-3 py-1 ${filter === k ? "border-[var(--adm-action)] bg-[var(--adm-info-bg)] font-semibold" : "border-[var(--adm-border)] bg-white"}`}
           >
             {l}
           </Link>

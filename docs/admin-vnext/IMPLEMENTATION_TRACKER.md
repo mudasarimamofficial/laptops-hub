@@ -1,7 +1,8 @@
 # Admin VNext — implementation tracker
 
-**Production main (at last tracker sync):** `4a6b44e` (TipTap A2 via #31)  
-**Prior E main:** `857a8b8` (#30) · **Prior D2:** `19998d8` (#29)  
+**Production main (at last tracker sync):** `6e683fa` (Reviews/Reels #32)  
+**Prior TipTap:** `4a6b44e` (#31) · **Prior E:** `857a8b8` (#30) · **Prior D2:** `19998d8` (#29)  
+**Prod deploy READY:** `dpl_GbnaeHReBLurhw4MtFSckJRDxhqw` (`6e683fa`)  
 **Shopify benchmark:** `laptopshub-2`  
 **Updated:** 2026-11-18
 
@@ -19,7 +20,8 @@ Status keys (independent gates):
 | D2 Nav/Merch/Media | [#29](https://github.com/mudasarimamofficial/laptops-hub/pull/29) | `19998d8` | verify after promote | CMS upload bucket, nav status fix, online-store links |
 | E Settings/ops | [#30](https://github.com/mudasarimamofficial/laptops-hub/pull/30) | `857a8b8` | verify after promote | Settings hub IA, staff, SEO honesty, activity labels, backups copy |
 | A2 TipTap RTE | [#31](https://github.com/mudasarimamofficial/laptops-hub/pull/31) | `4a6b44e` | verify after promote | TipTap editor; safe img/table/hr sanitizer |
-| D3 Reviews/Reels | [#32](https://github.com/mudasarimamofficial/laptops-hub/pull/32) | — | — | Reviews Admin VNext desk; reel poster media picker |
+| D3 Reviews/Reels | [#32](https://github.com/mudasarimamofficial/laptops-hub/pull/32) | `6e683fa` | verify after promote | Reviews Admin VNext desk; reel poster media picker |
+| F Acceptance baseline | *docs branch* | — | — | Honest route/acceptance matrices; no false 10/10 |
 
 ## Module gate matrix
 
@@ -37,12 +39,13 @@ Status keys (independent gates):
 | Merchandising | PARTIAL (IA links) | YES | PENDING | PENDING | PARTIAL | NO |
 | Online store customize | PARTIAL (tokens/links) | YES | PENDING | PENDING | PARTIAL | NO |
 | Media library + upload | YES (#29) | YES | PENDING | PENDING | PARTIAL | NO |
-| Reviews / Reels | YES (#32) | PENDING | PENDING | PENDING | PARTIAL | NO |
+| Reviews / Reels | YES (#32) | PENDING promote | PENDING | PENDING | PARTIAL | NO |
 | Settings / staff / analytics / SEO / activity / backups | YES (#30) | PENDING promote | PENDING | PENDING | PARTIAL | NO |
-| System-wide F matrix | PENDING | — | — | — | — | NO |
+| System-wide F matrix | PARTIAL (docs baseline) | — | NOT TESTED | NOT TESTED | — | NO |
 
 ## Active work
 
-1. Merge Reviews/Reels #32.
-2. Isolated Blog schedule/revisions E2E + Product/Order full-flow QA (no production mutations).
-3. Release F viewport/a11y acceptance matrix — no system-wide 10/10 until gates pass with evidence.
+1. ~~Merge #29–#32.~~
+2. Isolated Blog/Product/Order Playwright (blocked without isolated Supabase).
+3. Capture viewport screenshots + fix overflow; close remaining `--lh-*` bleed.
+4. **Do not claim system-wide completion** until `ACCEPTANCE_MATRIX.md` gates flip with evidence.

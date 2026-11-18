@@ -57,14 +57,14 @@ export default async function AdminProductExportPage() {
             <p className="mt-1 text-sm text-[var(--adm-ink-2)]">{l.note}</p>
             <a
               href={l.href}
-              className="mt-3 inline-flex rounded-lg bg-[var(--lh-action)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--lh-action-hover)]"
+              className="mt-3 inline-flex rounded-lg bg-[var(--adm-action)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)]"
             >
               Download
             </a>
           </div>
         ))}
         <p className="text-sm">
-          <Link href="/admin/products/import" className="font-semibold text-[var(--lh-action)] hover:underline">
+          <Link href="/admin/products/import" className="font-semibold text-[var(--adm-action)] hover:underline">
             Open import preview
           </Link>
         </p>

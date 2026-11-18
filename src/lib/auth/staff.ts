@@ -110,7 +110,7 @@ export async function requireStaff(allowedRoles?: StaffRole[]): Promise<StaffSes
   };
 }
 
-/** For admin pages: redirect unauthenticated → login; non-staff → forbidden. */
+/** For admin pages: redirect unauthenticated → login; wrong/inactive role → forbidden with reason. */
 export async function requireStaffPage(allowedRoles?: StaffRole[]): Promise<StaffSession> {
   try {
     return await requireStaff(allowedRoles);
@@ -118,7 +118,13 @@ export async function requireStaffPage(allowedRoles?: StaffRole[]): Promise<Staf
     if (e instanceof StaffAuthError && e.status === 401) {
       redirect("/admin/login");
     }
-    redirect("/admin/forbidden");
+    const reason =
+      e instanceof StaffAuthError && e.code === "forbidden_role"
+        ? "role"
+        : e instanceof StaffAuthError && e.code === "forbidden"
+          ? "membership"
+          : "denied";
+    redirect(`/admin/forbidden?reason=${reason}`);
   }
 }
 

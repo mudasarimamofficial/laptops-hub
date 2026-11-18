@@ -17,9 +17,18 @@ assert.equal(reelUrlProblem("javascript:alert(1)", "video"), "scheme");
 assert.equal(reelUrlProblem("not a url", "video"), "invalid");
 // External hosts (including previously blocked shops) are allowed when the path is a direct media file.
 assert.equal(reelUrlProblem("https://ronin.pk/cdn/shop/videos/c/vp/x/x.HD-1080p-2.5Mbps-1.mp4", "video"), null);
+assert.equal(reelUrlProblem("https://ronin.pk/cdn/shop/videos/c/vp/x/x.HD-1080p-2.5Mbps", "video"), null);
 assert.equal(reelUrlProblem("https://cdn.RONIN.pk/a.mp4", "video"), null);
 assert.equal(reelUrlProblem("https://notronin.pk.example.com/a.mp4", "video"), null);
 assert.equal(reelUrlProblem("https://www.instagram.com/reel/abc/", "video"), "extension");
+assert.equal(
+  isRenderableReel({
+    videoUrl: "https://ronin.pk/cdn/shop/videos/c/vp/x/x.HD-1080p-2.5Mbps-1.mp4?v=0",
+    posterUrl: "https://ronin.pk/cdn/shop/files/preview_images/x.thumbnail.0000000000.jpg",
+    hlsUrl: "https://ronin.pk/cdn/shop/videos/c/vp/x/x.m3u8?v=0",
+  }),
+  true,
+);
 assert.equal(reelUrlProblem("https://cdn.example.com/stream/a.m3u8", "hls"), null);
 assert.equal(reelUrlProblem("https://10.0.0.5/a.mp4", "video"), "private_host");
 assert.equal(reelUrlProblem("https://cdn.example.com/p.webp", "poster"), null);

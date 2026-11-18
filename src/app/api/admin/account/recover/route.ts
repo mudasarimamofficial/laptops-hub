@@ -4,19 +4,26 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { clientIp, rateLimit } from "@/lib/security/rate-limit";
 import { isCrossSite } from "@/lib/validation/contact";
-import { siteUrl } from "@/lib/site-url";
-import { RECOVERY_CONFIRM_PATH, recoveryEmail } from "@/lib/auth/recovery";
+import { recoveryEmail } from "@/lib/auth/recovery";
+import { dispatchStaffRecoveryEmail } from "@/lib/auth/send-recovery-email";
 
-// Same answer whether or not the address belongs to a staff account (no account discovery).
+// Same answer whether or not the address belongs to a staff account (no account discovery),
+// except when our own rate limiter or the email provider is clearly throttling — then we say so
+// without revealing whether the address is registered.
 const GENERIC = {
   ok: true,
   message: "If this email belongs to a staff account, a password reset link is on its way. It is valid for one hour.",
 };
 
+const THROTTLED = {
+  error: "rate_limited" as const,
+  message:
+    "Too many reset emails were requested recently. Wait about an hour and try again, or sign in and change your password under Settings → Security.",
+};
+
 /** Staff: request a password-recovery email. */
 export async function POST(request: Request) {
   const headers = { "Cache-Control": "no-store" };
-  // No recovery emails or password changes on Production auth from a Preview / read-only deployment.
   const blocked = publicWriteBlockedResponse();
   if (blocked) return blocked;
   if (isCrossSite(request.headers.get("origin"), request.url, request.headers.get("x-forwarded-host") || request.headers.get("host"))) {
@@ -31,16 +38,16 @@ export async function POST(request: Request) {
   const byEmail = await rateLimit(`recover:email:${createHash("sha256").update(email).digest("hex").slice(0, 32)}`, { limit: 3, windowMs: 60 * 60 * 1000 });
   if (!byIp.ok || !byEmail.ok) {
     const retry = Math.max(byIp.ok ? 0 : byIp.retryAfterSec, byEmail.ok ? 0 : byEmail.retryAfterSec);
-    return NextResponse.json(
-      { error: "rate_limited", message: "Too many reset requests. Please try again later." },
-      { status: 429, headers: { ...headers, "Retry-After": String(retry) } },
-    );
+    return NextResponse.json(THROTTLED, { status: 429, headers: { ...headers, "Retry-After": String(retry) } });
   }
 
-  // Anon server client: the PKCE verifier (for links using the default email template) is stored in this browser's
-  // cookies. The redirect is fixed to this site's confirm path — never taken from the request.
   const supabase = await createClient();
-  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${siteUrl()}${RECOVERY_CONFIRM_PATH}` });
-  if (error) console.warn("password recovery request failed", error.status ?? "", error.code ?? "");
+  const result = await dispatchStaffRecoveryEmail(email, (addr, opts) => supabase.auth.resetPasswordForEmail(addr, opts));
+  if (!result.ok) {
+    console.warn("password recovery request failed", result.throttled ? "throttled" : "error", result.detail.slice(0, 80));
+    if (result.throttled) {
+      return NextResponse.json(THROTTLED, { status: 429, headers: { ...headers, "Retry-After": "3600" } });
+    }
+  }
   return NextResponse.json(GENERIC, { headers });
 }

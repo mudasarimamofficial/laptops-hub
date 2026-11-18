@@ -8,6 +8,7 @@ import { AdminCard } from "@/components/admin/ui/admin-card";
 import { StoreSettingsForm } from "@/components/admin/store-settings-form";
 import { BackupsPanel } from "@/components/admin/backups-panel";
 import { CheckoutReadinessPanel } from "@/components/admin/checkout-readiness-panel";
+import { ChangePasswordForm } from "@/components/admin/change-password-form";
 import { loadCheckoutReadiness } from "@/lib/commerce/checkout-readiness-server";
 import { parseStorefrontPresentation, STOREFRONT_PRESENTATION_KEY } from "@/lib/content/storefront-presentation";
 import {
@@ -28,6 +29,7 @@ function readJson(settings: { key: string; value: unknown }[] | null, key: strin
 
 const HUB = [
   { href: "#general", title: "Store details", blurb: "Business name and support contacts" },
+  { href: "#security", title: "Security", blurb: "Change your admin password" },
   { href: "#inventory", title: "Products & inventory", blurb: "Tracking defaults and stock alerts" },
   { href: "#checkout", title: "Checkout & storefront", blurb: "Buy now / cart and presentation" },
   { href: "#shipping", title: "Shipping & COD fees", blurb: "Zones, delivery and COD amounts" },
@@ -93,6 +95,15 @@ export default async function AdminSettingsPage() {
             ...parseStorefrontPresentation((settings || []).find((r) => r.key === STOREFRONT_PRESENTATION_KEY)?.value),
           }}
         />
+      </div>
+
+      <div id="security" className="mt-8 scroll-mt-24">
+        <AdminCard
+          title="Security"
+          description="Change the password for the account you are signed in with. This does not send an email. Forgotten passwords use recovery from the sign-in screen."
+        >
+          <ChangePasswordForm email={staff.email || "your account"} />
+        </AdminCard>
       </div>
 
       {(staff.role === "owner" || staff.role === "admin") ? (

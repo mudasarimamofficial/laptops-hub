@@ -143,7 +143,7 @@ export function AdminSearch({ role }: { role: StaffRole | null }) {
       <button
         type="button"
         onClick={show}
-        className="inline-flex h-10 min-w-0 items-center gap-2 rounded-lg border border-[var(--adm-border)] bg-[var(--adm-surface)] px-3 text-sm text-[var(--adm-ink-2)] hover:border-[var(--lh-action)] sm:w-64"
+        className="inline-flex h-10 min-w-0 items-center gap-2 rounded-lg border border-[var(--adm-border)] bg-[var(--adm-surface)] px-3 text-sm text-[var(--adm-ink-2)] hover:border-[var(--adm-action)] sm:w-64"
         aria-keyshortcuts="Control+K Meta+K /"
         data-testid="admin-search-open"
       >
@@ -189,7 +189,7 @@ export function AdminSearch({ role }: { role: StaffRole | null }) {
                   data-group={it.group}
                   onMouseEnter={() => setActive(i)}
                   onClick={() => go(it)}
-                  className={`flex cursor-pointer items-baseline gap-3 px-4 py-2 text-sm ${i === current ? "bg-[var(--lh-ice)] text-[var(--adm-ink)]" : "text-[var(--adm-ink)]"}`}
+                  className={`flex cursor-pointer items-baseline gap-3 px-4 py-2 text-sm ${i === current ? "bg-[var(--adm-info-bg)] text-[var(--adm-ink)]" : "text-[var(--adm-ink)]"}`}
                 >
                   <span className="w-16 shrink-0 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-[var(--adm-ink-2)]">{it.group}</span>
                   <span className="min-w-0 flex-1 truncate font-medium">{it.label}</span>

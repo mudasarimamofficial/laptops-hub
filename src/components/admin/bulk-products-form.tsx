@@ -157,7 +157,7 @@ export function BulkProductsForm({ initialHandles }: { initialHandles: string[] 
         type="button"
         disabled={!hydrated || busy || !rows.length}
         onClick={apply}
-        className="rounded-lg bg-[var(--lh-action)] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+        className="rounded-lg bg-[var(--adm-action)] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
       >
         {busy ? "Applying…" : "Apply bulk changes"}
       </button>

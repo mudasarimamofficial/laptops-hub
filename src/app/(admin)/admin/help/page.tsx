@@ -16,7 +16,7 @@ export default async function AdminHelpPage() {
       />
       <div className="prose-sm max-w-3xl space-y-4 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-6 text-sm">
         <h2 className="font-[family-name:var(--font-display)] text-lg font-bold">Quick links</h2>
-        <ul className="list-disc space-y-1 pl-5 text-[var(--lh-action)]">
+        <ul className="list-disc space-y-1 pl-5 text-[var(--adm-action)]">
           <li>
             <Link href="/admin/products/new">Add a product</Link>
           </li>

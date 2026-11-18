@@ -38,7 +38,7 @@ export function InquiryStatus({ id, status }: { id: string; status: string }) {
 
   return (
     <div className="flex flex-wrap items-center gap-2 text-sm">
-      <span className="text-[var(--lh-ink-2)]">Status:</span>
+      <span className="text-[var(--adm-ink-2)]">Status:</span>
       {STATUSES.map(([v, l]) => (
         <button
           key={v}
@@ -46,12 +46,12 @@ export function InquiryStatus({ id, status }: { id: string; status: string }) {
           disabled={busy}
           aria-pressed={current === v}
           onClick={() => change(v)}
-          className={`rounded-full border px-3 py-1 ${current === v ? "border-[var(--lh-action)] bg-[var(--lh-ice)] font-semibold" : "border-[var(--lh-border)] bg-white"}`}
+          className={`rounded-full border px-3 py-1 ${current === v ? "border-[var(--adm-action)] bg-[var(--adm-info-bg)] font-semibold" : "border-[var(--adm-border)] bg-white"}`}
         >
           {l}
         </button>
       ))}
-      {error ? <span role="alert" className="text-[var(--lh-error)]">{error}</span> : null}
+      {error ? <span role="alert" className="text-[var(--adm-danger)]">{error}</span> : null}
     </div>
   );
 }

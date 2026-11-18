@@ -4,7 +4,7 @@ import { LEGAL_CONTENT_SLUGS } from "@/lib/security/sanitize-html";
 import { V5_CONTENT } from "@/lib/content/v5-content";
 import type { V5Page } from "@/lib/content/types";
 import { isContentPublic, previewAllContent, resolveContent as resolve, type ContentRow as Row, type ResolvedContent } from "@/lib/content/resolve";
-import { readMinutes } from "@/lib/content/blog";
+import { isArticlePubliclyVisible, readMinutes } from "@/lib/content/blog";
 import { sanitizeCmsHtml } from "@/lib/security/sanitize-html";
 
 export { previewAllContent, type ResolvedContent };
@@ -40,10 +40,16 @@ async function readVisibleRows(): Promise<Rows> {
   const sb = createPublicClient();
   const [p, a] = await Promise.all([
     sb.from("content_pages").select("slug, title, body_html, status, legal_approved").eq("status", "published"),
-    sb.from("articles").select("slug, title, excerpt, body_html, status, published_at").eq("status", "published"),
+    sb
+      .from("articles")
+      .select("slug, title, excerpt, body_html, status, published_at, scheduled_for")
+      .eq("status", "published"),
   ]);
   if (p.error || a.error) throw new Error("content read failed");
-  return { pages: (p.data as Row[] | null) || [], articles: (a.data as Row[] | null) || [] };
+  const articles = ((a.data as (Row & { status?: string; scheduled_for?: string | null })[] | null) || []).filter((row) =>
+    isArticlePubliclyVisible({ status: row.status || "published", scheduled_for: row.scheduled_for }),
+  );
+  return { pages: (p.data as Row[] | null) || [], articles };
 }
 
 /** Cached 60s under the `content` tag — for site chrome only (expired by every CMS change). */

@@ -3,6 +3,8 @@ const TONES: Record<string, { bg: string; fg: string; label?: string }> = {
   published: { bg: "var(--adm-success-bg)", fg: "var(--adm-success)", label: "Published" },
   draft: { bg: "var(--adm-warning-bg)", fg: "var(--adm-warning)", label: "Draft" },
   pending: { bg: "var(--adm-warning-bg)", fg: "var(--adm-warning)", label: "Pending" },
+  scheduled: { bg: "var(--lh-ice)", fg: "var(--lh-action)", label: "Scheduled" },
+
   archived: { bg: "var(--adm-surface-2)", fg: "var(--adm-ink-2)", label: "Archived" },
   deleted: { bg: "var(--adm-danger-bg)", fg: "var(--adm-danger)", label: "Deleted" },
   placed: { bg: "var(--lh-ice)", fg: "var(--lh-action)", label: "Placed" },

@@ -1,4 +1,4 @@
-/* Admin console tokens — separate from frozen V5 storefront. */
+/* Admin console tokens — separate from frozen V5 storefront. Admin VNext design system. */
 .admin-app {
   --adm-sidebar-w: 248px;
   --adm-sidebar-bg: #0b1528;
@@ -11,20 +11,35 @@
   --adm-canvas: #f3f6fb;
   --adm-surface: #ffffff;
   --adm-surface-2: #eef3fa;
+  --adm-surface-elevated: #ffffff;
   --adm-ink: #102039;
   --adm-ink-2: #52637b;
+  --adm-ink-muted: #8494b0;
   --adm-border: #d7e2ef;
+  --adm-border-strong: #b8c7db;
   --adm-divider: #e8eff7;
   --adm-focus: #2159d4;
+  --adm-action: #1748b5;
+  --adm-action-hover: #123a91;
   --adm-danger: #b42318;
   --adm-danger-bg: #fef3f2;
   --adm-success: #166044;
   --adm-success-bg: #e8f4ee;
   --adm-warning: #865111;
   --adm-warning-bg: #fff4e0;
+  --adm-info: #175cd3;
+  --adm-info-bg: #eff4ff;
   --adm-radius: 10px;
   --adm-radius-lg: 14px;
+  --adm-radius-sm: 6px;
   --adm-shadow: 0 1px 2px rgba(16, 32, 57, 0.06), 0 8px 24px rgba(16, 32, 57, 0.04);
+  --adm-space-1: 4px;
+  --adm-space-2: 8px;
+  --adm-space-3: 12px;
+  --adm-space-4: 16px;
+  --adm-space-5: 20px;
+  --adm-space-6: 24px;
+  --adm-editor-aside: 320px;
   background: var(--adm-canvas);
   color: var(--adm-ink);
   font-family: var(--font-body);

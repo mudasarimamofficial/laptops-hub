@@ -1,8 +1,9 @@
-import Link from "next/link";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 import { ContentEditForm } from "@/components/admin/content-edit-form";
 import { LEGAL_CONTENT_SLUGS } from "@/lib/security/sanitize-html";
+import { AdminPageHeader } from "@/components/admin/ui/page-header";
+import { EmptyState } from "@/components/admin/ui/empty-state";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -16,26 +17,21 @@ export default async function AdminContentPage() {
     .order("slug");
 
   const canApproveLegal = ["owner", "admin", "manager"].includes(staff.role);
+  const rows = pages || [];
 
   return (
-    <div className="lh-container py-10">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold">Content</h1>
-          <p className="mt-2 text-sm text-[var(--lh-ink-2)]">
-            Editorial publish and legal approval are separate. Policy pages stay private until both are set.
-          </p>
-        </div>
-        <Link href="/admin" className="text-sm text-[var(--lh-action)]">
-          ← Overview
-        </Link>
-      </div>
+    <div>
+      <AdminPageHeader
+        title="Pages"
+        description="Editorial publish and legal approval are separate. Policy pages stay private until both are set."
+        breadcrumbs={[{ href: "/admin", label: "Overview" }, { label: "Pages" }]}
+      />
 
-      <div className="mt-8 space-y-8">
-        {(pages || []).length === 0 ? (
-          <p className="text-[var(--lh-ink-2)]">No content pages yet.</p>
+      <div className="space-y-8">
+        {rows.length === 0 ? (
+          <EmptyState title="No content pages yet" description="CMS pages appear here once seeded. Customers only see published, approved policy pages." />
         ) : (
-          (pages || []).map((p) => (
+          rows.map((p) => (
             <ContentEditForm
               key={p.slug}
               slug={p.slug}

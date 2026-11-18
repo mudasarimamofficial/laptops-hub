@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
+import { AdminCard } from "@/components/admin/ui/admin-card";
+import { AdminField, admInputClass } from "@/components/admin/ui/admin-field";
 
 type Props = {
   slug: string;
@@ -16,7 +18,6 @@ type Props = {
 
 export function ContentEditForm(props: Props) {
   const router = useRouter();
-  // Before hydration the submit stays disabled (and forms post): a click can never become a GET page reload.
   const hydrated = useHydrated();
   const [title, setTitle] = useState(props.title);
   const [status, setStatus] = useState(props.status);
@@ -46,7 +47,7 @@ export function ContentEditForm(props: Props) {
         setErr(data.message || data.error || `Save failed (${res.status})`);
         return;
       }
-      setMsg("Saved.");
+      setMsg("Page saved.");
       router.refresh();
     } catch {
       setErr("Network error — try again.");
@@ -56,75 +57,66 @@ export function ContentEditForm(props: Props) {
   }
 
   return (
-    <form method="post" onSubmit={onSubmit} className="rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-[family-name:var(--font-mono)] text-sm font-semibold uppercase tracking-wider">{props.slug}</h2>
-        <span className="text-xs text-[var(--lh-ink-2)]">
-          {props.status}
-          {props.isLegalPage ? (props.legalApproved ? " · legally approved" : " · needs legal approval") : ""}
-        </span>
-      </div>
-      {props.isLegalPage ? (
-        <p className="mt-2 text-xs text-[var(--lh-ink-2)]">
-          Saving or publishing editorial copy is not the same as approving warranty, shipping, privacy or returns
-          commitments. Legal approval is a separate owner/manager action.
-        </p>
-      ) : null}
-      <label className="mt-4 block text-sm">
-        <span className="font-medium">Title</span>
-        <input
-          className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </label>
-      <label className="mt-3 block text-sm">
-        <span className="font-medium">Editorial status</span>
-        <select
-          className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
-          value={status}
-          onChange={(e) => setStatus(e.target.value as Props["status"])}
-        >
-          <option value="pending">Pending (not public)</option>
-          <option value="draft">Draft (not public)</option>
-          <option value="published">Published</option>
-        </select>
-      </label>
-      {props.isLegalPage && props.canApproveLegal ? (
-        <label className="mt-3 flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={legalApproved} onChange={(e) => setLegalApproved(e.target.checked)} />
-          Legal / business approval (required before public policy pages)
-        </label>
-      ) : null}
-      <label className="mt-3 block text-sm">
-        <span className="font-medium">Body (safe HTML — headings, lists, links)</span>
-        <textarea
-          className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2 font-[family-name:var(--font-mono)] text-xs"
-          rows={8}
-          value={bodyHtml}
-          onChange={(e) => setBodyHtml(e.target.value)}
-        />
-        <span className="mt-1 block text-xs text-[var(--lh-ink-2)]">
-          Leave empty to publish the V5 page layout and copy for this page. That is only possible when the template has
-          no sections waiting for business details; otherwise write the approved body here.
-        </span>
-      </label>
-      {status === "published" && !bodyHtml.trim() ? (
-        <label className="mt-3 flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={approveTemplate} onChange={(e) => setApproveTemplate(e.target.checked)} />
-          I have reviewed the V5 template copy for this page and approve publishing it
-        </label>
-      ) : null}
-      {err ? <p className="mt-2 text-sm text-red-600">{err}</p> : null}
-      {msg ? <p className="mt-2 text-sm text-emerald-700">{msg}</p> : null}
-      <button
-        type="submit"
-        disabled={busy || !hydrated}
-        className="mt-4 rounded-[var(--lh-radius-pill)] bg-[linear-gradient(180deg,var(--lh-grad-action-from),var(--lh-grad-action-to))] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
+    <form method="post" onSubmit={onSubmit}>
+      <AdminCard
+        title={props.slug}
+        description={`${props.status}${props.isLegalPage ? (props.legalApproved ? " · legally approved" : " · needs legal approval") : ""}`}
       >
-        {busy ? "Saving…" : "Save page"}
-      </button>
+        {props.isLegalPage ? (
+          <p className="mb-3 text-xs text-[var(--adm-ink-2)]">
+            Saving or publishing editorial copy is not the same as approving warranty, shipping, privacy or returns
+            commitments. Legal approval is a separate owner/manager action.
+          </p>
+        ) : null}
+        <div className="space-y-3">
+          <AdminField label="Title">
+            <input className={admInputClass} value={title} onChange={(e) => setTitle(e.target.value)} required />
+          </AdminField>
+          <AdminField label="Editorial status">
+            <select className={admInputClass} value={status} onChange={(e) => setStatus(e.target.value as Props["status"])}>
+              <option value="pending">Pending (not public)</option>
+              <option value="draft">Draft (not public)</option>
+              <option value="published">Published</option>
+            </select>
+          </AdminField>
+          {props.isLegalPage && props.canApproveLegal ? (
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={legalApproved} onChange={(e) => setLegalApproved(e.target.checked)} />
+              Legal / business approval (required before public policy pages)
+            </label>
+          ) : null}
+          <AdminField
+            label="Body"
+            hint="Safe HTML — headings, lists, links. Leave empty only when you approve publishing the V5 template copy."
+          >
+            <textarea
+              className={`${admInputClass} font-[family-name:var(--font-mono)] text-xs`}
+              rows={8}
+              value={bodyHtml}
+              onChange={(e) => setBodyHtml(e.target.value)}
+            />
+          </AdminField>
+          {status === "published" && !bodyHtml.trim() ? (
+            <label className="flex items-center gap-2 text-sm">
+              <input type="checkbox" checked={approveTemplate} onChange={(e) => setApproveTemplate(e.target.checked)} />
+              I have reviewed the V5 template copy for this page and approve publishing it
+            </label>
+          ) : null}
+          {err ? (
+            <p role="alert" className="text-sm text-[var(--adm-danger)]">
+              {err}
+            </p>
+          ) : null}
+          {msg ? <p className="text-sm text-[var(--adm-success)]">{msg}</p> : null}
+          <button
+            type="submit"
+            disabled={busy || !hydrated}
+            className="inline-flex min-h-10 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-5 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
+          >
+            {busy ? "Saving…" : "Save page"}
+          </button>
+        </div>
+      </AdminCard>
     </form>
   );
 }

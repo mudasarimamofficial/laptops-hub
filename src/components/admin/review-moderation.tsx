@@ -49,7 +49,7 @@ export function ReviewModeration({ id, status }: { id: string; status: string })
         value={note}
         onChange={(e) => setNote(e.target.value)}
         maxLength={500}
-        className="min-w-0 flex-1 rounded-xl border border-[var(--lh-border)] px-3 py-1.5"
+        className="min-w-0 flex-1 rounded-[var(--adm-radius)] border border-[var(--adm-border)] px-3 py-1.5"
       />
       {ACTIONS.map(([v, l]) => (
         <button
@@ -58,7 +58,7 @@ export function ReviewModeration({ id, status }: { id: string; status: string })
           disabled={busy}
           aria-pressed={current === v}
           onClick={() => change(v)}
-          className={`rounded-full border px-3 py-1 ${current === v ? "border-[var(--lh-action)] bg-[var(--lh-ice)] font-semibold" : "border-[var(--lh-border)] bg-white"}`}
+          className={`rounded-full border px-3 py-1 ${current === v ? "border-[var(--adm-action)] bg-[var(--adm-info-bg)] font-semibold" : "border-[var(--adm-border)] bg-[var(--adm-surface)]"}`}
         >
           {l}
         </button>

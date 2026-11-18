@@ -44,7 +44,7 @@ export default async function AdminMediaLibraryPage() {
               <div className="space-y-1 p-3 text-sm">
                 <StatusBadge status={m.approval === "approved" ? "active" : "pending"} />
                 {product ? (
-                  <Link href={`/admin/products/${product.handle}`} className="block font-medium text-[var(--lh-action)] hover:underline">
+                  <Link href={`/admin/products/${product.handle}`} className="block font-medium text-[var(--adm-action)] hover:underline">
                     {product.title}
                   </Link>
                 ) : (

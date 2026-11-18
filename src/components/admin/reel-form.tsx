@@ -170,7 +170,7 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
           {id ? "Save reel" : "Add reel"}
         </button>
         {id ? (
-          <button type="button" disabled={!hydrated || busy} onClick={onDelete} className="rounded-full border border-[var(--lh-border)] px-4 py-2">
+          <button type="button" disabled={!hydrated || busy} onClick={onDelete} className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] px-4 py-2">
             Delete
           </button>
         ) : null}

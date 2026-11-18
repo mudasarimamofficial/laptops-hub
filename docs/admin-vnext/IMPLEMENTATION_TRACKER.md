@@ -2,23 +2,22 @@
 
 **Released A:** PR #25 → `678eac9`  
 **Released B (batch 1):** PR #26 → `f479153`  
-**Branch (active):** `feat/admin-vnext-release-c`  
+**Released C:** PR #27 → `c789b51`  
+**Branch (active):** `feat/admin-vnext-release-d`  
 **Started:** 2026-11-18
 
-## Release A — Blog VNext — MERGED
-## Release B — Products desks — MERGED (batch 1)
+## Releases A–C — MERGED
 
-## Release C — Orders + Customers + Inquiries
+## Release D — Content + Online Store
 
 | Item | Status |
 |------|--------|
-| Orders list human labels + empty state | in progress |
-| Order detail remove `lh-container`, AdminCard layout | in progress |
-| Order actions adm tokens + readable statuses | in progress |
-| Customers / inquiries token pass | pending |
+| CMS pages desk (no lh-container) | in progress |
+| Content edit form AdminCard | in progress |
+| Reviews / media / reels token pass | in progress |
+| Navigation / merchandising / online-store | pending |
 
 ## Later releases
 
-- D Content/Online store
 - E Settings/Staff/Analytics
 - F System-wide polish

@@ -1,7 +1,7 @@
 /**
  * Preset manifest for “Generation Laptops HUB” reels.
- * Source HTML (Shopify/third-party) is parsed into this shape — never pasted raw into React.
- * ronin.pk hosts remain blocked for publish/playback; presets stay draft until rights + owned media.
+ * Source HTML is parsed into this shape — never pasted raw into React via dangerouslySetInnerHTML.
+ * External hosts are technically allowed; presets seed as draft + rights pending until the merchant confirms.
  */
 
 export type ReelPreset = {
@@ -10,22 +10,20 @@ export type ReelPreset = {
   creatorName: string;
   tag: string;
   videoUrl: string | null;
+  hlsUrl: string | null;
   posterUrl: string | null;
   avatarUrl: string | null;
   productOrCollectionPath: string | null;
   sortOrder: number;
   rightsStatus: "pending" | "owned" | "licensed";
   rightsNote: string;
-  /** When true, media URLs must not be published until cleared. */
-  mediaBlocked: boolean;
+  sourceAttribution: string;
+  /** Filename mismatch / identity caution for merchants (not auto-consent). */
+  identityNote?: string;
 };
 
 export const REELS_SECTION_HEADING = "Generation Laptops HUB";
 
-/**
- * Placeholder keys for the six HTML-derived presets.
- * Populated when the owner pastes the source HTML; until then titles are reserved as unpublished drafts.
- */
 export const REELS_PRESET_KEYS = [
   "junaid-akram",
   "hemayal",
@@ -45,32 +43,29 @@ export function decodeHtmlEntities(s: string): string {
     .replace(/&#x2F;/gi, "/");
 }
 
-export function isBlockedReelHost(url: string | null | undefined): boolean {
-  if (!url) return false;
-  try {
-    const host = new URL(url).hostname.toLowerCase();
-    return host === "ronin.pk" || host.endsWith(".ronin.pk");
-  } catch {
-    return false;
-  }
-}
-
-/** Build unpublished draft rows from a parsed preset list (idempotent by title+sort_order for callers). */
+/** Build unpublished draft rows from a parsed preset (idempotent by preset_key for callers). */
 export function presetToDraftReel(p: ReelPreset) {
-  const blocked = p.mediaBlocked || isBlockedReelHost(p.videoUrl) || isBlockedReelHost(p.posterUrl);
+  const attribution =
+    p.sourceAttribution ||
+    "Reference media from Shopify HTML export. External URL ≠ ownership or endorsement. Confirm rights before publish.";
   return {
     title: p.title,
     caption: p.creatorName ? `${p.creatorName}${p.tag ? ` · ${p.tag}` : ""}` : p.tag,
-    video_url: blocked ? "" : p.videoUrl || "",
-    poster_url: blocked ? null : p.posterUrl,
+    video_url: p.videoUrl || "",
+    hls_url: p.hlsUrl || null,
+    poster_url: p.posterUrl || null,
+    avatar_url: p.avatarUrl || null,
+    media_source: "external_file" as const,
+    preset_key: p.key,
+    link_path: p.productOrCollectionPath || null,
+    source_attribution: [attribution, p.identityNote].filter(Boolean).join(" "),
     rights_status: "pending" as const,
-    rights_note: blocked
-      ? `${p.rightsNote || "Third-party media"}. Blocked host or uncleared rights — replace with Laptops HUB owned/licensed media before publish.`
-      : p.rightsNote || "Preset draft — confirm rights before publish.",
+    rights_note: p.rightsNote || "Preset draft — confirm rights before publish.",
     status: "draft" as const,
     sort_order: p.sortOrder,
-    creator_name: p.creatorName,
+    // Keep creator_name empty until consent is recorded (DB constraint).
+    creator_name: "",
     creator_consent: false,
-    tag: p.tag,
+    tag: p.tag.replace(/^#/, ""),
   };
 }

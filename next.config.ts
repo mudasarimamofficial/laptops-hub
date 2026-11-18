@@ -23,6 +23,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.shopify.com" },
       { protocol: "https", hostname: "*.supabase.co" },
       { protocol: "https", hostname: "**.myshopify.com" },
+      // External reel posters/avatars (e.g. Shopify CDN on third-party shops) — HTTPS only.
+      { protocol: "https", hostname: "ronin.pk" },
+      { protocol: "https", hostname: "**.ronin.pk" },
     ],
   },
 };

@@ -15,10 +15,13 @@ assert.equal(reelUrlProblem("http://127.0.0.1:54321/storage/v1/object/public/ree
 assert.equal(reelUrlProblem("http://cdn.example.com/a.mp4", "video"), "scheme");
 assert.equal(reelUrlProblem("javascript:alert(1)", "video"), "scheme");
 assert.equal(reelUrlProblem("not a url", "video"), "invalid");
-assert.equal(reelUrlProblem("https://ronin.pk/a.mp4", "video"), "blocked_host");
-assert.equal(reelUrlProblem("https://cdn.RONIN.pk/a.mp4", "video"), "blocked_host");
+// External hosts (including previously blocked shops) are allowed when the path is a direct media file.
+assert.equal(reelUrlProblem("https://ronin.pk/cdn/shop/videos/c/vp/x/x.HD-1080p-2.5Mbps-1.mp4", "video"), null);
+assert.equal(reelUrlProblem("https://cdn.RONIN.pk/a.mp4", "video"), null);
 assert.equal(reelUrlProblem("https://notronin.pk.example.com/a.mp4", "video"), null);
 assert.equal(reelUrlProblem("https://www.instagram.com/reel/abc/", "video"), "extension");
+assert.equal(reelUrlProblem("https://cdn.example.com/stream/a.m3u8", "hls"), null);
+assert.equal(reelUrlProblem("https://10.0.0.5/a.mp4", "video"), "private_host");
 assert.equal(reelUrlProblem("https://cdn.example.com/p.webp", "poster"), null);
 assert.equal(reelUrlProblem("https://cdn.example.com/p.mp4", "poster"), "extension");
 
@@ -28,10 +31,25 @@ assert.equal(reelInputSchema.safeParse({ ...reel, rightsStatus: "pending" }).suc
 assert.equal(reelInputSchema.safeParse({ ...reel, rightsStatus: "pending", status: "draft" }).success, true, "drafts may be pending");
 assert.equal(reelInputSchema.safeParse({ ...reel, rightsStatus: "licensed" }).success, false, "licence needs a note");
 assert.equal(reelInputSchema.safeParse({ ...reel, rightsStatus: "licensed", rightsNote: "Licensed from X, 2026" }).success, true);
-assert.equal(reelInputSchema.safeParse({ ...reel, videoUrl: "https://www.ronin.pk/r.mp4" }).success, false);
-assert.equal(isRenderableReel({ videoUrl: "https://ronin.pk/a.mp4", posterUrl: null }), false);
-assert.equal(isRenderableReel({ videoUrl: "https://cdn.example.com/a.mp4", posterUrl: "https://ronin.pk/p.jpg" }), false);
+assert.equal(reelInputSchema.safeParse({ ...reel, videoUrl: "https://www.ronin.pk/r.mp4" }).success, true, "external host allowed");
+assert.equal(isRenderableReel({ videoUrl: "https://ronin.pk/a.mp4", posterUrl: null }), true);
+assert.equal(isRenderableReel({ videoUrl: "https://cdn.example.com/a.mp4", posterUrl: "https://ronin.pk/p.jpg" }), true);
 assert.equal(isRenderableReel({ videoUrl: "https://cdn.example.com/a.mp4", posterUrl: null }), true);
+assert.equal(
+  reelInputSchema.safeParse({ ...reel, mediaSource: "external_stream", status: "draft", rightsStatus: "pending" }).success,
+  false,
+  "stream source needs hls",
+);
+assert.equal(
+  reelInputSchema.safeParse({
+    ...reel,
+    mediaSource: "external_stream",
+    hlsUrl: "https://cdn.example.com/a.m3u8",
+    status: "draft",
+    rightsStatus: "pending",
+  }).success,
+  true,
+);
 
 // ── Reviews ──
 assert.deepEqual(reviewSummary([]), { count: 0, average: null });

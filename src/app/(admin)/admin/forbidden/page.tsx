@@ -6,22 +6,41 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function AdminForbiddenPage() {
+type Props = { searchParams: Promise<{ reason?: string }> };
+
+export default async function AdminForbiddenPage({ searchParams }: Props) {
+  const reason = (await searchParams).reason;
+  const copy =
+    reason === "role"
+      ? {
+          title: "Not allowed for this role",
+          body: "You are signed in as staff, but this page needs a different role. Ask an owner or admin if you need access.",
+        }
+      : reason === "membership"
+        ? {
+            title: "Staff access required",
+            body: "You are signed in, but this account is not an active staff member. Admin data is never shown without an active membership.",
+          }
+        : {
+            title: "Access denied",
+            body: "You do not have permission to open this admin page.",
+          };
+
   return (
     <div className="lh-content flex min-h-[50vh] flex-col items-center justify-center py-16 text-center">
       <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-[0.14em] text-[var(--lh-error)]">
         403
       </p>
       <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-bold tracking-[-0.04em]">
-        Staff access required
+        {copy.title}
       </h1>
-      <p className="mt-3 max-w-md text-sm text-[var(--lh-ink-2)]">
-        You are signed in, but this account is not an active staff member. Admin data is never shown without an active
-        membership.
-      </p>
+      <p className="mt-3 max-w-md text-sm text-[var(--lh-ink-2)]">{copy.body}</p>
       <div className="mt-8 flex gap-4 text-sm font-semibold">
         <Link href="/" className="text-[var(--lh-action)]">
           Storefront
+        </Link>
+        <Link href="/admin" className="text-[var(--lh-action)]">
+          Overview
         </Link>
         <Link href="/admin/login" className="text-[var(--lh-action)]">
           Staff login

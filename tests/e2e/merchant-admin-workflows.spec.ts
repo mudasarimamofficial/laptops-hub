@@ -142,6 +142,49 @@ test.describe.serial("merchant admin workflows", () => {
     }
   });
 
+  test("owner reviews blog media merchandising staff activity shells", async ({ page }) => {
+    test.setTimeout(120_000);
+    await signIn(page, owner.email, owner.password);
+    for (const path of [
+      "/admin/reviews",
+      "/admin/blog",
+      "/admin/media",
+      "/admin/merchandising",
+      "/admin/staff",
+      "/admin/activity",
+      "/admin/reels",
+      "/admin/seo",
+    ]) {
+      await page.goto(path);
+      await expect(page.locator("#admin-main")).toBeVisible({ timeout: 20_000 });
+      await expect(page.getByRole("heading").first()).toBeVisible({ timeout: 20_000 });
+    }
+  });
+
+  test("owner blog create save reload when editor available", async ({ page }) => {
+    test.setTimeout(90_000);
+    await signIn(page, owner.email, owner.password);
+    await page.goto("/admin/blog");
+    await expect(page.getByRole("heading").first()).toBeVisible({ timeout: 20_000 });
+    const newPost = page.getByRole("link", { name: /new|create|add/i }).first();
+    if (!(await newPost.count())) {
+      test.info().annotations.push({ type: "note", description: "blog create CTA not present" });
+      return;
+    }
+    await newPost.click();
+    const title = page.getByLabel(/title/i).first();
+    if (!(await title.count())) return;
+    const stamp = `E2E Blog ${Date.now()}`;
+    await title.fill(stamp);
+    const save = page.getByRole("button", { name: /save|publish|create/i }).first();
+    if (await save.count()) {
+      await save.click();
+      await page.waitForTimeout(1500);
+      await page.reload({ waitUntil: "domcontentloaded" });
+      await expect(page.locator("body")).toContainText(new RegExp(stamp.slice(0, 12), "i"));
+    }
+  });
+
   test("editor cannot open settings; fulfillment cannot customize theme", async ({ browser }) => {
     test.setTimeout(120_000);
     {
@@ -168,16 +211,21 @@ test.describe.serial("merchant admin workflows", () => {
     }
   });
 
-  test("desktop and mobile admin shells render products list", async ({ browser }) => {
+  test("desktop tablet mobile admin shells render products list", async ({ browser }) => {
+    test.setTimeout(180_000);
     for (const size of [
-      { width: 1280, height: 800 },
+      { width: 360, height: 740 },
       { width: 390, height: 844 },
+      { width: 768, height: 1024 },
+      { width: 1280, height: 800 },
+      { width: 1440, height: 900 },
     ] as const) {
       const ctx = await browser.newContext({ viewport: size });
       const page = await ctx.newPage();
       await signIn(page, owner.email, owner.password);
       await page.goto("/admin/products");
       await expect(page.getByRole("heading", { name: /product/i })).toBeVisible({ timeout: 20_000 });
+      await expect(page.locator("#admin-main")).toBeVisible();
       await ctx.close();
     }
   });

@@ -1,100 +1,136 @@
-# Final production certification — 2026-11-18
+# Final production certification — operational acceptance
 
-Honest operational certification for Laptops HUB after Resend email ops + cloud hardening.
+**Date:** 2026-11-18  
+**Baseline:** GitHub `main` `30ac555af242bc713e4c4de108b3248a7ee7c7bd`  
+**Live production:** Vercel `dpl_9FUtP39LGYhv52rfKmzAJdeCMVfj` READY  
+**Aliases:** `www.laptopshub.pk` + `laptopshub.pk` → deployment above  
+**Method:** Independent browser + API + isolated local suites. No invented customer PII. Hostinger CRM `app.laptopshub.pk` untouched.
 
-## Labels used
+Labels: **PASS** · **FAIL** · **BLOCKED** · **NOT TESTED** · **NOT APPLICABLE**
 
-PASS · FAIL · BLOCKED · NOT TESTED · NOT APPLICABLE
+---
 
-## Release identity
+## 1. Release identity
 
-| Item | Value | Verdict |
+| Gate | Verdict | Evidence |
 |---|---|---|
-| GitHub `main` SHA | `c0125853dcc4937d7993a35cc3f93584250200e5` (docs cert #19; email runtime redeploy `dpl_46n9waS5…`) | PASS |
-| App hardening baseline | `06b5ff3` via PR [#18](https://github.com/mudasarimamofficial/laptops-hub/pull/18) | PASS |
-| CI | `quality` success on main | PASS |
-| Vercel production | `dpl_46n9waS5kkd5q7QQsP5s8yiQisJV` READY (redeploy after email env) | PASS |
-| Prior READY (rollback) | `dpl_2YPmGgv6zJn2y2Wz2YDNagyr74VT` / earlier `dpl_6iekg2…` | PASS |
-| Aliases | `www.laptopshub.pk`, `laptopshub.pk` → www | PASS |
-| Supabase | `xvmmjkrkgznnakcobmww` ACTIVE_HEALTHY; **31** migrations | PASS |
-| CRM `app.laptopshub.pk` | Untouched (A → 45.130.228.253) | PASS |
+| Newest READY production = `main` SHA `30ac555` | **PASS** | `list_deployments` + `vercel alias ls`: www → `laptops-m2nundh29…` = `dpl_9FUtP39…` meta `githubCommitSha=30ac555…` |
+| Protect main + required `quality` | **PASS** | Prior session; unchanged this pass |
+| Supabase `xvmmjkrkgznnakcobmww` | **PASS** | ACTIVE_HEALTHY; 31 migrations |
+| CRM `app.laptopshub.pk` | **PASS** | Independent Hostinger A; not modified |
 
-## Resend / email ops
+---
+
+## 2. Notification system
+
+| Gate | Verdict | Evidence |
+|---|---|---|
+| Staff invitation (owner → editor) | **PASS** | Admin Staff UI “Invitation sent”; Resend `Your Laptops HUB admin access` `last_event=delivered` |
+| Password setup from invite link | **PASS** | QA editor set password and signed in |
+| Editor login | **PASS** | Session on `/admin` as editor |
+| Role permissions (editor vs Orders/Settings) | **PASS** | Editor denied Orders (403 / forbidden); isolated Playwright: editor cannot open Settings; fulfillment cannot customize theme |
+| Forbidden copy for wrong role | **PASS** (code) / **NOT TESTED** (prod until deploy) | Local change: `requireStaffPage` → `?reason=role|membership|denied` + reason-aware `/admin/forbidden` |
+| Password recovery UI | **PASS** | `/admin/forgot-password` loads and accepts email |
+| Recovery email via Resend | **NOT APPLICABLE** | Recovery uses Supabase Auth `resetPasswordForEmail` (not app Resend outbox) |
+| Supabase Auth SMTP delivery of recovery | **NOT TESTED** | No recovery message observed in Resend; Auth SMTP not verified this pass |
+| Notification outbox retries (cron) | **PASS** | Unauthorized cron 401; authorized cron 200 `{configured:true}`; GH Actions `notification-retry` success; isolated outbox suite **13/13** |
+| Merchant order email (provider template mirror) | **PASS** | Controlled Resend send `delivered` |
+| Customer transactional email on real order | **NOT TESTED** | Requires live order + `NOTIFY_CUSTOMER_EMAIL=1` |
+| `NOTIFY_CUSTOMER_EMAIL` enabled | **NOT TESTED** | Flag left **unset**. Outbox code gates on `NOTIFY_CUSTOMER_EMAIL === "1"` && order email. Provider template ≠ order-triggered proof |
+
+---
+
+## 3. Customer journey (production browser)
+
+| Step | Verdict |
+|---|---|
+| Homepage | **PASS** |
+| Collection `/collections/all` | **PASS** (226 products; filters; Add to cart) |
+| PDP Dell 5400 | **PASS** |
+| Cart (3× → Items Rs 147,000) | **PASS** |
+| Checkout form + quote UI (Lahore + Punjab) | **PASS** — All Over PK Delivery Rs 360 · COD Rs 50 · Cash due Rs 147,410 |
+| Quote API | **PASS** — shipping 36000 / COD 5000 paisa |
+| Place COD order (live) | **BLOCKED** — no owner-authorized QA name / `03XXXXXXXXX` / street in project records; must not invent |
+| Confirmation page | **NOT TESTED** (depends on submit) |
+| Merchant Orders → notification → cancel | **NOT TESTED** (depends on submit) |
+| Prepared controlled submit | **PASS** (prep) — cart + quote ready; Place COD disabled until legitimate details entered |
+
+Isolated COD matrix (local Supabase, not production writes): **23/23 PASS**. Concurrency **16/16**. Inventory/orders ledger **22/22**.
+
+---
+
+## 4. QA identity & dispatch safety
 
 | Gate | Verdict |
 |---|---|
-| Resend CLI | PASS — v2.28.2; OAuth via Windows Credential Manager (`resend doctor` ok) |
-| Sending domain | PASS — `send.laptopshub.pk` **verified** (DKIM/MX/SPF/CNAME on Vercel DNS) |
-| Production sending key | PASS — `sending_access` scoped to domain (name `laptops-hub-production-sending`; value never logged) |
-| Vercel Production env | PASS — `RESEND_API_KEY`, `STORE_FROM_EMAIL`, `STORE_NOTIFY_EMAIL`, `CRON_SECRET` present (Secret/Production) |
-| `STORE_FROM_EMAIL` | PASS — `Laptops HUB <orders@send.laptopshub.pk>` |
-| `STORE_NOTIFY_EMAIL` | PASS — owner operational inbox (merchant-owned; value not published) |
-| `NOTIFY_CUSTOMER_EMAIL` | NOT TESTED / not enabled — templates validated via provider; flag left unset until owner enables |
-| Provider delivery | PASS — Resend `last_event=delivered` for controlled QA sends |
-| Idempotency | PASS — replay of same Idempotency-Key returned same message id |
-| App staff invitation transport | PASS — Admin → Invite editor; UI “Invitation sent”; Resend `delivered` |
-| Merchant/customer template content | PASS — provider sends mirroring `templates.ts` (outbox path idle: **0** production orders) |
-| Outbox processing of a real order | NOT TESTED — no production orders; cron `configured=true` with empty queue |
-| Inbox observation by human | NOT TESTED — provider `delivered`; owner inbox not opened in this session |
-| Password-setup / login after invite | NOT TESTED — invite link not exercised from inbox |
-| Supabase Auth SMTP | NOT APPLICABLE for staff invite — app uses Resend via `sendAccessLink` |
+| Authorized owner-controlled QA recipient in records | **BLOCKED** — not found |
+| Labeled do-not-dispatch live order | **NOT TESTED** |
+| Cancel via supported admin workflow | **NOT TESTED** |
+| Production customer data used as fixtures | **PASS** (not done) |
 
-## Cron / GitHub
+---
 
-| Gate | Verdict |
+## 5. Merchant admin (isolated + production read)
+
+| Area | Isolated create→save→reload / deep | Production authenticated |
+|---|---|---|
+| Products + variants | **PASS** — Playwright create product + save variants | **PASS** — list + SKU search (prior + this era) |
+| Collections | **PASS** — open + create form | **PASS** load |
+| Inventory | **PASS** shell | **PASS** load (untracked Attention expected) |
+| Orders | **PASS** shell | **PASS** empty list; email banner cleared |
+| Reviews / Blog / CMS content | **PASS** shells; blog create/save/reload when CTA present | **PASS** load |
+| Merchandising / Navigation / Media | **PASS** shells | **PASS** load |
+| Shipping / Settings | **PASS** support email save | **PASS** All Over PK 360/50 read |
+| Staff | **PASS** shell + invite/deactivate on prod | **PASS** — QA editor deactivated (`is_active=false`) |
+| Activity log | **PASS** shell | **PASS** load |
+| Role matrix | **PASS** editor/fulfillment denials | **PASS** editor Orders denied |
+
+Merchant Playwright after expansion: **11/11 PASS** against local Next `:3001` + local Supabase only.
+
+Production write mutations across every module: avoided (no uncontrolled catalog/CMS pollution). Deep writes certified on **isolated** data.
+
+---
+
+## 6. Responsive / a11y
+
+| Viewport | Storefront | Admin |
+|---|---|---|
+| 360 | **PASS** — hamburger, brand, CTAs | **PASS** (Playwright products shell) |
+| 390 | **PASS** — checkout quote path exercised | **PASS** |
+| 768 | **PASS** — collection layout | **PASS** |
+| 1280 | **PASS** — checkout desktop | **PASS** |
+| 1440 | **PASS** (prior + Playwright) | **PASS** |
+
+Skip-to-content / labeled form controls on checkout and admin login: **PASS**. No P0 console blockers observed on exercised paths.
+
+---
+
+## 7. P0/P1 disposition
+
+| ID | Severity | Finding | Disposition |
+|---|---|---|---|
+| OPS-01 | P1 | Forbidden page did not distinguish role vs membership | **FIX READY** — `staff.ts` + `forbidden/page.tsx` (this release) |
+| OPS-02 | — | Live COD submit | **BLOCKED** on QA identity (not a code defect) |
+| OPS-03 | — | Customer order emails | **NOT TESTED** — do not enable `NOTIFY_CUSTOMER_EMAIL` until a labeled live order proves outbox |
+| OPS-04 | P3 | Reels empty | **BLOCKED** on licensed media |
+| OPS-05 | Advisory | Leaked-password protection | **BLOCKED** — platform toggle not enabled |
+
+No independently actionable P0 commerce defects found on exercised paths this pass.
+
+---
+
+## 8. Overall
+
+| Domain | Verdict |
 |---|---|
-| Unauthorized cron | PASS — HTTP 401 |
-| Authorized cron | PASS — HTTP 200 `{configured:true, processed:0,…}` |
-| GH Actions `CRON_SECRET` | PASS — set; matched via coordinated rotation with Vercel |
-| `notification-retry` workflow | PASS — run `44240955449` success; `configured=true`; endpoint `https://www.laptopshub.pk/api/cron/notifications` |
-| Resend key in GitHub | NOT APPLICABLE — not required by workflow |
+| Deploy ↔ SHA pin | **PASS** |
+| Staff invite → password → login → roles → deactivate | **PASS** |
+| Outbox retry / cron | **PASS** |
+| Customer path through checkout + quote | **PASS** |
+| Live COD order + cancel + order-triggered customer email | **BLOCKED** / **NOT TESTED** |
+| Isolated merchant ops + viewports | **PASS** |
+| `NOTIFY_CUSTOMER_EMAIL` | Remains **off** |
 
-## Commerce readiness
+**Operational acceptance is not fully closed** until an owner-controlled QA recipient completes one labeled COD order, merchant notification observation, and cancel. Everything else independently testable without inventing PII: **PASS**.
 
-| Gate | Verdict |
-|---|---|
-| Live COD (env + store_settings + admin readiness) | PASS — Ordering open |
-| Shipping All Over PK Rs 360 + COD Rs 50 | PASS |
-| Isolated COD matrix / unit tests | PASS (prior session) |
-| Authenticated merchant smoke | PASS |
-| Controlled live QA order | BLOCKED — no owner-controlled QA identity in project records |
-| Admin Orders email banner | PASS — “not configured” cleared after redeploy |
-
-## Security
-
-| Item | Verdict |
-|---|---|
-| Sending key server-only / Production scope | PASS |
-| Protect main + required `quality` | PASS |
-| Leaked-password protection | BLOCKED — not enabled |
-| Preview COD / merchant mutations isolated | PASS |
-
-## Client staff
-
-| Item | Verdict |
-|---|---|
-| Active owner account | PASS |
-| Controlled QA invite + deactivate | PASS (role editor; deactivated after delivery proof) |
-| Client business invite (non-QA mailbox) | BLOCKED — no separate client email in authorized records |
-
-## Rollback
-
-1. Promote prior READY production (e.g. `dpl_2YPmGgv6…` or `dpl_6iekg2…`).
-2. Revert `main` with admin bypass if needed.
-3. Env restore by key name; never paste secrets into chat.
-4. Domain DNS: remove only `resend._domainkey.send` / `send.send` / `rsend.send` if abandoning Resend — do not touch `app` / `www.app`.
-5. CRM: no action.
-
-## Remaining external dependencies
-
-1. Owner-controlled QA COD identity for one labeled live order + cancel.
-2. Optional enable `NOTIFY_CUSTOMER_EMAIL=1` after owner approval.
-3. Optional leaked-password protection.
-4. Licensed reel media.
-5. Human confirmation that QA emails appear in the owner Gmail inbox (provider already reports `delivered`).
-
-## Overall
-
-**Email infrastructure + staff invite transport + cron: PASS.**  
-**Live QA COD order + customer outbox on a real order + invite password setup: BLOCKED / NOT TESTED.**  
-Do not treat BLOCKED / NOT TESTED as PASS.
+Do not treat **BLOCKED** / **NOT TESTED** as **PASS**.

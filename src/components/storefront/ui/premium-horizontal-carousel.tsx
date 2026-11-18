@@ -4,7 +4,6 @@ import {
   type CSSProperties,
   type ReactNode,
   type RefObject,
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -49,20 +48,21 @@ export function PremiumHorizontalCarousel({
   const [atEnd, setAtEnd] = useState(true);
   const raf = useRef(0);
 
-  const measure = useCallback(() => {
-    const el = ref.current;
-    if (!el) return;
-    const max = el.scrollWidth - el.clientWidth;
-    const has = max > 4;
-    setOverflow(has);
-    setProgress(progressOf(el));
-    setAtStart(el.scrollLeft <= 2);
-    setAtEnd(!has || el.scrollLeft >= max - 2);
-  }, [ref]);
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    const measure = () => {
+      const node = ref.current;
+      if (!node) return;
+      const max = node.scrollWidth - node.clientWidth;
+      const has = max > 4;
+      setOverflow(has);
+      setProgress(progressOf(node));
+      setAtStart(node.scrollLeft <= 2);
+      setAtEnd(!has || node.scrollLeft >= max - 2);
+    };
+
     const onScroll = () => {
       cancelAnimationFrame(raf.current);
       raf.current = requestAnimationFrame(measure);
@@ -78,7 +78,7 @@ export function PremiumHorizontalCarousel({
       ro?.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [measure, ref, children]);
+  }, [ref, children]);
 
   const btn: CSSProperties = {
     width: 44,

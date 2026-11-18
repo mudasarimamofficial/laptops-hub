@@ -24,6 +24,7 @@ export function ReelShoppableModal({ reel, open, onClose, returnFocusRef }: Prop
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
+    const focusReturn = returnFocusRef?.current;
     document.body.style.overflow = "hidden";
     closeBtn.current?.focus();
     const onKey = (e: KeyboardEvent) => {
@@ -33,7 +34,7 @@ export function ReelShoppableModal({ reel, open, onClose, returnFocusRef }: Prop
     return () => {
       document.body.style.overflow = prev;
       document.removeEventListener("keydown", onKey);
-      returnFocusRef?.current?.focus?.();
+      focusReturn?.focus?.();
     };
   }, [open, onClose, returnFocusRef]);
 

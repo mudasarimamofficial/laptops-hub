@@ -17,8 +17,8 @@ Branch work: `feat/certification-handover`. Starting main: `83978426b91bbabc9261
 | Check | Result |
 |---|---|
 | Orders in DB | **0** |
-| Resend | **Not configured** (`RESEND_API_KEY` / `STORE_FROM_EMAIL` / `STORE_NOTIFY_EMAIL`) |
-| Fallback | Admin Overview + Orders banners: watch Orders list; unsent mail never marked delivered |
+| Resend | **Configured** — verified domain `send.laptopshub.pk`; Production `RESEND_API_KEY` / `STORE_FROM_EMAIL` / `STORE_NOTIFY_EMAIL`; GH `CRON_SECRET` synced |
+| Fallback | Orders “email not configured” banner cleared after redeploy; outbox idle until first COD order |
 | Staff | Active owner/admin can open `/admin/orders` |
 
 ## 3. Shipping and COD totals

@@ -11,7 +11,7 @@ journeys "notifications" in `tests/e2e-isolated/launch-journey.spec.ts`.
    `/api/cron/notifications` (secret-protected) and the staff **Retry sending** button on the order page.
 3. A worker **claims** rows with `claim_notifications()` — atomic, `FOR UPDATE SKIP LOCKED`, a new `claim_token` and
    `claimed_at` per claim. Every later write is conditional on that token.
-4. The **store alert** (to `STORE_NOTIFY_EMAIL`) and the **customer confirmation** (only with
+4. The **store alert** (to `STORE_NOTIFY_EMAIL`, permanently `infolaptopshub@gmail.com`) and the **customer confirmation** (only with
    `NOTIFY_CUSTOMER_EMAIL=1` and a customer email; otherwise `skipped`) are tracked separately
    (`business_*`, `customer_*`: status, provider message id, accepted time).
 

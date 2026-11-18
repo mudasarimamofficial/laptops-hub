@@ -55,7 +55,7 @@ export function presetToDraftReel(p: ReelPreset) {
     hls_url: p.hlsUrl || null,
     poster_url: p.posterUrl || null,
     avatar_url: p.avatarUrl || null,
-    media_source: "external_file" as const,
+    media_source: (p.hlsUrl ? "external_stream" : "external_file") as "external_file" | "external_stream",
     preset_key: p.key,
     link_path: p.productOrCollectionPath || null,
     source_attribution: [attribution, p.identityNote].filter(Boolean).join(" "),

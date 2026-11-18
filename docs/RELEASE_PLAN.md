@@ -71,7 +71,7 @@ Order matters only within Option B (the CLI applies files in version order, one 
 | `SITE_PRELAUNCH` | pre-launch mode (`restricted` / `1`) | set until launch, then removed |
 | `SITE_URL` | canonical origin (only with a custom domain) | optional |
 | `RESEND_API_KEY`, `STORE_FROM_EMAIL` | email provider + verified sender | owner account |
-| `STORE_NOTIFY_EMAIL` | new-order alert recipient | owner inbox |
+| `STORE_NOTIFY_EMAIL` | new-order alert recipient | `infolaptopshub@gmail.com` (permanent owner) |
 | `NOTIFY_CUSTOMER_EMAIL` | `1` to email customers who give an email | owner choice |
 | `NOTIFY_TIMEOUT_MS` | email request timeout (default 15000) | unset |
 | `CRON_SECRET` | protects `/api/cron/notifications` (daily safety net, `vercel.json`; Hobby allows daily) | random secret |

@@ -1,8 +1,10 @@
 # Merchant OS enhancement — implementation map
 
 **Branch:** `feat/merchant-os-enhancements`  
+**Commit:** `d167c6e`  
 **Baseline:** `951b95a` / tag `checkpoint/pre-merchant-os-951b95a`  
-**Production pin (pre-change):** `dpl_B9bykg3S…` @ `951b95a`
+**Production pin (unchanged):** `dpl_B9bykg3S…` @ `951b95a`  
+**Preview:** `dpl_DfvNxv6N…` → https://laptops-m77qkyniy-mudasarimamofficial-gmailcoms-projects.vercel.app
 
 ## Done in this pass
 

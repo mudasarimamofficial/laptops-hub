@@ -9,8 +9,10 @@ type Props = {
     businessName: string;
     supportEmail: string;
     supportPhone: string;
+    trackProductInventory: boolean;
     inventoryDefaultTracked: boolean;
     lowStockDefault: number;
+    pdpCta: "add_to_cart" | "buy_now";
     seoTitleSuffix: string;
     showCatalogCounts: boolean;
     showStoryAngleLabels: boolean;
@@ -24,8 +26,10 @@ export function StoreSettingsForm({ initial }: Props) {
   const [businessName, setBusinessName] = useState(initial.businessName);
   const [supportEmail, setSupportEmail] = useState(initial.supportEmail);
   const [supportPhone, setSupportPhone] = useState(initial.supportPhone);
+  const [trackProductInventory, setTrackProductInventory] = useState(initial.trackProductInventory);
   const [inventoryDefaultTracked, setInventoryDefaultTracked] = useState(initial.inventoryDefaultTracked);
   const [lowStockDefault, setLowStockDefault] = useState(String(initial.lowStockDefault));
+  const [pdpCta, setPdpCta] = useState<"add_to_cart" | "buy_now">(initial.pdpCta);
   const [seoTitleSuffix, setSeoTitleSuffix] = useState(initial.seoTitleSuffix);
   const [showCatalogCounts, setShowCatalogCounts] = useState(initial.showCatalogCounts);
   const [showStoryAngleLabels, setShowStoryAngleLabels] = useState(initial.showStoryAngleLabels);
@@ -47,8 +51,10 @@ export function StoreSettingsForm({ initial }: Props) {
           businessName,
           supportEmail,
           supportPhone,
+          trackProductInventory,
           inventoryDefaultTracked,
           lowStockDefault: Number(lowStockDefault) || 0,
+          pdpCta,
           seoTitleSuffix,
           showCatalogCounts,
           showStoryAngleLabels,
@@ -102,25 +108,94 @@ export function StoreSettingsForm({ initial }: Props) {
           />
         </label>
       </div>
-      <h3 className="pt-2 font-semibold">Inventory defaults</h3>
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          checked={inventoryDefaultTracked}
-          onChange={(e) => setInventoryDefaultTracked(e.target.checked)}
-        />
-        New products default to tracked inventory
-      </label>
-      <label className="block text-sm">
-        Default low-stock threshold
-        <input
-          type="number"
-          min={0}
-          className="mt-1 w-40 rounded-lg border border-[var(--adm-border)] px-3 py-2"
-          value={lowStockDefault}
-          onChange={(e) => setLowStockDefault(e.target.value)}
-        />
-      </label>
+      <fieldset id="products-inventory" className="space-y-3 border-t border-[var(--adm-divider)] pt-4">
+        <legend className="font-semibold">Products &amp; Inventory</legend>
+        <label className="flex items-start gap-3 text-sm">
+          <input
+            type="checkbox"
+            className="mt-1"
+            role="switch"
+            aria-checked={trackProductInventory}
+            checked={trackProductInventory}
+            onChange={(e) => {
+              const next = e.target.checked;
+              if (next && !trackProductInventory) {
+                const ok = window.confirm(
+                  "Turn on inventory tracking? Stored stock quantities will become authoritative again. Zero-stock products may show as sold out until you restock them.",
+                );
+                if (!ok) return;
+              }
+              setTrackProductInventory(next);
+            }}
+          />
+          <span>
+            <span className="font-medium">Track product inventory</span>
+            <span className="mt-1 block text-[var(--adm-ink-2)]">
+              When enabled, product availability follows available stock quantities. When disabled, published products
+              can be purchased even if their recorded inventory is zero. Draft and unpublished products stay hidden.
+            </span>
+            <span className="mt-1 block text-xs text-[var(--adm-ink-2)]" aria-live="polite">
+              Status: {trackProductInventory ? "ON — stock quantities control availability" : "OFF — stock does not block purchase"}
+            </span>
+          </span>
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={inventoryDefaultTracked}
+            onChange={(e) => setInventoryDefaultTracked(e.target.checked)}
+          />
+          New products default to tracked inventory
+        </label>
+        <label className="block text-sm">
+          Default low-stock threshold
+          <input
+            type="number"
+            min={0}
+            className="mt-1 w-40 rounded-lg border border-[var(--adm-border)] px-3 py-2"
+            value={lowStockDefault}
+            onChange={(e) => setLowStockDefault(e.target.value)}
+          />
+        </label>
+      </fieldset>
+      <fieldset id="storefront-checkout" className="space-y-3 border-t border-[var(--adm-divider)] pt-4">
+        <legend className="font-semibold">Storefront &amp; Checkout</legend>
+        <p className="text-sm text-[var(--adm-ink-2)]">
+          Product page checkout behavior applies only to the main button on individual product pages. Collection and
+          search Add to cart buttons are unchanged.
+        </p>
+        <div className="space-y-2 text-sm" role="radiogroup" aria-label="Product page checkout behavior">
+          <label className="flex items-start gap-2">
+            <input
+              type="radio"
+              name="pdpCta"
+              className="mt-1"
+              checked={pdpCta === "add_to_cart"}
+              onChange={() => setPdpCta("add_to_cart")}
+            />
+            <span>
+              <span className="font-medium">Add to cart</span>
+              <span className="mt-0.5 block text-[var(--adm-ink-2)]">The main product page button adds the selected item to the cart.</span>
+            </span>
+          </label>
+          <label className="flex items-start gap-2">
+            <input
+              type="radio"
+              name="pdpCta"
+              className="mt-1"
+              checked={pdpCta === "buy_now"}
+              onChange={() => setPdpCta("buy_now")}
+            />
+            <span>
+              <span className="font-medium">Buy now — Go directly to checkout</span>
+              <span className="mt-0.5 block text-[var(--adm-ink-2)]">
+                The main product page button starts checkout for the selected item without visiting the cart first. The
+                customer&apos;s existing cart is preserved.
+              </span>
+            </span>
+          </label>
+        </div>
+      </fieldset>
       <label className="block text-sm">
         SEO title suffix
         <input

@@ -103,9 +103,12 @@
   animation-name: lh-reviews-right;
 }
 .paused .track,
-.offscreen .track,
-.animated:hover .track,
-.animated:focus-within .track {
+.offscreen .track {
+  animation-play-state: paused;
+}
+/* Pause only when the pointer or keyboard focus is on a review card — not the heading, lede, or section padding. */
+.animated:has(.card:hover) .track,
+.animated:has(.card:focus-within) .track {
   animation-play-state: paused;
 }
 @keyframes lh-reviews-left {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { mapCheckoutError } from "@/lib/commerce/checkout-errors";
+import { INVENTORY_TRACKING_KEY, parseInventoryTracking } from "@/lib/commerce/store-commerce-settings";
 import { z } from "zod";
 import { createServiceClient } from "@/lib/supabase/server";
 import { clientIp, rateLimit } from "@/lib/security/rate-limit";
@@ -56,6 +57,13 @@ export async function POST(request: Request) {
     );
   }
 
+  const { data: trackingRow } = await supabase
+    .from("store_settings")
+    .select("value")
+    .eq("key", INVENTORY_TRACKING_KEY)
+    .maybeSingle();
+  const inventoryTrackingOn = parseInventoryTracking(trackingRow?.value).enabled;
+
   // Optional: reprice lines server-side when provided
   let subtotalPaisa = 0;
   if (parsed.data.lines?.length) {
@@ -74,7 +82,7 @@ export async function POST(request: Request) {
         );
       }
       // Same stock and limit rules as create_cod_order, so a quote never promises what the order will refuse.
-      const tracked = variant.inventory_mode === "tracked";
+      const tracked = inventoryTrackingOn && variant.inventory_mode === "tracked";
       if (tracked && (variant.quantity_on_hand == null || (variant.quantity_on_hand < line.quantity && !variant.allow_oversell))) {
         return NextResponse.json(
           { error: "insufficient_stock", message: mapCheckoutError("insufficient_stock").message },

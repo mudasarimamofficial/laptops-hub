@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { parseStorefrontPresentation, STOREFRONT_PRESENTATION_KEY } from "@/lib/content/storefront-presentation";
+import {
+  INVENTORY_TRACKING_KEY,
+  STOREFRONT_CHECKOUT_KEY,
+} from "@/lib/commerce/store-commerce-settings";
 import { z } from "zod";
 import { createAuthorizedStaffClient, createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
+import { maybeCreateCoalescedSnapshot } from "@/lib/admin/merchant-snapshots";
 
 export const dynamic = "force-dynamic";
 
@@ -10,8 +15,10 @@ const settingsSchema = z.object({
   businessName: z.string().trim().max(160).optional(),
   supportEmail: z.string().trim().email().max(160).or(z.literal("")).optional(),
   supportPhone: z.string().trim().max(40).optional(),
+  trackProductInventory: z.boolean().optional(),
   inventoryDefaultTracked: z.boolean().optional(),
   lowStockDefault: z.number().int().min(0).max(1_000_000).optional(),
+  pdpCta: z.enum(["add_to_cart", "buy_now"]).optional(),
   seoTitleSuffix: z.string().trim().max(80).optional(),
   showCatalogCounts: z.boolean().optional(),
   showStoryAngleLabels: z.boolean().optional(),
@@ -72,8 +79,14 @@ export async function PUT(request: Request) {
     if (d.businessName !== undefined || d.supportEmail !== undefined || d.supportPhone !== undefined) {
       keysToTouch.push("business_identity");
     }
+    if (d.trackProductInventory !== undefined) {
+      keysToTouch.push(INVENTORY_TRACKING_KEY);
+    }
     if (d.inventoryDefaultTracked !== undefined || d.lowStockDefault !== undefined) {
       keysToTouch.push("inventory_defaults");
+    }
+    if (d.pdpCta !== undefined) {
+      keysToTouch.push(STOREFRONT_CHECKOUT_KEY);
     }
     if (d.seoTitleSuffix !== undefined) {
       keysToTouch.push("seo_defaults");
@@ -123,7 +136,20 @@ export async function PUT(request: Request) {
       });
     }
 
-    // Inventory defaults
+    if (keysToTouch.includes(INVENTORY_TRACKING_KEY)) {
+      const existing = currentMap.get(INVENTORY_TRACKING_KEY) || {};
+      upsertPayloads.push({
+        key: INVENTORY_TRACKING_KEY,
+        value: {
+          ...existing,
+          enabled: d.trackProductInventory === true,
+        },
+        updated_at: now,
+        updated_by: staff.userId,
+      });
+    }
+
+    // Inventory defaults (new-product form defaults only)
     if (keysToTouch.includes("inventory_defaults")) {
       const existing = currentMap.get("inventory_defaults") || {};
       const merged: Record<string, unknown> = {
@@ -133,6 +159,19 @@ export async function PUT(request: Request) {
       upsertPayloads.push({
         key: "inventory_defaults",
         value: merged,
+        updated_at: now,
+        updated_by: staff.userId,
+      });
+    }
+
+    if (keysToTouch.includes(STOREFRONT_CHECKOUT_KEY)) {
+      const existing = currentMap.get(STOREFRONT_CHECKOUT_KEY) || {};
+      upsertPayloads.push({
+        key: STOREFRONT_CHECKOUT_KEY,
+        value: {
+          ...existing,
+          pdp_cta: d.pdpCta ?? "add_to_cart",
+        },
         updated_at: now,
         updated_by: staff.userId,
       });
@@ -218,9 +257,16 @@ export async function PUT(request: Request) {
       }
     }
 
-    if (keysToTouch.includes(STOREFRONT_PRESENTATION_KEY)) {
+    if (
+      keysToTouch.includes(STOREFRONT_PRESENTATION_KEY) ||
+      keysToTouch.includes(INVENTORY_TRACKING_KEY) ||
+      keysToTouch.includes(STOREFRONT_CHECKOUT_KEY)
+    ) {
       revalidateTag("settings", { expire: 0 });
       revalidatePath("/", "layout");
+      revalidatePath("/products", "layout");
+      revalidatePath("/collections", "layout");
+      revalidatePath("/admin/settings");
     }
 
     // 4. Audit successful changes
@@ -230,6 +276,23 @@ export async function PUT(request: Request) {
       entity_type: "store_settings",
       after: { touched: keysToTouch, verified: verifiedMap },
     });
+
+    // 5. Coalesced merchant snapshot after significant settings changes (inventory / checkout / identity).
+    if (
+      keysToTouch.includes(INVENTORY_TRACKING_KEY) ||
+      keysToTouch.includes(STOREFRONT_CHECKOUT_KEY) ||
+      keysToTouch.includes("business_identity")
+    ) {
+      try {
+        await maybeCreateCoalescedSnapshot(supabase, {
+          label: `Auto backup after settings (${keysToTouch.join(", ")})`,
+          createdBy: staff.userId,
+          notes: "Triggered by store settings save",
+        });
+      } catch {
+        // Backup failure must not roll back a successful settings write.
+      }
+    }
 
     return NextResponse.json(
       {

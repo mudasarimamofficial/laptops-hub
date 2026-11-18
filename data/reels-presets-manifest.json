@@ -1,0 +1,91 @@
+{
+  "sectionHeading": "Generation Laptops HUB",
+  "source": "Awaiting owner-supplied Shopify/HTML reference paste for authoritative URL extraction.",
+  "note": "Do not publish ronin.pk or other third-party media without written authorization. Presets seed as draft + rights pending.",
+  "presets": [
+    {
+      "key": "junaid-akram",
+      "title": "Junaid Akram",
+      "creatorName": "Junaid Akram",
+      "tag": "",
+      "videoUrl": null,
+      "posterUrl": null,
+      "avatarUrl": null,
+      "productOrCollectionPath": null,
+      "sortOrder": 1,
+      "rightsStatus": "pending",
+      "rightsNote": "Preset reserved from Generation Laptops HUB reference. Awaiting HTML URL extraction and rights clearance.",
+      "mediaBlocked": true
+    },
+    {
+      "key": "hemayal",
+      "title": "Hemayal",
+      "creatorName": "Hemayal",
+      "tag": "",
+      "videoUrl": null,
+      "posterUrl": null,
+      "avatarUrl": null,
+      "productOrCollectionPath": null,
+      "sortOrder": 2,
+      "rightsStatus": "pending",
+      "rightsNote": "Preset reserved. Awaiting HTML URL extraction and rights clearance.",
+      "mediaBlocked": true
+    },
+    {
+      "key": "taimoor-salahuddin",
+      "title": "Taimoor Salahuddin",
+      "creatorName": "Taimoor Salahuddin",
+      "tag": "",
+      "videoUrl": null,
+      "posterUrl": null,
+      "avatarUrl": null,
+      "productOrCollectionPath": null,
+      "sortOrder": 3,
+      "rightsStatus": "pending",
+      "rightsNote": "Preset reserved. Awaiting HTML URL extraction and rights clearance.",
+      "mediaBlocked": true
+    },
+    {
+      "key": "laptops-hub-community",
+      "title": "Laptops HUB Community",
+      "creatorName": "Laptops HUB Community",
+      "tag": "Community",
+      "videoUrl": null,
+      "posterUrl": null,
+      "avatarUrl": null,
+      "productOrCollectionPath": null,
+      "sortOrder": 4,
+      "rightsStatus": "pending",
+      "rightsNote": "Preset reserved. Awaiting HTML URL extraction and rights clearance.",
+      "mediaBlocked": true
+    },
+    {
+      "key": "laptops-hub-gamer",
+      "title": "Laptops HUB Gamer",
+      "creatorName": "Laptops HUB Gamer",
+      "tag": "Gamer",
+      "videoUrl": null,
+      "posterUrl": null,
+      "avatarUrl": null,
+      "productOrCollectionPath": null,
+      "sortOrder": 5,
+      "rightsStatus": "pending",
+      "rightsNote": "Preset reserved. Awaiting HTML URL extraction and rights clearance.",
+      "mediaBlocked": true
+    },
+    {
+      "key": "laptops-hub-creator",
+      "title": "Laptops HUB Creator",
+      "creatorName": "Laptops HUB Creator",
+      "tag": "Creator",
+      "videoUrl": null,
+      "posterUrl": null,
+      "avatarUrl": null,
+      "productOrCollectionPath": null,
+      "sortOrder": 6,
+      "rightsStatus": "pending",
+      "rightsNote": "Preset reserved. Awaiting HTML URL extraction and rights clearance.",
+      "mediaBlocked": true
+    }
+  ]
+}

@@ -13,7 +13,11 @@ export default async function EditPostPage({ params, searchParams }: { params: P
   await requireStaffPage(POST_STAFF_ROLES);
   const { id } = await params;
   if (!z.string().uuid().safeParse(id).success) notFound();
-  const { data: p } = await createServiceClient().from("articles").select("id, slug, title, excerpt, body_html, status").eq("id", id).maybeSingle();
+  const { data: p } = await createServiceClient()
+    .from("articles")
+    .select("id, slug, title, excerpt, body_html, status, seo_title, seo_description, cover_image_url, og_image_url, author_name, category, template_key")
+    .eq("id", id)
+    .maybeSingle();
   if (!p) notFound();
   const saved = (await searchParams).saved === "1";
   return (
@@ -36,7 +40,20 @@ export default async function EditPostPage({ params, searchParams }: { params: P
       ) : null}
       <PostForm
         id={p.id}
-        initial={{ slug: p.slug, title: p.title, excerpt: p.excerpt, bodyHtml: p.body_html, status: p.status as "draft" | "published" }}
+        initial={{
+          slug: p.slug,
+          title: p.title,
+          excerpt: p.excerpt || "",
+          bodyHtml: p.body_html || "",
+          status: p.status as "draft" | "published",
+          seoTitle: p.seo_title || "",
+          seoDescription: p.seo_description || "",
+          coverImageUrl: p.cover_image_url || "",
+          ogImageUrl: p.og_image_url || "",
+          authorName: p.author_name || "",
+          category: p.category || "",
+          templateKey: p.template_key || "",
+        }}
       />
     </div>
   );

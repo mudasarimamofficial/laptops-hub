@@ -14,7 +14,22 @@ export default async function NewPostPage() {
         ← Blog
       </Link>
       <h1 className="mt-2 mb-6 font-[family-name:var(--font-display)] text-3xl font-bold">New post</h1>
-      <PostForm initial={{ slug: "", title: "", excerpt: "", bodyHtml: "", status: "draft" }} />
+      <PostForm
+        initial={{
+          slug: "",
+          title: "",
+          excerpt: "",
+          bodyHtml: "",
+          status: "draft",
+          seoTitle: "",
+          seoDescription: "",
+          coverImageUrl: "",
+          ogImageUrl: "",
+          authorName: "",
+          category: "",
+          templateKey: "",
+        }}
+      />
     </div>
   );
 }

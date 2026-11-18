@@ -3,6 +3,7 @@ import { REEL_STAFF_ROLES } from "@/lib/content/admin-roles";
 import { createServiceClient } from "@/lib/supabase/server";
 import { EMPTY_REEL, ReelForm, type ReelFormValues } from "@/components/admin/reel-form";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
+import { SeedReelsPresetsButton } from "@/components/admin/seed-reels-presets-button";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Reels", robots: { index: false, follow: false } };
@@ -29,6 +30,7 @@ export default async function AdminReelsPage() {
         title="Reels"
         description='Short videos for the homepage “Generation Laptops HUB” row. The row appears only when at least one reel is published with owned or licensed rights. Do not use videos from other shops (for example ronin.pk). Host Laptops HUB’s own or licensed HTTPS .mp4 / .webm / .mov files.'
         breadcrumbs={[{ href: "/admin", label: "Admin" }, { label: "Reels" }]}
+        actions={<SeedReelsPresetsButton />}
       />
       {rows.length ? (
         <p className="mb-4 text-sm text-[var(--adm-ink-2)]">

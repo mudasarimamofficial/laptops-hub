@@ -19,7 +19,11 @@ export async function PUT(request: Request, { params }: Ctx) {
     const { staff, supabase } = await createAuthorizedStaffWriter(POST_STAFF_ROLES);
     const { id } = await params;
     if (!uuid.safeParse(id).success) return NextResponse.json({ error: "not_found" }, { status: 404 });
-    const { data: before } = await supabase.from("articles").select("slug, status, published_at").eq("id", id).maybeSingle();
+    const { data: before } = await supabase
+      .from("articles")
+      .select("slug, status, published_at, title, excerpt, body_html, seo_title, seo_description")
+      .eq("id", id)
+      .maybeSingle();
     if (!before) return NextResponse.json({ error: "not_found" }, { status: 404 });
     const built = postRowFromInput(await request.json().catch(() => null));
     if (!built.ok) return NextResponse.json(built.body, { status: built.status });
@@ -34,6 +38,17 @@ export async function PUT(request: Request, { params }: Ctx) {
     }
     const now = new Date().toISOString();
     const published_at = built.row.status === "published" ? before.published_at || now : before.published_at;
+    // Revision history before overwrite (record-level undo support).
+    await supabase.from("article_revisions").insert({
+      article_id: id,
+      title: before.title,
+      excerpt: before.excerpt || "",
+      body_html: before.body_html || "",
+      status: before.status,
+      seo_title: before.seo_title,
+      seo_description: before.seo_description,
+      created_by: staff.userId,
+    });
     const { error } = await supabase.from("articles").update({ ...built.row, published_at, updated_at: now }).eq("id", id);
     if (error) return NextResponse.json({ error: "save_failed", message: "Could not save the post." }, { status: 500 });
     await supabase.from("audit_logs").insert({

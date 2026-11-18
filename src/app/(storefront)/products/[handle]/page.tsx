@@ -10,6 +10,7 @@ import { publicLinks } from "@/lib/content/links";
 import { getApprovedReviews } from "@/lib/catalog/reviews-server";
 import { ProductReviews } from "@/components/commerce/product-reviews";
 import { MerchBadgeFor } from "@/components/storefront/merch-badges";
+import { getStorefrontCheckoutSetting } from "@/lib/commerce/store-commerce-settings-server";
 
 export const revalidate = 60;
 
@@ -47,7 +48,7 @@ const POLICIES = [
 /** Port of the V5 product template (`isProduct`). */
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
-  const r = await load(handle);
+  const [r, checkoutSetting] = await Promise.all([load(handle), getStorefrontCheckoutSetting()]);
   if (!r) notFound();
   // Only public policies are linked (published + legally approved); never an unfinished page.
   const policies = publicLinks(POLICIES, await contentVisibility());
@@ -137,7 +138,7 @@ export default async function ProductPage({ params }: Props) {
                 </div>
               ))}
             </div>
-            <ProductBuy handle={p.h} title={p.t} model={p.model} config={p.config} sku={p.sku} variantId={p.variantId} pricePaisa={p.pricePaisa} maxPerOrder={p.maxPerOrder} available={p.avail} imageUrl={p.imgs[0]?.u ?? null} optionNames={p.optionNames} variants={p.variants} />
+            <ProductBuy handle={p.h} title={p.t} model={p.model} config={p.config} sku={p.sku} variantId={p.variantId} pricePaisa={p.pricePaisa} maxPerOrder={p.maxPerOrder} available={p.avail} imageUrl={p.imgs[0]?.u ?? null} optionNames={p.optionNames} variants={p.variants} pdpCta={checkoutSetting.pdpCta} />
           </div>
           {policies.length ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,150px),1fr))", gap: 8 }}>

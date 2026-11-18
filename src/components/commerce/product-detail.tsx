@@ -1,15 +1,18 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { LHImg } from "@/components/storefront/v5/lh-img";
 import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
 import { VariantPicker, pickerModel, variantLabel } from "@/components/commerce/variant-picker";
 import { canPurchase } from "@/lib/catalog/availability";
 import { useCart } from "@/lib/commerce/cart-store";
 import { openCartDrawer } from "@/lib/commerce/cart-ui";
+import { setBuyNowLine } from "@/lib/commerce/buy-now-store";
 import { useCompare } from "@/lib/commerce/compare-store";
 import { showToast } from "@/lib/commerce/toast";
 import { fmtPkr } from "@/lib/catalog/v5-model";
+import type { PdpCtaMode } from "@/lib/commerce/store-commerce-settings";
 import type { PublicVariant } from "@/types/catalog";
 
 const arrow = { position: "absolute", top: "50%", transform: "translateY(-50%)", width: 46, height: 46, borderRadius: "50%", border: "1px solid var(--lh-border)", background: "rgba(255,255,255,.92)", boxShadow: "0 8px 20px -12px rgba(var(--lh-navy-rgb),.6)", cursor: "pointer", display: "grid", placeItems: "center" } as const;
@@ -82,9 +85,11 @@ export type BuyProps = {
   imageUrl: string | null;
   optionNames: string[];
   variants: PublicVariant[];
+  /** Merchant setting: only the main PDP CTA. Product cards stay Add to cart. */
+  pdpCta?: PdpCtaMode;
 };
 
-/** V5 PDP purchase panel controls: variant picker, quantity stepper + add to cart (or inquiry), compare toggle. */
+/** V5 PDP purchase panel controls: variant picker, quantity stepper + add to cart / buy now (or inquiry), compare toggle. */
 export function ProductBuy(p: BuyProps) {
   // Single-variant listings (and pages built before variants were loaded) behave exactly as before.
   const variants: PublicVariant[] = p.variants?.length
@@ -97,9 +102,13 @@ export function ProductBuy(p: BuyProps) {
   const selected = variants.find((v) => v.id === selectedId) ?? null;
   const [qty, setQty] = useState(1);
   const [asking, setAsking] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [pendingNav, startTransition] = useTransition();
+  const router = useRouter();
   const add = useCart((s) => s.add);
   const toggle = useCompare((s) => s.toggle);
   const compared = useCompare((s) => s.handles.includes(p.handle));
+  const buyNow = (p.pdpCta ?? "add_to_cart") === "buy_now";
 
   const max = Math.max(1, selected?.maxPerOrder || 1);
   const q = Math.min(qty, max);
@@ -107,6 +116,44 @@ export function ProductBuy(p: BuyProps) {
   const soldOut = selected !== null && !selected.available;
   const label = selected && hasOptions ? variantLabel(selected, pickerModel(p.optionNames, variants), variants) : "";
   const step = { width: 48, height: "100%", border: 0, background: "transparent", fontSize: 20, cursor: "pointer", color: "var(--lh-ink)" } as const;
+  const submitting = busy || pendingNav;
+
+  function buildLine() {
+    if (!selected) return null;
+    return {
+      variantId: selected.id,
+      handle: p.handle,
+      title: p.title,
+      unitPricePaisa: selected.pricePaisa,
+      quantity: q,
+      imageUrl: p.imageUrl ?? undefined,
+      maxPerOrder: selected.maxPerOrder,
+      model: p.model,
+      config: hasOptions ? label : p.config,
+      sku: selected.sku,
+    };
+  }
+
+  function onPrimaryClick() {
+    if (submitting) return;
+    const line = buildLine();
+    if (!line) return;
+    if (buyNow) {
+      setBusy(true);
+      try {
+        setBuyNowLine(line);
+        startTransition(() => {
+          router.push("/checkout?mode=buy_now");
+        });
+      } catch {
+        setBusy(false);
+        showToast("Could not start checkout. Please try again.");
+      }
+      return;
+    }
+    add(line);
+    openCartDrawer();
+  }
 
   return (
     <>
@@ -149,26 +196,23 @@ export function ProductBuy(p: BuyProps) {
           <button
             type="button"
             className="v5-card-atc"
+            data-testid="pdp-primary-cta"
             data-variant-id={selected.id}
-            onClick={() => {
-              add({
-                variantId: selected.id,
-                handle: p.handle,
-                title: p.title,
-                unitPricePaisa: selected.pricePaisa,
-                quantity: q,
-                imageUrl: p.imageUrl ?? undefined,
-                maxPerOrder: selected.maxPerOrder,
-                model: p.model,
-                // The cart line names the chosen option (e.g. "16GB / 512GB"), not the product's default spec line.
-                config: hasOptions ? label : p.config,
-                sku: selected.sku,
-              });
-              openCartDrawer();
-            }}
-            style={{ flex: 1, minWidth: 200, height: 54, border: 0, borderRadius: 14, background: "var(--lh-action)", color: "#FFFFFF", fontSize: 16, fontWeight: 700, cursor: "pointer", boxShadow: "0 14px 30px -18px rgba(var(--lh-action-rgb),.9)", transition: "background .18s ease,transform .18s ease" }}
+            data-cta={buyNow ? "buy_now" : "add_to_cart"}
+            disabled={submitting}
+            aria-busy={submitting}
+            onClick={onPrimaryClick}
+            style={{ flex: 1, minWidth: 200, height: 54, border: 0, borderRadius: 14, background: "var(--lh-action)", color: "#FFFFFF", fontSize: 16, fontWeight: 700, cursor: submitting ? "wait" : "pointer", opacity: submitting ? 0.75 : 1, boxShadow: "0 14px 30px -18px rgba(var(--lh-action-rgb),.9)", transition: "background .18s ease,transform .18s ease" }}
           >
-            <span>Add to cart · {fmtPkr(selected.pricePaisa * q)}</span>
+            <span>
+              {submitting
+                ? buyNow
+                  ? "Starting checkout…"
+                  : "Adding…"
+                : buyNow
+                  ? `Buy now · ${fmtPkr(selected.pricePaisa * q)}`
+                  : `Add to cart · ${fmtPkr(selected.pricePaisa * q)}`}
+            </span>
           </button>
         </div>
       ) : (

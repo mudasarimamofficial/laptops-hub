@@ -1,46 +1,38 @@
 # Admin VNext — route inventory
 
-Baseline branch: `feat/admin-vnext-release-a` · Source of truth: `src/app/(admin)/admin/**/page.tsx`
+**Main:** `58572f6` · **Prod:** `dpl_B6a75f81JJ7rD4Z6xX25NtQEmpDT`  
+Gates: Visual · Workflow · Functional · Persistence · Responsive · A11y  
+Values: `PASS` / `PARTIAL` / `FAIL` / `PENDING` / `BLOCKED`
 
-| Route | Merchant task | Layout | Release |
-|---|---|---|---|
-| `/admin` | Overview | Dashboard | F |
-| `/admin/orders` | List COD orders | List | C |
-| `/admin/orders/[orderNumber]` | Fulfill / timeline | Detail | C |
-| `/admin/inquiries` | Handle inquiries | List | C |
-| `/admin/customers` | Customer lookup | List | C |
-| `/admin/products` | Find products | List | B |
-| `/admin/products/new` | Create product | Editor | B |
-| `/admin/products/[handle]` | Edit product | Editor | B |
-| `/admin/products/bulk` | Bulk edits | Workflow | B |
-| `/admin/products/import` | Import | Workflow | B |
-| `/admin/products/export` | Export | Workflow | B |
-| `/admin/collections` | Manage collections | List | B |
-| `/admin/collections/new` | Create collection | Editor | B |
-| `/admin/collections/[slug]` | Edit collection | Editor | B |
-| `/admin/inventory` | Stock / tracking | Ops | B |
-| `/admin/blog` | Blog desk | List | **A** |
-| `/admin/blog/new` | Add post | Editor | **A** |
-| `/admin/blog/[id]` | Edit post | Editor | **A** |
-| `/admin/content` | CMS pages | List/editor | D |
-| `/admin/reels` | Video reels | List/editor | D |
-| `/admin/reviews` | Moderate reviews | List | D |
-| `/admin/reviews/testimonials` | Home testimonials | List | D |
-| `/admin/media` | Media library | Library | D |
-| `/admin/navigation` | Menus | Editor | D |
-| `/admin/merchandising` | Badges / featured | Settings | D |
-| `/admin/online-store` | Customize | Settings | D |
-| `/admin/online-store/preview` | Preview | Utility | D |
-| `/admin/analytics` | Metrics | Insights | E |
-| `/admin/seo` | SEO ops | Insights | E |
-| `/admin/settings` | Store settings | Settings | E |
-| `/admin/staff` | Staff & roles | Settings | E |
-| `/admin/activity` | Audit log | Ops | E |
-| `/admin/help` | Merchant help | Docs | F |
-| `/admin/login` | Sign in | Auth | — |
-| `/admin/forgot-password` | Reset request | Auth | — |
-| `/admin/reset-password` | Reset form | Auth | — |
-| `/admin/forbidden` | Access denied | System | — |
-| `/admin/[...missing]` | 404 | System | — |
+| Route | Merchant task | Rel | Impl | Deployed | Persist QA | Resp | Notes |
+|---|---|---|---|---|---|---|---|
+| `/admin` | Overview | F | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/orders` | List COD | C | YES | YES | PENDING | PENDING | Labels improved |
+| `/admin/orders/[n]` | Fulfill | C | YES | YES | PENDING | PENDING | Off lh-container |
+| `/admin/inquiries` | Inquiries | C | YES | YES | PENDING | PENDING | |
+| `/admin/customers` | Customers | C | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/products` | Find products | B | YES | YES | PENDING | PENDING | |
+| `/admin/products/new` | Create | B | YES | YES | PENDING | PENDING | EditorLayout |
+| `/admin/products/[handle]` | Edit | B | YES | YES | PENDING | PENDING | Full flow PENDING |
+| `/admin/products/bulk` | Bulk | B | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/products/import` | Import | B | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/products/export` | Export | B | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/collections*` | Collections | B | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/inventory` | Stock | B | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/blog*` | Blog | A | YES | YES | PENDING | PENDING | Upload+RTE gaps |
+| `/admin/content` | CMS pages | D | YES | YES | PENDING | PENDING | |
+| `/admin/reels` | Reels | D | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/reviews*` | Reviews | D | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/media` | Media | D | IN PROG | — | PENDING | PENDING | Upload added D2 |
+| `/admin/navigation` | Menus | D | IN PROG | YES | PENDING | PENDING | is_published fix |
+| `/admin/merchandising` | Badges | D | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/online-store*` | Customize | D | PARTIAL | YES | PENDING | PENDING | |
+| `/admin/analytics` | Insights | E | PENDING | YES | PENDING | PENDING | |
+| `/admin/seo` | SEO | E | PENDING | YES | PENDING | PENDING | |
+| `/admin/settings` | Settings | E | PENDING | YES | PENDING | PENDING | |
+| `/admin/staff` | Staff | E | PENDING | YES | PENDING | PENDING | |
+| `/admin/activity` | Audit | E | PENDING | YES | PENDING | PENDING | |
+| `/admin/help` | Help | F | PENDING | YES | PENDING | PENDING | |
+| Auth routes | Login/reset | — | YES | YES | — | PENDING | |
 
-Acceptance status is tracked in `IMPLEMENTATION_TRACKER.md`.
+See `IMPLEMENTATION_TRACKER.md` for release SHAs and independent gates.

@@ -374,7 +374,7 @@ export function HomepageSectionEditor() {
           {f.defaultUrl ? (
             <button
               type="button"
-              className="mt-2 text-xs font-semibold text-[var(--lh-action)]"
+              className="mt-2 text-xs font-semibold text-[var(--adm-action)]"
               onClick={() => resetImageField(f)}
             >
               Reset to approved default
@@ -392,7 +392,7 @@ export function HomepageSectionEditor() {
             <p className="text-sm font-medium">{f.label}</p>
             <button
               type="button"
-              className="text-xs font-semibold text-[var(--lh-action)]"
+              className="text-xs font-semibold text-[var(--adm-action)]"
               onClick={resetAllStoryAngles}
             >
               Reset all angles
@@ -417,7 +417,7 @@ export function HomepageSectionEditor() {
                 />
                 <button
                   type="button"
-                  className="mt-1 text-xs font-semibold text-[var(--lh-action)]"
+                  className="mt-1 text-xs font-semibold text-[var(--adm-action)]"
                   onClick={() => updateNestedAngle(angle, preset.imageUrl)}
                 >
                   Reset {angle}
@@ -550,7 +550,7 @@ export function HomepageSectionEditor() {
                   onClick={() => setSelectedId(s.id)}
                   aria-current={selectedId === s.id ? "true" : undefined}
                   className={`flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-2 text-left text-sm ${
-                    selectedId === s.id ? "bg-[var(--lh-ice)] font-semibold" : "hover:bg-[var(--adm-surface-2)]"
+                    selectedId === s.id ? "bg-[var(--adm-info-bg)] font-semibold" : "hover:bg-[var(--adm-surface-2)]"
                   } ${!s.enabled ? "opacity-60" : ""}`}
                 >
                   <span className="w-5 text-xs text-[var(--adm-ink-2)]">{i + 1}</span>
@@ -590,7 +590,7 @@ export function HomepageSectionEditor() {
                     <button
                       type="button"
                       data-testid={`theme-rollback-${v.id}`}
-                      className="mt-1 font-semibold text-[var(--lh-action)]"
+                      className="mt-1 font-semibold text-[var(--adm-action)]"
                       disabled={busy}
                       onClick={() => rollbackTo(v.id)}
                     >
@@ -617,7 +617,7 @@ export function HomepageSectionEditor() {
                 type="button"
                 onClick={() => setViewport(v)}
                 className={`rounded border px-2 py-1 text-xs font-semibold ${
-                  viewport === v ? "border-[var(--lh-action)] bg-[var(--lh-ice)]" : "border-[var(--adm-border)]"
+                  viewport === v ? "border-[var(--adm-action)] bg-[var(--adm-info-bg)]" : "border-[var(--adm-border)]"
                 }`}
               >
                 {v}
@@ -727,7 +727,7 @@ export function HomepageSectionEditor() {
             {selected.type === "v5_cinematic_hero" ? (
               <button
                 type="button"
-                className="mt-3 text-xs font-semibold text-[var(--lh-action)]"
+                className="mt-3 text-xs font-semibold text-[var(--adm-action)]"
                 onClick={resetAllHeroPresets}
               >
                 Reset all hero images to approved defaults
@@ -744,7 +744,7 @@ export function HomepageSectionEditor() {
           data-testid="theme-save-draft"
           disabled={!hydrated || !loaded || busy || migrationRequired || sections.length < 1}
           onClick={saveDraft}
-          className="mt-5 w-full rounded-lg bg-[var(--lh-action)] px-3 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className="mt-5 w-full rounded-lg bg-[var(--adm-action)] px-3 py-2 text-sm font-semibold text-white disabled:opacity-50"
         >
           {migrationRequired ? "Save blocked (migration)" : busy ? "Working…" : dirty ? "Save draft *" : "Save draft"}
         </button>

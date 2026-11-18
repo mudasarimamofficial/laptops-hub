@@ -18,10 +18,21 @@ const ALLOWED_TAGS = [
   "blockquote",
   "a",
   "span",
+  "hr",
+  "img",
+  "table",
+  "thead",
+  "tbody",
+  "tr",
+  "th",
+  "td",
+  "aside",
   // Native, keyboard-accessible FAQ accordion (no attributes allowed).
   "details",
   "summary",
 ];
+
+const SAFE_IMG_SRC = /^(?:https:\/\/|\/(?!\/))/i;
 
 /** Legal/business policy slugs — require owner/manager legal_approved, not editor publish alone. */
 export const LEGAL_CONTENT_SLUGS = new Set([
@@ -45,22 +56,45 @@ const SAFE_HREF = /^(?:(?:https?|mailto|tel):|\/(?!\/)|#)/i;
 export function sanitizeCmsHtml(dirty: string): string {
   return sanitizeHtml(dirty, {
     allowedTags: ALLOWED_TAGS,
-    allowedAttributes: { a: ["href", "title", "target", "rel"] },
+    allowedAttributes: {
+      a: ["href", "title", "target", "rel"],
+      img: ["src", "alt", "title", "loading"],
+      aside: ["data-lh-block", "style"],
+      th: ["colspan", "rowspan"],
+      td: ["colspan", "rowspan"],
+    },
     // Drop the contents of dangerous elements entirely (not just their tags).
     nonTextTags: ["script", "style", "textarea", "option", "noscript", "iframe", "object", "embed", "svg", "math"],
     allowedSchemes: ["http", "https", "mailto", "tel"],
-    allowedSchemesAppliedToAttributes: ["href"],
+    allowedSchemesAppliedToAttributes: ["href", "src"],
     allowProtocolRelative: false,
     disallowedTagsMode: "discard",
     transformTags: {
-      a: (tagName, attribs) => {
+      a: (_tagName, attribs) => {
         const out: Record<string, string> = {};
         if (attribs.href && SAFE_HREF.test(attribs.href.trim())) out.href = attribs.href.trim();
         if (attribs.title) out.title = attribs.title;
         if (attribs.target === "_blank") out.target = "_blank";
         // Always force a safe rel on links.
         out.rel = "noopener noreferrer";
-        return { tagName, attribs: out };
+        return { tagName: "a", attribs: out };
+      },
+      img: (_tagName, attribs) => {
+        const src = (attribs.src || "").trim();
+        if (!SAFE_IMG_SRC.test(src)) return { tagName: "span", attribs: {} };
+        const out: Record<string, string> = { src, loading: "lazy" };
+        if (attribs.alt) out.alt = attribs.alt;
+        if (attribs.title) out.title = attribs.title;
+        return { tagName: "img", attribs: out };
+      },
+      aside: (_tagName, attribs) => {
+        const out: Record<string, string> = {};
+        if (attribs["data-lh-block"] === "callout") out["data-lh-block"] = "callout";
+        // Allow only the known callout inline style string pattern (no urls).
+        if (attribs.style && !/url\s*\(/i.test(attribs.style) && !/expression/i.test(attribs.style)) {
+          out.style = attribs.style;
+        }
+        return { tagName: "aside", attribs: out };
       },
     },
   });

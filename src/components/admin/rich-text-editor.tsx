@@ -1,6 +1,16 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { EditorContent, useEditor, type Editor } from "@tiptap/react";
+import { StarterKit } from "@tiptap/starter-kit";
+import { Link } from "@tiptap/extension-link";
+import { Image } from "@tiptap/extension-image";
+import { Underline } from "@tiptap/extension-underline";
+import { Placeholder } from "@tiptap/extension-placeholder";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
 
 type Props = {
   value: string;
@@ -8,47 +18,136 @@ type Props = {
   label?: string;
 };
 
-type Tool = { cmd?: string; arg?: string; label: string; title: string; html?: string };
-
-const TOOLS: Tool[] = [
-  { cmd: "formatBlock", arg: "h2", label: "H2", title: "Heading" },
-  { cmd: "formatBlock", arg: "p", label: "¶", title: "Paragraph" },
-  { cmd: "bold", label: "B", title: "Bold" },
-  { cmd: "italic", label: "I", title: "Italic" },
-  { cmd: "underline", label: "U", title: "Underline" },
-  { cmd: "insertUnorderedList", label: "•", title: "Bulleted list" },
-  { cmd: "insertOrderedList", label: "1.", title: "Numbered list" },
-  { cmd: "formatBlock", arg: "blockquote", label: "“", title: "Quote" },
-];
+const CALLOUT_HTML =
+  '<aside data-lh-block="callout" style="padding:14px 16px;border-left:4px solid #1748B5;background:#eef3ff;border-radius:8px;margin:16px 0"><p><strong>Tip:</strong> Add your callout text here.</p></aside>';
 
 /**
- * Visual blog body editor. Uses browser editing APIs (no new SaaS dependency).
- * HTML is sanitised again on the server before save. Icon-style compact toolbar for Admin VNext.
+ * TipTap-backed blog body editor.
+ * Replaces document.execCommand for reliable selection, undo/redo, lists and links.
+ * HTML is sanitised again on the server before save. Existing post HTML loads as content.
  */
 export function RichTextEditor({ value, onChange, label = "Body" }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-  const seeded = useRef(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const editorRef = useRef<Editor | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadErr, setUploadErr] = useState<string | null>(null);
+  const applyingExternal = useRef(false);
+  const lastEmitted = useRef(value);
+
+  const editor = useEditor({
+    immediatelyRender: false,
+    extensions: [
+      StarterKit.configure({
+        heading: { levels: [2, 3] },
+      }),
+      Underline,
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: { rel: "noopener noreferrer" },
+        autolink: true,
+      }),
+      Image.configure({
+        allowBase64: false,
+        HTMLAttributes: { loading: "lazy" },
+      }),
+      Placeholder.configure({ placeholder: "Write your article…" }),
+      Table.configure({ resizable: false }),
+      TableRow,
+      TableHeader,
+      TableCell,
+    ],
+    content: value || "<p></p>",
+    editorProps: {
+      attributes: {
+        class:
+          "min-h-[280px] rounded-[var(--adm-radius)] border border-[var(--adm-border)] bg-[var(--adm-surface)] px-4 py-3 text-sm leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-[var(--adm-focus)] prose-admin",
+        "data-testid": "blog-rich-editor",
+        "aria-label": label,
+      },
+      handlePaste(_view, event) {
+        const text = event.clipboardData?.getData("text/plain");
+        const html = event.clipboardData?.getData("text/html");
+        if (html && /mso-|urn:schemas-microsoft|docs-internal/i.test(html) && text) {
+          event.preventDefault();
+          const cleaned = text
+            .split(/\n{2,}/)
+            .map((p) => `<p>${p.replace(/\n/g, "<br>")}</p>`)
+            .join("");
+          editorRef.current?.commands.insertContent(cleaned);
+          return true;
+        }
+        return false;
+      },
+    },
+    onCreate: ({ editor: ed }) => {
+      editorRef.current = ed;
+    },
+    onUpdate: ({ editor: ed }) => {
+      if (applyingExternal.current) return;
+      const html = ed.getHTML();
+      lastEmitted.current = html;
+      onChange(html);
+    },
+  });
 
   useEffect(() => {
-    if (!ref.current || seeded.current) return;
-    ref.current.innerHTML = value || "<p></p>";
-    seeded.current = true;
-  }, [value]);
+    editorRef.current = editor;
+  }, [editor]);
 
-  function run(cmd: string, arg?: string) {
-    ref.current?.focus();
-    document.execCommand(cmd, false, arg);
-    if (ref.current) onChange(ref.current.innerHTML);
-  }
-
-  function insertBlock(html: string) {
-    ref.current?.focus();
-    document.execCommand("insertHTML", false, html);
-    if (ref.current) onChange(ref.current.innerHTML);
-  }
+  // Sync when parent replaces body (template apply / revision restore).
+  useEffect(() => {
+    if (!editor) return;
+    if (value === lastEmitted.current) return;
+    applyingExternal.current = true;
+    editor.commands.setContent(value || "<p></p>", { emitUpdate: false });
+    lastEmitted.current = value;
+    applyingExternal.current = false;
+  }, [editor, value]);
 
   const btn =
     "inline-flex min-h-9 min-w-9 items-center justify-center rounded-[var(--adm-radius-sm)] border border-[var(--adm-border)] bg-[var(--adm-surface)] px-2 text-xs font-semibold text-[var(--adm-ink)] hover:border-[var(--adm-action)] disabled:opacity-40";
+  const active = "border-[var(--adm-action)] bg-[var(--adm-info-bg)] text-[var(--adm-action)]";
+
+  const setLink = useCallback(() => {
+    if (!editor) return;
+    const prev = editor.getAttributes("link").href as string | undefined;
+    const url = window.prompt("Link URL (https://…)", prev || "https://");
+    if (url === null) return;
+    if (!url.trim()) {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url.trim() }).run();
+  }, [editor]);
+
+  async function uploadInlineImage(file: File) {
+    if (!editor) return;
+    setUploading(true);
+    setUploadErr(null);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("alt", file.name.replace(/\.[^.]+$/, ""));
+      const res = await fetch("/api/admin/media/upload", { method: "POST", body });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Upload failed");
+      editor.chain().focus().setImage({ src: data.url as string, alt: (data.alt as string) || "" }).run();
+    } catch (e) {
+      setUploadErr(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
+  if (!editor) {
+    return (
+      <div className="space-y-2">
+        <span className="block text-sm font-medium text-[var(--adm-ink)]">{label}</span>
+        <div className="min-h-[280px] animate-pulse rounded-[var(--adm-radius)] border border-[var(--adm-border)] bg-[var(--adm-surface-2)]" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-2">
@@ -58,82 +157,83 @@ export function RichTextEditor({ value, onChange, label = "Body" }: Props) {
         role="toolbar"
         aria-label="Formatting"
       >
-        {TOOLS.map((t) => (
-          <button
-            key={t.title}
-            type="button"
-            className={btn}
-            title={t.title}
-            aria-label={t.title}
-            onClick={() => t.cmd && run(t.cmd, t.arg)}
-          >
-            {t.label}
-          </button>
-        ))}
-        <button
-          type="button"
-          className={btn}
-          title="Link"
-          aria-label="Link"
-          onClick={() => {
-            const url = window.prompt("Link URL (https://…)");
-            if (url) run("createLink", url);
-          }}
-        >
+        <button type="button" className={`${btn} ${editor.isActive("heading", { level: 2 }) ? active : ""}`} title="Heading" aria-label="Heading" aria-pressed={editor.isActive("heading", { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>
+          H2
+        </button>
+        <button type="button" className={`${btn} ${editor.isActive("paragraph") ? active : ""}`} title="Paragraph" aria-label="Paragraph" onClick={() => editor.chain().focus().setParagraph().run()}>
+          ¶
+        </button>
+        <button type="button" className={`${btn} ${editor.isActive("bold") ? active : ""}`} title="Bold" aria-label="Bold" aria-pressed={editor.isActive("bold")} onClick={() => editor.chain().focus().toggleBold().run()}>
+          B
+        </button>
+        <button type="button" className={`${btn} ${editor.isActive("italic") ? active : ""}`} title="Italic" aria-label="Italic" aria-pressed={editor.isActive("italic")} onClick={() => editor.chain().focus().toggleItalic().run()}>
+          I
+        </button>
+        <button type="button" className={`${btn} ${editor.isActive("underline") ? active : ""}`} title="Underline" aria-label="Underline" aria-pressed={editor.isActive("underline")} onClick={() => editor.chain().focus().toggleUnderline().run()}>
+          U
+        </button>
+        <button type="button" className={`${btn} ${editor.isActive("bulletList") ? active : ""}`} title="Bulleted list" aria-label="Bulleted list" aria-pressed={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}>
+          •
+        </button>
+        <button type="button" className={`${btn} ${editor.isActive("orderedList") ? active : ""}`} title="Numbered list" aria-label="Numbered list" aria-pressed={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+          1.
+        </button>
+        <button type="button" className={`${btn} ${editor.isActive("blockquote") ? active : ""}`} title="Quote" aria-label="Quote" aria-pressed={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+          “
+        </button>
+        <button type="button" className={`${btn} ${editor.isActive("link") ? active : ""}`} title="Link" aria-label="Link" aria-pressed={editor.isActive("link")} onClick={setLink}>
           Link
         </button>
         <button
           type="button"
           className={btn}
-          title="Image"
-          aria-label="Image"
+          title="Image from URL"
+          aria-label="Image from URL"
           onClick={() => {
             const url = window.prompt("Image URL (https://…)");
-            if (url) run("insertImage", url);
+            if (url?.trim()) editor.chain().focus().setImage({ src: url.trim() }).run();
           }}
         >
           Img
         </button>
-        <button type="button" className={btn} title="Divider" aria-label="Divider" onClick={() => insertBlock("<hr />")}>
+        <button type="button" className={btn} title="Upload image" aria-label="Upload image" disabled={uploading} onClick={() => fileRef.current?.click()}>
+          {uploading ? "…" : "Upload"}
+        </button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          className="sr-only"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) void uploadInlineImage(f);
+          }}
+        />
+        <button type="button" className={btn} title="Divider" aria-label="Divider" onClick={() => editor.chain().focus().setHorizontalRule().run()}>
           —
         </button>
-        <button
-          type="button"
-          className={btn}
-          title="Callout"
-          aria-label="Callout"
-          onClick={() =>
-            insertBlock(
-              '<aside data-lh-block="callout" style="padding:14px 16px;border-left:4px solid #1748B5;background:#eef3ff;border-radius:8px;margin:16px 0"><p><strong>Tip:</strong> Add your callout text here.</p></aside>',
-            )
-          }
-        >
+        <button type="button" className={btn} title="Callout" aria-label="Callout" onClick={() => editor.chain().focus().insertContent(CALLOUT_HTML).run()}>
           Tip
         </button>
-        <button type="button" className={btn} title="Clear formatting" aria-label="Clear formatting" onClick={() => run("removeFormat")}>
+        <button type="button" className={btn} title="Clear formatting" aria-label="Clear formatting" onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}>
           ⌧
         </button>
-        <button type="button" className={btn} title="Undo" aria-label="Undo" onClick={() => run("undo")}>
+        <button type="button" className={btn} title="Undo" aria-label="Undo" disabled={!editor.can().undo()} onClick={() => editor.chain().focus().undo().run()}>
           ↶
         </button>
-        <button type="button" className={btn} title="Redo" aria-label="Redo" onClick={() => run("redo")}>
+        <button type="button" className={btn} title="Redo" aria-label="Redo" disabled={!editor.can().redo()} onClick={() => editor.chain().focus().redo().run()}>
           ↷
         </button>
       </div>
-      <div
-        ref={ref}
-        className="min-h-[280px] rounded-[var(--adm-radius)] border border-[var(--adm-border)] bg-[var(--adm-surface)] px-4 py-3 text-sm leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-[var(--adm-focus)]"
-        contentEditable
-        role="textbox"
-        aria-multiline="true"
-        aria-label={label}
-        data-testid="blog-rich-editor"
-        onInput={() => {
-          if (ref.current) onChange(ref.current.innerHTML);
-        }}
-        suppressContentEditableWarning
-      />
-      <p className="text-xs text-[var(--adm-ink-2)]">Write visually — no HTML required. Advanced HTML source is below for rare fixes.</p>
+      {uploadErr ? (
+        <p role="alert" className="text-xs text-[var(--adm-danger)]">
+          {uploadErr}
+        </p>
+      ) : null}
+      <EditorContent editor={editor} />
+      <p className="text-xs text-[var(--adm-ink-2)]">
+        Write visually — no HTML required. Paste from Word is cleaned when messy. Advanced HTML source remains below for rare fixes.
+      </p>
     </div>
   );
 }

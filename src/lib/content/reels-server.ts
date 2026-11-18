@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { createPublicClient, createServiceClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/server";
 import { getV5Catalog, fmtPkr } from "@/lib/catalog/v5";
 import { isRenderableReel, type PublicReel, type ReelShopProduct } from "@/lib/content/reels";
 
@@ -34,10 +34,11 @@ export const getPublishedReels = unstable_cache(
   async (): Promise<PublicReel[]> => {
     try {
       const sb = createPublicClient();
+      // Disambiguate products embeds: reel_products adds a second reels↔products path.
       const { data, error } = await sb
         .from("reels")
         .select(
-          "id, title, caption, video_url, hls_url, poster_url, avatar_url, link_path, creator_name, tag, product_id, products(handle)",
+          "id, title, caption, video_url, hls_url, poster_url, avatar_url, link_path, creator_name, tag, product_id, products!reels_product_id_fkey(handle), reel_products(sort_order, products!reel_products_product_id_fkey(handle))",
         )
         .eq("status", "published")
         .in("rights_status", ["owned", "licensed"])
@@ -46,36 +47,20 @@ export const getPublishedReels = unstable_cache(
         .limit(12);
       if (error || !data?.length) return [];
 
-      const ids = data.map((r) => r.id);
-      const linksByReel = new Map<string, string[]>();
-
-      // Prefer service client for join table if public grants are not yet live; fall back to empty.
-      try {
-        const svc = createServiceClient();
-        const { data: links } = await svc
-          .from("reel_products")
-          .select("reel_id, sort_order, products(handle)")
-          .in("reel_id", ids)
-          .order("sort_order", { ascending: true });
-        for (const row of links || []) {
-          const handle = (row.products as { handle?: string } | null)?.handle;
-          if (!handle) continue;
-          const list = linksByReel.get(row.reel_id) || [];
-          list.push(handle);
-          linksByReel.set(row.reel_id, list);
-        }
-      } catch {
-        /* table may not exist until migration is applied */
-      }
-
       const catalog = await getV5Catalog();
       const byHandle = new Map(catalog.map((p) => [p.h, p]));
 
       return data
         .map((r) => {
+          const linked = (
+            (r.reel_products as { sort_order: number; products: { handle?: string } | null }[] | null) || []
+          )
+            .slice()
+            .sort((a, b) => a.sort_order - b.sort_order)
+            .map((row) => row.products?.handle)
+            .filter((h): h is string => Boolean(h));
           const legacy = (r.products as { handle?: string } | null)?.handle ?? null;
-          let handles = linksByReel.get(r.id) || [];
-          if (!handles.length && legacy) handles = [legacy];
+          const handles = linked.length ? linked : legacy ? [legacy] : [];
           const products = handles
             .map((h) => shopProductFromHandle(h, byHandle))
             .filter((x): x is ReelShopProduct => Boolean(x));
@@ -100,6 +85,6 @@ export const getPublishedReels = unstable_cache(
       return [];
     }
   },
-  ["published-reels-v2"],
+  ["published-reels-v3"],
   { revalidate: 60, tags: ["reels"] },
 );

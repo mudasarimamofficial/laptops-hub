@@ -20,7 +20,7 @@ export default async function AdminReelsPage() {
   const { data } = await sb
     .from("reels")
     .select(
-      "id, title, caption, video_url, hls_url, poster_url, avatar_url, media_source, link_path, source_attribution, rights_status, rights_note, status, sort_order, creator_name, creator_consent, tag, preset_key, products(handle), reel_products(sort_order, products(handle))",
+      "id, title, caption, video_url, hls_url, poster_url, avatar_url, media_source, link_path, source_attribution, rights_status, rights_note, status, sort_order, creator_name, creator_consent, tag, preset_key, products!reels_product_id_fkey(handle), reel_products(sort_order, products!reel_products_product_id_fkey(handle))",
     )
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false })

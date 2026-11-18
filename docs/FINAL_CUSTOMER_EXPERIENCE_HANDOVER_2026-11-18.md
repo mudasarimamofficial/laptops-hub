@@ -12,7 +12,8 @@
 | Vercel project | `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` |
 | Production domain | https://www.laptopshub.pk |
 
-Final merged SHA / production deployment IDs are filled after PR #41 merges and production READY smoke.
+| Final GitHub SHA | `0db673ab1b9374b0a57e0a9e9db40e29507f2baf` |
+| Final production deployment | `dpl_Aa6dZ8JCDMn1VwbMox1ALUDqoV2G` (READY, aliased to www.laptopshub.pk) |
 
 ## B. Implemented UX improvements
 
@@ -80,7 +81,7 @@ Final merged SHA / production deployment IDs are filled after PR #41 merges and 
 |---|---|
 | Implemented | Premium reels UX, shoppable modal, `reel_products`, carousel progress, compare/reviews polish, SMTP save |
 | Tested | Unit reels/social-proof; CI quality (lint fix); SQL/anon query for published reels; SMTP config GET |
-| Production verified | Pending merge of PR #41 + production smoke |
+| Production verified | Homepage reels: 6 muted videos, progress indicators, centered shoppable modal with “Shop this video” on `www.laptopshub.pk` after `dpl_Aa6dZ8…` READY |
 | Requires owner action | One private Auth recovery / password-change confirmation with native SMTP; link products to reels in Admin → Reels |
 | Remaining limitations | Reels currently have no catalog products linked (modal empty-state until merchant assigns); full multi-viewport screenshot matrix and Lighthouse pass still recommended post-promote |
 

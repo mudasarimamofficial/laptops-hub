@@ -6,19 +6,19 @@ Supabase Auth was using the **built-in** mailer (not Resend). Built-in Auth SMTP
 
 **Code fix (this release):** `POST /api/admin/account/recover` prefers Auth Admin `generateLink({ type: "recovery" })` and delivers the confirm URL through the existing Resend sender (`STORE_FROM_EMAIL` on `send.laptopshub.pk`). That bypasses the built-in Auth mailer when Resend is configured.
 
-**Platform fix (operator):** Authentication → Email → SMTP Settings:
+**Platform fix (completed 2026-11-18):** Authentication → Email → SMTP Settings saved via Management API:
 
 | Field | Value |
 |---|---|
 | Host | `smtp.resend.com` |
 | Port | `465` (SSL) |
 | Username | `resend` |
-| Password | Resend API key (same sending key family as production `RESEND_API_KEY`) |
-| Sender | `orders@send.laptopshub.pk` / name `Laptops HUB` |
+| Password | Dedicated Resend API key `laptops-hub-supabase-auth-smtp` (sending_access; **not** the Vercel order-notification key) |
+| Sender email | `auth@send.laptopshub.pk` |
+| Sender name | `Laptops HUB` |
+| `rate_limit_email_sent` | `30` / hour (raised after custom SMTP enabled) |
 
-**Status 2026-11-18 evening:** Custom SMTP toggle was enabled in the Supabase dashboard and non-secret fields were filled (`smtp.resend.com:465`, user `resend`, sender above). Production `RESEND_API_KEY` cannot be decrypted via Vercel MCP/`env pull` (secret vault), so **Save** still needs the operator to paste the production Resend API key once and save. App recovery already bypasses built-in Auth mailer via `generateLink` + Resend REST — production `POST /api/admin/account/recover` returned `ok: true` for the owner mailbox after `#40` shipped.
-
-Keep rate limits enabled; raise Auth email rate modestly after custom SMTP is on (do not disable globally).
+Do not print or commit the SMTP password. App recovery via `generateLink` + Resend REST remains the primary staff recovery path; native Auth SMTP is now configured for built-in Auth mailer flows.
 
 ## Change password
 

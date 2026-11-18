@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   SOURCE_LABEL,
   formatReviewDate,
+  googleSourceLinkLabel,
   initials,
   splitRows,
   type PublicTestimonial,
@@ -65,6 +66,7 @@ function Avatar({ t }: { t: PublicTestimonial }) {
 
 export function ReviewCard({ t, clone = false, as: Tag = "article" }: { t: PublicTestimonial; clone?: boolean; as?: "article" | "li" }) {
   const date = formatReviewDate(t.reviewDate);
+  const googleLink = t.source === "google" && t.sourceUrl ? googleSourceLinkLabel(t.authorName, t.sourceUrl) : null;
   const props = clone
     ? { "aria-hidden": true as const, "data-clone": "", inert: true }
     : { "aria-label": `Review by ${t.authorName}` };
@@ -86,11 +88,12 @@ export function ReviewCard({ t, clone = false, as: Tag = "article" }: { t: Publi
           <span className={s.source} data-testid={clone ? undefined : "store-review-source"}>
             {t.source === "google" ? <GoogleG /> : null}
             {SOURCE_LABEL[t.source]}
-            {t.source === "google" && t.sourceUrl ? (
+            {googleLink && t.sourceUrl ? (
               <>
                 {" · "}
                 <a href={t.sourceUrl} target="_blank" rel="noopener nofollow ugc" tabIndex={clone ? -1 : undefined}>
-                  View<span className="sr-only"> {t.authorName}&apos;s review on Google (opens in a new tab)</span>
+                  {googleLink.visible}
+                  <span className="sr-only">{googleLink.srOnly}</span>
                 </a>
               </>
             ) : null}

@@ -3,6 +3,7 @@ import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { CheckoutReadinessPanel } from "@/components/admin/checkout-readiness-panel";
 import { loadCheckoutReadiness } from "@/lib/commerce/checkout-readiness-server";
 import { requireStaffPage } from "@/lib/auth/staff";
+import { emailConfigured } from "@/lib/notify/send-email";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -69,6 +70,7 @@ function StatCard({
 export default async function AdminHomePage() {
   const staff = await requireStaffPage();
   const [counts, readiness] = await Promise.all([operationalSnapshot(), loadCheckoutReadiness()]);
+  const mailReady = emailConfigured() && !!process.env.STORE_NOTIFY_EMAIL;
 
   return (
     <>
@@ -76,6 +78,24 @@ export default async function AdminHomePage() {
         title="Overview"
         description={`${staff.email ?? "Staff"} · role ${staff.role}. Figures are live database counts in PKR store context — unpaid COD orders are not counted as collected revenue.`}
       />
+
+      {!mailReady ? (
+        <div
+          role="status"
+          className="mb-4 rounded-[var(--adm-radius-lg)] border border-amber-300/80 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+          data-testid="overview-email-fallback"
+        >
+          <p className="font-semibold">Order email alerts are offline</p>
+          <p className="mt-1 text-amber-900/90">
+            COD is live: monitor{" "}
+            <Link href="/admin/orders" className="font-semibold underline">
+              Orders
+            </Link>{" "}
+            for new placements. Confirm stock before courier booking. Resend env vars are not set — unsent notifications are never
+            marked delivered.
+          </p>
+        </div>
+      ) : null}
 
       <div className="mb-6">
         <CheckoutReadinessPanel readiness={readiness} />

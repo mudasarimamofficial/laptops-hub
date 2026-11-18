@@ -44,6 +44,36 @@ export const GOOGLE_REVIEW_URL_RE =
   /^https:\/\/((www\.)?google\.(com|[a-z]{2})(\.[a-z]{2})?\/maps|maps\.google\.(com|[a-z]{2})(\.[a-z]{2})?\/|maps\.app\.goo\.gl\/|g\.page\/)/i;
 const HTTPS_URL_RE = /^https:\/\/[^\s<>"']+$/i;
 
+/**
+ * Place-listing Google URLs (e.g. `?cid=` business pages) open the listing, not one review.
+ * Individual review permalinks typically include `/contrib` or `review/` / `data=!…` contrib paths.
+ * Used only for honest link labels — never invent per-review URLs.
+ */
+export function isGooglePlaceListingUrl(url: string | null | undefined): boolean {
+  if (!url || !GOOGLE_REVIEW_URL_RE.test(url)) return false;
+  const u = url.toLowerCase();
+  if (/[?&]cid=\d+/.test(u) && !/\/contrib\//.test(u) && !/\/maps\/reviews?\//.test(u)) return true;
+  if (/maps\.app\.goo\.gl\//.test(u) || /g\.page\//.test(u)) return false; // ambiguous short links — treat as review-capable
+  return false;
+}
+
+/** Accessible / visible label for a Google attribution link. */
+export function googleSourceLinkLabel(authorName: string, sourceUrl: string | null | undefined): {
+  visible: string;
+  srOnly: string;
+} {
+  if (isGooglePlaceListingUrl(sourceUrl)) {
+    return {
+      visible: "Google listing",
+      srOnly: "Open this business on Google Maps (opens in a new tab). This link is the place listing, not a single review permalink.",
+    };
+  }
+  return {
+    visible: "View",
+    srOnly: ` ${authorName}'s review on Google (opens in a new tab)`,
+  };
+}
+
 const optionalHttps = z
   .union([z.literal(""), z.string().trim().max(1000).regex(HTTPS_URL_RE, "Use a full https:// link.")])
   .optional()
@@ -82,7 +112,16 @@ export const testimonialInputSchema = z
   });
 export type TestimonialInput = z.infer<typeof testimonialInputSchema>;
 
-/** Extra gates before status → published (drafts may omit Google URL / consent while being verified). */
+/**
+ * Extra gates before status → published (drafts may omit Google URL / consent while being verified).
+ *
+ * Consent rules:
+ * - `website` / `merchant`: require explicit customer consent to display (private channel).
+ * - `google`: public Google reviews may publish with a Maps URL without flipping `consent_confirmed`.
+ *   Matching an HTML snapshot is verification of text provenance, not customer consent — do not set
+ *   `consent_confirmed` from import scripts. Prefer an individual review permalink when available;
+ *   a place `cid` listing URL is allowed but must be labeled honestly on the storefront.
+ */
 export function publishBlockers(row: {
   source: TestimonialSource;
   source_url: string | null;
@@ -90,11 +129,11 @@ export function publishBlockers(row: {
   avatar_url: string | null;
   avatar_permission: boolean;
 }): string | null {
-  if (!row.consent_confirmed) {
+  if (row.source !== "google" && !row.consent_confirmed) {
     return "Record the customer's consent (edit the entry) before publishing.";
   }
   if (row.source === "google" && !GOOGLE_REVIEW_URL_RE.test(row.source_url || "")) {
-    return "A Google review needs the link to it on Google Maps before publishing.";
+    return "A Google review needs a Google Maps (or g.page / maps.app.goo.gl) link before publishing.";
   }
   if (row.avatar_url && !row.avatar_permission) {
     return "Confirm you may show this photo, or remove it, before publishing.";

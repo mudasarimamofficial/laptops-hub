@@ -3,6 +3,7 @@ import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 import { adminSearchTerm, phoneDigits } from "@/lib/admin/search-term";
 import { formatPkr } from "@/lib/money";
+import { emailConfigured } from "@/lib/notify/send-email";
 import { PendingBlock } from "@/components/ui/pending-block";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { StatusBadge } from "@/components/admin/ui/status-badge";
@@ -60,16 +61,34 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
     error = "Orders could not be loaded. Reload the page or try again shortly.";
   }
 
+  const mailReady = emailConfigured() && !!process.env.STORE_NOTIFY_EMAIL;
+
   return (
     <>
       <AdminPageHeader
         title="Orders"
-        description="COD totals ≠ collected cash. Collection requires an explicit staff action on the order detail page."
+        description="COD totals ≠ collected cash. Collection requires an explicit staff action on the order detail page. New orders start as placed / pending confirmation — confirm availability before packing or courier booking."
         breadcrumbs={[
           { href: "/admin", label: "Overview" },
           { label: "Orders" },
         ]}
       />
+
+      {!mailReady ? (
+        <div
+          role="status"
+          className="mb-4 rounded-[var(--adm-radius-lg)] border border-amber-300/80 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+          data-testid="orders-email-fallback"
+        >
+          <p className="font-semibold">Email notifications are not configured</p>
+          <p className="mt-1 text-amber-900/90">
+            Watch this Orders list for new COD submissions. Orders are still saved in the database; nothing is marked sent when
+            Resend is missing. Set <code className="font-mono text-xs">RESEND_API_KEY</code>,{" "}
+            <code className="font-mono text-xs">STORE_FROM_EMAIL</code>, and{" "}
+            <code className="font-mono text-xs">STORE_NOTIFY_EMAIL</code> on Vercel when the owner account is ready.
+          </p>
+        </div>
+      ) : null}
 
       <form className="mt-2 flex flex-wrap gap-3" method="get">
         <input

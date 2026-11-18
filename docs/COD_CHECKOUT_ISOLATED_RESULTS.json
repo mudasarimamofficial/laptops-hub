@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "app": null,
-  "at": "2026-11-18T01:41:54.388Z",
+  "at": "2026-11-18T02:05:34.945Z",
   "results": [
     {
       "name": "forged_price_ignored",
@@ -11,7 +11,7 @@
     {
       "name": "new_order_unpaid_cod",
       "ok": true,
-      "detail": "{\"id\":\"43aea3d5-7c3a-4c81-8a5e-fd66d4022128\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
+      "detail": "{\"id\":\"44ce96f9-7ea2-4a42-95bd-5e28ac633f22\",\"total_due_paisa\":9035000,\"subtotal_paisa\":9000000,\"payment_status\":\"unpaid_cod\",\"status\":\"placed\"}"
     },
     {
       "name": "same_key_one_order",
@@ -21,7 +21,7 @@
     {
       "name": "same_key_responses",
       "ok": true,
-      "detail": "errors=[]"
+      "detail": "errors=[\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\",\"duplicate key value violates unique constraint \\\"orders_idempotency_key_uidx\\\"\"]"
     },
     {
       "name": "same_key_replay_returns_duplicate",

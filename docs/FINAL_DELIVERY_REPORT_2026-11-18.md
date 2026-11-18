@@ -16,8 +16,9 @@ Evidence-based status after owner mandate execution. Distinguish **technical com
 | Item | Value |
 |---|---|
 | Project | `laptops-hub` / `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` |
-| COD env redeploy | `dpl_Hyi63FYnfRi8HTUKSNjWVRQPrsuB` (force new on `main` @ `0826024`, target production) |
+| COD env redeploy | `dpl_Hyi63FYnfRi8HTUKSNjWVRQPrsuB` — **READY**, aliased to `www.laptopshub.pk` |
 | Prior PR #15 prod | `dpl_Em15if9iN3VqLF2Zg4SCjoJugJFx` (READY before COD env flip) |
+| Evidence PR | https://github.com/mudasarimamofficial/laptops-hub/pull/16 (`5374479`) |
 | Production URL | https://www.laptopshub.pk |
 
 ## 3. Supabase migrations
@@ -106,7 +107,9 @@ Real-order-only; remains off until qualified orders exist. No invented purchaser
 | `store_settings.cod_checkout.enabled` | **true** (2026-11-18) |
 | `NEXT_PUBLIC_COD_CHECKOUT_ENABLED` production | **true** |
 | `COD_CHECKOUT_ENABLED` production | **true** (sensitive; Preview left off — Preview shares prod DB) |
-| Live storefront after redeploy | Pending READY on `dpl_Hyi63FYnfRi8HTUKSNjWVRQPrsuB` |
+| Live storefront after redeploy | **READY** — `/checkout` shows Place COD order; Lahore/Punjab quotes **Rs 360 + Rs 50**, cash due **Rs 49,410** on cart sample |
+| Production quote API | `POST /api/checkout/quote` → `ok:true`, All Over PK |
+| Production COD API gate | `POST /api/checkout/cod` returns `validation_failed` (not `checkout_disabled` / 403) |
 
 ## 14. Shipping configuration
 
@@ -156,9 +159,9 @@ Launch tariffs retained as transparent nonzero defaults (editable in Admin). Not
 | Policies + guides | **Live** |
 | Google reviews data | **Published in DB** (homepage after cache/redeploy) |
 | Reels content | **Engineering ready; media missing** |
-| COD technical readiness | **Gates satisfied; flags on; redeploy in flight** |
+| COD technical readiness | **Live** — checkout UI + quote fees verified on production |
 | Email notifications | **Operational fallback only (Admin Orders)** |
-| Tested live customer transaction | **Not certified** until controlled prod order |
+| Tested live customer transaction | **Quote/UI verified; full submit not run** (avoid unlabeled real obligation) |
 | Independent client admin access | **Pending email + Resend** |
 
-**Overall:** Commerce and mandatory content are production-enabled under the Nov 18 mandate. Full “live transaction certified + client self-serve staffed” awaits Resend, client email, and one labeled production order test after `dpl_Hyi63FYnfRi8HTUKSNjWVRQPrsuB` is READY.
+**Overall:** Commerce and mandatory content are live under the Nov 18 mandate. Checkout is customer-usable with disclosed fees. Remaining: Resend, client staff email, authorized reel media, and one labeled production order exercise watched in Admin → Orders.

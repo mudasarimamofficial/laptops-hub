@@ -178,7 +178,7 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
             type="button"
             disabled={!hydrated || busy || !pasteId.trim()}
             onClick={() => addById(pasteId.trim())}
-            className="rounded-lg bg-[var(--lh-action)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            className="rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
           >
             Add
           </button>
@@ -210,7 +210,7 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
                 {r.title}{" "}
                 <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--adm-ink-2)]">{r.handle}</span>
               </span>
-              <button type="button" className="text-[var(--lh-action)] font-semibold" onClick={() => addById(r.id)}>
+              <button type="button" className="font-semibold text-[var(--adm-action)]" onClick={() => addById(r.id)}>
                 Add
               </button>
             </li>

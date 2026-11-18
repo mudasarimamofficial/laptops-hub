@@ -73,7 +73,7 @@ export function InventoryAdjustForm({ variantId, sku, quantity }: { variantId: s
         <label htmlFor={`${id}-note`}>Note (optional)</label>
         <input id={`${id}-note`} value={note} onChange={(e) => setNote(e.target.value)} maxLength={300} className={f} />
       </div>
-      <button type="submit" disabled={busy} className="rounded-lg bg-[var(--lh-action)] px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-50">
+      <button type="submit" disabled={busy} className="rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-3 py-1.5 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50">
         {busy ? "Saving…" : "Save"}
       </button>
       {msg ? (

@@ -359,7 +359,7 @@ export function ProductVariantMatrix({ handle, optionNames, variants, canSetOver
           type="button"
           disabled={!hydrated || busy || !rows.length}
           onClick={save}
-          className="rounded-lg bg-[var(--lh-action)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+          className="rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
         >
           {busy ? "Saving…" : "Save variants"}
         </button>

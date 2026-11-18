@@ -1,28 +1,29 @@
 # Admin VNext — implementation tracker
 
-**Branch:** `feat/admin-vnext-release-a`  
-**Baseline:** `a2ccdf2`  
+**Released A:** PR #25 → `678eac9` (prod deploy `dpl_8ExYzdCyTiTEZ1nYqp8NFN1wxZsZ`)  
+**Branch (active):** `feat/admin-vnext-release-b`  
 **Started:** 2026-11-18
 
-## Release A — Foundations + Blog VNext
+## Release A — Foundations + Blog VNext — MERGED
 
 | Item | Status |
 |------|--------|
-| Design tokens expansion (`--adm-*`) | done |
-| AdminCard / EditorLayout / SaveBar / Field / MediaPicker | done |
-| Blog list search/filter/status/thumbnails | done |
-| Blog two-column editor | done |
-| Media picker (approved product media + HTTPS URL) | done |
-| Tags + schedule wiring + visibility radios | done |
-| Revisions UI (list + restore) | done |
-| RTE toolbar polish (clear format, a11y labels) | done |
-| RLS `articles_public_select` respects `scheduled_for` | applied (`articles_public_respect_scheduled_for`) |
-| Unit coverage (visibility / schedule / https cover) | done |
-| Tests / PR | in progress |
+| Shared primitives + Blog VNext | shipped in #25 |
+| Schedule-aware public RLS | applied |
+
+## Release B — Products + Collections + Inventory
+
+| Item | Status |
+|------|--------|
+| Product create two-column desk | in progress |
+| Product edit two-column desk + save bar | in progress |
+| Product list polish | pending |
+| Variant matrix / media token alignment | pending |
+| Collections editor pattern | pending |
+| Inventory desk clarity | pending |
 
 ## Later releases
 
-- B Products/Collections/Inventory
 - C Orders/Customers/Inquiries
 - D Content/Online store
 - E Settings/Staff/Analytics

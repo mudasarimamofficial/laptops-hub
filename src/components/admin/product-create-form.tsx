@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
+import { AdminCard } from "@/components/admin/ui/admin-card";
+import { AdminEditorLayout } from "@/components/admin/ui/admin-editor-layout";
+import { AdminField, admInputClass } from "@/components/admin/ui/admin-field";
+import { AdminSaveBar } from "@/components/admin/ui/admin-save-bar";
 
 function slugify(title: string): string {
   return title
@@ -33,8 +37,7 @@ export function ProductCreateForm() {
     if (!handleTouched) setHandle(slugify(v));
   }
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function onSubmit() {
     setBusy(true);
     setErr(null);
     try {
@@ -65,125 +68,108 @@ export function ProductCreateForm() {
     }
   }
 
-  return (
-    <form
-      method="post"
-      onSubmit={onSubmit}
-      className="max-w-xl space-y-5 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-6 shadow-[var(--adm-shadow)]"
-    >
-      <label className="block text-sm">
-        <span className="font-medium">Title</span>
-        <input
-          className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2"
-          value={title}
-          onChange={(e) => onTitleChange(e.target.value)}
-          required
-          maxLength={200}
-        />
-      </label>
-      <label className="block text-sm">
-        <span className="font-medium">URL handle</span>
-        <input
-          className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2 font-[family-name:var(--font-mono)] text-sm"
-          value={handle}
-          onChange={(e) => {
-            setHandleTouched(true);
-            setHandle(e.target.value.toLowerCase());
-          }}
-          pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-          required
-        />
-      </label>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <label className="block text-sm">
-          <span className="font-medium">Price (PKR)</span>
+  const dirty = Boolean(title.trim() || handle.trim() || pricePkr.trim() || manufacturer.trim());
+
+  const main = (
+    <AdminCard title="Product details" description="Creates a draft (or active) product with one default variant. Media and option matrix come next.">
+      <div className="space-y-4">
+        <AdminField label="Title">
+          <input
+            className={admInputClass}
+            value={title}
+            onChange={(e) => onTitleChange(e.target.value)}
+            required
+            maxLength={200}
+            placeholder="e.g. Dell Latitude 7490"
+          />
+        </AdminField>
+        <AdminField label="Web address" hint="Shown on the storefront under /products/">
+          <span className="mt-1 flex min-w-0 items-center gap-1">
+            <span className="shrink-0 text-sm text-[var(--adm-ink-2)]">/products/</span>
+            <input
+              className={admInputClass.replace("mt-1 ", "")}
+              value={handle}
+              onChange={(e) => {
+                setHandleTouched(true);
+                setHandle(e.target.value.toLowerCase());
+              }}
+              pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+              required
+            />
+          </span>
+        </AdminField>
+        <AdminField label="Starting price (PKR)">
           <input
             type="number"
             min={0}
             step={1}
-            className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2"
+            className={admInputClass}
             value={pricePkr}
             onChange={(e) => setPricePkr(e.target.value)}
           />
-        </label>
-        <label className="block text-sm">
-          <span className="font-medium">Status</span>
-          <select
-            className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2"
-            value={status}
-            onChange={(e) => setStatus(e.target.value as "draft" | "active")}
-          >
-            <option value="draft">Draft</option>
-            <option value="active">Active</option>
-          </select>
-        </label>
+        </AdminField>
+        <AdminField label="Brand / manufacturer" optional>
+          <input className={admInputClass} value={manufacturer} onChange={(e) => setManufacturer(e.target.value)} placeholder="Dell / HP / Lenovo…" />
+        </AdminField>
       </div>
-      <label className="block text-sm">
-        <span className="font-medium">Brand / manufacturer</span>
-        <input
-          className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2"
-          value={manufacturer}
-          onChange={(e) => setManufacturer(e.target.value)}
-        />
-      </label>
-      <fieldset className="space-y-2 rounded-lg border border-[var(--adm-border)] p-3">
-        <legend className="px-1 text-sm font-medium">Inventory</legend>
-        <label className="flex items-start gap-2 text-sm">
-          <input
-            type="radio"
-            name="inv"
-            checked={inventoryMode === "untracked"}
-            onChange={() => setInventoryMode("untracked")}
-            className="mt-1"
-          />
-          <span>
-            <strong>Confirm availability</strong>
-            <span className="block text-[var(--adm-ink-2)]">
-              Untracked — staff confirms stock before dispatch. Not unlimited stock.
+    </AdminCard>
+  );
+
+  const aside = (
+    <>
+      <AdminCard title="Status">
+        <AdminField label="Visibility">
+          <select className={admInputClass} value={status} onChange={(e) => setStatus(e.target.value as "draft" | "active")}>
+            <option value="draft">Draft — hidden from shoppers</option>
+            <option value="active">Active — for sale</option>
+          </select>
+        </AdminField>
+      </AdminCard>
+      <AdminCard title="Inventory" description="Global store tracking can stay off — this only sets the first variant.">
+        <fieldset className="space-y-2">
+          <legend className="sr-only">Inventory</legend>
+          <label className="flex items-start gap-2 text-sm">
+            <input type="radio" name="inv" checked={inventoryMode === "untracked"} onChange={() => setInventoryMode("untracked")} className="mt-1" />
+            <span>
+              <strong>Confirm availability</strong>
+              <span className="block text-[var(--adm-ink-2)]">Untracked — staff confirms stock before dispatch. Not unlimited stock.</span>
             </span>
-          </span>
-        </label>
-        <label className="flex items-start gap-2 text-sm">
-          <input
-            type="radio"
-            name="inv"
-            checked={inventoryMode === "tracked"}
-            onChange={() => setInventoryMode("tracked")}
-            className="mt-1"
-          />
-          <span>
-            <strong>Tracked quantity</strong>
-            <span className="block text-[var(--adm-ink-2)]">Requires a real starting count.</span>
-          </span>
-        </label>
-        {inventoryMode === "tracked" ? (
-          <label className="block text-sm">
-            <span className="font-medium">Starting quantity</span>
-            <input
-              type="number"
-              min={0}
-              className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2"
-              value={quantityOnHand}
-              onChange={(e) => setQuantityOnHand(e.target.value)}
-              required
-            />
           </label>
-        ) : null}
-      </fieldset>
+          <label className="flex items-start gap-2 text-sm">
+            <input type="radio" name="inv" checked={inventoryMode === "tracked"} onChange={() => setInventoryMode("tracked")} className="mt-1" />
+            <span>
+              <strong>Tracked quantity</strong>
+              <span className="block text-[var(--adm-ink-2)]">Requires a real starting count.</span>
+            </span>
+          </label>
+          {inventoryMode === "tracked" ? (
+            <AdminField label="Starting quantity">
+              <input
+                type="number"
+                min={0}
+                className={admInputClass}
+                value={quantityOnHand}
+                onChange={(e) => setQuantityOnHand(e.target.value)}
+                required
+              />
+            </AdminField>
+          ) : null}
+        </fieldset>
+      </AdminCard>
+    </>
+  );
 
-      {err ? (
-        <p className="rounded-lg border border-[var(--adm-danger)] bg-[var(--adm-danger-bg)] px-3 py-2 text-sm text-[var(--adm-danger)]" role="alert">
-          {err}
-        </p>
-      ) : null}
-
-      <button
-        type="submit"
-        disabled={!hydrated || busy}
-        className="rounded-lg bg-[var(--lh-action)] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[var(--lh-action-hover)] disabled:opacity-50"
-      >
-        {!hydrated ? "Preparing…" : busy ? "Creating…" : "Create product"}
-      </button>
+  return (
+    <form
+      method="post"
+      onSubmit={(e) => {
+        e.preventDefault();
+        void onSubmit();
+      }}
+      className="text-sm"
+    >
+      <AdminEditorLayout main={main} aside={aside} />
+      <AdminSaveBar dirty={dirty} busy={busy || !hydrated} error={err} onSave={() => void onSubmit()} saveLabel="Create product" />
     </form>
   );
 }

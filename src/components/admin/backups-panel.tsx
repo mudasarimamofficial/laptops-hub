@@ -71,7 +71,7 @@ export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
   async function restore(id: string, label: string) {
     if (!canRestore) return;
     const ok = window.confirm(
-      `Restore “${label}”? This overwrites products settings, articles, reels, reviews and shipping zones from the backup. Orders and staff accounts are not changed. A pre-restore checkpoint is created first.`,
+      `Restore “${label}”? This overwrites store settings, blog posts, reels, customer reviews and shipping zones from the backup. Products, orders, customers and staff are NOT restored. A pre-restore checkpoint is created first.`,
     );
     if (!ok) return;
     setBusy(id);
@@ -84,7 +84,7 @@ export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
         setErr(data.message || "Restore failed");
         return;
       }
-      setMsg("Restore completed. Review the storefront and admin catalog.");
+      setMsg("CMS restore completed. Review Settings, Blog, Reels, Reviews and Shipping. Product catalog was not changed.");
       await load();
     } catch {
       setErr("Network error");
@@ -104,8 +104,9 @@ export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
       <div>
         <h2 className="font-[family-name:var(--font-display)] text-lg font-bold">Backups &amp; Recovery</h2>
         <p className="mt-1 text-sm text-[var(--adm-ink-2)]">
-          Automatic merchant-data snapshots protect settings, catalog, blog, reels, reviews and shipping. The latest four
-          valid backups are kept. This is not a full database disaster-recovery dump.
+          Application snapshots protect store settings, blog posts, reels, customer reviews and shipping zones. The
+          latest four valid snapshots are kept. This is <strong>not</strong> a full PostgreSQL backup and does not
+          include products, orders, customers or staff accounts.
         </p>
       </div>
       <p className="text-sm" aria-live="polite">

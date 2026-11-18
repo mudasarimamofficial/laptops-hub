@@ -1,35 +1,36 @@
 # Merchant OS enhancement — implementation map
 
 **Branch:** `feat/merchant-os-enhancements`  
-**Commit:** `d167c6e`  
+**Feature base:** `d167c6e` / preview pin `db051f8`  
 **Baseline:** `951b95a` / tag `checkpoint/pre-merchant-os-951b95a`  
-**Production pin (unchanged):** `dpl_B9bykg3S…` @ `951b95a`  
-**Preview:** `dpl_DfvNxv6N…` → https://laptops-m77qkyniy-mudasarimamofficial-gmailcoms-projects.vercel.app
+**Release report:** `docs/FINAL_MERCHANT_OS_RELEASE_REPORT.md`  
+**Migration reconciliation:** `docs/MIGRATION_LEDGER_RECONCILIATION_2026-11-18.md`
 
-## Done in this pass
+## Done
 
 | Feature | Default | UI | Persistence | Notes |
 |--------|---------|----|-------------|-------|
-| Global inventory tracking | **OFF** | Admin → Settings → Products & Inventory | `store_settings.inventory_tracking` | RPC `inventory_tracking_enabled()`; `storefront_variant_availability` + `create_cod_order` + quote API honor it. Stock not decremented while OFF. |
-| PDP checkout CTA | **Add to cart** | Admin → Settings → Storefront & Checkout | `store_settings.storefront_checkout.pdp_cta` | PDP-only; cards unchanged. Buy now uses `sessionStorage` (`lh-buynow-v1`) + `/checkout?mode=buy_now` without clearing the main cart. |
+| Global inventory tracking | **OFF** | Admin → Settings → Products & Inventory | `store_settings.inventory_tracking` | Gate ∧ per-variant `inventory_mode`. Stock not decremented while OFF. |
+| PDP checkout CTA | **Add to cart** | Admin → Settings → Storefront & Checkout | `store_settings.storefront_checkout.pdp_cta` | PDP-only; buy-now uses `sessionStorage` `lh-buynow-v1` + `/checkout?mode=buy_now`. |
 | Reviews hover pause | card-only | Storefront reviews carousel | CSS `:has(.card:hover/:focus-within)` | Heading/padding no longer pause autoplay. |
-| Blog visual editor | — | Admin → Blog | `articles` + `article_revisions` | Rich toolbar, templates, SEO panel, revision on save/restore API. Existing posts remain editable by UUID. |
-| Backups (4 valid) | — | Admin → Settings → Backups & Recovery | `merchant_snapshots` | Owner/admin create; owner restore; coalesced auto-backup on key settings saves. |
-| Reels presets | draft | Admin → Reels → Restore 6 presets | `data/reels-presets-manifest.json` | Titles reserved; **awaiting HTML paste for URLs**. ronin.pk stays blocked. |
+| Blog visual editor | — | Admin → Blog | `articles` + `article_revisions` | Rich toolbar, SEO, revisions. contentEditable + sanitise-on-save. |
+| CMS backups (4 valid) | — | Admin → Settings → Backups & Recovery | `merchant_snapshots` + `restore_merchant_cms_snapshot` | **CMS only** (settings, articles, reels, testimonials, zones). Atomic RPC restore. Not a Postgres dump. |
+| Reels presets | draft | Admin → Reels → Restore 6 presets | `data/reels-presets-manifest.json` | Placeholders; **awaiting HTML paste**. ronin.pk blocked. |
 
-## Migrations applied to production Supabase
+## Migrations on production Supabase (aligned filenames)
 
-- `20261118160000_inventory_tracking_and_pdp_cta` (+ `create_cod_order_respect_inventory_tracking`)
-- `20261118170000_merchant_snapshots_and_blog_revisions`
+- `20261118074859_inventory_tracking_and_pdp_cta`
+- `20261118075155_create_cod_order_respect_inventory_tracking`
+- `20261118075220_merchant_snapshots_and_blog_revisions`
+- `20261118081618_merchant_cms_snapshot_restore_rpc`
 
-## Blocked / pending
+## Blocked / pending (non-blocking for Merchant OS app release)
 
-1. **Reels HTML paste** — six titles seeded as draft placeholders; extract real video/poster/avatar/tag URLs when HTML arrives; rights-gate before publish.
-2. **Production COD submit** — requires owner-controlled private PII; isolated/staging certification first.
-3. **Preview deploy + full Playwright matrix** — run before promotion.
-4. **Tiptap** — deferred; contentEditable visual editor shipped without a new paid/SaaS dependency. Can upgrade later if needed.
+1. **Reels HTML paste** — draft placeholders only; rights-gate before publish.
+2. **Live production COD with owner PII** — not claimed tested until done.
+3. **Isolated full COD concurrency suite** — prefer local Supabase stack (Preview shares prod DB).
 
 ## Rollback
 
-- App: return to tag `checkpoint/pre-merchant-os-951b95a`.
-- Schema: settings keys can remain (defaults safe). Function bodies can be restored from `20261117120000` / `20261117150000`. Snapshot/revision tables are additive.
+- App: tag `checkpoint/pre-merchant-os-951b95a`.
+- Schema: settings defaults remain safe OFF / add_to_cart. Snapshot tables additive.

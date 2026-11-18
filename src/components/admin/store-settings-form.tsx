@@ -121,7 +121,7 @@ export function StoreSettingsForm({ initial }: Props) {
               const next = e.target.checked;
               if (next && !trackProductInventory) {
                 const ok = window.confirm(
-                  "Turn on inventory tracking? Stored stock quantities will become authoritative again. Zero-stock products may show as sold out until you restock them.",
+                  "Turn on inventory tracking? Only variants set to “tracked” inventory will enforce stock counts. Untracked variants stay sellable. Zero-stock tracked variants may show as sold out until you restock them.",
                 );
                 if (!ok) return;
               }
@@ -131,11 +131,15 @@ export function StoreSettingsForm({ initial }: Props) {
           <span>
             <span className="font-medium">Track product inventory</span>
             <span className="mt-1 block text-[var(--adm-ink-2)]">
-              When enabled, product availability follows available stock quantities. When disabled, published products
-              can be purchased even if their recorded inventory is zero. Draft and unpublished products stay hidden.
+              When OFF, published products stay buyable even at zero recorded stock. When ON, each variant that uses
+              tracked inventory must have enough stock (unless that variant allows overselling). Untracked variants are
+              unaffected. Draft and unpublished products stay hidden either way.
             </span>
             <span className="mt-1 block text-xs text-[var(--adm-ink-2)]" aria-live="polite">
-              Status: {trackProductInventory ? "ON — stock quantities control availability" : "OFF — stock does not block purchase"}
+              Status:{" "}
+              {trackProductInventory
+                ? "ON — tracked variants respect stock quantities"
+                : "OFF — stock counts do not block purchase"}
             </span>
           </span>
         </label>

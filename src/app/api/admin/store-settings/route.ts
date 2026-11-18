@@ -25,8 +25,6 @@ const settingsSchema = z.object({
   showSectionNumbers: z.boolean().optional(),
 });
 
-type SettingsSchema = z.infer<typeof settingsSchema>;
-
 /**
  * Fetch all store settings.
  */
@@ -206,7 +204,24 @@ export async function PUT(request: Request) {
       });
     }
 
-    // 2. Perform database upserts with strict error checking
+    // 2. Pre-change CMS snapshot for inventory / checkout / identity (coalesced; never blocks save).
+    if (
+      keysToTouch.includes(INVENTORY_TRACKING_KEY) ||
+      keysToTouch.includes(STOREFRONT_CHECKOUT_KEY) ||
+      keysToTouch.includes("business_identity")
+    ) {
+      try {
+        await maybeCreateCoalescedSnapshot(supabase, {
+          label: `Pre-change backup before settings (${keysToTouch.join(", ")})`,
+          createdBy: staff.userId,
+          notes: "Triggered before store settings save",
+        });
+      } catch {
+        /* snapshot failure must not block settings */
+      }
+    }
+
+    // 3. Perform database upserts with strict error checking
     for (const item of upsertPayloads) {
       const { error: upsertErr } = await supabase
         .from("store_settings")
@@ -223,7 +238,7 @@ export async function PUT(request: Request) {
       }
     }
 
-    // 3. Confirm persistence through a fresh read
+    // 4. Confirm persistence through a fresh read
     const { data: verifiedRows, error: verifyErr } = await supabase
       .from("store_settings")
       .select("key, value")
@@ -269,30 +284,13 @@ export async function PUT(request: Request) {
       revalidatePath("/admin/settings");
     }
 
-    // 4. Audit successful changes
+    // 5. Audit successful changes
     await supabase.from("audit_logs").insert({
       actor_user_id: staff.userId,
       action: "store_settings.update",
       entity_type: "store_settings",
       after: { touched: keysToTouch, verified: verifiedMap },
     });
-
-    // 5. Coalesced merchant snapshot after significant settings changes (inventory / checkout / identity).
-    if (
-      keysToTouch.includes(INVENTORY_TRACKING_KEY) ||
-      keysToTouch.includes(STOREFRONT_CHECKOUT_KEY) ||
-      keysToTouch.includes("business_identity")
-    ) {
-      try {
-        await maybeCreateCoalescedSnapshot(supabase, {
-          label: `Auto backup after settings (${keysToTouch.join(", ")})`,
-          createdBy: staff.userId,
-          notes: "Triggered by store settings save",
-        });
-      } catch {
-        // Backup failure must not roll back a successful settings write.
-      }
-    }
 
     return NextResponse.json(
       {

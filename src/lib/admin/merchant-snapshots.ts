@@ -1,19 +1,38 @@
 import { createHash } from "crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-const KEEP_VALID = 4;
+/**
+ * Merchant CMS application snapshots — NOT a full PostgreSQL dump.
+ *
+ * Protected / restorable:
+ *   store_settings, articles, reels, store_testimonials, shipping_zones
+ *
+ * Explicitly excluded (order integrity / auth / live catalog):
+ *   products, product_variants, collections, orders, customers, staff, secrets
+ */
+export const SNAPSHOT_SCOPE = [
+  "store_settings",
+  "articles",
+  "reels",
+  "store_testimonials",
+  "shipping_zones",
+] as const;
 
-type SnapshotTables = {
+export const SNAPSHOT_SCOPE_LABEL =
+  "Store settings, blog posts, reels, customer reviews, and shipping zones. Does not include products, orders, customers, or staff accounts.";
+
+const KEEP_VALID = 4;
+const COALESCE_MS = 10 * 60 * 1000;
+const SCHEMA_VERSION = 2;
+
+export type MerchantCmsPayload = {
+  schemaVersion: number;
+  capturedAt: string;
   store_settings: unknown[];
-  products: unknown[];
-  product_variants: unknown[];
-  collections: unknown[];
-  collection_products: unknown[];
   articles: unknown[];
   reels: unknown[];
   store_testimonials: unknown[];
   shipping_zones: unknown[];
-  product_reviews?: unknown[];
 };
 
 async function loadTable(supabase: SupabaseClient, table: string, columns = "*") {
@@ -22,23 +41,9 @@ async function loadTable(supabase: SupabaseClient, table: string, columns = "*")
   return data || [];
 }
 
-export async function buildMerchantSnapshotPayload(supabase: SupabaseClient): Promise<SnapshotTables> {
-  const [
-    store_settings,
-    products,
-    product_variants,
-    collections,
-    collection_products,
-    articles,
-    reels,
-    store_testimonials,
-    shipping_zones,
-  ] = await Promise.all([
+export async function buildMerchantSnapshotPayload(supabase: SupabaseClient): Promise<MerchantCmsPayload> {
+  const [store_settings, articles, reels, store_testimonials, shipping_zones] = await Promise.all([
     loadTable(supabase, "store_settings"),
-    loadTable(supabase, "products", "id, handle, title, status, category, manufacturer, featured, tags, specs, option_names, description_safe, deleted_at, updated_at"),
-    loadTable(supabase, "product_variants", "id, product_id, sku, title, option_values, price_paisa, compare_at_paisa, max_per_order, purchasable, position, inventory_mode, quantity_on_hand, allow_oversell, low_stock_threshold"),
-    loadTable(supabase, "collections"),
-    loadTable(supabase, "collection_products"),
     loadTable(supabase, "articles"),
     loadTable(supabase, "reels"),
     loadTable(supabase, "store_testimonials"),
@@ -46,11 +51,9 @@ export async function buildMerchantSnapshotPayload(supabase: SupabaseClient): Pr
   ]);
 
   return {
+    schemaVersion: SCHEMA_VERSION,
+    capturedAt: new Date().toISOString(),
     store_settings,
-    products,
-    product_variants,
-    collections,
-    collection_products,
     articles,
     reels,
     store_testimonials,
@@ -58,20 +61,52 @@ export async function buildMerchantSnapshotPayload(supabase: SupabaseClient): Pr
   };
 }
 
-export function validateSnapshotPayload(payload: SnapshotTables): { ok: boolean; checks: Record<string, number | boolean> } {
-  const checks = {
-    has_settings: (payload.store_settings?.length || 0) > 0,
-    products: payload.products?.length || 0,
-    variants: payload.product_variants?.length || 0,
-    articles: payload.articles?.length || 0,
-    reels: payload.reels?.length || 0,
-    shipping_zones: payload.shipping_zones?.length || 0,
+export function validateSnapshotPayload(payload: unknown): {
+  ok: boolean;
+  checks: Record<string, number | boolean | string>;
+  reason?: string;
+} {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return { ok: false, checks: {}, reason: "payload_not_object" };
+  }
+  const p = payload as Record<string, unknown>;
+
+  // Reject legacy catalog-heavy payloads that advertised products but could not restore them safely.
+  if (Array.isArray(p.products) || Array.isArray(p.product_variants)) {
+    return {
+      ok: false,
+      checks: { legacy_catalog_payload: true },
+      reason: "legacy_catalog_payload_unsupported",
+    };
+  }
+
+  const settings = Array.isArray(p.store_settings) ? p.store_settings : null;
+  const articles = Array.isArray(p.articles) ? p.articles : null;
+  const reels = Array.isArray(p.reels) ? p.reels : null;
+  const testimonials = Array.isArray(p.store_testimonials) ? p.store_testimonials : null;
+  const zones = Array.isArray(p.shipping_zones) ? p.shipping_zones : null;
+
+  const checks: Record<string, number | boolean | string> = {
+    schemaVersion: typeof p.schemaVersion === "number" ? p.schemaVersion : "missing",
+    store_settings: settings?.length ?? -1,
+    articles: articles?.length ?? -1,
+    reels: reels?.length ?? -1,
+    store_testimonials: testimonials?.length ?? -1,
+    shipping_zones: zones?.length ?? -1,
   };
-  const ok = checks.has_settings && checks.products > 0 && checks.variants > 0 && checks.shipping_zones > 0;
-  return { ok, checks };
+
+  if (!settings || !articles || !reels || !testimonials || !zones) {
+    return { ok: false, checks, reason: "missing_tables" };
+  }
+  if (settings.length < 1) return { ok: false, checks, reason: "empty_settings" };
+  if (zones.length < 1) return { ok: false, checks, reason: "empty_zones" };
+
+  return { ok: true, checks };
 }
 
-const COALESCE_MS = 10 * 60 * 1000;
+export function checksumPayload(payload: MerchantCmsPayload): string {
+  return createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+}
 
 /** Skip a new auto-snapshot when a valid one was created within the coalesce window. */
 export async function maybeCreateCoalescedSnapshot(
@@ -98,7 +133,7 @@ export async function createMerchantSnapshot(
 ) {
   const payload = await buildMerchantSnapshotPayload(supabase);
   const json = JSON.stringify(payload);
-  const checksum = createHash("sha256").update(json).digest("hex");
+  const checksum = checksumPayload(payload);
   const validation = validateSnapshotPayload(payload);
   const status = validation.ok ? "valid" : "failed";
 
@@ -111,10 +146,10 @@ export async function createMerchantSnapshot(
       payload,
       payload_bytes: Buffer.byteLength(json, "utf8"),
       checksum,
-      validation,
+      validation: { ...validation.checks, reason: validation.reason ?? null, scope: SNAPSHOT_SCOPE },
       created_by: opts.createdBy,
       verified_at: validation.ok ? new Date().toISOString() : null,
-      notes: opts.notes || null,
+      notes: opts.notes || SNAPSHOT_SCOPE_LABEL,
     })
     .select("id, label, kind, status, payload_bytes, checksum, validation, created_at, verified_at")
     .single();
@@ -146,8 +181,8 @@ export async function enforceRetention(supabase: SupabaseClient) {
 }
 
 /**
- * Restore selected merchant tables from a validated snapshot.
- * Creates a pre_restore checkpoint first. Does not touch auth users or orders.
+ * Restore Merchant CMS tables from a validated snapshot via a single DB transaction (RPC).
+ * Creates a pre_restore checkpoint first. Does not touch products, orders, or auth.
  */
 export async function restoreMerchantSnapshot(
   supabase: SupabaseClient,
@@ -156,55 +191,39 @@ export async function restoreMerchantSnapshot(
 ) {
   const { data: snap, error } = await supabase
     .from("merchant_snapshots")
-    .select("id, status, payload")
+    .select("id, status, payload, checksum")
     .eq("id", snapshotId)
     .maybeSingle();
   if (error || !snap) throw new Error("Backup not found");
   if (snap.status !== "valid") throw new Error("Only validated backups can be restored");
 
-  await createMerchantSnapshot(supabase, {
+  const payload = snap.payload;
+  const validation = validateSnapshotPayload(payload);
+  if (!validation.ok) throw new Error(`Backup failed integrity checks (${validation.reason})`);
+
+  const recomputed = createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+  if (snap.checksum && snap.checksum !== recomputed) {
+    throw new Error("Backup checksum mismatch — refusing restore");
+  }
+
+  // Pre-restore checkpoint must succeed before mutating live CMS rows.
+  const checkpoint = await createMerchantSnapshot(supabase, {
     label: `Pre-restore checkpoint before ${snapshotId.slice(0, 8)}`,
     kind: "pre_restore",
     createdBy: staffUserId,
+    notes: "Automatic checkpoint before CMS restore",
+  });
+  if (checkpoint.status !== "valid") {
+    throw new Error("Pre-restore checkpoint failed validation — restore aborted");
+  }
+
+  const { data: rpcResult, error: rpcError } = await supabase.rpc("restore_merchant_cms_snapshot", {
+    payload,
+    actor: staffUserId,
   });
 
-  const payload = snap.payload as SnapshotTables;
-  const validation = validateSnapshotPayload(payload);
-  if (!validation.ok) throw new Error("Backup failed integrity checks");
-
-  // Settings upsert by key
-  for (const row of payload.store_settings as { key: string; value: unknown }[]) {
-    if (!row?.key) continue;
-    const { error: e } = await supabase.from("store_settings").upsert(
-      { key: row.key, value: row.value, updated_at: new Date().toISOString(), updated_by: staffUserId },
-      { onConflict: "key" },
-    );
-    if (e) throw new Error(`settings ${row.key}: ${e.message}`);
-  }
-
-  // Articles upsert by id (preserve URLs)
-  for (const row of payload.articles as Record<string, unknown>[]) {
-    if (!row?.id) continue;
-    const { error: e } = await supabase.from("articles").upsert(row, { onConflict: "id" });
-    if (e) throw new Error(`article: ${e.message}`);
-  }
-
-  for (const row of payload.reels as Record<string, unknown>[]) {
-    if (!row?.id) continue;
-    const { error: e } = await supabase.from("reels").upsert(row, { onConflict: "id" });
-    if (e) throw new Error(`reel: ${e.message}`);
-  }
-
-  for (const row of payload.store_testimonials as Record<string, unknown>[]) {
-    if (!row?.id) continue;
-    const { error: e } = await supabase.from("store_testimonials").upsert(row, { onConflict: "id" });
-    if (e) throw new Error(`testimonial: ${e.message}`);
-  }
-
-  for (const row of payload.shipping_zones as Record<string, unknown>[]) {
-    if (!row?.id) continue;
-    const { error: e } = await supabase.from("shipping_zones").upsert(row, { onConflict: "id" });
-    if (e) throw new Error(`zone: ${e.message}`);
+  if (rpcError) {
+    throw new Error(`Restore failed (transaction rolled back): ${rpcError.message}`);
   }
 
   await supabase.from("audit_logs").insert({
@@ -212,8 +231,8 @@ export async function restoreMerchantSnapshot(
     action: "merchant_snapshot.restore",
     entity_type: "merchant_snapshots",
     entity_id: snapshotId,
-    after: { restored: true, checks: validation.checks },
+    after: { restored: true, checks: validation.checks, rpc: rpcResult, checkpointId: checkpoint.id },
   });
 
-  return { ok: true as const, snapshotId };
+  return { ok: true as const, snapshotId, checkpointId: checkpoint.id as string, rpc: rpcResult };
 }

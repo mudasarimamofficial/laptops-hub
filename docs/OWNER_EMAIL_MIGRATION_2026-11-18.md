@@ -29,4 +29,4 @@
 
 ## Operator note
 
-Password is unchanged on the Auth user. Sign in with the **new** email and the existing password, or use password recovery to the new mailbox. Existing browser sessions may still show the previous email until a full sign-out / fresh login.
+Password is unchanged on the Auth user. Sign in with the **new** email and the existing password, or use password recovery to the new mailbox. Fresh magiclink login and recovery → `/admin/reset-password` were verified for `infolaptopshub@gmail.com` after PR #38 (password not rotated in that pass).

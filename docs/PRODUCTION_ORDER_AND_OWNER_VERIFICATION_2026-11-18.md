@@ -37,6 +37,7 @@ Evidence: explicit customer note `testing`, purchaser identity matches the engin
 2. Do **not** dispatch, collect cash, or mark delivered.
 3. Preferred merchant action when ready: cancel as test (or archive via normal cancel workflow) so inventory/ops are not confused.
 4. Do not delete the row — retain for notification/COD audit evidence.
+5. `order_events` already includes `ops_note` (2026-11-18 14:30 UTC): QA classification + do-not-dispatch.
 
 ### Notifications
 
@@ -66,7 +67,9 @@ Six `preset_key` drafts remain unpublished (`rights_status=pending`). All six MP
 |---|---|
 | Production COD order create | **PASS** (DB evidence) |
 | Merchant outbox provider accept | **PASS** (Resend id recorded) |
-| Merchant alert in `infolaptopshub@gmail.com` inbox | **PENDING** (this order pre-dates notify cutover; needs a post-cutover send or Resend event check) |
-| Fresh owner browser login | **PENDING until magiclink confirm ships** (confirm route previously rejected `type=magiclink`) |
+| Merchant alert in `infolaptopshub@gmail.com` inbox | **Provider PASS / inbox PENDING human open** — post-cutover smoke `POST /api/admin/notifications/test` → Resend `01a1ef1a-a5c8-7740-b285-bb0c090f51b0` accepted. Open the permanent owner mailbox to confirm delivery. |
+| Fresh owner browser login | **PASS** — magiclink confirm → `/admin` shows `infolaptopshub@gmail.com` · role `owner`; session persisted on reload |
+| Password recovery landing | **PASS** — recovery confirm → `/admin/reset-password` for `infolaptopshub@gmail.com` (password not changed in this pass) |
 | Customer email | **N/A / skipped by design** |
-| Live customer fulfillment for `LH-261118-77C0F6` | **NOT applicable** — QA order |
+| Live customer fulfillment for `LH-261118-77C0F6` | **NOT applicable** — QA order; `order_events.ops_note` recorded |
+| Six reels admin preview | **PASS** — 6/6 `<video>` `readyState=4`, posters `naturalWidth=600`; remain draft / rights pending / unpublished |

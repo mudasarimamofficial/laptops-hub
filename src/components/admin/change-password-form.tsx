@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 
@@ -91,9 +92,9 @@ export function ChangePasswordForm({ email }: { email: string }) {
       </button>
       <p className="text-xs text-[var(--adm-ink-2)]">
         Forgot your current password? Use{" "}
-        <a href="/admin/forgot-password" className="font-semibold text-[var(--adm-action)] underline">
+        <Link href="/admin/forgot-password" className="font-semibold text-[var(--adm-action)] underline">
           password recovery
-        </a>
+        </Link>
         .
       </p>
     </form>

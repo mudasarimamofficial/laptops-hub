@@ -27,7 +27,13 @@ export function isDisallowedPrivateHost(hostname: string): boolean {
 }
 
 function pathLooksLike(kind: ReelUrlKind, pathname: string): boolean {
-  if (kind === "video") return REEL_VIDEO_EXT.test(pathname);
+  if (kind === "video") {
+    if (REEL_VIDEO_EXT.test(pathname)) return true;
+    // Progressive CDN URLs sometimes omit a file extension (e.g. Shopify …/vp/…/….HD-1080p-2.5Mbps).
+    // Still require a video-like path and reject playlists/images.
+    if (REEL_HLS_EXT.test(pathname) || REEL_POSTER_EXT.test(pathname)) return false;
+    return /\/(?:videos?|vp)\//i.test(pathname);
+  }
   if (kind === "hls") return REEL_HLS_EXT.test(pathname);
   return REEL_POSTER_EXT.test(pathname);
 }
@@ -52,7 +58,7 @@ const MESSAGES: Record<ReelUrlProblem, string> = {
   scheme: "Use a secure https:// link (http is only for local testing).",
   private_host: "That host looks private or internal and cannot be used as public media.",
   extension:
-    "Use a direct media file URL (.mp4, .webm or .mov for video; .m3u8 for HLS; .jpg, .png, .webp or .avif for images).",
+    "Use a direct HTTPS media URL (.mp4 / .webm / .mov, or a CDN progressive video path under /videos/; .m3u8 for HLS; image files for posters).",
 };
 
 const optionalUrl = (kind: ReelUrlKind) =>

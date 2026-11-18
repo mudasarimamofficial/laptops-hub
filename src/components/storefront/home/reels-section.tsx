@@ -170,11 +170,11 @@ export function ReelsSection({ reels, heading = "Generation Laptops HUB", autopl
                     onError={() => setFailed((s) => (s.has(r.id) ? s : new Set(s).add(r.id)))}
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
                   >
-                    {/* Prefer HLS when present; browsers that cannot play it fall through to MP4. */}
+                    {/* MP4 first — Chrome/Firefox often cannot play HLS without a library. Safari can still pick HLS when listed second. */}
+                    <source src={r.videoUrl} onError={() => setFailed((s) => new Set(s).add(r.id))} />
                     {r.hlsUrl ? (
                       <source src={r.hlsUrl} type="application/x-mpegURL" onError={() => setFailed((s) => new Set(s).add(r.id))} />
                     ) : null}
-                    <source src={r.videoUrl} onError={() => setFailed((s) => new Set(s).add(r.id))} />
                   </video>
                 )}
                 {(r.creatorName || tag) && !broken ? (

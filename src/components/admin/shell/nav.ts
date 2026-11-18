@@ -89,8 +89,13 @@ export const ADMIN_NAV: AdminNavSection[] = [
       },
       {
         href: "/admin/content",
-        label: "Pages",
+        label: "Content",
         roles: ["owner", "admin", "editor"],
+        children: [
+          { href: "/admin/content", label: "Pages" },
+          { href: "/admin/blog", label: "Blog" },
+          { href: "/admin/reels", label: "Generation reels" },
+        ],
       },
       {
         href: "/admin/blog",
@@ -99,7 +104,7 @@ export const ADMIN_NAV: AdminNavSection[] = [
       },
       {
         href: "/admin/reels",
-        label: "Reels",
+        label: "Generation reels",
         roles: ["owner", "admin", "editor"],
       },
       {

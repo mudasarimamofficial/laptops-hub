@@ -215,7 +215,26 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
     return { ...l, bar: Math.max(4, Math.round((n / lapN) * 100)) + "%", share: Math.round((n / lapN) * 100) + "% of laptops" };
   });
   const newGen = P.filter((p) => (p.gen ?? 0) >= 10);
-  const reelsBlock = <ReelsSection reels={reels} heading={social.reels.heading} autoplayMuted={social.reels.autoplayMuted} />;
+  const reelsBlock = reels.length ? (
+    <ReelsSection reels={reels} heading={social.reels.heading} autoplayMuted={social.reels.autoplayMuted} />
+  ) : (
+    <section
+      aria-labelledby="reels-placeholder-title"
+      data-testid="reels-placeholder"
+      style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(40px,5vw,72px) clamp(16px,3vw,32px) 0" }}
+    >
+      <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".12em", color: "var(--lh-ink-2)" }}>
+        <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
+        REELS
+      </span>
+      <h2 id="reels-placeholder-title" style={{ margin: "10px 0 0", fontFamily: "var(--font-display)", fontSize: "clamp(28px,3vw,44px)", letterSpacing: "-.035em", fontWeight: 700 }}>
+        {social.reels.heading}
+      </h2>
+      <p style={{ marginTop: 12, maxWidth: 42 + "rem", fontSize: 15, lineHeight: 1.55, color: "var(--lh-ink-2)" }}>
+        Short videos will appear here once published with confirmed media rights. Nothing is hidden as live content until then.
+      </p>
+    </section>
+  );
 
   const render: Record<SectionType, () => ReactNode> = {
     v5_cinematic_hero: () => {

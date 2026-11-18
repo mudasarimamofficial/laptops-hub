@@ -53,7 +53,7 @@ export function SelectRow({ handle, title }: { handle: string; title: string }) 
   return (
     <input
       type="checkbox"
-      className="h-4 w-4 cursor-pointer accent-[var(--lh-action)]"
+      className="h-4 w-4 cursor-pointer accent-[var(--adm-action)]"
       checked={selected.has(handle)}
       onChange={(e) => toggle(handle, e.target.checked)}
       aria-label={`Select ${title}`}
@@ -75,7 +75,7 @@ export function SelectAll({ handles }: { handles: string[] }) {
     <input
       ref={ref}
       type="checkbox"
-      className="h-4 w-4 cursor-pointer accent-[var(--lh-action)]"
+      className="h-4 w-4 cursor-pointer accent-[var(--adm-action)]"
       checked={all}
       onChange={(e) => setMany(handles, e.target.checked)}
       aria-label={all ? "Unselect all products on this page" : "Select all products on this page"}
@@ -161,7 +161,7 @@ export function BulkActionBar() {
           ))}
           <Link
             href={`/admin/products/bulk?handles=${encodeURIComponent(handles.join(","))}`}
-            className="inline-flex min-h-9 items-center rounded-lg bg-[var(--lh-action)] px-3 text-sm font-semibold text-white hover:bg-[var(--lh-action-hover)]"
+            className="inline-flex min-h-9 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-3 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)]"
             data-testid="bulk-open-editor"
           >
             Edit prices in bulk editor

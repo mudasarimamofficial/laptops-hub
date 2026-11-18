@@ -189,7 +189,7 @@ export function CollectionRuleBuilder({ slug, initialRule }: Props) {
           type="button"
           disabled={!hydrated || busy}
           onClick={save}
-          className="rounded-lg bg-[var(--lh-action)] px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+          className="rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-3 py-1.5 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
         >
           {busy ? "Saving…" : "Save rules"}
         </button>

@@ -201,7 +201,7 @@ export function ProductMediaManager({ handle, initialMedia }: Props) {
           <button
             type="submit"
             disabled={!hydrated || busy}
-            className="w-full rounded-lg bg-[var(--lh-action)] px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+            className="w-full rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
           >
             Add URL
           </button>

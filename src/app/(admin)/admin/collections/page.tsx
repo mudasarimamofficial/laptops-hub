@@ -46,7 +46,7 @@ export default async function AdminCollectionsPage() {
         actions={
           <Link
             href="/admin/collections/new"
-            className="inline-flex rounded-lg bg-[var(--lh-action)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--lh-action-hover)]"
+            className="inline-flex min-h-10 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)]"
           >
             Create collection
           </Link>

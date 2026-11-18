@@ -103,7 +103,7 @@ export default async function AdminProductEditPage({ params }: Props) {
               href={`/products/${data.handle}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-semibold text-[var(--lh-action)] hover:underline"
+              className="text-sm font-semibold text-[var(--adm-action)] hover:underline"
             >
               View on storefront
             </Link>

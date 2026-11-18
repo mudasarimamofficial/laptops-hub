@@ -28,9 +28,10 @@ jobs:
       - name: Call the notification cron endpoint
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
-          ENDPOINT: ${{ vars.NOTIFY_CRON_URL || 'https://laptops-hub.vercel.app/api/cron/notifications' }}
+          # Canonical production host (laptops-hub.vercel.app is not a project alias).
+          ENDPOINT: ${{ vars.NOTIFY_CRON_URL || 'https://www.laptopshub.pk/api/cron/notifications' }}
         run: |
-          if [ -z "$CRON_SECRET" ]; then echo "CRON_SECRET is not set — skipping (schedule inactive)."; exit 0; fi
+          if [ -z "$CRON_SECRET" ]; then echo "CRON_SECRET is not set — skipping (schedule inactive until Resend + secret are configured)."; exit 0; fi
           code=$(curl -sS -o body.json -w '%{http_code}' --max-time 90 -H "Authorization: Bearer $CRON_SECRET" "$ENDPOINT") || true
           code=${code:-000}
           echo "HTTP $code"
@@ -39,7 +40,10 @@ jobs:
             const j = require("./body.json");
             console.log([j.configured, j.processed ?? 0, j.accepted ?? 0, j.failed ?? 0, j.needsAttention ?? 0].join(" "));')
           echo "configured=$configured processed=$processed accepted=$accepted failed=$failed needsAttention=$attention"
-          [ "$configured" = "true" ] || { echo "::error::email is not configured on Production (RESEND_API_KEY / STORE_FROM_EMAIL / STORE_NOTIFY_EMAIL)"; exit 1; }
+          if [ "$configured" != "true" ]; then
+            echo "::warning::email is not configured on Production (RESEND_API_KEY / STORE_FROM_EMAIL / STORE_NOTIFY_EMAIL) — cron auth worked; delivery remains inactive"
+            exit 0
+          fi
           [ "$failed" = "0" ] || { echo "::error::$failed notification(s) failed again — Admin → Unsent notifications"; exit 1; }
           if [ "$attention" != "0" ] && [ "$(date -u +%M)" -lt 15 ]; then
             echo "::error::$attention notification(s) need staff action (automatic retries stopped) — open the order, fix the cause, press Retry sending"; exit 1

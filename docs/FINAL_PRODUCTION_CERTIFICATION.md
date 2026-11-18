@@ -2,11 +2,26 @@
 
 **Date:** 2026-11-18  
 **Acceptance baseline exercised:** `30ac555af242bc713e4c4de108b3248a7ee7c7bd` (`dpl_9FUtP39…`)  
-**Live production now:** GitHub `main` `c29801e55c7e6ae51689c9e728822da8c446c5fb` · Vercel `dpl_5YnLi4A3mEQo2aAcbCP3Np9ksr1f` READY (PR [#21](https://github.com/mudasarimamofficial/laptops-hub/pull/21))  
-**Aliases:** `www.laptopshub.pk` + `laptopshub.pk` → `dpl_5YnLi4A3…`  
+**Live production now:** GitHub `main` `c311b65b8d3ec51c34a8ef9a25c129abbaff9d9d` · see follow-on deploy after PR #38  
+**Aliases:** `www.laptopshub.pk` + `laptopshub.pk`  
 **Method:** Independent browser + API + isolated local suites. No invented customer PII. Hostinger CRM `app.laptopshub.pk` untouched.
 
 Labels: **PASS** · **FAIL** · **BLOCKED** · **NOT TESTED** · **NOT APPLICABLE**
+
+### Delta — 2026-11-18 evening (order + owner + reels)
+
+| Gate | Verdict | Evidence |
+|---|---|---|
+| Live COD order create | **PASS** | `LH-261118-77C0F6` · Rs 181,410 · `placed` / `unpaid_cod` |
+| Order purpose | **QA test** | customer_note=`testing`; purchaser=`mudasarimamofficial@gmail.com`; ops_note recorded — **do not dispatch** |
+| Merchant outbox provider accept | **PASS** | Resend id `01a1eded-…` · business=`accepted` · customer=`skipped` |
+| Merchant alert in permanent owner inbox | **PENDING** | Order sent **before** `STORE_NOTIFY_EMAIL` cutover to `infolaptopshub@gmail.com`; post-cutover smoke via `/api/admin/notifications/test` |
+| Owner Auth email + UUID | **PASS** | `infolaptopshub@gmail.com` · UUID `cc603db4-…` · owner active |
+| Fresh owner browser session | **PENDING → fix shipped** | Confirm route now accepts `magiclink` → `/admin` |
+| Six Generation reels drafts | **PASS (draft only)** | All media HEAD 200; **0 published**; rights pending |
+| Customer transactional email | **NOT APPLICABLE** | `NOTIFY_CUSTOMER_EMAIL` unset → skipped |
+
+Detail: `docs/PRODUCTION_ORDER_AND_OWNER_VERIFICATION_2026-11-18.md`.
 
 ---
 

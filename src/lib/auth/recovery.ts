@@ -1,7 +1,9 @@
 /**
  * Staff password recovery (Supabase Auth). Pure helpers — the routes are:
  *   POST /api/admin/account/recover   request a recovery email (generic answer, rate-limited)
- *   GET  /admin/auth/confirm          verify the email link (token_hash or PKCE code) → recovery session
+ *   GET  /admin/auth/confirm          verify email links (token_hash or PKCE code)
+ *                                     · recovery / invite → reset-password form
+ *                                     · magiclink → /admin (passwordless staff session)
  *   GET  /admin/reset-password        new-password form (only with a fresh recovery session)
  *   POST /api/admin/account/password  set the password, then sign out every session
  * Recovery only proves control of the mailbox and changes the password of that same Auth user (same UID). It never

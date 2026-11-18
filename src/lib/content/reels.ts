@@ -95,6 +95,12 @@ export const reelInputSchema = z
     posterUrl: optionalUrl("poster").optional().default(""),
     avatarUrl: optionalUrl("avatar").optional().default(""),
     productHandle: z.union([z.literal(""), z.string().regex(/^[a-z0-9][a-z0-9-]{0,199}$/)]).optional().default(""),
+    /** Ordered product handles featured in this reel (multi-select). */
+    productHandles: z
+      .array(z.string().regex(/^[a-z0-9][a-z0-9-]{0,199}$/))
+      .max(40)
+      .optional()
+      .default([]),
     linkPath: z
       .union([z.literal(""), z.string().regex(/^\/[a-z0-9][a-z0-9/_-]{0,199}$/, "Use a site path like /collections/all.")])
       .optional()
@@ -143,6 +149,22 @@ export const reelInputSchema = z
 
 export type ReelInput = z.infer<typeof reelInputSchema>;
 
+/** Catalog product card for the shoppable reel modal (authoritative prices from the public catalog). */
+export type ReelShopProduct = {
+  handle: string;
+  title: string;
+  model: string;
+  config: string;
+  priceText: string;
+  pricePaisa: number;
+  compareAtText: string | null;
+  imageUrl: string | null;
+  available: boolean;
+  variantId: string;
+  maxPerOrder: number;
+  sku: string | null;
+};
+
 export type PublicReel = {
   id: string;
   title: string;
@@ -151,7 +173,12 @@ export type PublicReel = {
   hlsUrl: string | null;
   posterUrl: string | null;
   avatarUrl: string | null;
+  /** @deprecated Prefer `products` / `productHandles` — kept for single-product callers. */
   productHandle: string | null;
+  /** Ordered product handles linked to this reel (many-to-many). */
+  productHandles: string[];
+  /** Resolved shoppable products (SSR). Empty when none are linked or catalog-missing. */
+  products: ReelShopProduct[];
   linkPath: string | null;
   /** Shown only when the creator consented (DB constraint reels_creator_requires_consent). */
   creatorName: string;

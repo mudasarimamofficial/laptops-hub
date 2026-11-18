@@ -195,7 +195,10 @@ test.describe.serial("P1: truthful social proof (isolated)", () => {
       { ...base, title: `QA social reel B ${RUN}`, sort_order: -499, creator_name: "", creator_consent: false, tag: "" },
     ]);
     expect(ins.error).toBeNull();
-    await putSettings(page, { ...DEFAULT_SOCIAL_PROOF, reels: { heading: `Generation QA ${RUN}`, autoplayMuted: true } });
+    await putSettings(page, {
+      ...DEFAULT_SOCIAL_PROOF,
+      reels: { heading: `Generation QA ${RUN}`, subtitle: DEFAULT_SOCIAL_PROOF.reels.subtitle, autoplayMuted: true },
+    });
     // Reel caches expire on admin reel changes; poke one through the API so the direct inserts become visible.
     const { data: rowA } = await sb.from("reels").select("id, title, caption, video_url, rights_status, rights_note, sort_order, status").like("title", "QA social reel A %").single();
     await page.request.put(`/api/admin/reels/${rowA!.id}`, {

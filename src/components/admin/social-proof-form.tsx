@@ -153,11 +153,16 @@ export function SocialProofForm({ initial }: { initial: SocialProofSettings }) {
           <input className={input} value={v.reels.heading} maxLength={80} onChange={(e) => setR("heading", e.target.value)} />
           {fieldErr("reels.heading")}
         </label>
-        <label className="flex items-start gap-2">
+        <label className="mt-3 block">
+          Subtitle
+          <input className={input} value={v.reels.subtitle} maxLength={160} onChange={(e) => setR("subtitle", e.target.value)} />
+          {fieldErr("reels.subtitle")}
+        </label>
+        <label className="mt-3 flex items-start gap-2">
           <input type="checkbox" className="mt-1" checked={v.reels.autoplayMuted} onChange={(e) => setR("autoplayMuted", e.target.checked)} />
           <span>
-            Play the visible reel automatically, without sound (one at a time). Shoppers who prefer reduced motion or save data always get a
-            play button instead, and some browsers block autoplay.
+            Autoplay every currently visible reel muted and looping (full duration). Off-screen cards pause. Reduced-motion and data-saver
+            shoppers skip autoplay; browsers may still block it. Tap a card to open the shoppable video popup.
           </span>
         </label>
       </fieldset>

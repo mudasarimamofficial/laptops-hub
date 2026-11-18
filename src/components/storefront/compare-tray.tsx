@@ -95,7 +95,8 @@ export function CompareTray() {
       <button
         type="button"
         onClick={clear}
-        className="h-[42px] whitespace-nowrap rounded-full px-3 text-[13px] font-semibold text-white/80 hover:text-white"
+        data-testid="compare-clear-all"
+        className="h-[42px] whitespace-nowrap rounded-full border border-white/55 bg-white/15 px-3.5 text-[13px] font-semibold text-white shadow-[inset_0_0_0_1px_rgba(255,255,255,.12)] hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--lh-electric)]"
       >
         Clear all
       </button>

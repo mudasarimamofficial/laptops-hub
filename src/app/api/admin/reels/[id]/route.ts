@@ -3,7 +3,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { REEL_STAFF_ROLES } from "@/lib/content/admin-roles";
-import { reelRowFromInput } from "../shared";
+import { reelRowFromInput, replaceReelProducts } from "../shared";
 
 type Ctx = { params: Promise<{ id: string }> };
 const uuid = z.string().uuid();
@@ -25,13 +25,17 @@ export async function PUT(request: Request, { params }: Ctx) {
     if (!built.ok) return NextResponse.json(built.body, { status: built.status });
     const { error } = await supabase.from("reels").update(built.row).eq("id", id);
     if (error) return NextResponse.json({ error: "save_failed", message: "Could not save the reel." }, { status: 500 });
+    const linked = await replaceReelProducts(supabase, id, built.productIds);
+    if (linked.error) {
+      return NextResponse.json({ error: "save_failed", message: "Reel saved but product links failed. Try again." }, { status: 500 });
+    }
     await supabase.from("audit_logs").insert({
       actor_user_id: staff.userId,
       action: "reel.update",
       entity_type: "reels",
       entity_id: id,
       before,
-      after: { title: built.row.title, status: built.row.status, rights_status: built.row.rights_status },
+      after: { title: built.row.title, status: built.row.status, rights_status: built.row.rights_status, product_count: built.productIds.length },
     });
     refresh();
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });

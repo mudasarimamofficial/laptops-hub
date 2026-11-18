@@ -20,7 +20,7 @@ export default async function AdminReelsPage() {
   const { data } = await sb
     .from("reels")
     .select(
-      "id, title, caption, video_url, hls_url, poster_url, avatar_url, media_source, link_path, source_attribution, rights_status, rights_note, status, sort_order, creator_name, creator_consent, tag, preset_key, products(handle)",
+      "id, title, caption, video_url, hls_url, poster_url, avatar_url, media_source, link_path, source_attribution, rights_status, rights_note, status, sort_order, creator_name, creator_consent, tag, preset_key, products(handle), reel_products(sort_order, products(handle))",
     )
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false })
@@ -30,21 +30,37 @@ export default async function AdminReelsPage() {
   const pendingRights = rows.filter((r) => r.rights_status === "pending").length;
   const drafts = rows.filter((r) => r.status === "draft").length;
 
+  function handlesFor(r: (typeof rows)[number]): string[] {
+    const linked = ((r.reel_products as { sort_order: number; products: { handle?: string } | null }[] | null) || [])
+      .slice()
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((x) => x.products?.handle)
+      .filter((h): h is string => Boolean(h));
+    if (linked.length) return linked;
+    const legacy = (r.products as { handle?: string } | null)?.handle;
+    return legacy ? [legacy] : [];
+  }
+
   const previewReels: PublicReel[] = rows
     .filter((r) => r.status !== "archived")
-    .map((r) => ({
-      id: r.id,
-      title: r.title,
-      caption: r.caption,
-      videoUrl: r.video_url,
-      hlsUrl: r.hls_url ?? null,
-      posterUrl: r.poster_url,
-      avatarUrl: r.avatar_url ?? null,
-      productHandle: (r.products as { handle?: string } | null)?.handle ?? null,
-      linkPath: r.link_path ?? null,
-      creatorName: r.creator_consent ? (r.creator_name ?? "") : "",
-      tag: r.tag ?? "",
-    }))
+    .map((r) => {
+      const handles = handlesFor(r);
+      return {
+        id: r.id,
+        title: r.title,
+        caption: r.caption,
+        videoUrl: r.video_url,
+        hlsUrl: r.hls_url ?? null,
+        posterUrl: r.poster_url,
+        avatarUrl: r.avatar_url ?? null,
+        productHandle: handles[0] ?? null,
+        productHandles: handles,
+        products: [],
+        linkPath: r.link_path ?? null,
+        creatorName: r.creator_consent ? (r.creator_name ?? "") : "",
+        tag: r.tag ?? "",
+      };
+    })
     .filter(isRenderableReel);
 
   return (
@@ -105,6 +121,7 @@ export default async function AdminReelsPage() {
       ) : (
         <ul className="mt-6 space-y-3">
           {rows.map((r) => {
+            const handles = handlesFor(r);
             const initial: ReelFormValues = {
               title: r.title,
               caption: r.caption,
@@ -113,7 +130,8 @@ export default async function AdminReelsPage() {
               hlsUrl: r.hls_url || "",
               posterUrl: r.poster_url || "",
               avatarUrl: r.avatar_url || "",
-              productHandle: (r.products as { handle?: string } | null)?.handle || "",
+              productHandle: handles[0] || "",
+              productHandles: handles,
               linkPath: r.link_path || "",
               rightsStatus: r.rights_status as ReelFormValues["rightsStatus"],
               rightsNote: r.rights_note,

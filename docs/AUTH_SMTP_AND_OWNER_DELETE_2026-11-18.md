@@ -14,7 +14,9 @@ Supabase Auth was using the **built-in** mailer (not Resend). Built-in Auth SMTP
 | Port | `465` (SSL) |
 | Username | `resend` |
 | Password | Resend API key (same sending key family as production `RESEND_API_KEY`) |
-| Sender | verified address under `send.laptopshub.pk` (e.g. same as `STORE_FROM_EMAIL`) |
+| Sender | `orders@send.laptopshub.pk` / name `Laptops HUB` |
+
+**Status 2026-11-18 evening:** Custom SMTP toggle was enabled in the Supabase dashboard and non-secret fields were filled (`smtp.resend.com:465`, user `resend`, sender above). Production `RESEND_API_KEY` cannot be decrypted via Vercel MCP/`env pull` (secret vault), so **Save** still needs the operator to paste the production Resend API key once and save. App recovery already bypasses built-in Auth mailer via `generateLink` + Resend REST — production `POST /api/admin/account/recover` returned `ok: true` for the owner mailbox after `#40` shipped.
 
 Keep rate limits enabled; raise Auth email rate modestly after custom SMTP is on (do not disable globally).
 

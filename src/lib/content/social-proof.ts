@@ -51,6 +51,7 @@ export type SocialProofSettings = {
   editorial: { enabled: boolean };
   reels: {
     heading: string;
+    subtitle: string;
     /** Start muted playback when a reel scrolls into view (browser policy and reduced-motion/data-saver still apply). */
     autoplayMuted: boolean;
   };
@@ -60,7 +61,11 @@ export const DEFAULT_SOCIAL_PROOF: SocialProofSettings = {
   activity: { enabled: false, minStatus: "confirmed", showCity: false, windowDays: 14, intervalSeconds: 30, displaySeconds: 6, maxPerSession: 3, position: "bottom-left" },
   topSeller: { enabled: false, minStatus: "confirmed", windowDays: 30, minUnits: 3, maxProducts: 8 },
   editorial: { enabled: true },
-  reels: { heading: "Generation Laptops HUB", autoplayMuted: true },
+  reels: {
+    heading: "Laptops in Action",
+    subtitle: "Watch, explore, and find your next laptop.",
+    autoplayMuted: true,
+  },
 };
 
 const int = (min: number, max: number) => z.number().int().min(min).max(max);
@@ -86,6 +91,7 @@ export const socialProofSchema = z.object({
   editorial: z.object({ enabled: z.boolean() }),
   reels: z.object({
     heading: z.string().trim().min(1, "Enter a heading.").max(80),
+    subtitle: z.string().trim().max(160),
     autoplayMuted: z.boolean(),
   }),
 });

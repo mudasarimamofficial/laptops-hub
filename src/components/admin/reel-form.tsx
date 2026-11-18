@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import { AdminMediaPicker } from "@/components/admin/ui/admin-media-picker";
+import { ReelProductPicker } from "@/components/admin/reel-product-picker";
 
 export type ReelFormValues = {
   title: string;
@@ -14,6 +15,7 @@ export type ReelFormValues = {
   posterUrl: string;
   avatarUrl: string;
   productHandle: string;
+  productHandles: string[];
   linkPath: string;
   rightsStatus: "pending" | "owned" | "licensed";
   rightsNote: string;
@@ -35,6 +37,7 @@ export const EMPTY_REEL: ReelFormValues = {
   posterUrl: "",
   avatarUrl: "",
   productHandle: "",
+  productHandles: [],
   linkPath: "",
   rightsStatus: "pending",
   rightsNote: "",
@@ -184,10 +187,10 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
 
       <div className="sm:col-span-2">
         <AdminMediaPicker
-          label="Poster / cover image"
+          label="Poster / cover image (optional)"
           value={v.posterUrl}
           onChange={(url) => set("posterUrl", url)}
-          hint="Upload, pick from library, or paste an HTTPS image URL."
+          hint="Optional. When empty, the live video frame is used on the storefront. Upload, pick from library, or paste an HTTPS image URL."
         />
         {fieldErr("posterUrl")}
       </div>
@@ -205,24 +208,25 @@ export function ReelForm({ id, initial }: { id?: string; initial: ReelFormValues
         {fieldErr("avatarUrl")}
       </label>
 
-      <label className="block">
-        <span className="font-medium">Linked product handle (optional)</span>
-        <input
-          className={input}
-          value={v.productHandle}
-          onChange={(e) => set("productHandle", e.target.value.trim())}
-          placeholder="dell-latitude-7490"
-        />
-        {fieldErr("productHandle")}
-      </label>
-      <label className="block">
-        <span className="font-medium">Or site path (optional)</span>
+      <ReelProductPicker
+        value={v.productHandles}
+        onChange={(handles) => {
+          set("productHandles", handles);
+          set("productHandle", handles[0] || "");
+        }}
+        error={fe.productHandles || fe.productHandle}
+      />
+      <label className="block sm:col-span-2">
+        <span className="font-medium">Fallback browse path (optional)</span>
         <input
           className={input}
           value={v.linkPath}
           onChange={(e) => set("linkPath", e.target.value.trim())}
           placeholder="/collections/all"
         />
+        <span className="mt-1 block text-xs text-[var(--adm-ink-2)]">
+          Used in the shoppable popup when no products are linked.
+        </span>
         {fieldErr("linkPath")}
       </label>
 

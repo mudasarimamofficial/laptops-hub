@@ -22,9 +22,11 @@ export type ReelRow = {
   preset_key: string | null;
 };
 
-type Built = { ok: true; row: ReelRow } | { ok: false; status: number; body: Record<string, unknown> };
+type Built =
+  | { ok: true; row: ReelRow; productIds: string[] }
+  | { ok: false; status: number; body: Record<string, unknown> };
 
-/** Validates staff input and resolves the optional linked product (must exist and not be deleted). */
+/** Validates staff input and resolves linked products (legacy single handle + multi handles). */
 export async function reelRowFromInput(supabase: SupabaseClient, body: unknown): Promise<Built> {
   const parsed = reelInputSchema.safeParse(body);
   if (!parsed.success) {
@@ -36,20 +38,33 @@ export async function reelRowFromInput(supabase: SupabaseClient, body: unknown):
     return { ok: false, status: 400, body: { error: "validation_failed", message: "Check the highlighted fields.", fieldErrors } };
   }
   const v = parsed.data;
-  let productId: string | null = null;
-  if (v.productHandle) {
-    const { data } = await supabase.from("products").select("id").eq("handle", v.productHandle).is("deleted_at", null).maybeSingle();
-    if (!data) {
-      return {
-        ok: false,
-        status: 400,
-        body: { error: "validation_failed", message: "Check the highlighted fields.", fieldErrors: { productHandle: "No product with this handle." } },
-      };
+  const handles = [...v.productHandles];
+  if (v.productHandle && !handles.includes(v.productHandle)) handles.unshift(v.productHandle);
+
+  const productIds: string[] = [];
+  if (handles.length) {
+    const { data } = await supabase.from("products").select("id, handle").in("handle", handles).is("deleted_at", null);
+    const byHandle = new Map((data || []).map((p) => [p.handle, p.id]));
+    for (const h of handles) {
+      const id = byHandle.get(h);
+      if (!id) {
+        return {
+          ok: false,
+          status: 400,
+          body: {
+            error: "validation_failed",
+            message: "Check the highlighted fields.",
+            fieldErrors: { productHandles: `No product with handle “${h}”.` },
+          },
+        };
+      }
+      if (!productIds.includes(id)) productIds.push(id);
     }
-    productId = data.id;
   }
+
   return {
     ok: true,
+    productIds,
     row: {
       title: v.title,
       caption: v.caption,
@@ -58,7 +73,7 @@ export async function reelRowFromInput(supabase: SupabaseClient, body: unknown):
       poster_url: v.posterUrl || null,
       avatar_url: v.avatarUrl || null,
       media_source: v.mediaSource,
-      product_id: productId,
+      product_id: productIds[0] ?? null,
       link_path: v.linkPath || null,
       rights_status: v.rightsStatus,
       rights_note: v.rightsNote,
@@ -71,4 +86,19 @@ export async function reelRowFromInput(supabase: SupabaseClient, body: unknown):
       preset_key: v.presetKey || null,
     },
   };
+}
+
+/** Replace ordered reel_products rows for a reel (service-role client). */
+export async function replaceReelProducts(
+  supabase: SupabaseClient,
+  reelId: string,
+  productIds: string[],
+): Promise<{ error: string | null }> {
+  const { error: delErr } = await supabase.from("reel_products").delete().eq("reel_id", reelId);
+  if (delErr) return { error: delErr.message };
+  if (!productIds.length) return { error: null };
+  const { error: insErr } = await supabase.from("reel_products").insert(
+    productIds.map((product_id, sort_order) => ({ reel_id: reelId, product_id, sort_order })),
+  );
+  return { error: insErr?.message ?? null };
 }

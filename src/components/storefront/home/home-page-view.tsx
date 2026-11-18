@@ -216,7 +216,12 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
   });
   const newGen = P.filter((p) => (p.gen ?? 0) >= 10);
   const reelsBlock = reels.length ? (
-    <ReelsSection reels={reels} heading={social.reels.heading} autoplayMuted={social.reels.autoplayMuted} />
+    <ReelsSection
+      reels={reels}
+      heading={social.reels.heading}
+      subtitle={social.reels.subtitle}
+      autoplayMuted={social.reels.autoplayMuted}
+    />
   ) : (
     <section
       aria-labelledby="reels-placeholder-title"

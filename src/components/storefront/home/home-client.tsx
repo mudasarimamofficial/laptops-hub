@@ -103,7 +103,9 @@ export function ChromebookSection({ cb, pres = DEFAULT_STOREFRONT_PRESENTATION }
             <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".12em", color: "var(--lh-action)" }}>PRICE</span>
             <span style={{ fontSize: 13, fontWeight: 600, color: "var(--lh-ink)" }}>{cb.p.priceText}</span>
           </div>
-          <span style={{ position: "absolute", left: "50%", bottom: "2%", transform: "translateX(-50%)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".14em", color: "var(--lh-ink-2)", whiteSpace: "nowrap" }}>{cb.countText}</span>
+          {pres.showCatalogCounts && cb.countText ? (
+            <span style={{ position: "absolute", left: "50%", bottom: "2%", transform: "translateX(-50%)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".14em", color: "var(--lh-ink-2)", whiteSpace: "nowrap" }}>{cb.countText}</span>
+          ) : null}
         </div>
       </div>
       <InquiryDialog open={asking} onClose={() => setAsking(false)} productTitle="Chromebooks: tell us the model, budget or specs you need" productHandle="chromebooks" />

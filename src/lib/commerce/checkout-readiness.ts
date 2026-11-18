@@ -149,7 +149,7 @@ export function evaluateCheckoutReadiness(input: ReadinessInput): Readiness {
       input.activeOwnersOrAdmins > 0
         ? `${input.activeOwnersOrAdmins} active owner/admin account(s).`
         : "No active owner/admin can confirm or fulfil orders.",
-    fixHref: "/admin/settings#staff",
+    fixHref: "/admin/staff",
     owner: "owner-approval",
   });
 

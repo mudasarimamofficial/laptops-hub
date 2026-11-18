@@ -7,6 +7,7 @@ import {
   TESTIMONIAL_APPROVE_ROLES,
   TESTIMONIAL_EDIT_ROLES,
   canTransition,
+  publishBlockers,
   testimonialInputSchema,
   testimonialStatusSchema,
   toRow,
@@ -42,11 +43,20 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         { status: 403 },
       );
     }
-    if (before.status === "published" && !parsed.data.consentConfirmed) {
-      return NextResponse.json(
-        { error: "validation_failed", issues: [{ path: "consentConfirmed", message: "A published entry needs recorded consent. Hide it first to remove consent." }] },
-        { status: 400 },
-      );
+    if (before.status === "published") {
+      const block = publishBlockers({
+        source: parsed.data.source,
+        source_url: parsed.data.sourceUrl || null,
+        consent_confirmed: parsed.data.consentConfirmed,
+        avatar_url: parsed.data.avatarUrl || null,
+        avatar_permission: parsed.data.avatarPermission,
+      });
+      if (block) {
+        return NextResponse.json(
+          { error: "validation_failed", message: block },
+          { status: 400 },
+        );
+      }
     }
     const row = { ...toRow(parsed.data), updated_by: staff.userId };
     const { error } = await supabase.from("store_testimonials").update(row).eq("id", id);
@@ -80,7 +90,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (!parsed.success) return NextResponse.json({ error: "validation_failed" }, { status: 400 });
     const { data: before } = await supabase
       .from("store_testimonials")
-      .select("status, consent_confirmed")
+      .select("status, consent_confirmed, source, source_url, avatar_url, avatar_permission")
       .eq("id", id)
       .maybeSingle();
     if (!before) return NextResponse.json({ error: "not_found" }, { status: 404 });
@@ -91,11 +101,17 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         { status: 403 },
       );
     }
-    if (to === "published" && !before.consent_confirmed) {
-      return NextResponse.json(
-        { error: "consent_required", message: "Record the customer's consent (edit the entry) before publishing." },
-        { status: 400 },
-      );
+    if (to === "published") {
+      const block = publishBlockers({
+        source: before.source as "google" | "website" | "merchant",
+        source_url: before.source_url,
+        consent_confirmed: before.consent_confirmed,
+        avatar_url: before.avatar_url,
+        avatar_permission: before.avatar_permission,
+      });
+      if (block) {
+        return NextResponse.json({ error: "consent_required", message: block }, { status: 400 });
+      }
     }
     const patch: Record<string, unknown> = { status: to, updated_by: staff.userId };
     if (to === "published" && before.status !== "published") {

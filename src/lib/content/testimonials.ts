@@ -24,7 +24,7 @@ export const SOURCE_LABEL: Record<TestimonialSource, string> = {
   merchant: "Customer testimonial",
 };
 export const SOURCE_ADMIN_LABEL: Record<TestimonialSource, string> = {
-  google: "Google review (link required)",
+  google: "Google review (Maps link required to publish)",
   website: "Website review (sent to us directly)",
   merchant: "Testimonial given to the store",
 };
@@ -69,8 +69,9 @@ export const testimonialInputSchema = z
     sortOrder: z.number().int().min(-100000).max(100000).default(0),
   })
   .superRefine((v, ctx) => {
-    if (v.source === "google" && !GOOGLE_REVIEW_URL_RE.test(v.sourceUrl)) {
-      ctx.addIssue({ code: "custom", path: ["sourceUrl"], message: "A Google review needs the link to it on Google Maps." });
+    // Google Maps URL is required to *publish*, not to save a draft candidate (bulk import / pending verification).
+    if (v.source === "google" && v.sourceUrl && !GOOGLE_REVIEW_URL_RE.test(v.sourceUrl)) {
+      ctx.addIssue({ code: "custom", path: ["sourceUrl"], message: "Use a Google Maps (or g.page / maps.app.goo.gl) review link." });
     }
     if (v.avatarUrl && !v.avatarPermission) {
       ctx.addIssue({ code: "custom", path: ["avatarPermission"], message: "Confirm you may show this photo, or remove it." });
@@ -81,7 +82,47 @@ export const testimonialInputSchema = z
   });
 export type TestimonialInput = z.infer<typeof testimonialInputSchema>;
 
+/** Extra gates before status → published (drafts may omit Google URL / consent while being verified). */
+export function publishBlockers(row: {
+  source: TestimonialSource;
+  source_url: string | null;
+  consent_confirmed: boolean;
+  avatar_url: string | null;
+  avatar_permission: boolean;
+}): string | null {
+  if (!row.consent_confirmed) {
+    return "Record the customer's consent (edit the entry) before publishing.";
+  }
+  if (row.source === "google" && !GOOGLE_REVIEW_URL_RE.test(row.source_url || "")) {
+    return "A Google review needs the link to it on Google Maps before publishing.";
+  }
+  if (row.avatar_url && !row.avatar_permission) {
+    return "Confirm you may show this photo, or remove it, before publishing.";
+  }
+  return null;
+}
+
 export const testimonialStatusSchema = z.object({ status: z.enum(TESTIMONIAL_STATUSES) });
+
+/** Bulk draft import candidate (from a verified extraction JSON). Avatars are omitted until permission is recorded. */
+export const testimonialImportItemSchema = z.object({
+  authorName: z.string().trim().min(2).max(80),
+  rating: z.union([z.null(), z.number().int().min(1).max(5)]).default(null),
+  body: z.string().trim().min(10).max(2000),
+  reviewDate: z
+    .union([z.literal(""), z.string().regex(/^\d{4}-\d{2}-\d{2}$/)])
+    .optional()
+    .default(""),
+  source: z.literal("google").default("google"),
+  sourceUrl: optionalHttps,
+  verificationNote: z.string().trim().max(1000).optional().default(""),
+  showOnHomepage: z.boolean().default(true),
+  featured: z.boolean().default(false),
+  sortOrder: z.number().int().min(-100000).max(100000).default(0),
+});
+export const testimonialImportSchema = z.object({
+  candidates: z.array(testimonialImportItemSchema).min(1).max(100),
+});
 
 /** Whether a role may move an entry from `from` to `to`. Editors may only draft and submit. */
 export function canTransition(role: StaffRole, from: TestimonialStatus, to: TestimonialStatus): boolean {

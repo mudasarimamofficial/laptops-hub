@@ -22,7 +22,7 @@ import { contentVisibility } from "@/lib/content/pages";
 import { getStorefrontPresentation } from "@/lib/content/storefront-presentation-server";
 import { getPublishedReels } from "@/lib/content/reels-server";
 import { ReelsSection } from "@/components/storefront/home/reels-section";
-import { getSocialProofSettings } from "@/lib/content/social-proof-server";
+import { getMerchBadges, getSocialProofSettings } from "@/lib/content/social-proof-server";
 import { cpuFmt, fmtPkr, getV5Catalog, ord, stoFmt, v5Card, v5Link, type V5Product } from "@/lib/catalog/v5";
 import { normalizeHomepageLayout, sectionNumbers } from "@/lib/content/homepage-layout";
 import type { SectionInstance, SectionType } from "@/lib/content/site-builder-schema";
@@ -83,12 +83,13 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
     );
   }
 
-  const [pres, reels, social, testimonials, vis] = await Promise.all([
+  const [pres, reels, social, testimonials, vis, merchBadges] = await Promise.all([
     getStorefrontPresentation(),
     getPublishedReels(),
     getSocialProofSettings(),
     getPublishedTestimonials(),
     contentVisibility(),
+    getMerchBadges(),
   ]);
 
   // Without a theme layout every setting stays at the approved V5 defaults (exactly the original composition).
@@ -265,9 +266,27 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
     ),
     v5_chromebook: () => <ChromebookSection cb={cb} pres={presFor("v5_chromebook")} />,
     v5_brand_grid: () => <BrandSection tiles={brandTiles} pres={presFor("v5_brand_grid")} />,
-    v5_featured_products: () => (
-      <FeaturedSection cards={stock.slice(0, 8).map(v5Card)} laptopCount={lapN} brandTotal={brandN} accCount={accN} pres={presFor("v5_featured_products")} />
-    ),
+    v5_featured_products: () => {
+      // Prefer staff-assigned Featured badges; fill remaining slots from available catalog stock.
+      const featuredHandles = new Set(
+        Object.entries(merchBadges)
+          .filter(([, b]) => b.kind === "featured")
+          .map(([h]) => h),
+      );
+      const featuredFirst = [
+        ...stock.filter((p) => featuredHandles.has(p.h)),
+        ...stock.filter((p) => !featuredHandles.has(p.h)),
+      ].slice(0, 8);
+      return (
+        <FeaturedSection
+          cards={featuredFirst.map(v5Card)}
+          laptopCount={lapN}
+          brandTotal={brandN}
+          accCount={accN}
+          pres={presFor("v5_featured_products")}
+        />
+      );
+    },
     v5_promo: () => <PromoSection promo={promo} pres={presFor("v5_promo")} />,
     v5_spec_filters: () => <SpecSection links={quickLinks} pres={presFor("v5_spec_filters")} />,
     v5_new_gen: () => (

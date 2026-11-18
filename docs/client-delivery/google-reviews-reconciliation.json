@@ -1,0 +1,1160 @@
+{
+  "extractedAt": "2026-11-18",
+  "sourceFile": "laptops-hub-google-reviews.source.html",
+  "count": 37,
+  "summaryInSource": {
+    "rating": 4.9,
+    "reviewCount": 157,
+    "displayableUntilOwnerConfirms": true
+  },
+  "publishPolicy": "All candidates remain draft. Owner must verify each against Google Maps, attach sourceUrl, confirm consent/avatar, then publish via Admin → Reviews → Testimonials.",
+  "candidates": [
+    {
+      "id": "src-01",
+      "authorName": "Haris Copywriter",
+      "rating": 5,
+      "reviewDate": "2026-11-14",
+      "body": "Great Experience with Laptops Hub... The didn't rush to sell but made me feel comfortable and showed all possible options in my budget with 7 days check warranty and 1 year of free service for charger battery Windows etc.",
+      "avatarPhotoId": "a-/ALV-UjVlhHVyX44jqInDWDxy9tfUYNFpCtt5GE-1py1S5w6qFHotmslh",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjVlhHVyX44jqInDWDxy9tfUYNFpCtt5GE-1py1S5w6qFHotmslh=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 1,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-02",
+      "authorName": "Asfahan Rajpoot",
+      "rating": 5,
+      "reviewDate": "2026-10-14",
+      "body": "I recently bought a laptop from Laptops Hub and had a great experience. The laptop was available at a very reasonable price, and the service was excellent. The staff was professional, cooperative, and helpful throughout the process. Highly recommended for anyone looking for a good laptop at a reasonable price!",
+      "avatarPhotoId": "a-/ALV-UjX5Mez_gc8AT15kUkUWTeHcJUwrvFa3zv-ZF4t0Xbsu1axpp0EL",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjX5Mez_gc8AT15kUkUWTeHcJUwrvFa3zv-ZF4t0Xbsu1axpp0EL=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 2,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-03",
+      "authorName": "Muhammad Arslan Rehmani",
+      "rating": 5,
+      "reviewDate": "2026-10-14",
+      "body": "Laptop Hub a one stop laptop shop where you get high quality laptops Which performs your daily tasks very well. The price is very well for all type of machines. 💯 Recommended 👍🥰🥰🥰 …",
+      "avatarPhotoId": "a-/ALV-UjWmikigJpMAxPo--C9p_ujL5AePRDwHw_U9s-XA5bHpCoIH1NaNUA",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjWmikigJpMAxPo--C9p_ujL5AePRDwHw_U9s-XA5bHpCoIH1NaNUA=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 3,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-04",
+      "authorName": "Abdul Wasay",
+      "rating": 5,
+      "reviewDate": "2026-07-14",
+      "body": "I’ve been buying laptops from this shop for the past 3 years and have purchased more than 15 laptops so far — for myself as well as for my friends and family. …",
+      "avatarPhotoId": "a/ACg8ocK6nYNzhi3TJJw88WJ2VepBwBMiLkCW7Bbxf97OCqwrW186fQ",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocK6nYNzhi3TJJw88WJ2VepBwBMiLkCW7Bbxf97OCqwrW186fQ=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 4,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-05",
+      "authorName": "Saim Bhatti",
+      "rating": 5,
+      "reviewDate": "2026-07-14",
+      "body": "Excellent service by Laptop Hub! Visited the shop and had a great experience. The staff was cooperative, and the laptop was exactly as described. Highly recommended. Thank you, Laptop Hub!",
+      "avatarPhotoId": "a-/ALV-UjWvIrXuXon3LMi_PlGDI9DCLLMxXvyPwakFOU-m3rTKcbC8CS0",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjWvIrXuXon3LMi_PlGDI9DCLLMxXvyPwakFOU-m3rTKcbC8CS0=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 5,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-06",
+      "authorName": "Abid Bhatti",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Laptop Hub offers reliable repair services. The staff is professional, the work is done on time, and their customer dealing is friendly.",
+      "avatarPhotoId": "a-/ALV-UjXTa-KZ_J0H0BZhVN7yHXs88OVm3OOm1J6XnyveLIHX_flI2xQZ",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjXTa-KZ_J0H0BZhVN7yHXs88OVm3OOm1J6XnyveLIHX_flI2xQZ=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 6,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-07",
+      "authorName": "Mohammed",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "I ordered 7490 online from them and i receive it in only 2 days and i am totally shock after seeing the receipt because it is too much affordable as compare to market price ❤️‍🩹❤️‍🩹 …",
+      "avatarPhotoId": "a/ACg8ocJbyf0EdPfUGqoV4Ld4RdZZ08eUAMBgUqB4I-tnMWy5g_93XA",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocJbyf0EdPfUGqoV4Ld4RdZZ08eUAMBgUqB4I-tnMWy5g_93XA=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 7,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-08",
+      "authorName": "Alla Deen",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Laptop hub have great dealing sense, and gave us great machine of lenovo thinkpad on ordinary price. Thank you so much, high recommended, especially for imported laptop.",
+      "avatarPhotoId": "a-/ALV-UjX-mvgcPfvOEg9sqGOW8IJwNt7jYdYwu2kTaQ_40kBSWxKsnoAZ",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjX-mvgcPfvOEg9sqGOW8IJwNt7jYdYwu2kTaQ_40kBSWxKsnoAZ=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 8,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-09",
+      "authorName": "Faizan Mustafa",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Good experience at Laptop Hub. Staff was helpful, prices were reasonable, and they have a nice variety of laptops. Worth visiting if you’re planning to buy one❣️.",
+      "avatarPhotoId": "a-/ALV-UjVHJr87yybFTh2Bupuqj0d6qyaHiNKGrDVmghcfZhf2They54NAiw",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjVHJr87yybFTh2Bupuqj0d6qyaHiNKGrDVmghcfZhf2They54NAiw=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 9,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-10",
+      "authorName": "Muhammad Ahmad",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Best Experience\nGreat laptop shop with helpful staff, good prices, and a nice variety of options. Highly recommended!",
+      "avatarPhotoId": "a-/ALV-UjWpHFM_OPoygHvitC75tvelY-bOwp88hzW5e7FgQ10TvWuK3-I",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjWpHFM_OPoygHvitC75tvelY-bOwp88hzW5e7FgQ10TvWuK3-I=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 10,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-11",
+      "authorName": "Sufyan Anwar",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "\"I bought this laptop from this shop and had a great experience. The service was excellent, the shop staff were helpful, and the product was exactly as described.\"❤️✨",
+      "avatarPhotoId": "a-/ALV-UjVF-CkAmnus5GSpXxajaDdZr_77SWdZd2TIm2pYn6g-FK56x7egYw",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjVF-CkAmnus5GSpXxajaDdZr_77SWdZd2TIm2pYn6g-FK56x7egYw=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 11,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-12",
+      "authorName": "Rehan Afzal",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Very cooperative staff. They guide you properly and help you choose the best option according to your needs",
+      "avatarPhotoId": "a/ACg8ocIG6W4Q6Nnv9mhbi3-vV3bw_J5EoKI6bUghxb6igYo8YXqvVA",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocIG6W4Q6Nnv9mhbi3-vV3bw_J5EoKI6bUghxb6igYo8YXqvVA=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 12,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-13",
+      "authorName": "Rehan Cheema",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Great experience with Laptop Hub BWP. The staff is very helpful and prices are reasonable. Highly recommended!",
+      "avatarPhotoId": "a-/ALV-UjX-czMDJkQYJVY4M3FVz73YxIP_ukJ5CarXlZkVu_zoi86J4EY",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjX-czMDJkQYJVY4M3FVz73YxIP_ukJ5CarXlZkVu_zoi86J4EY=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 13,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-14",
+      "authorName": "Noman Ali",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Authentic products and professional service. Really satisfied with my purchase. Definitely a trusted shop.",
+      "avatarPhotoId": "a/ACg8ocKbzdEkoBhQnEFBRAAKsCnzVNIxos5wWv5Jb9pjUC9ILMFbAs2c",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocKbzdEkoBhQnEFBRAAKsCnzVNIxos5wWv5Jb9pjUC9ILMFbAs2c=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 14,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-15",
+      "authorName": "Khalid Mehmood Awan",
+      "rating": 5,
+      "reviewDate": "2024-11-14",
+      "body": "Best place for buying a laptop. The admins are very cooperative they tell all the features about the laptop. They have many kinds of laptops. I have also bought an hp 640 G3 7 generation 8ram and 256 SSD at an affordable price.",
+      "avatarPhotoId": "a-/ALV-UjWx7HWpsYqXTPNLdV2Hz6AjitClZrks_gUEoyMUHXkKhWaEf_dD",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjWx7HWpsYqXTPNLdV2Hz6AjitClZrks_gUEoyMUHXkKhWaEf_dD=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 15,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-16",
+      "authorName": "Muhammad Asad",
+      "rating": 5,
+      "reviewDate": "2022-11-14",
+      "body": "Best experience I brought Dell 3340 with touch panel at the lowest price in bahawalpur. And using it since Jan 2022.\nI love to see your name on Google recommendations too.\nThanks Laptops Hub.",
+      "avatarPhotoId": "a/ACg8ocLyaDr8-gy6qk3FmaLmeuQyimyDbc81QxtiScon6Djm0qjpyA",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocLyaDr8-gy6qk3FmaLmeuQyimyDbc81QxtiScon6Djm0qjpyA=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 16,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-17",
+      "authorName": "Zeeshan Ahmad",
+      "rating": 5,
+      "reviewDate": "2024-11-14",
+      "body": "Excellent and highly recommended for best and top quality laptops. I bought this machine from laptop hub and it was great shopping experience with them.",
+      "avatarPhotoId": "a-/ALV-UjVBsjZhbHLdW9zG9kRcvVbK4y4go1X2C4Bn-ks68g547LDsBShu",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjVBsjZhbHLdW9zG9kRcvVbK4y4go1X2C4Bn-ks68g547LDsBShu=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 17,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-18",
+      "authorName": "Muhammad Shazil Noor",
+      "rating": 5,
+      "reviewDate": "2023-11-14",
+      "body": "Highly recommended\nHigh Quailty laptop, good customer support and delivery service are well managed. Great experience with you.",
+      "avatarPhotoId": "a-/ALV-UjWQQVTMjAgWblsF7prZEtBoqwDMs6zphe9NptE_gsZuHRcShiwy",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjWQQVTMjAgWblsF7prZEtBoqwDMs6zphe9NptE_gsZuHRcShiwy=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 18,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-19",
+      "authorName": "Fiza Ch",
+      "rating": 5,
+      "reviewDate": "2022-11-14",
+      "body": "Great experience.\nWell mannered and honest seller.\nBest shop for laptop ever.",
+      "avatarPhotoId": "a-/ALV-UjWcWqrHmzWw7tjxAggkAVQBLpQZ6KH8PIzc-l3eR9uzlvMTyg4",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjWcWqrHmzWw7tjxAggkAVQBLpQZ6KH8PIzc-l3eR9uzlvMTyg4=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 19,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-20",
+      "authorName": "A.R.K.",
+      "rating": 5,
+      "reviewDate": "2026-10-24",
+      "body": "It was truly good. The prices were cheaper than other shops",
+      "avatarPhotoId": "a-/ALV-UjVjFZgvBjiyJpG7fHEKdTV7bNXuadHjf_ATqD92sc8uMmgYp0s",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjVjFZgvBjiyJpG7fHEKdTV7bNXuadHjf_ATqD92sc8uMmgYp0s=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 20,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-21",
+      "authorName": "Kinza Shehzadi",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "First of all owner is very nice person and i am totally confident for saying this they sell Quality ♥️",
+      "avatarPhotoId": "a/ACg8ocLNtqbjoygo3JrS6Cj0m3Nm1KkEkpLkxHWxOAIJPiVkb2KrhA",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocLNtqbjoygo3JrS6Cj0m3Nm1KkEkpLkxHWxOAIJPiVkb2KrhA=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 21,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-22",
+      "authorName": "khurshid khan",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Most good shop provide different brands like HP, Dell, Lenovo, and Apple\nStaff usually help customers choose laptops according to their needs (study, gaming, office work). …",
+      "avatarPhotoId": "a-/ALV-UjXKq1dqHp_gId6M4Nv5a1DWSskYy8ja1eJXqCXSKvAOzdzktDzfXg",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjXKq1dqHp_gId6M4Nv5a1DWSskYy8ja1eJXqCXSKvAOzdzktDzfXg=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 22,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-23",
+      "authorName": "Pet Care Clinic Bahawalpur",
+      "rating": 5,
+      "reviewDate": "2026-07-14",
+      "body": "Good experience\nCheap prices also dealing is good\nThey will suggest you thing according to your demand",
+      "avatarPhotoId": "a-/ALV-UjXzK7Ryff-aFxG9JVzK98USyK35FYZqYSpng8XXBhLlWOfPuuG-",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjXzK7Ryff-aFxG9JVzK98USyK35FYZqYSpng8XXBhLlWOfPuuG-=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 23,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-24",
+      "authorName": "Ali Raza",
+      "rating": 5,
+      "reviewDate": "2026-09-14",
+      "body": "The laptop is great! Smooth performance and excellent quality. Highly recommended! 💻✨ …",
+      "avatarPhotoId": "a-/ALV-UjUjF5p1Tzven49X7NxOnblGyb7IKnI5fQN9yrGq4_lyzhEujnrb",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjUjF5p1Tzven49X7NxOnblGyb7IKnI5fQN9yrGq4_lyzhEujnrb=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 24,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-25",
+      "authorName": "Aamir Jamshaid",
+      "rating": 5,
+      "reviewDate": "2026-09-14",
+      "body": "⭐⭐⭐⭐⭐ Excellent experience! Service bohat achi thi, staff cooperative tha aur overall experience really satisfying raha. Quality bhi impressive thi aur jo expectations thin un se bhi better mila. Highly recommended! 👍 …",
+      "avatarPhotoId": "a-/ALV-UjVCCZ7e0vZuUf3HiNFTxSiU1IEkk7PWkltt1NfZaOxl8luGoBs",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjVCCZ7e0vZuUf3HiNFTxSiU1IEkk7PWkltt1NfZaOxl8luGoBs=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 25,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-26",
+      "authorName": "Muhammad Haseeb",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Your one-stop shop for laptops and premium accessories at the best prices.Quality laptops and reliable accessories, all under one roof",
+      "avatarPhotoId": "a-/ALV-UjVYabeJAT3UQRtZgZcQZe7tjOt3Z2bdKdzorBd1dqocTiCiV4aw",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjVYabeJAT3UQRtZgZcQZe7tjOt3Z2bdKdzorBd1dqocTiCiV4aw=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 26,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-27",
+      "authorName": "Emraan Asad",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Ahmad Sulaiman is humble person, who guide like a Big bro,thanks for the machine.",
+      "avatarPhotoId": "a-/ALV-UjXTAbyTx9IUQFeE7o0VLkAwa32WDVOr_BFVGagSXcriM4k-3S_F",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjXTAbyTx9IUQFeE7o0VLkAwa32WDVOr_BFVGagSXcriM4k-3S_F=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 27,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-28",
+      "authorName": "Shaheer Abdullah",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "MacBook are really good and the staff is awesome very helpful",
+      "avatarPhotoId": "a-/ALV-UjUaudW5KOdx2yhA5kZMDo6Z5g3zvW0wtzLIpDy9GFtMOLisOmi4_Q",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjUaudW5KOdx2yhA5kZMDo6Z5g3zvW0wtzLIpDy9GFtMOLisOmi4_Q=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 28,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-29",
+      "authorName": "Adeel Ahmed",
+      "rating": 5,
+      "reviewDate": "2023-11-14",
+      "body": "The guys from Laptops Hub gave me a dope laptop, and that too at a reasonable price. The quality is next level, boss. Come here and buy the laptop without any tension. Thanks to me later.",
+      "avatarPhotoId": "a-/ALV-UjXcrJWMDtOrTGntgHWpe02kOS1AeBnCNXXDmwMUYNloVZtzMlMj",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjXcrJWMDtOrTGntgHWpe02kOS1AeBnCNXXDmwMUYNloVZtzMlMj=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 29,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-30",
+      "authorName": "Abdul Rehman",
+      "rating": 5,
+      "reviewDate": "2023-11-14",
+      "body": "The customer service you get at Laptops Hub is unmatched anywhere else. I heartily recommend it!",
+      "avatarPhotoId": "a-/ALV-UjVz-XmDMlmaiO0tQmnJSxJcafnLnnmpWzwALVP7GU-JnIndc8Sq",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjVz-XmDMlmaiO0tQmnJSxJcafnLnnmpWzwALVP7GU-JnIndc8Sq=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 30,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-31",
+      "authorName": "Asifa Kalwar",
+      "rating": 5,
+      "reviewDate": "2023-11-14",
+      "body": "One of the best experiences I had. It was a very good experience. The variety of laptops is huge!",
+      "avatarPhotoId": "a/ACg8ocJPnbRGTTicWx_8SnfmdDpbrm7DERE_CX-uRYabrCoBZgp8YQ",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocJPnbRGTTicWx_8SnfmdDpbrm7DERE_CX-uRYabrCoBZgp8YQ=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 31,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-32",
+      "authorName": "Habiba Ahmad",
+      "rating": 5,
+      "reviewDate": "2022-11-14",
+      "body": "Best service provider .. honest and well mannered sellers...",
+      "avatarPhotoId": "a-/ALV-UjVbfhtDncLB1T1IundM5U4VOldsHj92EVSbAYFzWSeM_IHQK54",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjVbfhtDncLB1T1IundM5U4VOldsHj92EVSbAYFzWSeM_IHQK54=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 32,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-33",
+      "authorName": "Nomi Chaudhary",
+      "rating": 5,
+      "reviewDate": "2023-11-14",
+      "body": "Best laptops wholesaler in bahawalpur...",
+      "avatarPhotoId": "a/ACg8ocLjnBBMgPwZuExE35MYCprxA9O7PXpzoQa2OFQhkDMFpMFpTw",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocLjnBBMgPwZuExE35MYCprxA9O7PXpzoQa2OFQhkDMFpMFpTw=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 33,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-34",
+      "authorName": "Syed Shah",
+      "rating": 5,
+      "reviewDate": "2026-10-14",
+      "body": "Humble behavior, Excellent products and very nice environment",
+      "avatarPhotoId": "a/ACg8ocLtt7NcEdiQ-5_K83IglMj6hNkKdaWZJxDHDlSgTtEMlTckhw",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocLtt7NcEdiQ-5_K83IglMj6hNkKdaWZJxDHDlSgTtEMlTckhw=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 34,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-35",
+      "authorName": "Hamza Amjad",
+      "rating": 5,
+      "reviewDate": "2026-07-14",
+      "body": "Good experience best rate overall as compared to market.",
+      "avatarPhotoId": "a/ACg8ocI5W6yek1k1ny5h9lLgvUfEiDcBawdae_BtOIfXw8jGRFrkvw",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocI5W6yek1k1ny5h9lLgvUfEiDcBawdae_BtOIfXw8jGRFrkvw=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 35,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-36",
+      "authorName": "Saad Ali",
+      "rating": 5,
+      "reviewDate": "2026-05-14",
+      "body": "Very good service and reasonable prices must visit",
+      "avatarPhotoId": "a-/ALV-UjV8aTN7mUNewBmWpg9pKewP4NjTn5f1fm-5cdfKBbbPxwH_v-1D",
+      "avatarUrl": "https://lh3.googleusercontent.com/a-/ALV-UjV8aTN7mUNewBmWpg9pKewP4NjTn5f1fm-5cdfKBbbPxwH_v-1D=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 36,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    },
+    {
+      "id": "src-37",
+      "authorName": "Zubair DMCA",
+      "rating": 5,
+      "reviewDate": "2026-10-14",
+      "body": "Excellent Service; highly recommended 5* rating.",
+      "avatarPhotoId": "a/ACg8ocLBd0bJ-p8r-PgVrDfzHeBZQ3rXFDZc9tzAnM8bfqUB6Vp7Og",
+      "avatarUrl": "https://lh3.googleusercontent.com/a/ACg8ocLBd0bJ-p8r-PgVrDfzHeBZQ3rXFDZc9tzAnM8bfqUB6Vp7Og=w80-h80-p-rp-mo-br100",
+      "source": "google",
+      "sourceUrl": "",
+      "status": "draft",
+      "showOnHomepage": true,
+      "featured": false,
+      "sortOrder": 37,
+      "consentConfirmed": false,
+      "avatarPermission": false,
+      "verificationNote": "Imported from laptops-hub-google-reviews.source.html static snapshot. Needs owner verification against live Google Business Profile before publish. sourceUrl and consent/avatar permission pending.",
+      "provenance": {
+        "extractedFrom": "laptops-hub-google-reviews.source.html",
+        "summaryClaimInSource": {
+          "rating": 4.9,
+          "reviewCount": 157,
+          "note": "Do NOT display as verified until owner confirms against live GBP."
+        },
+        "publishBlockedReasons": [
+          "Individual Google Maps review URL not yet attached",
+          "Customer consent / avatar display permission not confirmed",
+          "Text/date/name not re-verified against live Google listing"
+        ]
+      }
+    }
+  ]
+}

@@ -32,11 +32,18 @@ export async function POST(request: Request) {
     if (wanted === "published" && !TESTIMONIAL_APPROVE_ROLES.includes(staff.role)) {
       return NextResponse.json({ error: "forbidden", message: "Only the owner, an admin or a manager can publish." }, { status: 403 });
     }
-    if (wanted === "published" && !parsed.data.consentConfirmed) {
-      return NextResponse.json(
-        { error: "validation_failed", issues: [{ path: "consentConfirmed", message: "Confirm the customer agreed to be shown before publishing." }] },
-        { status: 400 },
-      );
+    if (wanted === "published") {
+      const { publishBlockers } = await import("@/lib/content/testimonials");
+      const block = publishBlockers({
+        source: parsed.data.source,
+        source_url: parsed.data.sourceUrl || null,
+        consent_confirmed: parsed.data.consentConfirmed,
+        avatar_url: parsed.data.avatarUrl || null,
+        avatar_permission: parsed.data.avatarPermission,
+      });
+      if (block) {
+        return NextResponse.json({ error: "validation_failed", message: block }, { status: 400 });
+      }
     }
     const now = new Date().toISOString();
     const row = {

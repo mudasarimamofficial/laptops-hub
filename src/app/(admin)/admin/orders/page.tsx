@@ -6,7 +6,9 @@ import { formatPkr } from "@/lib/money";
 import { emailConfigured } from "@/lib/notify/send-email";
 import { PendingBlock } from "@/components/ui/pending-block";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
+import { EmptyState } from "@/components/admin/ui/empty-state";
 import { StatusBadge } from "@/components/admin/ui/status-badge";
+
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -97,25 +99,28 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
           placeholder="Search order #, customer, phone"
           className="min-w-[220px] flex-1 rounded-xl border border-[var(--adm-border)] px-3 py-2 text-sm"
         />
-        <select name="status" defaultValue={status} className="rounded-xl border border-[var(--adm-border)] px-3 py-2 text-sm">
+        <select name="status" defaultValue={status} className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] px-3 py-2 text-sm">
           <option value="all">All fulfillment</option>
-          <option value="placed">placed</option>
-          <option value="confirmed">confirmed</option>
-          <option value="packing">packing</option>
-          <option value="shipped">shipped</option>
-          <option value="out_for_delivery">out_for_delivery</option>
-          <option value="delivered">delivered</option>
-          <option value="cancelled">cancelled</option>
-          <option value="returned">returned</option>
+          <option value="placed">Placed</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="packing">Packing</option>
+          <option value="shipped">Shipped</option>
+          <option value="out_for_delivery">Out for delivery</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="returned">Returned</option>
         </select>
-        <select name="payment" defaultValue={payment} className="rounded-xl border border-[var(--adm-border)] px-3 py-2 text-sm">
+        <select name="payment" defaultValue={payment} className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] px-3 py-2 text-sm">
           <option value="all">All payment</option>
-          <option value="unpaid_cod">unpaid_cod</option>
-          <option value="partially_collected">partially_collected</option>
-          <option value="collected">collected</option>
-          <option value="collection_failed">collection_failed</option>
+          <option value="unpaid_cod">Unpaid COD</option>
+          <option value="partially_collected">Partially collected</option>
+          <option value="collected">Collected</option>
+          <option value="collection_failed">Collection failed</option>
         </select>
-        <button type="submit" className="rounded-lg bg-[var(--lh-action)] px-4 py-2 text-sm font-semibold text-white">
+        <button
+          type="submit"
+          className="inline-flex min-h-10 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)]"
+        >
           Apply filters
         </button>
       </form>
@@ -127,7 +132,16 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
           </PendingBlock>
         </div>
       ) : orders.length === 0 ? (
-        <p className="mt-8 text-[var(--adm-ink-2)]">No orders match these filters.</p>
+        <div className="mt-6">
+          <EmptyState
+            title="No orders match"
+            description={
+              q || status !== "all" || payment !== "all"
+                ? "Try clearing search or filters. New COD orders appear here after checkout."
+                : "When customers place COD orders, they show up here for confirmation and fulfillment."
+            }
+          />
+        </div>
       ) : (
         <div className="mt-6 overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
           <table className="w-full text-left text-sm">
@@ -146,7 +160,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
               {orders.map((o) => (
                 <tr key={o.order_number} className="border-t border-[var(--adm-border)]">
                   <td className="px-4 py-3 font-semibold">
-                    <Link href={`/admin/orders/${o.order_number}`} className="text-[var(--lh-action)] hover:underline">
+                    <Link href={`/admin/orders/${o.order_number}`} className="text-[var(--adm-action)] hover:underline">
                       {o.order_number}
                     </Link>
                   </td>

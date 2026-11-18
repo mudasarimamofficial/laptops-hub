@@ -5,6 +5,9 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { formatPkr } from "@/lib/money";
 import { OrderActions } from "@/components/admin/order-actions";
 import { NotificationRetry } from "@/components/admin/notification-retry";
+import { AdminPageHeader } from "@/components/admin/ui/page-header";
+import { AdminCard } from "@/components/admin/ui/admin-card";
+import { StatusBadge } from "@/components/admin/ui/status-badge";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
@@ -65,40 +68,46 @@ export default async function AdminOrderDetailPage({ params }: Props) {
   }[];
 
   return (
-    <div className="lh-container py-10">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p className="font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider text-[var(--lh-ink-2)]">
-            Order
-          </p>
-          <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold">{order.order_number}</h1>
-        </div>
-        <Link href="/admin/orders" className="text-sm text-[var(--lh-action)]">
-          ← Orders
-        </Link>
-      </div>
+    <div>
+      <AdminPageHeader
+        title={order.order_number}
+        description={`Placed ${new Date(order.created_at).toLocaleString("en-PK")} · COD due is not the same as cash collected.`}
+        breadcrumbs={[
+          { href: "/admin", label: "Overview" },
+          { href: "/admin/orders", label: "Orders" },
+          { label: order.order_number },
+        ]}
+        actions={
+          <div className="flex flex-wrap items-center gap-3">
+            <StatusBadge status={order.status} />
+            <StatusBadge status={order.payment_status} />
+            <Link href="/admin/orders" className="text-sm font-semibold text-[var(--adm-action)] hover:underline">
+              ← Orders
+            </Link>
+          </div>
+        }
+      />
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
-          <h2 className="font-semibold">Customer</h2>
-          <dl className="mt-3 space-y-1 text-sm">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <AdminCard title="Customer">
+          <dl className="space-y-1 text-sm">
             <div>
-              <dt className="inline text-[var(--lh-ink-2)]">Name · </dt>
+              <dt className="inline text-[var(--adm-ink-2)]">Name · </dt>
               <dd className="inline">{order.customer_name}</dd>
             </div>
             <div>
-              <dt className="inline text-[var(--lh-ink-2)]">Phone · </dt>
+              <dt className="inline text-[var(--adm-ink-2)]">Phone · </dt>
               <dd className="inline">{order.customer_phone_e164}</dd>
             </div>
             {order.customer_email ? (
               <div>
-                <dt className="inline text-[var(--lh-ink-2)]">Email · </dt>
+                <dt className="inline text-[var(--adm-ink-2)]">Email · </dt>
                 <dd className="inline">{order.customer_email}</dd>
               </div>
             ) : null}
             {addr ? (
               <div className="pt-2">
-                <dt className="text-[var(--lh-ink-2)]">Address</dt>
+                <dt className="text-[var(--adm-ink-2)]">Delivery address</dt>
                 <dd>
                   {addr.line1}
                   {addr.line2 ? `, ${addr.line2}` : ""}
@@ -116,16 +125,15 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             ) : null}
             {order.customer_note ? (
               <div className="pt-2">
-                <dt className="text-[var(--lh-ink-2)]">Delivery note</dt>
+                <dt className="text-[var(--adm-ink-2)]">Delivery note</dt>
                 <dd>{order.customer_note}</dd>
               </div>
             ) : null}
           </dl>
-        </section>
+        </AdminCard>
 
-        <section className="rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
-          <h2 className="font-semibold">Totals</h2>
-          <dl className="mt-3 space-y-1 text-sm">
+        <AdminCard title="Totals">
+          <dl className="space-y-1 text-sm">
             <div className="flex justify-between">
               <dt>Subtotal</dt>
               <dd>{formatPkr(order.subtotal_paisa)}</dd>
@@ -138,7 +146,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
               <dt>COD fee</dt>
               <dd>{formatPkr(order.cod_fee_paisa)}</dd>
             </div>
-            <div className="flex justify-between border-t border-[var(--lh-divider)] pt-2 font-semibold">
+            <div className="flex justify-between border-t border-[var(--adm-divider)] pt-2 font-semibold">
               <dt>Total due</dt>
               <dd>{formatPkr(order.total_due_paisa)}</dd>
             </div>
@@ -146,21 +154,21 @@ export default async function AdminOrderDetailPage({ params }: Props) {
               <dt>Collected</dt>
               <dd>{formatPkr(order.amount_collected_paisa)}</dd>
             </div>
-            <div className="flex justify-between text-[var(--lh-ink-2)]">
+            <div className="flex justify-between text-[var(--adm-ink-2)]">
               <dt>Payment</dt>
               <dd data-testid="order-payment-status">{order.payment_status}</dd>
             </div>
-            <div className="flex justify-between text-[var(--lh-ink-2)]">
+            <div className="flex justify-between text-[var(--adm-ink-2)]">
               <dt>Fulfillment</dt>
               <dd data-testid="order-fulfillment-status">{order.status}</dd>
             </div>
           </dl>
-        </section>
+        </AdminCard>
       </div>
 
-      <section className="mt-8 overflow-x-auto rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white">
+      <div className="mt-6 overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
         <table className="w-full text-left text-sm">
-          <thead className="bg-[var(--lh-ice)] text-[11px] uppercase tracking-wider">
+          <thead className="bg-[var(--adm-surface-2)] text-[11px] uppercase tracking-wider text-[var(--adm-ink-2)]">
             <tr>
               <th className="px-4 py-3">Item</th>
               <th className="px-4 py-3">Qty</th>
@@ -170,10 +178,10 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           </thead>
           <tbody>
             {items.map((it, i) => (
-              <tr key={`${it.handle}-${i}`} className="border-t border-[var(--lh-divider)]">
+              <tr key={`${it.handle}-${i}`} className="border-t border-[var(--adm-divider)]">
                 <td className="px-4 py-3">
                   <div className="font-medium">{it.title_snapshot}</div>
-                  <div className="font-[family-name:var(--font-mono)] text-xs text-[var(--lh-ink-2)]">{it.handle}</div>
+                  <div className="font-[family-name:var(--font-mono)] text-xs text-[var(--adm-ink-2)]">{it.handle}</div>
                 </td>
                 <td className="px-4 py-3">{it.quantity}</td>
                 <td className="px-4 py-3">{formatPkr(it.unit_price_paisa)}</td>
@@ -182,7 +190,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
             ))}
           </tbody>
         </table>
-      </section>
+      </div>
 
       <OrderActions
         orderNumber={order.order_number}
@@ -191,69 +199,68 @@ export default async function AdminOrderDetailPage({ params }: Props) {
         amountCollectedPaisa={order.amount_collected_paisa}
       />
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <section>
-          <h2 className="font-semibold">Activity</h2>
-          <ul className="mt-3 space-y-2 text-sm">
-            {events.length === 0 ? <li className="text-[var(--lh-ink-2)]">No events yet.</li> : null}
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <AdminCard title="Activity">
+          <ul className="space-y-2 text-sm">
+            {events.length === 0 ? <li className="text-[var(--adm-ink-2)]">No events yet.</li> : null}
             {events.map((ev, i) => (
-              <li key={`${ev.created_at}-${i}`} className="rounded-xl border border-[var(--lh-border)] bg-white px-3 py-2">
+              <li key={`${ev.created_at}-${i}`} className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] bg-[var(--adm-surface-2)] px-3 py-2">
                 <div className="font-medium">
                   {ev.event_type}
                   {ev.from_status || ev.to_status ? ` · ${ev.from_status || "—"} → ${ev.to_status || "—"}` : ""}
                 </div>
-                {ev.note ? <div className="text-[var(--lh-ink-2)]">{ev.note}</div> : null}
-                <div className="text-xs text-[var(--lh-ink-2)]">{new Date(ev.created_at).toLocaleString()}</div>
+                {ev.note ? <div className="text-[var(--adm-ink-2)]">{ev.note}</div> : null}
+                <div className="text-xs text-[var(--adm-ink-2)]">{new Date(ev.created_at).toLocaleString()}</div>
               </li>
             ))}
           </ul>
-        </section>
-        <section>
-          <h2 className="font-semibold">Collections & shipping</h2>
-          <ul className="mt-3 space-y-2 text-sm">
+        </AdminCard>
+
+        <AdminCard title="Collections & shipping">
+          <ul className="space-y-2 text-sm">
             {collections.map((c, i) => (
-              <li key={i} className="rounded-xl border border-[var(--lh-border)] bg-white px-3 py-2">
+              <li key={i} className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] bg-[var(--adm-surface-2)] px-3 py-2">
                 {formatPkr(c.amount_paisa)} · {c.collector_ref || "—"} · {new Date(c.collected_at).toLocaleString()}
-                {c.note ? <div className="text-[var(--lh-ink-2)]">{c.note}</div> : null}
+                {c.note ? <div className="text-[var(--adm-ink-2)]">{c.note}</div> : null}
               </li>
             ))}
             {fulfillments.map((f, i) => (
-              <li key={`f-${i}`} className="rounded-xl border border-[var(--lh-border)] bg-white px-3 py-2">
+              <li key={`f-${i}`} className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] bg-[var(--adm-surface-2)] px-3 py-2">
                 {f.carrier || "Carrier"} · {f.tracking_number || "no tracking"}
               </li>
             ))}
             {collections.length === 0 && fulfillments.length === 0 ? (
-              <li className="text-[var(--lh-ink-2)]">None yet.</li>
+              <li className="text-[var(--adm-ink-2)]">None yet.</li>
             ) : null}
           </ul>
-        </section>
-        <section>
-          <h2 className="font-semibold">Notifications</h2>
-          <ul className="mt-3 space-y-2 text-sm">
-            {(outbox || []).length === 0 ? <li className="text-[var(--lh-ink-2)]">None queued.</li> : null}
+        </AdminCard>
+
+        <AdminCard title="Notifications" className="lg:col-span-2">
+          <ul className="space-y-2 text-sm">
+            {(outbox || []).length === 0 ? <li className="text-[var(--adm-ink-2)]">None queued.</li> : null}
             {(outbox || []).map((n, i) => (
-              <li key={i} className="rounded-xl border border-[var(--lh-border)] bg-white px-3 py-2" data-testid="notification-row">
+              <li key={i} className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] bg-[var(--adm-surface-2)] px-3 py-2" data-testid="notification-row">
                 <div className="font-medium">
                   {n.template} · {n.channel} · <span data-testid="notification-status">{n.status}</span> · attempts {n.attempts}
                 </div>
-                <div className="text-xs text-[var(--lh-ink-2)]">
+                <div className="text-xs text-[var(--adm-ink-2)]">
                   Store alert: <span data-testid="notification-business">{n.business_status}</span> · Customer email:{" "}
                   <span data-testid="notification-customer">{n.customer_status}</span>
                 </div>
                 {n.sent_at ? (
-                  <div className="text-xs text-[var(--lh-ink-2)]">
+                  <div className="text-xs text-[var(--adm-ink-2)]">
                     Accepted by the email provider {new Date(n.sent_at).toLocaleString()} (delivery to the inbox is not confirmed)
                   </div>
                 ) : null}
                 {n.status === "failed" && !(n.last_error || "").endsWith("automatic retries stopped") && Number.isFinite(Date.parse(n.next_attempt_at)) ? (
-                  <div className="text-xs text-[var(--lh-ink-2)]">Next automatic attempt after {new Date(n.next_attempt_at).toLocaleString()}</div>
+                  <div className="text-xs text-[var(--adm-ink-2)]">Next automatic attempt after {new Date(n.next_attempt_at).toLocaleString()}</div>
                 ) : null}
-                {n.last_error ? <div className="text-xs text-[var(--lh-error)]">{n.last_error}</div> : null}
+                {n.last_error ? <div className="text-xs text-[var(--adm-danger)]">{n.last_error}</div> : null}
               </li>
             ))}
           </ul>
           {(outbox || []).some((n) => n.status !== "accepted") ? <NotificationRetry orderNumber={order.order_number} /> : null}
-        </section>
+        </AdminCard>
       </div>
     </div>
   );

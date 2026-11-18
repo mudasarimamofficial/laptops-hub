@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatPkr, paisaToMajor } from "@/lib/money";
 import { useHydrated } from "@/lib/ui/use-hydrated";
+import { AdminCard } from "@/components/admin/ui/admin-card";
+import { AdminField, admInputClass } from "@/components/admin/ui/admin-field";
 
 const NEXT: Record<string, string[]> = {
   placed: ["pending_confirmation", "confirmed", "cancelled"],
@@ -19,6 +21,20 @@ const NEXT: Record<string, string[]> = {
   return_requested: ["returned", "cancelled"],
 };
 
+const STATUS_LABEL: Record<string, string> = {
+  placed: "Placed",
+  pending_confirmation: "Awaiting confirmation",
+  confirmed: "Confirmed",
+  packing: "Packing",
+  shipped: "Shipped",
+  out_for_delivery: "Out for delivery",
+  delivered: "Delivered",
+  delivery_failed: "Delivery failed",
+  cancelled: "Cancelled",
+  returned: "Returned",
+  return_requested: "Return requested",
+};
+
 type Props = {
   orderNumber: string;
   status: string;
@@ -28,10 +44,7 @@ type Props = {
 
 export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollectedPaisa }: Props) {
   const router = useRouter();
-  // Before hydration the submit stays disabled (and forms post): a click can never become a GET page reload.
   const hydrated = useHydrated();
-  // Show what the server just confirmed until the refreshed props arrive (router.refresh() can lag); once the
-  // props change, they win again.
   const [statusDone, setStatusDone] = useState<{ from: string; to: string } | null>(null);
   const [collectedDone, setCollectedDone] = useState<{ from: number; value: number } | null>(null);
   const current = statusDone && statusDone.from === status ? statusDone.to : status;
@@ -46,8 +59,6 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
   const [collectPkr, setCollectPkr] = useState(String(paisaToMajor(outstanding) || ""));
   const [collectorRef, setCollectorRef] = useState("");
   const [busy, setBusy] = useState(false);
-  // One key per logical collection: kept across retries (a lost response must replay, not record twice),
-  // cleared only after the server confirms.
   const collectKey = useRef<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -75,7 +86,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
         setErr(data.message || data.error || `Status update failed (${res.status})`);
         return;
       }
-      setMsg(`Status → ${toStatus}`);
+      setMsg(`Status → ${STATUS_LABEL[toStatus] || toStatus}`);
       setStatusDone({ from: status, to: toStatus });
       setToStatus((NEXT[toStatus] || [])[0] || "");
       router.refresh();
@@ -131,108 +142,84 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
   }
 
   return (
-    <div className="mt-8 grid gap-8 lg:grid-cols-2">
-      <form method="post" onSubmit={changeStatus} className="space-y-3 rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
-        <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold">Fulfillment status</h2>
-        <p className="text-sm text-[var(--lh-ink-2)]">Current: {current}</p>
-        {options.length ? (
-          <>
-            <label className="block text-sm">
-              <span className="font-medium">Next status</span>
-              <select
-                className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
-                value={toStatus}
-                onChange={(e) => setToStatus(e.target.value)}
+    <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <AdminCard title="Fulfillment" description={`Current: ${STATUS_LABEL[current] || current}`}>
+        <form method="post" onSubmit={changeStatus} className="space-y-3">
+          {options.length ? (
+            <>
+              <AdminField label="Next step">
+                <select className={admInputClass} value={toStatus} onChange={(e) => setToStatus(e.target.value)}>
+                  {options.map((s) => (
+                    <option key={s} value={s}>
+                      {STATUS_LABEL[s] || s}
+                    </option>
+                  ))}
+                </select>
+              </AdminField>
+              <AdminField label="Carrier" optional>
+                <input className={admInputClass} value={carrier} onChange={(e) => setCarrier(e.target.value)} />
+              </AdminField>
+              <AdminField label="Tracking number" optional>
+                <input className={admInputClass} value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} />
+              </AdminField>
+              <AdminField label="Note" optional>
+                <input className={admInputClass} value={note} onChange={(e) => setNote(e.target.value)} />
+              </AdminField>
+              <button
+                type="submit"
+                disabled={busy || !hydrated}
+                className="inline-flex min-h-10 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-5 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
               >
-                {options.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block text-sm">
-              <span className="font-medium">Carrier (optional)</span>
-              <input
-                className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
-                value={carrier}
-                onChange={(e) => setCarrier(e.target.value)}
-              />
-            </label>
-            <label className="block text-sm">
-              <span className="font-medium">Tracking (optional)</span>
-              <input
-                className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
-                value={trackingNumber}
-                onChange={(e) => setTrackingNumber(e.target.value)}
-              />
-            </label>
-            <label className="block text-sm">
-              <span className="font-medium">Note</span>
-              <input
-                className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-              />
-            </label>
-            <button
-              type="submit"
-              disabled={busy || !hydrated}
-              className="rounded-[var(--lh-radius-pill)] bg-[linear-gradient(180deg,var(--lh-grad-action-from),var(--lh-grad-action-to))] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60"
-            >
-              Update status
-            </button>
-          </>
-        ) : (
-          <p className="text-sm text-[var(--lh-ink-2)]">No further transitions from this status.</p>
-        )}
-      </form>
+                Update status
+              </button>
+            </>
+          ) : (
+            <p className="text-sm text-[var(--adm-ink-2)]">No further transitions from this status.</p>
+          )}
+        </form>
+      </AdminCard>
 
-      <form method="post" onSubmit={collectCod} className="space-y-3 rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-5">
-        <h2 className="font-[family-name:var(--font-display)] text-lg font-semibold">COD cash collection</h2>
-        <p className="text-sm text-[var(--lh-ink-2)]">
-          Due {formatPkr(totalDuePaisa)} · Collected {formatPkr(collected)} · Outstanding{" "}
-          {formatPkr(outstanding)}
+      <AdminCard
+        title="COD cash collection"
+        description={`Due ${formatPkr(totalDuePaisa)} · Collected ${formatPkr(collected)} · Outstanding ${formatPkr(outstanding)}. Delivery alone is not payment.`}
+      >
+        <form method="post" onSubmit={collectCod} className="space-y-3">
+          {outstanding > 0 ? (
+            <>
+              <AdminField label="Amount collected (PKR)">
+                <input
+                  type="number"
+                  min={1}
+                  step={1}
+                  className={admInputClass}
+                  value={collectPkr}
+                  onChange={(e) => setCollectPkr(e.target.value)}
+                  required
+                />
+              </AdminField>
+              <AdminField label="Collector reference" optional hint="Courier or staff name">
+                <input className={admInputClass} value={collectorRef} onChange={(e) => setCollectorRef(e.target.value)} placeholder="Courier / staff name" />
+              </AdminField>
+              <button
+                type="submit"
+                disabled={busy || !hydrated}
+                className="inline-flex min-h-10 items-center rounded-[var(--adm-radius)] border border-[var(--adm-border)] px-5 text-sm font-semibold disabled:opacity-50"
+              >
+                Record collection
+              </button>
+            </>
+          ) : (
+            <p className="text-sm text-[var(--adm-success)]">Fully collected.</p>
+          )}
+        </form>
+      </AdminCard>
+
+      {err ? (
+        <p role="alert" className="text-sm text-[var(--adm-danger)] lg:col-span-2">
+          {err}
         </p>
-        <p className="text-xs text-[var(--lh-ink-2)]">Delivery alone is not payment. Record cash explicitly.</p>
-        {outstanding > 0 ? (
-          <>
-            <label className="block text-sm">
-              <span className="font-medium">Amount collected (PKR)</span>
-              <input
-                type="number"
-                min={1}
-                step={1}
-                className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
-                value={collectPkr}
-                onChange={(e) => setCollectPkr(e.target.value)}
-                required
-              />
-            </label>
-            <label className="block text-sm">
-              <span className="font-medium">Collector reference</span>
-              <input
-                className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2"
-                value={collectorRef}
-                onChange={(e) => setCollectorRef(e.target.value)}
-                placeholder="Courier / staff name"
-              />
-            </label>
-            <button
-              type="submit"
-              disabled={busy || !hydrated}
-              className="rounded-[var(--lh-radius-pill)] border border-[var(--lh-border)] px-5 py-2 text-sm font-semibold disabled:opacity-60"
-            >
-              Record collection
-            </button>
-          </>
-        ) : (
-          <p className="text-sm text-emerald-700">Fully collected.</p>
-        )}
-      </form>
-
-      {err ? <p className="text-sm text-red-600 lg:col-span-2">{err}</p> : null}
-      {msg ? <p className="text-sm text-emerald-700 lg:col-span-2">{msg}</p> : null}
+      ) : null}
+      {msg ? <p className="text-sm text-[var(--adm-success)] lg:col-span-2">{msg}</p> : null}
     </div>
   );
 }

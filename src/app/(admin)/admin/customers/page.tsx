@@ -54,7 +54,7 @@ export default async function AdminCustomersPage() {
                     {o.customer_phone_normalized}
                   </td>
                   <td className="px-4 py-3">
-                    <a href={`/admin/orders/${o.order_number}`} className="text-[var(--lh-action)] hover:underline">
+                    <a href={`/admin/orders/${o.order_number}`} className="text-[var(--adm-action)] hover:underline">
                       {o.order_number}
                     </a>
                   </td>

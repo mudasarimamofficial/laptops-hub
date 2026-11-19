@@ -2,10 +2,11 @@
 
 **Date:** 2026-11-19  
 **Production alias:** https://www.laptopshub.pk  
-**Latest READY production deploy:** `dpl_CHuvw5gQNfYew2fRNd84fBD9jktC` (commit `b48bdb7`, mobile admin + isolated COD test alignment PR #53)  
+**Latest READY production deploy:** `dpl_7taivjMfTu42pMcEE8Sau7MNvwXJ` (commit `676698e`, admin mobile matrix PR #55)  
 **Prior READY (mega menu / wordmark PR #52):** `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` / `79df85d`  
 **Prior READY (favicon PR #50):** `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` / `dff6ba4`  
-**Rollback candidates (READY):** `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` (PR #52), `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` (favicon #50), `dpl_8FqSGLE3j3PqB4BVoc666mS7GBhk` (docs #51)
+**Prior READY (PR #53):** `dpl_CHuvw5gQNfYew2fRNd84fBD9jktC` / `b48bdb7`  
+**Rollback candidates (READY):** `dpl_CHuvw5gQNfYew2fRNd84fBD9jktC` (PR #53), `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` (PR #52), `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` (favicon #50)
 
 PR #48 mobile nav / reel–cart overlay / carousel a11y fixes are deployed. This document does **not** re-implement them.
 
@@ -15,7 +16,7 @@ PR #48 mobile nav / reel–cart overlay / carousel a11y fixes are deployed. This
 
 | Item | Label | Evidence |
 |---|---|---|
-| Production deploy READY + aliases | **PASS** | `dpl_CHuvw5gQNfYew2fRNd84fBD9jktC` READY @ `b48bdb7`; aliases include `www.laptopshub.pk`, `laptopshub.pk` |
+| Production deploy READY + aliases | **PASS** | `dpl_7taivjMfTu42pMcEE8Sau7MNvwXJ` READY @ `676698e`; aliases include `www.laptopshub.pk`, `laptopshub.pk` |
 | Official favicon (site-wide) | **PASS** | PR #50; static `favicon.ico` / `icon.png` / `apple-icon.png`; SHA match on www + apex→www; see `docs/FAVICON_ACCEPTANCE_2026-11-19.md` |
 | Uppercase LAPTOPS HUB wordmark | **PASS** | PR #52; header/footer/admin shell; live on `www.laptopshub.pk` |
 | Compact grouped desktop mega menu | **PASS** | PR #52; height-capped category panel; Escape/Close; isolated Playwright 2/2 |
@@ -55,14 +56,14 @@ PR #48 mobile nav / reel–cart overlay / carousel a11y fixes are deployed. This
 
 | Item | Label |
 |---|---|
-| Private permanent password set | **OWNER VERIFICATION REQUIRED** |
-| Fresh email/password login (`infolaptopshub@gmail.com`) | **OWNER VERIFICATION REQUIRED** |
-| Settings accessible after login | **OWNER VERIFICATION REQUIRED** |
-| Recovery sessions invalidated as designed | **OWNER VERIFICATION REQUIRED** |
+| Private permanent password set | **OWNER REPORTED COMPLETE** (2026-11-19) — engineering did not access the value |
+| Fresh email/password login (`infolaptopshub@gmail.com`) | **OWNER VERIFICATION REQUIRED** only if owner has not yet confirmed a signed-out re-login |
+| Settings accessible after login | **OWNER VERIFICATION REQUIRED** if not yet confirmed after password change |
+| Recovery sessions invalidated as designed | **OWNER VERIFICATION REQUIRED** if not yet confirmed |
 | Password value | **NOT ACCESSED / NOT RECORDED** |
 
-Do **not** resend recovery emails from engineering unless the owner explicitly requests a new link.  
-`last_sign_in_at` alone is not acceptance of a privately chosen password.
+Do **not** initiate another password reset or request the password.  
+Do **not** resend recovery emails from engineering unless the owner explicitly requests a new link.
 
 ---
 
@@ -103,11 +104,13 @@ Run on https://www.laptopshub.pk and report PASS/FAIL per line:
 ### Production references
 
 - Live: https://www.laptopshub.pk  
-- Latest READY: `dpl_CHuvw5gQNfYew2fRNd84fBD9jktC` @ `b48bdb7` (PR #53 mobile admin + COD test alignment)  
+- Latest READY: `dpl_7taivjMfTu42pMcEE8Sau7MNvwXJ` @ `676698e` (PR #55 admin mobile matrix)  
+- Prior READY (PR #53): `dpl_CHuvw5gQNfYew2fRNd84fBD9jktC` @ `b48bdb7`  
 - Prior READY (PR #52 mega menu / wordmark): `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` @ `79df85d`  
-- Prior READY (PR #50 favicon): `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` @ `dff6ba4`  
 - Mega menu / wordmark acceptance: `docs/FINAL_MEGA_MENU_WORDMARK_ACCEPTANCE_2026-11-19.md`  
 - Mobile admin acceptance: `docs/FINAL_MOBILE_ADMIN_ACCEPTANCE_2026-11-19.md`  
+- Admin mobile matrix results: `docs/FINAL_AZ_ADMIN_MOBILE_MATRIX_RESULTS.json`  
+- Feature matrix CSV: `docs/FINAL_AZ_FEATURE_MATRIX_2026-11-19.csv`  
 - Controlled / isolated COD: `docs/FINAL_CONTROLLED_ORDER_TEST_2026-11-19.md`  
 - A–Z QA checkpoint: `docs/FINAL_AZ_CUSTOMER_MERCHANT_QA_2026-11-19.md`  
 - Favicon acceptance: `docs/FAVICON_ACCEPTANCE_2026-11-19.md`  

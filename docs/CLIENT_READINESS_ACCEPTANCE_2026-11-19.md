@@ -1,7 +1,9 @@
 # Client readiness acceptance — 2026-11-19 (post ca7e468)
 
-Baseline production: `ca7e4685b97444b915fa0e27cab739c8a5bd52a6` / `dpl_HTiVFkGA1CyLumajhuYqmDfvsoqR`.  
+Started from production: `ca7e4685b97444b915fa0e27cab739c8a5bd52a6` / `dpl_HTiVFkGA1CyLumajhuYqmDfvsoqR`.  
 Resend workspace repair and PRs #43–#45 were already complete; this pass closes remaining acceptance items.
+
+**This pass shipped:** PR #46 → `bc6e52c1ceb416fcd57b87da3a62ef6751298a6f` / `dpl_A3VjJZCN12mwiaRwrNkoFzf2mWqa`.
 
 ## 1. Owner password reset / login / role+UUID
 

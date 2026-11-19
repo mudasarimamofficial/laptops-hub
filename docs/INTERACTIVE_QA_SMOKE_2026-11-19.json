@@ -1,0 +1,328 @@
+{
+  "generatedAt": "2026-11-19T05:29:41.289Z",
+  "base": "https://www.laptopshub.pk",
+  "note": "Read-only interactive/a11y smoke — NOT full UX certification. No cart mutations, no admin auth, no password entry.",
+  "results": [
+    {
+      "width": 390,
+      "route": "/",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "The future of\nsmarter laptop\nshopping."
+    },
+    {
+      "width": 390,
+      "route": "/collections/all",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "All products"
+    },
+    {
+      "width": 390,
+      "route": "/cart",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Cart"
+    },
+    {
+      "width": 390,
+      "route": "/checkout",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS",
+        "checkoutEmptyCartH1": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Place COD order"
+    },
+    {
+      "width": 390,
+      "route": "/compare",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Compare laptops"
+    },
+    {
+      "width": 390,
+      "route": "/reels",
+      "checks": {
+        "http": "FAIL",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS",
+        "reelSurface": "PARTIAL"
+      },
+      "status": 404,
+      "h1Text": "This page doesn’t exist"
+    },
+    {
+      "width": 390,
+      "route": "/admin/login",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PARTIAL",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PARTIAL",
+        "loginFields": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Staff sign in"
+    },
+    {
+      "width": 390,
+      "route": "/admin/forgot-password",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PARTIAL",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PARTIAL"
+      },
+      "status": 200,
+      "h1Text": "Reset staff password"
+    },
+    {
+      "width": 768,
+      "route": "/",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "The future of\nsmarter laptop\nshopping."
+    },
+    {
+      "width": 768,
+      "route": "/collections/all",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "All products"
+    },
+    {
+      "width": 768,
+      "route": "/cart",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Cart"
+    },
+    {
+      "width": 768,
+      "route": "/checkout",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS",
+        "checkoutEmptyCartH1": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Place COD order"
+    },
+    {
+      "width": 768,
+      "route": "/compare",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Compare laptops"
+    },
+    {
+      "width": 768,
+      "route": "/reels",
+      "checks": {
+        "http": "FAIL",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS",
+        "reelSurface": "PARTIAL"
+      },
+      "status": 404,
+      "h1Text": "This page doesn’t exist"
+    },
+    {
+      "width": 768,
+      "route": "/admin/login",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PARTIAL",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PARTIAL",
+        "loginFields": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Staff sign in"
+    },
+    {
+      "width": 768,
+      "route": "/admin/forgot-password",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PARTIAL",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PARTIAL"
+      },
+      "status": 200,
+      "h1Text": "Reset staff password"
+    },
+    {
+      "width": 1280,
+      "route": "/",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "The future of\nsmarter laptop\nshopping."
+    },
+    {
+      "width": 1280,
+      "route": "/collections/all",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "All products"
+    },
+    {
+      "width": 1280,
+      "route": "/cart",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Cart"
+    },
+    {
+      "width": 1280,
+      "route": "/checkout",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS",
+        "checkoutEmptyCartH1": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Place COD order"
+    },
+    {
+      "width": 1280,
+      "route": "/compare",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Compare laptops"
+    },
+    {
+      "width": 1280,
+      "route": "/reels",
+      "checks": {
+        "http": "FAIL",
+        "h1": "PASS",
+        "skip": "PASS",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PASS",
+        "reelSurface": "PARTIAL"
+      },
+      "status": 404,
+      "h1Text": "This page doesn’t exist"
+    },
+    {
+      "width": 1280,
+      "route": "/admin/login",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PARTIAL",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PARTIAL",
+        "loginFields": "PASS"
+      },
+      "status": 200,
+      "h1Text": "Staff sign in"
+    },
+    {
+      "width": 1280,
+      "route": "/admin/forgot-password",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skip": "PARTIAL",
+        "noHorizontalOverflow": "PASS",
+        "focusableNav": "PARTIAL"
+      },
+      "status": 200,
+      "h1Text": "Reset staff password"
+    }
+  ]
+}

@@ -12,7 +12,7 @@
 
 Credential rotation: created sending-only key `laptops-hub-supabase-auth-smtp-v2` in the **verified** workspace; applied to Supabase Auth SMTP via Management API (secret not logged). Production Vercel `RESEND_API_KEY` / order-notification credential left intact (same correct workspace).
 
-Legacy incorrect-workspace key `laptops-hub-supabase-auth-smtp`: **PENDING** revoke (do not revoke production order-notification key).
+Legacy incorrect-workspace key `laptops-hub-supabase-auth-smtp`: **REVOKED** (2026-11-19) from wrong Resend account `mudasarimamofficial` (empty Domains). Correct workspace keys untouched.
 
 ## Supabase SMTP
 

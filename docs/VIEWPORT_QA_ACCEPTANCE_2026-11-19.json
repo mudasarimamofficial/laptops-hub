@@ -1,0 +1,806 @@
+{
+  "generatedAt": "2026-11-19T02:22:18.275Z",
+  "base": "https://www.laptopshub.pk",
+  "results": [
+    {
+      "width": 320,
+      "path": "/",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 320,
+      "path": "/collections/all",
+      "ok": true,
+      "status": 200,
+      "title": "All products · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 320,
+      "path": "/search?q=dell",
+      "ok": true,
+      "status": 200,
+      "title": "Results for “dell” · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 320,
+      "path": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ok": true,
+      "status": 200,
+      "title": "Dell Latitude 7420 - Core i5, 11th Gen, 16GB RAM, 256GB Storage · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 320,
+      "path": "/compare",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 320,
+      "path": "/cart",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 320,
+      "path": "/checkout",
+      "ok": true,
+      "status": 200,
+      "title": "Checkout · Laptops HUB",
+      "hasH1": false,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 320,
+      "path": "/guides",
+      "ok": true,
+      "status": 200,
+      "title": "Guides · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 320,
+      "path": "/track-order",
+      "ok": true,
+      "status": 200,
+      "title": "Track order · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 320,
+      "path": "/admin/login",
+      "ok": true,
+      "status": 200,
+      "title": "Admin",
+      "hasH1": true,
+      "hasSkip": false,
+      "overflowX": 0
+    },
+    {
+      "width": 360,
+      "path": "/",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 360,
+      "path": "/collections/all",
+      "ok": true,
+      "status": 200,
+      "title": "All products · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 360,
+      "path": "/search?q=dell",
+      "ok": true,
+      "status": 200,
+      "title": "Results for “dell” · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 360,
+      "path": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ok": true,
+      "status": 200,
+      "title": "Dell Latitude 7420 - Core i5, 11th Gen, 16GB RAM, 256GB Storage · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 360,
+      "path": "/compare",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 360,
+      "path": "/cart",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 360,
+      "path": "/checkout",
+      "ok": true,
+      "status": 200,
+      "title": "Checkout · Laptops HUB",
+      "hasH1": false,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 360,
+      "path": "/guides",
+      "ok": true,
+      "status": 200,
+      "title": "Guides · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 360,
+      "path": "/track-order",
+      "ok": true,
+      "status": 200,
+      "title": "Track order · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 360,
+      "path": "/admin/login",
+      "ok": true,
+      "status": 200,
+      "title": "Admin",
+      "hasH1": true,
+      "hasSkip": false,
+      "overflowX": 0
+    },
+    {
+      "width": 390,
+      "path": "/",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 390,
+      "path": "/collections/all",
+      "ok": true,
+      "status": 200,
+      "title": "All products · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 390,
+      "path": "/search?q=dell",
+      "ok": true,
+      "status": 200,
+      "title": "Results for “dell” · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 390,
+      "path": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ok": true,
+      "status": 200,
+      "title": "Dell Latitude 7420 - Core i5, 11th Gen, 16GB RAM, 256GB Storage · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 390,
+      "path": "/compare",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 390,
+      "path": "/cart",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 390,
+      "path": "/checkout",
+      "ok": true,
+      "status": 200,
+      "title": "Checkout · Laptops HUB",
+      "hasH1": false,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 390,
+      "path": "/guides",
+      "ok": true,
+      "status": 200,
+      "title": "Guides · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 390,
+      "path": "/track-order",
+      "ok": true,
+      "status": 200,
+      "title": "Track order · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 390,
+      "path": "/admin/login",
+      "ok": true,
+      "status": 200,
+      "title": "Admin",
+      "hasH1": true,
+      "hasSkip": false,
+      "overflowX": 0
+    },
+    {
+      "width": 428,
+      "path": "/",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 428,
+      "path": "/collections/all",
+      "ok": true,
+      "status": 200,
+      "title": "All products · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 428,
+      "path": "/search?q=dell",
+      "ok": true,
+      "status": 200,
+      "title": "Results for “dell” · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 428,
+      "path": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ok": true,
+      "status": 200,
+      "title": "Dell Latitude 7420 - Core i5, 11th Gen, 16GB RAM, 256GB Storage · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 428,
+      "path": "/compare",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 428,
+      "path": "/cart",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 428,
+      "path": "/checkout",
+      "ok": true,
+      "status": 200,
+      "title": "Checkout · Laptops HUB",
+      "hasH1": false,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 428,
+      "path": "/guides",
+      "ok": true,
+      "status": 200,
+      "title": "Guides · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 428,
+      "path": "/track-order",
+      "ok": true,
+      "status": 200,
+      "title": "Track order · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 428,
+      "path": "/admin/login",
+      "ok": true,
+      "status": 200,
+      "title": "Admin",
+      "hasH1": true,
+      "hasSkip": false,
+      "overflowX": 0
+    },
+    {
+      "width": 768,
+      "path": "/",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 768,
+      "path": "/collections/all",
+      "ok": true,
+      "status": 200,
+      "title": "All products · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 768,
+      "path": "/search?q=dell",
+      "ok": true,
+      "status": 200,
+      "title": "Results for “dell” · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 768,
+      "path": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ok": true,
+      "status": 200,
+      "title": "Dell Latitude 7420 - Core i5, 11th Gen, 16GB RAM, 256GB Storage · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 768,
+      "path": "/compare",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 768,
+      "path": "/cart",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 768,
+      "path": "/checkout",
+      "ok": true,
+      "status": 200,
+      "title": "Checkout · Laptops HUB",
+      "hasH1": false,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 768,
+      "path": "/guides",
+      "ok": true,
+      "status": 200,
+      "title": "Guides · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 768,
+      "path": "/track-order",
+      "ok": true,
+      "status": 200,
+      "title": "Track order · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 768,
+      "path": "/admin/login",
+      "ok": true,
+      "status": 200,
+      "title": "Admin",
+      "hasH1": true,
+      "hasSkip": false,
+      "overflowX": 0
+    },
+    {
+      "width": 1024,
+      "path": "/",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1024,
+      "path": "/collections/all",
+      "ok": true,
+      "status": 200,
+      "title": "All products · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1024,
+      "path": "/search?q=dell",
+      "ok": true,
+      "status": 200,
+      "title": "Results for “dell” · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1024,
+      "path": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ok": true,
+      "status": 200,
+      "title": "Dell Latitude 7420 - Core i5, 11th Gen, 16GB RAM, 256GB Storage · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1024,
+      "path": "/compare",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1024,
+      "path": "/cart",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1024,
+      "path": "/checkout",
+      "ok": true,
+      "status": 200,
+      "title": "Checkout · Laptops HUB",
+      "hasH1": false,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1024,
+      "path": "/guides",
+      "ok": true,
+      "status": 200,
+      "title": "Guides · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1024,
+      "path": "/track-order",
+      "ok": true,
+      "status": 200,
+      "title": "Track order · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1024,
+      "path": "/admin/login",
+      "ok": true,
+      "status": 200,
+      "title": "Admin",
+      "hasH1": true,
+      "hasSkip": false,
+      "overflowX": 0
+    },
+    {
+      "width": 1440,
+      "path": "/",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1440,
+      "path": "/collections/all",
+      "ok": true,
+      "status": 200,
+      "title": "All products · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1440,
+      "path": "/search?q=dell",
+      "ok": true,
+      "status": 200,
+      "title": "Results for “dell” · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1440,
+      "path": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ok": true,
+      "status": 200,
+      "title": "Dell Latitude 7420 - Core i5, 11th Gen, 16GB RAM, 256GB Storage · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1440,
+      "path": "/compare",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1440,
+      "path": "/cart",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1440,
+      "path": "/checkout",
+      "ok": true,
+      "status": 200,
+      "title": "Checkout · Laptops HUB",
+      "hasH1": false,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1440,
+      "path": "/guides",
+      "ok": true,
+      "status": 200,
+      "title": "Guides · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1440,
+      "path": "/track-order",
+      "ok": true,
+      "status": 200,
+      "title": "Track order · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1440,
+      "path": "/admin/login",
+      "ok": true,
+      "status": 200,
+      "title": "Admin",
+      "hasH1": true,
+      "hasSkip": false,
+      "overflowX": 0
+    },
+    {
+      "width": 1920,
+      "path": "/",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1920,
+      "path": "/collections/all",
+      "ok": true,
+      "status": 200,
+      "title": "All products · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1920,
+      "path": "/search?q=dell",
+      "ok": true,
+      "status": 200,
+      "title": "Results for “dell” · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1920,
+      "path": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "ok": true,
+      "status": 200,
+      "title": "Dell Latitude 7420 - Core i5, 11th Gen, 16GB RAM, 256GB Storage · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1920,
+      "path": "/compare",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1920,
+      "path": "/cart",
+      "ok": true,
+      "status": 200,
+      "title": "Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1920,
+      "path": "/checkout",
+      "ok": true,
+      "status": 200,
+      "title": "Checkout · Laptops HUB",
+      "hasH1": false,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1920,
+      "path": "/guides",
+      "ok": true,
+      "status": 200,
+      "title": "Guides · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1920,
+      "path": "/track-order",
+      "ok": true,
+      "status": 200,
+      "title": "Track order · Laptops HUB",
+      "hasH1": true,
+      "hasSkip": true,
+      "overflowX": 0
+    },
+    {
+      "width": 1920,
+      "path": "/admin/login",
+      "ok": true,
+      "status": 200,
+      "title": "Admin",
+      "hasH1": true,
+      "hasSkip": false,
+      "overflowX": 0
+    }
+  ]
+}

@@ -187,22 +187,32 @@ test.describe.serial("P1: truthful social proof (isolated)", () => {
     expect(audit?.length).toBe(1);
   });
 
-  test("reels: visible reel autoplays muted, one at a time; sound only on request; reduced motion waits", async ({ page, browser }) => {
+  test("reels: visible cards autoplay muted independently; no hashtag/play overlay; modal centers", async ({ page, browser }) => {
     await signIn(page);
     const base = { video_url: VIDEO, rights_status: "owned", status: "published", sort_order: -500 };
     const ins = await sb.from("reels").insert([
       { ...base, title: `QA social reel A ${RUN}`, creator_name: "QA Creator", creator_consent: true, tag: "Productivity" },
-      { ...base, title: `QA social reel B ${RUN}`, sort_order: -499, creator_name: "", creator_consent: false, tag: "" },
+      { ...base, title: `QA social reel B ${RUN}`, sort_order: -499, creator_name: "", creator_consent: false, tag: "GamingSetup" },
     ]);
     expect(ins.error).toBeNull();
     await putSettings(page, {
       ...DEFAULT_SOCIAL_PROOF,
-      reels: { heading: `Generation QA ${RUN}`, subtitle: DEFAULT_SOCIAL_PROOF.reels.subtitle, autoplayMuted: true },
+      reels: { heading: `Generation QA ${RUN}`, subtitle: "Watch, explore, and find your next laptop.", autoplayMuted: true },
     });
     // Reel caches expire on admin reel changes; poke one through the API so the direct inserts become visible.
     const { data: rowA } = await sb.from("reels").select("id, title, caption, video_url, rights_status, rights_note, sort_order, status").like("title", "QA social reel A %").single();
     await page.request.put(`/api/admin/reels/${rowA!.id}`, {
-      data: { title: rowA!.title, videoUrl: VIDEO, rightsStatus: "owned", status: "published", sortOrder: -500, creatorName: "QA Creator", creatorConsent: true, tag: "Productivity" },
+      data: {
+        title: rowA!.title,
+        videoUrl: VIDEO,
+        rightsStatus: "owned",
+        status: "published",
+        sortOrder: -500,
+        creatorName: "QA Creator",
+        creatorConsent: true,
+        tag: "Productivity",
+        productHandles: [],
+      },
     });
 
     const serve = async (p: Page) =>
@@ -213,24 +223,56 @@ test.describe.serial("P1: truthful social proof (isolated)", () => {
     await expect(section.getByRole("heading", { name: `Generation QA ${RUN}` })).toBeVisible();
     await section.scrollIntoViewIfNeeded();
     const videos = section.getByTestId("reel-video");
-    await expect(section.getByText("QA Creator")).toBeVisible();
-    await expect(section.getByText("#Productivity")).toBeVisible();
+    await expect(videos).toHaveCount(2);
 
+    // Hashtags / permanent play controls must not cover the cards.
+    await expect(section.getByText("#Productivity")).toHaveCount(0);
+    await expect(section.getByText("#GamingSetup")).toHaveCount(0);
+    await expect(section.getByTestId("reel-play")).toHaveCount(0);
+    await expect(section.getByTestId("reel-sound")).toHaveCount(0);
+
+    // Both visible cards may autoplay muted at once (new multi-autoplay contract).
     await expect
       .poll(async () => videos.evaluateAll((els) => (els as HTMLVideoElement[]).filter((v) => !v.paused).length), { timeout: 15_000 })
-      .toBe(1);
-    expect(await videos.evaluateAll((els) => (els as HTMLVideoElement[]).every((v) => v.muted))).toBe(true);
-    expect(await videos.evaluateAll((els) => (els as HTMLVideoElement[]).map((v) => v.preload))).toEqual(expect.arrayContaining(["none"]));
+      .toBeGreaterThanOrEqual(1);
+    const playing = await videos.evaluateAll((els) => (els as HTMLVideoElement[]).filter((v) => !v.paused).length);
+    expect(playing).toBeGreaterThanOrEqual(1);
+    expect(playing).toBeLessThanOrEqual(2);
+    expect(await videos.evaluateAll((els) => (els as HTMLVideoElement[]).every((v) => v.muted && v.loop))).toBe(true);
+    expect(await videos.evaluateAll((els) => (els as HTMLVideoElement[]).map((v) => v.preload))).toEqual(["none", "none"]);
 
-    // Sound on for the second reel: it plays unmuted, the first stops.
-    const reelB = section.getByTestId("reel").filter({ hasText: `QA social reel B ${RUN}` });
-    await reelB.getByTestId("reel-sound").click();
-    await expect.poll(async () => reelB.getByTestId("reel-video").evaluate((v: HTMLVideoElement) => !v.paused && !v.muted)).toBe(true);
-    expect(await videos.evaluateAll((els) => (els as HTMLVideoElement[]).filter((v) => !v.paused).length)).toBe(1);
-    await expect(reelB.getByTestId("reel-sound")).toHaveAttribute("aria-pressed", "true");
+    // Full-duration loop: attribute is set and playback advances (no artificial cutoff timer).
+    const first = videos.first();
+    expect(await first.evaluate((v: HTMLVideoElement) => v.loop)).toBe(true);
+    await expect.poll(async () => first.evaluate((v: HTMLVideoElement) => v.currentTime), { timeout: 10_000 }).toBeGreaterThan(0.05);
+
+    // Open centered shoppable modal; background carousel videos pause; Escape restores focus.
+    const openA = section.getByTestId("reel").filter({ hasText: `QA social reel A ${RUN}` }).getByTestId("reel-open");
+    await openA.focus();
+    await openA.click();
+    const modal = page.getByTestId("reel-shoppable-modal");
+    await expect(modal).toBeVisible();
+    await expect(modal.getByText(/Shop this video/i)).toBeVisible();
+    const box = await modal.boundingBox();
+    const vp = page.viewportSize()!;
+    expect(box).toBeTruthy();
+    expect(Math.abs(box!.x + box!.width / 2 - vp.width / 2)).toBeLessThan(48);
+    await expect.poll(async () => videos.evaluateAll((els) => (els as HTMLVideoElement[]).filter((v) => !v.paused).length)).toBe(0);
+    await page.keyboard.press("Escape");
+    await expect(modal).toHaveCount(0);
+    await expect(openA).toBeFocused();
     await section.screenshot({ path: `${OUT}/reels-playing.png` });
 
-    // Reduced motion: nothing starts by itself; the play button works.
+    // Tab hidden → pause eligible playback when returning without modal.
+    await openA.click();
+    await page.keyboard.press("Escape");
+    await page.evaluate(() => {
+      Object.defineProperty(document, "hidden", { configurable: true, get: () => true });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await expect.poll(async () => videos.evaluateAll((els) => (els as HTMLVideoElement[]).filter((v) => !v.paused).length)).toBe(0);
+
+    // Reduced motion: no autoplay; subtle Watch fallback; card opens the modal.
     const ctx = await browser.newContext({ reducedMotion: "reduce", baseURL: page.url().replace(/\/$/, "") });
     const rm = await ctx.newPage();
     await serve(rm);
@@ -240,8 +282,10 @@ test.describe.serial("P1: truthful social proof (isolated)", () => {
     await rm.waitForTimeout(2_500);
     const rmVideos = rmSection.getByTestId("reel-video");
     expect(await rmVideos.evaluateAll((els) => (els as HTMLVideoElement[]).filter((v) => !v.paused).length)).toBe(0);
-    await rmSection.getByTestId("reel").first().getByTestId("reel-play").click();
-    await expect.poll(async () => rmVideos.evaluateAll((els) => (els as HTMLVideoElement[]).filter((v) => !v.paused).length)).toBe(1);
+    await expect(rmSection.getByTestId("reel-watch-fallback").first()).toBeVisible();
+    await expect(rmSection.getByTestId("reel-play")).toHaveCount(0);
+    await rmSection.getByTestId("reel-open").first().click();
+    await expect(rm.getByTestId("reel-shoppable-modal")).toBeVisible();
     await ctx.close();
   });
 
@@ -250,13 +294,9 @@ test.describe.serial("P1: truthful social proof (isolated)", () => {
     await page.goto("/");
     const section = page.getByTestId("reels-section");
     await section.scrollIntoViewIfNeeded();
-    // Muted autoplay may already have tried the (404) video, in which case the card has swapped its player and play
-    // button for the unavailable state. Only press play while the button is still there; the result must be the
-    // same either way. (An unbounded click on a button that disappears would wait out the whole test.)
+    // Autoplay attaches sources when visible; a 404 should surface the unavailable state without a permanent play control.
     const unavailable = section.getByText("This video is not available right now.").first();
-    const play = section.getByTestId("reel").first().getByTestId("reel-play");
-    await expect(unavailable.or(play).first()).toBeVisible();
-    if (!(await unavailable.isVisible())) await play.click({ timeout: 5_000 }).catch(() => null);
     await expect(unavailable).toBeVisible({ timeout: 15_000 });
+    await expect(section.getByTestId("reel-play")).toHaveCount(0);
   });
 });

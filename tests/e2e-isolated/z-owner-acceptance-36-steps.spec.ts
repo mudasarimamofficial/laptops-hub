@@ -365,13 +365,18 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     step(23, rv);
 
     await page.goto("/admin/blog/new"); // 24
-    await page.getByLabel("Title").fill(`QA acceptance guide ${RUN}`);
-    await page.getByLabel("Address").fill(POST_SLUG);
-    await page.getByLabel("Summary (shown on the guides list)").fill("Synthetic staging article proving the guides pages.");
-    await page.getByLabel(/^Body/).fill("<h2>Checking a used laptop</h2><p>Look at the battery health and the keyboard first.</p>");
-    await page.getByLabel("Status").selectOption("published");
-    await page.getByRole("button", { name: "Save post" }).click();
-    await expect(page.getByText("Post saved.")).toBeVisible();
+    await page.getByLabel("Title", { exact: true }).fill(`QA acceptance guide ${RUN}`);
+    await page.getByLabel("Web address").fill(POST_SLUG);
+    await page.getByLabel("Summary").fill("Synthetic staging article proving the guides pages.");
+    // Body: TipTap surface is the primary editor; type into it so the real author path is covered.
+    const editor = page.getByTestId("blog-rich-editor");
+    await expect(editor).toBeVisible({ timeout: 20_000 });
+    await editor.click();
+    await page.keyboard.type("Look at the battery health and the keyboard first.");
+    await page.getByLabel("Visible — published now").check();
+    await page.getByRole("button", { name: "Create post" }).click();
+    await page.waitForURL(/\/admin\/blog\/[0-9a-f-]{36}\?saved=1$/);
+    await expect(page.getByText("Post saved.").first()).toBeVisible();
     await page.goto(`/guides/${POST_SLUG}`);
     await expect(page.getByRole("heading", { level: 1, name: `QA acceptance guide ${RUN}` })).toBeVisible();
     await page.goto("/guides");

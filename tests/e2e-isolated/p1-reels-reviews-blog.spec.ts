@@ -200,7 +200,7 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     );
     await page.getByRole("button", { name: "Create post" }).click();
     await page.waitForURL(/\/admin\/blog\/[0-9a-f-]{36}\?saved=1$/);
-    await expect(page.getByText(/Post saved|Saved/i).first()).toBeVisible();
+    await expect(page.getByText("Post saved.").first()).toBeVisible();
 
     const { data: row } = await sb.from("articles").select("body_html, status, published_at").eq("slug", POST_SLUG).single();
     expect(row!.status).toBe("published");
@@ -225,7 +225,7 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     await page.goto(`/admin/blog/${idRow!.id}`);
     await page.getByLabel("Hidden — draft, not on the site").check();
     await page.getByRole("button", { name: "Save" }).click();
-    await expect(page.getByText(/Post saved|Saved/i).first()).toBeVisible();
+    await expect(page.getByText("Post saved.").first()).toBeVisible();
     const res = await page.request.get(`/guides/${POST_SLUG}`);
     expect(res.status()).toBe(404);
   });

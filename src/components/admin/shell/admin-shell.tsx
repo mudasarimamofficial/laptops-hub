@@ -70,8 +70,8 @@ export function AdminShell({ staff, children }: Props) {
         aria-label="Admin navigation"
       >
         <div className="flex h-[var(--adm-topbar-h)] items-center gap-2 border-b border-[var(--adm-sidebar-border)] px-4">
-          <Link href="/admin" className="font-[family-name:var(--font-display)] text-[15px] font-bold tracking-[-0.03em] text-white">
-            Laptops <span className="rounded bg-[var(--lh-signal)] px-1.5 text-white">HUB</span>
+          <Link href="/admin" className="font-[family-name:var(--font-display)] text-[15px] font-bold tracking-[-0.02em] text-white uppercase">
+            LAPTOPS <span className="rounded bg-[var(--lh-signal)] px-1.5 normal-case tracking-[0.12em] text-white">HUB</span>
           </Link>
           <span className="ml-auto font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-[var(--adm-sidebar-muted)]">
             Admin
@@ -94,7 +94,7 @@ export function AdminShell({ staff, children }: Props) {
                       <li key={item.href}>
                         <Link
                           href={item.href}
-                          className={`flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                          className={`flex min-h-[44px] items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                             active
                               ? "bg-[var(--adm-sidebar-active)] text-white"
                               : "text-[var(--adm-sidebar-text)] hover:bg-[var(--adm-sidebar-hover)] hover:text-white"
@@ -145,7 +145,11 @@ export function AdminShell({ staff, children }: Props) {
             {staff?.role ?? "—"}
           </p>
           <form action="/api/admin/account/sign-out" method="post" className="mt-2">
-            <button type="submit" className="text-xs text-[var(--adm-sidebar-muted)] hover:text-white hover:underline" data-testid="admin-sign-out">
+            <button
+              type="submit"
+              className="mt-1 inline-flex min-h-[44px] items-center text-sm text-[var(--adm-sidebar-muted)] hover:text-white hover:underline"
+              data-testid="admin-sign-out"
+            >
               Sign out
             </button>
           </form>
@@ -156,9 +160,11 @@ export function AdminShell({ staff, children }: Props) {
         <header className="sticky top-0 z-30 flex h-[var(--adm-topbar-h)] items-center gap-3 border-b border-[var(--adm-border)] bg-[var(--adm-surface)]/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-[var(--adm-surface)]/80">
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[var(--adm-border)] text-[var(--adm-ink)] lg:hidden"
+            data-testid="admin-nav-open"
+            className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-[var(--adm-border)] text-[var(--adm-ink)] lg:hidden"
             aria-expanded={open}
             aria-controls={navId}
+            aria-label="Open admin menu"
             onClick={() => setOpen((v) => !v)}
           >
             <span className="sr-only">Menu</span>
@@ -184,8 +190,8 @@ export function AdminShell({ staff, children }: Props) {
           </div>
         </header>
 
-        <main id="admin-main" className="px-4 py-6 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-[1400px]">{children}</div>
+        <main id="admin-main" className="min-w-0 overflow-x-hidden px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-[1400px] min-w-0">{children}</div>
         </main>
       </div>
     </div>

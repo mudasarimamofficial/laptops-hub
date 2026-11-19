@@ -125,16 +125,16 @@ button {
   border-color: var(--lh-action, #2159d4) !important;
 }
 
-/* ── Header ───────────────────────────────────────────────── */
+/* ── Header / compact grouped mega menu ───────────────────── */
 .v5-mega-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(140px, 200px) minmax(0, 1fr);
 }
 .v5-mega-feat {
   display: none;
 }
 @media (min-width: 1180px) {
   .v5-mega-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr)) 270px;
+    grid-template-columns: minmax(160px, 210px) minmax(0, 1fr) minmax(200px, 240px);
   }
   .v5-mega-feat {
     display: flex;

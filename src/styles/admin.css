@@ -134,3 +134,27 @@
   height: 0;
   pointer-events: none;
 }
+
+/* Mobile-first dense data: bounded horizontal scroll, never page-wide overflow */
+.admin-app .adm-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.admin-app .adm-table-scroll > table {
+  min-width: 560px;
+}
+@media (max-width: 639px) {
+  .admin-app input,
+  .admin-app select,
+  .admin-app textarea {
+    font-size: 16px; /* avoid iOS Safari auto-zoom */
+  }
+  .admin-app .adm-card-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}

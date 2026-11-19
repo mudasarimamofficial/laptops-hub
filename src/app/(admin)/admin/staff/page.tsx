@@ -63,7 +63,7 @@ export default async function AdminStaffPage() {
           <EmptyState title="No staff listed" description="Invite a teammate above when email is configured." />
         </div>
       ) : (
-        <div className="mt-3 overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
+        <div className="adm-table-scroll mt-3 overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="bg-[var(--adm-surface-2)] text-xs uppercase tracking-wide text-[var(--adm-ink-2)]">
               <tr>

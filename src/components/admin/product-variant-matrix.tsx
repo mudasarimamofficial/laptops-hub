@@ -252,8 +252,8 @@ export function ProductVariantMatrix({ handle, optionNames, variants, canSetOver
         ) : null}
       </div>
 
-      <div className="mt-4 overflow-x-auto">
-        <table className="min-w-full text-left text-sm">
+      <div className="adm-table-scroll mt-4 overflow-x-auto">
+        <table className="min-w-[640px] w-full text-left text-sm">
           <thead className="border-b border-[var(--adm-border)] text-xs uppercase tracking-wide text-[var(--adm-ink-2)]">
             <tr>
               <th className="px-2 py-2">Variant</th>

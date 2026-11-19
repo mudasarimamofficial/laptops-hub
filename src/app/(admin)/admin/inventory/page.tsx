@@ -155,7 +155,7 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
 
       <h2 className="mt-10 text-lg font-semibold">Stock history</h2>
       <p className="text-sm text-[var(--adm-ink-2)]">Every change to tracked stock: orders, cancellations, product edits and adjustments. Who made an adjustment is in the Activity log.</p>
-      <div className="mt-3 overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-white">
+      <div className="adm-table-scroll mt-3 overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-white">
         <table className="w-full min-w-[560px] text-left text-sm">
           <thead className="text-xs uppercase tracking-wide text-[var(--adm-ink-2)]">
             <tr>

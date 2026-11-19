@@ -45,7 +45,19 @@ const tracked = must(await sb.from("product_variants").insert({ product_id: prod
 const draftVar = must(await sb.from("product_variants").insert({ product_id: draft.id, sku: `ISO-D-${tag}`, price_paisa: PRICE }).select("id").single(), "draftVar");
 const zone = must(await sb.from("shipping_zones").insert({ name: `ISO zone ${tag}`, provinces: ["Punjab"], cities: ["Lahore"], flat_fee_paisa: 25_000, cod_fee_paisa: 10_000, is_active: true }).select("id").single(), "zone");
 const prevCod = (await sb.from("store_settings").select("value").eq("key", "cod_checkout").maybeSingle()).data?.value ?? { enabled: false };
+const prevTracking =
+  (await sb.from("store_settings").select("value").eq("key", "inventory_tracking").maybeSingle()).data?.value ?? {
+    enabled: false,
+  };
 must(await sb.from("store_settings").upsert({ key: "cod_checkout", value: { enabled: true } }), "enable checkout (local only)");
+// Oversell race requires the global merchant tracking switch ON (default OFF since 20261118074859).
+must(
+  await sb.from("store_settings").upsert({
+    key: "inventory_tracking",
+    value: { ...(typeof prevTracking === "object" && prevTracking ? prevTracking : {}), enabled: true },
+  }),
+  "enable inventory tracking (local only)",
+);
 
 const payload = (o = {}) => ({
   idempotency_key: `iso-${randomUUID()}`,
@@ -195,8 +207,9 @@ try {
     }
   }
 } finally {
-  // Local stack only: remove fixtures and put the checkout setting back the way it was.
+  // Local stack only: remove fixtures and put settings back the way they were.
   await sb.from("store_settings").upsert({ key: "cod_checkout", value: prevCod });
+  await sb.from("store_settings").upsert({ key: "inventory_tracking", value: prevTracking });
   const ids = ((await sb.from("orders").select("id").in("shipping_zone_id", [zone.id])).data || []).map((o) => o.id);
   if (ids.length) await sb.from("orders").delete().in("id", ids);
   await sb.from("shipping_zones").delete().eq("id", zone.id);

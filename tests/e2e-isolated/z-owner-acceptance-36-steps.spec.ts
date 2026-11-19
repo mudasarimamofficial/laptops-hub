@@ -252,7 +252,7 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     await page.getByLabel("Street address").fill("House 12, Street 4, Gulberg III");
     await page.getByLabel("City").fill("Lahore");
     await page.getByLabel("Province").selectOption("Punjab");
-    await page.getByLabel(/Lahore standard \(test\)/).check(); // 12
+    await page.getByRole("radio", { name: /Lahore standard \(test\)/ }).first().check(); // 12
     const { data: zone } = await sb.from("shipping_zones").select("flat_fee_paisa, cod_fee_paisa, free_shipping_min_paisa").eq("id", fx.zone.id).single();
     const subtotal = PRICES[state.soldRam!] * 100;
     const free = zone!.free_shipping_min_paisa != null && subtotal >= zone!.free_shipping_min_paisa;
@@ -305,13 +305,13 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     step(16, { visibleTo: "manager" });
     const transitions = ["confirmed", "packing", "shipped", "out_for_delivery", "delivered"]; // 17–20
     for (const to of transitions) {
-      await page.getByLabel("Next status").selectOption(to);
+      await page.getByLabel("Next step").selectOption(to);
       if (to === "shipped") {
-        await page.getByLabel("Carrier (optional)").fill("Test Courier");
-        await page.getByLabel("Tracking (optional)").fill(`ACC-${RUN}`);
+        await page.getByLabel(/^Carrier/).fill("Test Courier");
+        await page.getByLabel(/^Tracking number/).fill(`ACC-${RUN}`);
       }
       await page.getByRole("button", { name: "Update status" }).click();
-      await expect(page.getByText(`Current: ${to}`)).toBeVisible();
+      await expect(page.getByText(new RegExp(`Current:\\s*${to}`, "i"))).toBeVisible();
     }
     await shot(page, "20-delivered", true);
     const { data: before } = await sb.from("orders").select("status, payment_status, amount_collected_paisa").eq("id", state.orderId!).single();

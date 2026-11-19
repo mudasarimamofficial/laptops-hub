@@ -48,11 +48,19 @@ const apiOrder = (page: Page, lines: { variantId: string; quantity: number }[], 
   });
 
 test.describe.serial("P0: exact variant from PDP to COD order (isolated)", () => {
+  let prevTracking: unknown = null;
+
   test.beforeAll(async () => {
     await assertLocalOnly("variant order journey");
+    prevTracking = (await sb.from("store_settings").select("value").eq("key", "inventory_tracking").maybeSingle()).data?.value ?? null;
+    await sb.from("store_settings").upsert({
+      key: "inventory_tracking",
+      value: { ...(typeof prevTracking === "object" && prevTracking ? prevTracking : {}), enabled: true },
+    });
   });
 
   test.afterAll(async () => {
+    if (prevTracking) await sb.from("store_settings").upsert({ key: "inventory_tracking", value: prevTracking });
     for (const handle of [A.handle, B.handle]) {
       const { data: p } = await sb.from("products").select("id").eq("handle", handle).maybeSingle();
       if (!p) continue;
@@ -159,7 +167,7 @@ test.describe.serial("P0: exact variant from PDP to COD order (isolated)", () =>
     await page.getByLabel("Street address").fill("House 3, Street 4, Gulberg");
     await page.getByLabel("City").fill(fx.zone.city);
     await page.getByLabel("Province").selectOption(fx.zone.province);
-    await page.getByLabel(/Lahore standard \(test\)/).check();
+    await page.getByRole("radio", { name: /Lahore standard \(test\)/ }).first().check();
     await expect(page.getByText(`Cash due: ${formatPkr(9_200_000 + FEES)}`)).toBeVisible();
     await page.getByRole("checkbox", { name: /I will pay the cash-due amount/ }).check();
     await page.getByRole("button", { name: "Place COD order" }).click();
@@ -248,9 +256,9 @@ test.describe.serial("P0: exact variant from PDP to COD order (isolated)", () =>
     await page.goto(`/admin/orders/${placedOrder}`);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(placedOrder);
     await expect(page.getByRole("button", { name: "Update status" })).toBeEnabled();
-    await page.getByLabel("Next status").selectOption("cancelled");
+    await page.getByLabel("Next step").selectOption("cancelled");
     await page.getByRole("button", { name: "Update status" }).click();
-    await expect(page.getByText("Current: cancelled")).toBeVisible();
+    await expect(page.getByText(/Current:\s*cancelled/i)).toBeVisible();
     expect((await sb.from("product_variants").select("quantity_on_hand").eq("id", vA["16GB/256GB"].id).single()).data!.quantity_on_hand).toBe(3);
     const { data: o } = await sb.from("orders").select("id, payment_status, amount_collected_paisa").eq("order_number", placedOrder).single();
     expect(o).toMatchObject({ payment_status: "unpaid_cod", amount_collected_paisa: 0 });

@@ -2,10 +2,10 @@
 
 **Date:** 2026-11-19  
 **Production alias:** https://www.laptopshub.pk  
-**Latest READY production deploy:** `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` (commit `79df85d`, mega menu / wordmark / admin shell PR #52)  
+**Latest READY production deploy:** `dpl_CHuvw5gQNfYew2fRNd84fBD9jktC` (commit `b48bdb7`, mobile admin + isolated COD test alignment PR #53)  
+**Prior READY (mega menu / wordmark PR #52):** `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` / `79df85d`  
 **Prior READY (favicon PR #50):** `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` / `dff6ba4`  
-**Prior READY (Featured flame PR #49):** `dpl_Gs2REDcGqhcLN2YEEHZwMw8xfxH5` / `c0bac99`  
-**Rollback candidates (READY):** `dpl_8FqSGLE3j3PqB4BVoc666mS7GBhk` (docs #51), `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` (favicon #50), `dpl_Gs2REDcGqhcLN2YEEHZwMw8xfxH5` (PR #49)
+**Rollback candidates (READY):** `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` (PR #52), `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` (favicon #50), `dpl_8FqSGLE3j3PqB4BVoc666mS7GBhk` (docs #51)
 
 PR #48 mobile nav / reel–cart overlay / carousel a11y fixes are deployed. This document does **not** re-implement them.
 
@@ -15,11 +15,12 @@ PR #48 mobile nav / reel–cart overlay / carousel a11y fixes are deployed. This
 
 | Item | Label | Evidence |
 |---|---|---|
-| Production deploy READY + aliases | **PASS** | `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` READY @ `79df85d`; aliases include `www.laptopshub.pk`, `laptopshub.pk` |
+| Production deploy READY + aliases | **PASS** | `dpl_CHuvw5gQNfYew2fRNd84fBD9jktC` READY @ `b48bdb7`; aliases include `www.laptopshub.pk`, `laptopshub.pk` |
 | Official favicon (site-wide) | **PASS** | PR #50; static `favicon.ico` / `icon.png` / `apple-icon.png`; SHA match on www + apex→www; see `docs/FAVICON_ACCEPTANCE_2026-11-19.md` |
 | Uppercase LAPTOPS HUB wordmark | **PASS** | PR #52; header/footer/admin shell; live on `www.laptopshub.pk` |
 | Compact grouped desktop mega menu | **PASS** | PR #52; height-capped category panel; Escape/Close; isolated Playwright 2/2 |
-| Admin mobile shell hardening | **PARTIAL** | PR #52 shell + table scroll; full route matrix still in progress |
+| Admin mobile shell hardening | **PASS** (shell) / **PARTIAL** (full matrix) | PR #52–#53: shell, save bar, table scroll, settings touch targets, isolated mobile shell 2/2; full every-route viewport matrix still in progress |
+| Isolated COD checkout + journeys | **PASS** (isolated) | COD matrix 32/32; launch-journey 10/10; variant journey 9/9; oversell 3/3 — live place-order still gated |
 | Homepage HTTP | **PASS** | 200 |
 | Mobile Open menu / Close menu | **PASS** | Production smoke @ 390px after `data-ready` hydration — `docs/CLIENT_HANDOVER_PROD_SMOKE_2026-11-19.json` |
 | Homepage reels section + modal open | **PASS** | Production smoke; modal opens |
@@ -101,11 +102,13 @@ Run on https://www.laptopshub.pk and report PASS/FAIL per line:
 ### Production references
 
 - Live: https://www.laptopshub.pk  
-- Latest READY: `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` @ `79df85d` (PR #52 mega menu / wordmark / admin shell)  
+- Latest READY: `dpl_CHuvw5gQNfYew2fRNd84fBD9jktC` @ `b48bdb7` (PR #53 mobile admin + COD test alignment)  
+- Prior READY (PR #52 mega menu / wordmark): `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` @ `79df85d`  
 - Prior READY (PR #50 favicon): `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` @ `dff6ba4`  
-- Prior READY (PR #49 Featured flame): `dpl_Gs2REDcGqhcLN2YEEHZwMw8xfxH5` @ `c0bac99`  
 - Mega menu / wordmark acceptance: `docs/FINAL_MEGA_MENU_WORDMARK_ACCEPTANCE_2026-11-19.md`  
-- Mobile admin acceptance (in progress): `docs/FINAL_MOBILE_ADMIN_ACCEPTANCE_2026-11-19.md`  
+- Mobile admin acceptance: `docs/FINAL_MOBILE_ADMIN_ACCEPTANCE_2026-11-19.md`  
+- Controlled / isolated COD: `docs/FINAL_CONTROLLED_ORDER_TEST_2026-11-19.md`  
+- A–Z QA checkpoint: `docs/FINAL_AZ_CUSTOMER_MERCHANT_QA_2026-11-19.md`  
 - Favicon acceptance: `docs/FAVICON_ACCEPTANCE_2026-11-19.md`  
 - Smoke evidence: `docs/CLIENT_HANDOVER_PROD_SMOKE_2026-11-19.json`  
 - Exception closure: `docs/QA_EXCEPTION_CLOSURE_2026-11-19.md`  

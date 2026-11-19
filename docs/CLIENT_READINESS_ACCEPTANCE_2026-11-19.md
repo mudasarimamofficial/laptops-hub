@@ -1,90 +1,49 @@
-# Client readiness acceptance — 2026-11-19 (post ca7e468)
+# Client readiness acceptance — 2026-11-19 (final blockers pass)
 
-Started from production: `ca7e4685b97444b915fa0e27cab739c8a5bd52a6` / `dpl_HTiVFkGA1CyLumajhuYqmDfvsoqR`.  
-Resend workspace repair and PRs #43–#45 were already complete; this pass closes remaining acceptance items.
+Started from `75f0d32c7b708236ab1fce43f31c81320f0d8208` (PR #46 already shipped: checkout H1, recovery bridge, Resend/SMTP).  
+This pass closes remaining functional blockers only — no redo of Resend, bridge, checkout heading, or prior reels one-product coverage.
 
-**This pass shipped:** PR #46 → `bc6e52c1ceb416fcd57b87da3a62ef6751298a6f` / `dpl_A3VjJZCN12mwiaRwrNkoFzf2mWqa`.
+## Acceptance matrix
 
-## 1. Owner password reset / login / role+UUID
+| Area | Label | Evidence |
+|---|---|---|
+| Storefront functionality | **PASS** (isolated) | Interactive UX QA `docs/INTERACTIVE_UX_QA_2026-11-19.json` — 459 PASS checks, 0 FAIL across discovered public routes @ 390/768/1280; screenshots in `test-results/interactive-ux-qa/` |
+| Merchant functionality | **PASS** (isolated) | `merchant-admin-workflows.spec.ts` 11/11; `p0-merchant-inventory-collections.spec.ts` (collections, inventory desk, analytics) |
+| Admin authentication | **PARTIAL** | Isolated owner/staff login **PASS**. Production owner UUID `cc603db4-…`, role `owner`, `is_active=true`, email `infolaptopshub@gmail.com` **PASS**. Fresh post-reset password login: **OWNER VERIFICATION REQUIRED** |
+| Reels shopping | **PASS** (isolated fixtures only) | P1 single-product modal **PASS**; multi-product link / reorder / reload / prices / add-to-cart / mobile **PASS** (`p1-reels-reviews-blog.spec.ts`). Production’s six reels left unlinked for merchant curation — **NOT TESTED** as business matches |
+| Blog publishing | **PASS** (isolated) | Create → save → `/guides/:slug` 200 → guides index → sitemap → unpublish → 404. Root cause of prior fail: stale `.next-local` + duplicate probe titles (not RLS). Guard: `assertIsolatedAppAligned` |
+| Checkout | **PASS** (prior + smoke) | Empty-cart H1 shipped in #46; checkout route interactive smoke **PASS**. Full COD place-order on production remains gated by COD flags — **NOT TESTED** as live COD |
+| Responsive usability | **PARTIAL** | Real viewport screenshots + overflow + menu/modal interactions **PASS** on isolated. Full touch/gesture certification **NOT TESTED** |
+| Accessibility | **PARTIAL** | Skip links, landmarks, keyboard Tab focus, dialog roles **PASS** in interactive QA. Full screen-reader audit **NOT TESTED** |
+| Operational integrations | **PASS** / **PARTIAL** | Resend correct workspace + SMTP v2 (**PASS**, prior). Recovery bridge 4/4 (**PASS**, prior). Owner password completion (**OWNER VERIFICATION REQUIRED**) |
 
-| Check | Label |
-|---|---|
-| Owner Auth UUID + role (SQL) | **PASS** — `cc603db4-d291-4dc1-a401-b04ffbeff86c`, role `owner`, `is_active=true`, email `infolaptopshub@gmail.com` |
-| App recovery request (`/admin/forgot-password`) | **PASS** — generic success: “If this email belongs to a staff account…” |
-| Fresh reset email delivery | **PARTIAL** — request accepted; confirm Delivered in correct Resend workspace + Gmail (owner) |
-| Password form via confirm/hash bridge | **OWNER VERIFICATION REQUIRED** — owner sets password privately within link window |
-| Fresh email/password login after reset | **OWNER VERIFICATION REQUIRED** |
-| Role/UUID unchanged after reset | **PASS** (pre-check); re-confirm after owner login |
+### Overall
 
-Do not claim complete client readiness until owner login after reset is confirmed.
+**PARTIAL — engineering acceptance largely green on isolated; not complete client ready until owner confirms private password setup + fresh login.**
 
-## 2. Wrong-workspace credential revoke
+Blocking for “complete client ready”:
 
-| Check | Label |
-|---|---|
-| Wrong account identified | **PASS** — Cursor/Resend login `mudasarimamofficial`, Domains empty |
-| Revoke `laptops-hub-supabase-auth-smtp` | **PASS** — deleted; UI: “This API Key has been deleted” |
-| Correct workspace keys intact | **PASS** — `infolaptopshub`: `laptops-hub-supabase-auth-smtp-v2` + `laptops-hub-production-sending` |
-| App notifications credential | **PASS** — production-sending key preserved (not revoked) |
+1. Owner privately completes new password + confirms fresh email/password admin login (**OWNER VERIFICATION REQUIRED** — do not resend recovery).
+2. Merge/deploy this pass’s test/docs/guard fixes to production.
 
-## 3. Recovery bridge (isolated Playwright)
+Non-blocking / honest gaps: full SR audit **NOT TESTED**; production reel–product curation left to merchant; live COD order **NOT TESTED** while COD remains gated.
 
-| Check | Label |
-|---|---|
-| Valid `#access_token&type=recovery` → cookies → `/admin/reset-password` | **PASS** |
-| Malformed / non-recovery hash ignored | **PASS** |
-| Cleared cookies → reset form refused | **PASS** |
-| 15-minute recovery window constant | **PASS** |
-| Production expired link UI | **PASS** — “needs a valid reset link… within 15 minutes” |
+## What changed this pass
 
-Suite: `tests/e2e-isolated/auth-hash-recovery-bridge.spec.ts` (4/4).
+- Blog E2E: slug-scoped guides assertions; `scripts/test-fixtures/check-isolated-app.mjs`; `docs/ISOLATED_TESTS.md` rebuild warning.
+- Shoppable reels: multi-product picker, reorder, reload, modal prices, add-to-cart, mobile screenshot coverage.
+- Merchant E2E: settings heading aligned to real UI (`Settings` + categories nav); full 11/11 green on isolated.
+- Interactive UX QA script + JSON evidence (not the old 80-viewport structural smoke).
 
-## 4. Interactive / a11y / responsive (beyond 80 viewport smoke)
-
-Artifact: `docs/INTERACTIVE_QA_SMOKE_2026-11-19.json` — **PARTIAL** (read-only smoke, not full UX certification).
-
-| Area | Label |
-|---|---|
-| Storefront routes @ 390/768/1280 (http, h1, skip, overflow, focus) | **PASS** for `/`, collections, cart, checkout, compare, admin login/forgot |
-| `/reels` path | **FAIL** as URL — no storefront `/reels` page (reels live on homepage/admin); treat as **NOT TESTED** for reel UX |
-| Cart mutations / checkout inputs / compare / modals / touch | **NOT TESTED** |
-| Merchant save/reload / owner admin auth session | **NOT TESTED** (mutating) |
-| Screen-reader full audit | **NOT TESTED** |
-
-Viewport JSON remains **PARTIAL** smoke only (`docs/VIEWPORT_QA_HONESTY_NOTE_2026-11-19.md`).
-
-## 5. Checkout empty-cart H1
+## Owner password (item 5)
 
 | Check | Label |
 |---|---|
-| Defect | Empty-cart hydrated path used `PendingBlock` (`h2`) only — no page `h1` |
-| Fix | Empty cart now renders kicker + `<h1>` + browse CTA (branch `fix/release-acceptance-checkout-h1-recovery-qa`) |
-| Production until deploy | Pre-hydration still shows “Place COD order”; post-hydrate empty state fixed after merge |
+| UUID unchanged | **PASS** — `cc603db4-d291-4dc1-a401-b04ffbeff86c` |
+| Active owner | **PASS** |
+| Correct email | **PASS** — `infolaptopshub@gmail.com` |
+| Password form / fresh login after reset | **OWNER VERIFICATION REQUIRED** |
+| Recovery sessions invalidated | **OWNER VERIFICATION REQUIRED** (confirm after owner login) |
+| Admin settings accessible post-login | **OWNER VERIFICATION REQUIRED** |
 
-## 6. Blog create/edit/save/reload E2E
-
-| Check | Label |
-|---|---|
-| Isolated blog publish → public `/guides/:slug` | **PARTIAL** — create/save reached DB `published` in prior CI; this run failed public H1 (`/guides` gated empty / post visibility). Needs re-run on healthy isolated stack after merge |
-| Merchant workflow selectors (Visibility / Create post) | Shipped in #44; full merchant E2E needs authenticated preview storage (**NOT TESTED** this pass) |
-
-## 7. CI / deploy / readiness
-
-| Check | Label |
-|---|---|
-| Unit tests | **PASS** (local `npm run test:unit`) |
-| ESLint on touched files | **PASS** |
-| Hash-bridge isolated E2E | **PASS** 4/4 |
-| Production deploy of this branch | Pending merge of checkout H1 + tests + docs |
-
-### Overall client readiness
-
-**PARTIAL — not complete client ready.**
-
-Blocking for “complete”:
-
-1. Owner privately completes password set + fresh login (**OWNER VERIFICATION REQUIRED**).
-2. Merge/deploy checkout H1 fix.
-3. Re-confirm blog public publish on isolated (**PARTIAL** until green re-run).
-
-Non-blocking known gaps: full interactive matrix **NOT TESTED**; `/reels` URL myth; viewport smoke ≠ certification.
+`last_sign_in_at` may update from recovery-link exchange; that alone is not acceptance of a privately chosen password.

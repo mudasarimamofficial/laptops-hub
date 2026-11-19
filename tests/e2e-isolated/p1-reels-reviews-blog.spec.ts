@@ -7,6 +7,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 import fs from "fs";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
+import { assertIsolatedAppAligned } from "../../scripts/test-fixtures/check-isolated-app.mjs";
 import { DEFAULT_SOCIAL_PROOF } from "../../src/lib/content/social-proof";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -14,12 +15,18 @@ if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new
 const fx = JSON.parse(fs.readFileSync(".isolated/fixture.json", "utf8"));
 const sb = createClient(SB_URL, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
 const P = fx.products[0];
+const P2 = fx.products[1];
 const OUT = "test-results/p1-evidence";
 const RUN = Date.now().toString(36);
 const REEL_TITLE = `QA reel ${RUN}`;
+const REEL_MULTI = `QA reel multi ${RUN}`;
 const POST_SLUG = `qa-post-${RUN}`;
 const REVIEWER = `QA Reviewer ${RUN}`;
 const VIDEO = `${SB_URL.replace(/\/+$/, "")}/storage/v1/object/public/reels/qa-${RUN}.mp4`;
+
+function fmtPkr(paisa: number) {
+  return "Rs " + Number(paisa / 100).toLocaleString("en-PK", { maximumFractionDigits: 2 });
+}
 
 async function signIn(page: Page) {
   await page.goto("/admin/login");
@@ -30,16 +37,29 @@ async function signIn(page: Page) {
 }
 
 async function cleanup() {
-  const { data: rows } = await sb.from("reels").select("id").or("title.like.QA reel %,title.like.QA premium reel %,title.like.QA social reel %");
+  const { data: rows } = await sb
+    .from("reels")
+    .select("id")
+    .or("title.like.QA reel %,title.like.QA reel multi %,title.like.QA premium reel %,title.like.QA social reel %");
   for (const r of rows || []) await sb.from("reel_products").delete().eq("reel_id", r.id);
-  await sb.from("reels").delete().or("title.like.QA reel %,title.like.QA premium reel %,title.like.QA social reel %");
+  await sb
+    .from("reels")
+    .delete()
+    .or("title.like.QA reel %,title.like.QA reel multi %,title.like.QA premium reel %,title.like.QA social reel %");
   await sb.from("product_reviews").delete().like("author_name", "QA Reviewer %");
   await sb.from("articles").delete().like("slug", "qa-post-%");
+}
+
+async function stubReelVideo(page: Page) {
+  await page.route(/\/reels\/qa-[^/]*\.mp4/, (route) =>
+    route.fulfill({ status: 200, contentType: "video/webm", body: fs.readFileSync("tests/fixtures/reel-synthetic.webm") }),
+  );
 }
 
 test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
   test.beforeAll(async () => {
     await assertLocalOnly("reels/reviews/blog journeys");
+    await assertIsolatedAppAligned("reels/reviews/blog journeys");
     fs.mkdirSync(OUT, { recursive: true });
     await cleanup();
     await sb.from("rate_limit_buckets").delete().like("bucket_key", "review:%");
@@ -48,9 +68,7 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
 
   test("reels: no row by default; reference and unlicensed videos refused; published owned reel shows", async ({ page }) => {
     // The local stack has no storage service: serve the original synthetic clip for the test URL.
-    await page.route(/\/reels\/qa-[^/]*\.mp4/, (route) =>
-      route.fulfill({ status: 200, contentType: "video/webm", body: fs.readFileSync("tests/fixtures/reel-synthetic.webm") }),
-    );
+    await stubReelVideo(page);
     await signIn(page);
     await cleanup();
     // Revalidate homepage reel cache after wiping sibling-suite QA rows.
@@ -121,6 +139,98 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     expect(res.status()).toBe(200);
     await page.goto("/");
     await expect(page.getByTestId("reels-section")).toHaveCount(0);
+  });
+
+  test("reels: multi-product link, reorder, reload, modal prices, add to cart, mobile", async ({ page }) => {
+    test.setTimeout(120_000);
+    await stubReelVideo(page);
+    await signIn(page);
+    await page.goto("/admin/reels");
+
+    const form = page.getByTestId("reel-new-form");
+    await form.getByLabel("Title").fill(REEL_MULTI);
+    await form.getByLabel(/Video URL/).fill(VIDEO.replace(`qa-${RUN}`, `qa-multi-${RUN}`));
+    await form.getByLabel("Video rights").selectOption("owned");
+    await form.getByLabel("Status").selectOption("published");
+
+    const picker = form.getByTestId("reel-product-picker");
+    // Link product 1, then product 2 (order = picker order).
+    await picker.getByLabel("Search products to feature").fill(P.handle.slice(0, 16));
+    await expect(picker.getByRole("button", { name: new RegExp(P.handle) })).toBeVisible({ timeout: 10_000 });
+    await picker.getByRole("button", { name: new RegExp(P.handle) }).click();
+    await picker.getByLabel("Search products to feature").fill(P2.handle.slice(0, 16));
+    await expect(picker.getByRole("button", { name: new RegExp(P2.handle) })).toBeVisible({ timeout: 10_000 });
+    await picker.getByRole("button", { name: new RegExp(P2.handle) }).click();
+    await expect(picker.locator("ol li")).toHaveCount(2);
+
+    // Reorder: move second product Up so P2 is first.
+    await picker.locator("ol li").filter({ hasText: P2.handle }).getByRole("button", { name: "Up" }).click();
+    await expect(picker.locator("ol li").first()).toContainText(P2.handle);
+    await expect(picker.locator("ol li").nth(1)).toContainText(P.handle);
+
+    await form.getByRole("button", { name: "Add reel" }).click();
+    await expect(form.getByText("Reel saved.")).toBeVisible();
+    const row = page.getByTestId("reel-row").filter({ hasText: REEL_MULTI });
+    await expect(row).toBeVisible();
+
+    // Persist after reload — open the row details and confirm picker order.
+    await page.reload({ waitUntil: "domcontentloaded" });
+    const edit = page.getByTestId("reel-row").filter({ hasText: REEL_MULTI });
+    await expect(edit).toBeVisible();
+    await edit.locator("summary").click();
+    const editPicker = edit.getByTestId("reel-product-picker");
+    await expect(editPicker.locator("ol li").first()).toContainText(P2.handle);
+    await expect(editPicker.locator("ol li").nth(1)).toContainText(P.handle);
+
+    const reelId = (await sb.from("reels").select("id").eq("title", REEL_MULTI).single()).data!.id;
+    const { data: dbLinks } = await sb
+      .from("reel_products")
+      .select("sort_order, products!reel_products_product_id_fkey(handle)")
+      .eq("reel_id", reelId)
+      .order("sort_order", { ascending: true });
+    expect((dbLinks || []).map((l) => (l.products as { handle?: string } | null)?.handle)).toEqual([P2.handle, P.handle]);
+
+    // Public modal: order, prices, availability, add to cart.
+    await page.goto("/");
+    const section = page.getByTestId("reels-section");
+    await expect(section).toBeVisible();
+    const reel = section.getByTestId("reel").filter({ hasText: REEL_MULTI });
+    await expect(reel).toBeVisible();
+    await reel.getByTestId("reel-open").click();
+    const modal = page.getByTestId("reel-shoppable-modal");
+    await expect(modal).toBeVisible();
+    const cards = modal.getByTestId("reel-shop-product");
+    await expect(cards).toHaveCount(2);
+    await expect(cards.nth(0).locator(`a[href="/products/${P2.handle}"]`).first()).toBeVisible();
+    await expect(cards.nth(0)).toContainText(fmtPkr(P2.pricePaisa));
+    await expect(cards.nth(0)).toContainText(/In stock|Unavailable/);
+    await expect(cards.nth(1).locator(`a[href="/products/${P.handle}"]`).first()).toBeVisible();
+    await expect(cards.nth(1)).toContainText(fmtPkr(P.pricePaisa));
+
+    await cards.nth(0).getByTestId("reel-modal-add-to-cart").click();
+    const cart = page.getByRole("dialog", { name: /cart/i });
+    await expect(cart).toBeVisible();
+    await expect(cart.locator(`a[href="/products/${P2.handle}"], a[href*="${P2.handle}"]`).first()).toBeVisible({ timeout: 10_000 });
+    await page.screenshot({ path: `${OUT}/reel-shoppable-desktop.png` });
+
+    // Mobile layout of the same modal surface.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    const mobileReel = page.getByTestId("reels-section").getByTestId("reel").filter({ hasText: REEL_MULTI });
+    await mobileReel.getByTestId("reel-open").click();
+    const mobileModal = page.getByTestId("reel-shoppable-modal");
+    await expect(mobileModal).toBeVisible();
+    await expect(mobileModal.getByTestId("reel-shop-product")).toHaveCount(2);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 2);
+    expect(overflow).toBe(false);
+    await page.screenshot({ path: `${OUT}/reel-shoppable-mobile.png` });
+
+    // Cleanup this reel so subsequent tests start clean.
+    const { data: multi } = await sb.from("reels").select("id").eq("title", REEL_MULTI).single();
+    if (multi?.id) {
+      await sb.from("reel_products").delete().eq("reel_id", multi.id);
+      await sb.from("reels").delete().eq("id", multi.id);
+    }
   });
 
   test("reviews: honest empty state; submission is pending until approved; then rating + JSON-LD", async ({ page }) => {
@@ -214,9 +324,9 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     await page.screenshot({ path: `${OUT}/guide-post.png`, fullPage: false });
 
     await page.goto("/guides");
-    // Listed as a guide card and in the side navigation.
+    // Listed as a guide card and in the side navigation (scope by slug — titles may collide with leftover fixtures).
     await expect(page.locator(`a.v5-hov-article[href="/guides/${POST_SLUG}"]`)).toContainText("How much memory a student laptop needs.");
-    await expect(page.getByRole("link", { name: "QA guide: choosing RAM", exact: true })).toBeVisible();
+    await expect(page.locator(`a[href="/guides/${POST_SLUG}"]`).filter({ hasText: "QA guide: choosing RAM" }).first()).toBeVisible();
     const sitemap = await (await page.request.get("/sitemap.xml")).text();
     expect(sitemap).toContain(`/guides/${POST_SLUG}`);
 

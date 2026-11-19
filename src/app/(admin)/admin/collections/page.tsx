@@ -65,7 +65,34 @@ export default async function AdminCollectionsPage() {
           actionLabel="Create collection"
         />
       ) : (
-        <div className="adm-table-scroll overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
+        <>
+        <div className="adm-mobile-cards" data-testid="collections-mobile-cards">
+          {rows.map((c) => {
+            const count = c.collection_products?.[0]?.count ?? 0;
+            const automated = isAutomated(c.rule);
+            return (
+              <article key={`m-${c.id}`} className="adm-mobile-card">
+                <p className="adm-mobile-card__title">
+                  {c.title}
+                  {c.featured ? (
+                    <span className="ml-2 text-xs font-normal text-[var(--adm-action)]">featured</span>
+                  ) : null}
+                </p>
+                <p className="adm-mobile-card__meta font-[family-name:var(--font-mono)]">{c.slug}</p>
+                <div className="adm-mobile-card__row">
+                  <StatusBadge status={c.published ? "published" : "draft"} />
+                  <span className="text-xs text-[var(--adm-ink-2)]">
+                    {automated ? "Automated" : `${count} products`}
+                  </span>
+                </div>
+                <Link href={`/admin/collections/${c.slug}`} className="adm-mobile-card__action">
+                  Edit collection
+                </Link>
+              </article>
+            );
+          })}
+        </div>
+        <div className="adm-desktop-table adm-table-scroll overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="border-b border-[var(--adm-divider)] bg-[var(--adm-surface-2)] text-[11px] uppercase tracking-wider text-[var(--adm-ink-2)]">
               <tr>
@@ -108,6 +135,7 @@ export default async function AdminCollectionsPage() {
             </tbody>
           </table>
         </div>
+        </>
       )}
     </>
   );

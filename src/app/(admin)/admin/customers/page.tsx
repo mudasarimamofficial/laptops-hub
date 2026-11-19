@@ -36,7 +36,20 @@ export default async function AdminCustomersPage() {
           actionLabel="View orders"
         />
       ) : (
-        <div className="adm-table-scroll overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)]">
+        <>
+        <div className="adm-mobile-cards" data-testid="customers-mobile-cards">
+          {rows.map((o) => (
+            <article key={`m-${o.order_number}`} className="adm-mobile-card">
+              <p className="adm-mobile-card__title">{o.customer_name || "—"}</p>
+              <p className="adm-mobile-card__meta font-[family-name:var(--font-mono)]">{o.customer_phone_normalized}</p>
+              <p className="adm-mobile-card__meta">Status: {o.status}</p>
+              <a href={`/admin/orders/${o.order_number}`} className="adm-mobile-card__action">
+                Open {o.order_number}
+              </a>
+            </article>
+          ))}
+        </div>
+        <div className="adm-desktop-table adm-table-scroll overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)]">
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="bg-[var(--adm-surface-2)] text-[11px] uppercase tracking-wider text-[var(--adm-ink-2)]">
               <tr>
@@ -67,6 +80,7 @@ export default async function AdminCustomersPage() {
             Showing latest {rows.length} of {count ?? rows.length} order rows (not deduplicated profiles yet).
           </p>
         </div>
+        </>
       )}
     </>
   );

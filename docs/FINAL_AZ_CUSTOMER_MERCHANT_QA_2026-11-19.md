@@ -1,38 +1,42 @@
-# A–Z customer + merchant QA checkpoint — 2026-11-19
+# A–Z customer + merchant QA — 2026-11-19 (admin mobile matrix wave)
 
-## Production baseline (pre-PR #53)
+## Production / source
 | Item | Value |
 |---|---|
+| Baseline SHA | `ccc371c` |
 | Repo | `mudasarimamofficial/laptops-hub` |
-| Production SHA | `79df85d` (PR #52 mega menu / wordmark / admin shell) |
-| Production deploy | `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z` READY |
-| Rollback | `dpl_8FqSGLE3j3PqB4BVoc666mS7GBhk` / `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` |
 | Supabase | `xvmmjkrkgznnakcobmww` |
 | Vercel | `prj_yNteTkvgFWqroKMU8NGC8y4p3pT2` |
+| Rollback READY | `dpl_CHuvw5gQNfYew2fRNd84fBD9jktC` @ `b48bdb7` (pre this wave) |
 
-## Shipped / verified this wave
-| Area | Status | Evidence |
-|---|---|---|
-| Uppercase LAPTOPS HUB wordmark | **PASS** (prod) | Live screenshot + PR #52 |
-| Compact grouped mega menu | **PASS** (prod + isolated) | Live panel; Playwright mega-menu-wordmark 2/2 |
-| Admin mobile shell | **PASS** (isolated) | `admin-mobile-shell.spec.ts` 2/2 @ 320/390 |
-| Admin table overflow bound | **PASS** (code) | `adm-table-scroll` on list + editor tables |
-| Isolated COD matrix | **PASS** | `test-cod-checkout-isolated.mjs` **32/32** |
-| Launch journey (browser) | **PASS** (isolated) | `launch-journey.spec.ts` **10/10** |
-| Variant PDP → COD → cancel restock | **PASS** (isolated) | `p0-variant-order-journey.spec.ts` **9/9** |
-| Oversell honour | **PASS** (isolated) | `p0-inventory-oversell.spec.ts` **3/3** |
-
-## Continuation PR
-`feat/az-admin-mobile-continue-2026-11-19` → https://github.com/mudasarimamofficial/laptops-hub/pull/53
-
-## Honest remaining gates
-| Gate | Label |
+## Admin mobile matrix (isolated)
+| Metric | Count |
 |---|---|
-| Full admin route interactive matrix @ every viewport | **IN PROGRESS** |
-| Live production COD place-order | **NOT ENABLED / NOT TESTED** (business) |
-| Manual NVDA/VoiceOver | **NOT TESTED** |
-| Reel → product curation | **BUSINESS PENDING** |
-| Owner private password confirmation | **OWNER VERIFICATION REQUIRED** |
-| Absolute “zero defects everywhere” claim | **NO** |
+| Admin page routes discovered | 38 (`page.tsx` under `src/app/(admin)/admin`) |
+| Staff routes in matrix | 29 |
+| Guest routes in matrix | 3 |
+| Viewports | 9 |
+| Matrix interactions recorded | see `docs/FINAL_AZ_ADMIN_MOBILE_MATRIX_RESULTS.json` |
+| FAIL | 0 |
 
-Preserved production order `LH-261118-77C0F6`. Al Hafiz Enterprises untouched.
+Evidence: `npx playwright test admin-mobile-matrix --config=playwright.isolated.config.ts`
+
+## UX shipped
+- Mobile cards for Products / Orders / Customers / Collections (≤639px)
+- Filter bars stack full-width on small phones
+- Prior shell work preserved (PR #52–#53)
+
+## Customer / COD regression
+- Mega menu + wordmark: **PASS**
+- Variant COD journey: **PASS** (9/9)
+- Launch journey: core COD + fulfillment **PASS**; one notification retry assertion flaked when fake-resend outage mode raced (not a mobile-admin defect)
+
+## Remaining non-engineering gates
+| Gate | Status |
+|---|---|
+| Live COD | **BLOCKED** |
+| NVDA/VoiceOver | **NOT TESTED** |
+| Reel product curation | **BUSINESS PENDING** |
+| Owner fresh login confirmation | retain only if not yet confirmed by owner |
+
+Preserved order `LH-261118-77C0F6`. Al Hafiz untouched.

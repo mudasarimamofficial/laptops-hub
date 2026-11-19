@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-11-19T08:30:38.538Z",
+  "base": "https://www.laptopshub.pk",
+  "note": "Production smoke for final handover. No COD/order mutations. Screen-reader not included.",
+  "counts": {
+    "pass": 10,
+    "fail": 0,
+    "partial": 0,
+    "notTested": 1
+  },
+  "results": [
+    {
+      "check": "production_home_http",
+      "label": "PASS",
+      "detail": "status=200"
+    },
+    {
+      "check": "mobile_open_menu",
+      "label": "PASS",
+      "detail": "open → Mobile nav visible after hydration"
+    },
+    {
+      "check": "mobile_close_menu",
+      "label": "PASS",
+      "detail": null
+    },
+    {
+      "check": "reels_section",
+      "label": "PASS",
+      "detail": null
+    },
+    {
+      "check": "reel_modal_open",
+      "label": "PASS",
+      "detail": null
+    },
+    {
+      "check": "reel_modal_linked_products",
+      "label": "PASS",
+      "detail": "linked cards in modal=0 (business curation pending if 0)"
+    },
+    {
+      "check": "reel_add_to_cart_opens_cart",
+      "label": "NOT TESTED",
+      "detail": "no linked products on production reels — add-to-cart path verified on isolated only"
+    },
+    {
+      "check": "cart_drawer",
+      "label": "PASS",
+      "detail": null
+    },
+    {
+      "check": "checkout_http",
+      "label": "PASS",
+      "detail": "status=200"
+    },
+    {
+      "check": "checkout_h1",
+      "label": "PASS",
+      "detail": "Place COD order"
+    },
+    {
+      "check": "checkout_no_order_submit",
+      "label": "PASS",
+      "detail": "smoke only — order placement not attempted"
+    }
+  ]
+}

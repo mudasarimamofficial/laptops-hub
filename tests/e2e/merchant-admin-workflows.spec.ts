@@ -161,39 +161,78 @@ test.describe.serial("merchant admin workflows", () => {
     }
   });
 
-  test("owner blog create save reload when editor available", async ({ page }) => {
-    test.setTimeout(90_000);
-    await signIn(page, owner.email, owner.password);
-    await page.goto("/admin/blog");
-    await expect(page.getByRole("heading").first()).toBeVisible({ timeout: 20_000 });
-    const newPost = page.getByRole("link", { name: /new|create|add/i }).first();
-    if (!(await newPost.count())) {
-      test.info().annotations.push({ type: "note", description: "blog create CTA not present" });
-      return;
-    }
-    await newPost.click();
-    const title = page.getByLabel(/title/i).first();
-    if (!(await title.count())) return;
-    const stamp = `E2E Blog ${Date.now()}`;
-    await title.fill(stamp);
-    // TipTap surface (Release A2) — contenteditable with data-testid
-    const tipTap = page.getByTestId("blog-rich-editor");
-    if (await tipTap.count()) {
-      await tipTap.click();
-      await page.keyboard.type("TipTap body for isolated merchant QA.");
-    }
-    const save = page.getByRole("button", { name: /save|publish|create/i }).first();
-    if (await save.count()) {
-      await save.click();
-      await page.waitForTimeout(1500);
+  test("owner blog create, save and reload (Visibility, TipTap, SEO)", async ({ page }) => {
+    test.setTimeout(120_000);
+    const stamp = Date.now();
+    const title = `E2E Blog ${stamp}`;
+    const slug = `e2e-blog-${stamp}`;
+    const body = `TipTap body for isolated merchant QA ${stamp}.`;
+    const summary = "E2E summary for the guides list.";
+    const seoTitle = `E2E SEO title ${stamp}`;
+    const seoDescription = "E2E search description for the blog editor.";
+    const sb = admin();
+    try {
+      await signIn(page, owner.email, owner.password);
+      await page.goto("/admin/blog");
+      // The header CTA; the empty state repeats the same link when no posts exist.
+      await page.getByRole("link", { name: "Add blog post" }).first().click();
+      await expect(page).toHaveURL(/\/admin\/blog\/new$/);
+
+      await page.getByLabel("Title", { exact: true }).fill(title);
+      await page.getByLabel("Web address").fill(slug);
+
+      // TipTap surface: a contenteditable that only appears once the editor is hydrated.
+      const editor = page.getByTestId("blog-rich-editor");
+      await expect(editor).toBeVisible({ timeout: 20_000 });
+      await editor.click();
+      await page.keyboard.type(body);
+      await expect(editor).toContainText(body);
+
+      await page.getByLabel("Summary").fill(summary);
+      await page.getByLabel(/^Page title/).fill(seoTitle);
+      await page.getByLabel(/^Description \(/).fill(seoDescription);
+
+      // Visibility defaults to Hidden for a new post; make it Visible so the public page can be checked too.
+      await expect(page.getByLabel("Hidden — draft, not on the site")).toBeChecked();
+      await page.getByLabel("Visible — published now").check();
+
+      await page.getByRole("button", { name: "Create post" }).click();
+      await page.waitForURL(/\/admin\/blog\/[0-9a-f-]{36}\?saved=1$/, { timeout: 30_000 });
+      await expect(page.getByText("Post saved.").first()).toBeVisible();
+
+      // Stored row matches what was typed (TipTap HTML, SEO, publish state).
+      const { data: row, error } = await sb
+        .from("articles")
+        .select("title, slug, excerpt, body_html, status, published_at, seo_title, seo_description")
+        .eq("slug", slug)
+        .single();
+      expect(error).toBeNull();
+      expect(row).toMatchObject({ title, slug, excerpt: summary, status: "published", seo_title: seoTitle, seo_description: seoDescription });
+      expect(row!.published_at).toBeTruthy();
+      expect(row!.body_html).toContain(body);
+
+      // Reload: every field and the visibility choice round-trip.
       await page.reload({ waitUntil: "domcontentloaded" });
-      await expect(page.locator("body")).toContainText(new RegExp(stamp.slice(0, 12), "i"));
-      if (await tipTap.count()) {
-        await expect(page.getByTestId("blog-rich-editor")).toBeVisible();
-      }
+      await expect(page.getByLabel("Title", { exact: true })).toHaveValue(title);
+      await expect(page.getByLabel("Web address")).toHaveValue(slug);
+      await expect(page.getByLabel("Summary")).toHaveValue(summary);
+      await expect(page.getByLabel(/^Page title/)).toHaveValue(seoTitle);
+      await expect(page.getByLabel(/^Description \(/)).toHaveValue(seoDescription);
+      await expect(page.getByLabel("Visible — published now")).toBeChecked();
+      await expect(page.getByTestId("blog-rich-editor")).toContainText(body, { timeout: 20_000 });
+
+      // Edit through the existing-post form ("Save"), then confirm the change survives another reload.
+      await page.getByLabel("Hidden — draft, not on the site").check();
+      await page.getByRole("button", { name: "Save" }).click();
+      await expect(page.getByText("Post saved.").first()).toBeVisible();
+      await page.reload({ waitUntil: "domcontentloaded" });
+      await expect(page.getByLabel("Hidden — draft, not on the site")).toBeChecked();
+      const { data: after } = await sb.from("articles").select("status").eq("slug", slug).single();
+      expect(after!.status).toBe("draft");
+    } finally {
+      await sb.from("articles").delete().eq("slug", slug);
     }
   });
-
   test("editor cannot open settings; fulfillment cannot customize theme", async ({ browser }) => {
     test.setTimeout(120_000);
     {

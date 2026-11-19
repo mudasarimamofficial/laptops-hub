@@ -1,0 +1,1209 @@
+{
+  "generatedAt": "2026-11-19T06:17:49.642Z",
+  "base": "http://127.0.0.1:3001",
+  "note": "Interactive UX/a11y against isolated stack. Viewport smoke ≠ certification. /reels public route not tested (does not exist).",
+  "counts": {
+    "rows": 91,
+    "passChecks": 459,
+    "failChecks": 0
+  },
+  "results": [
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "homepageReelsSurface": "PASS",
+        "shoppableModal": "NOT TESTED",
+        "mobileMenu": "PARTIAL"
+      },
+      "status": 200,
+      "mobileMenuError": "locator.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for getByRole('button', { name: /^Open menu$/i })\n    - locator resolved to <button type=\"button\" "
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/all",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/cart",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "cartControlFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/checkout",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "cartControlFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/compare",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "compareShell": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/guides",
+      "checks": {
+        "http": "PASS",
+        "h1": "NOT TESTED",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "guidesEmptyGate": "PASS"
+      },
+      "status": 404
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/admin/login",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PARTIAL",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/admin/forgot-password",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PARTIAL",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/dell",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/hp",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/lenovo",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/chromebooks",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/accessories",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/products/lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "pdpActions": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "pdpActions": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/laptops",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/products/inv-mwlqm84z",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "pdpActions": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/core-i5",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/core-i7",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/ram-16gb",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/gen-10-plus",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/touchscreen",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/screen-15",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "mobile",
+      "route": "/collections/screen-13",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "homepageReelsSurface": "PASS",
+        "shoppableModal": "NOT TESTED"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/all",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/cart",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "cartControlFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/checkout",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "cartControlFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/compare",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "compareShell": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/guides",
+      "checks": {
+        "http": "PASS",
+        "h1": "NOT TESTED",
+        "skipLink": "PARTIAL",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "guidesEmptyGate": "PASS"
+      },
+      "status": 404
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/admin/login",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PARTIAL",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/admin/forgot-password",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PARTIAL",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/dell",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/hp",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/lenovo",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/chromebooks",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/accessories",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/products/lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "pdpActions": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "pdpActions": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/laptops",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/products/inv-mwlqm84z",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "pdpActions": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/core-i5",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/core-i7",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/ram-16gb",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/gen-10-plus",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/touchscreen",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/screen-15",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "tablet",
+      "route": "/collections/screen-13",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "homepageReelsSurface": "PASS",
+        "shoppableModal": "NOT TESTED"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/all",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/cart",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "cartControlFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/checkout",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "cartControlFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/compare",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "compareShell": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/guides",
+      "checks": {
+        "http": "PASS",
+        "h1": "NOT TESTED",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "guidesEmptyGate": "PASS"
+      },
+      "status": 404
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/admin/login",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PARTIAL",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/admin/forgot-password",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PARTIAL",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/dell",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/hp",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/lenovo",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/chromebooks",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/accessories",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/products/lenovo-thinkpad-t580-core-i5-8th-gen-16gb-ram-512gb-storage",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "pdpActions": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "pdpActions": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/laptops",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/products/inv-mwlqm84z",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "pdpActions": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/core-i5",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/core-i7",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/ram-16gb",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/gen-10-plus",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/touchscreen",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/screen-15",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "storefront",
+      "viewport": "desktop",
+      "route": "/collections/screen-13",
+      "checks": {
+        "http": "PASS",
+        "h1": "PASS",
+        "skipLink": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant_auth",
+      "label": "PASS",
+      "detail": "isolated owner signed in"
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/products",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/products/new",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/collections",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/orders",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/inventory",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/blog",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/reels",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "reelForm": "PASS",
+        "productPicker": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/reviews",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/content",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/navigation",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "navEditor": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/settings",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS",
+        "settingsForm": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/online-store",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/media",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "desktop",
+      "route": "/admin/staff",
+      "checks": {
+        "http": "PASS",
+        "adminMain": "PASS",
+        "h1": "PASS",
+        "noOverflow": "PASS",
+        "keyboardFocus": "PASS"
+      },
+      "status": 200
+    },
+    {
+      "area": "merchant",
+      "viewport": "mobile",
+      "route": "/admin/products",
+      "checks": {
+        "adminMain": "PASS",
+        "noOverflow": "PASS",
+        "h1": "PASS"
+      }
+    },
+    {
+      "area": "a11y_landmarks",
+      "route": "/",
+      "checks": {
+        "mainLandmark": "PASS",
+        "navLandmark": "PASS"
+      },
+      "detail": {
+        "mains": 1,
+        "navs": 1,
+        "dialogs": 0
+      }
+    },
+    {
+      "area": "a11y_screenreader",
+      "label": "NOT TESTED",
+      "detail": "Full SR audit requires assistive tech session"
+    }
+  ]
+}

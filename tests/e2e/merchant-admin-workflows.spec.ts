@@ -116,14 +116,15 @@ test.describe.serial("merchant admin workflows", () => {
   test("owner edits store settings form", async ({ page }) => {
     await signIn(page, owner.email, owner.password);
     await page.goto("/admin/settings");
-    await expect(page.getByRole("heading", { name: /store settings/i })).toBeVisible();
+    // Page header is "Settings" (AdminPageHeader); hub cards link into Store details / shipping / etc.
+    await expect(page.getByRole("heading", { level: 1, name: /^Settings$/i })).toBeVisible();
+    await expect(page.getByRole("navigation", { name: /settings categories/i })).toBeVisible();
     const support = page.getByLabel(/support email/i);
-    if (await support.count()) {
-      await support.fill("e2e-support@lh-test.local");
-      const save = page.getByRole("button", { name: /save/i }).first();
-      await save.click();
-      await expect(page.getByText(/saved|updated|settings/i).first()).toBeVisible({ timeout: 20_000 });
-    }
+    await expect(support).toBeVisible({ timeout: 20_000 });
+    await support.fill("e2e-support@lh-test.local");
+    const save = page.getByRole("button", { name: /save/i }).first();
+    await save.click();
+    await expect(page.getByText(/saved|updated|settings/i).first()).toBeVisible({ timeout: 20_000 });
   });
 
   test("owner inventory + inquiries + orders shells load", async ({ page }) => {

@@ -89,6 +89,9 @@ node scripts/test-fixtures/seed-isolated.mjs                     # 2 products, L
 # build + start with: NEXT_DIST_DIR=.next-local COD_CHECKOUT_ENABLED=true NEXT_PUBLIC_COD_CHECKOUT_ENABLED=true
 #   RESEND_API_KEY=re_local_test STORE_FROM_EMAIL=… STORE_NOTIFY_EMAIL=owner@lh-test.local NOTIFY_CUSTOMER_EMAIL=1
 #   RESEND_API_URL=http://127.0.0.1:4599 CRON_SECRET=local-cron-secret + local Supabase URL/keys
+# CRITICAL: rebuild whenever NEXT_PUBLIC_SUPABASE_* change. A stale .next-local can write via service role
+# to local DB while public /guides reads a hosted (or empty) project → published posts look like 404s.
+node scripts/test-fixtures/check-isolated-app.mjs                # fail-closed: base URL must serve local published guides
 npx playwright test -c playwright.isolated.config.ts
 ```
 

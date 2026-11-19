@@ -11,6 +11,7 @@ import { CompareTray } from "@/components/storefront/compare-tray";
 import { CartDrawer } from "@/components/storefront/cart-drawer";
 import { Toast } from "@/components/storefront/v5/toast";
 import { getMerchBadges, getSocialProofSettings } from "@/lib/content/social-proof-server";
+import { ensureFeaturedFlamePreset, getFeaturedFlamePreset } from "@/lib/content/featured-flame-preset-server";
 import { MerchBadgeProvider } from "@/components/storefront/merch-badges";
 import { PurchaseActivity } from "@/components/storefront/purchase-activity";
 import "../globals.css";
@@ -85,6 +86,14 @@ export default async function StorefrontLayout({
       </main>
     );
   }
+  // Idempotent one-time 🔥 Featured install so the live site shows badges without merchant setup.
+  try {
+    const flame = await getFeaturedFlamePreset();
+    if (!flame.installedAt) await ensureFeaturedFlamePreset();
+  } catch {
+    /* storefront still renders without badges */
+  }
+
   const [vis, navConfig, pres, social, badges] = await Promise.all([
     contentVisibility(),
     getPublishedNavigation(),

@@ -1,6 +1,8 @@
 import { unstable_cache } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/server";
 import { getV5Catalog } from "@/lib/catalog/v5";
+import { getFeaturedFlamePreset } from "./featured-flame-preset-server";
+import { isPresetBadgeNote } from "./featured-flame-preset";
 import {
   buildActivityItems,
   buildBadgeMap,
@@ -95,23 +97,47 @@ export const getMerchBadges = unstable_cache(
     try {
       const settings = await getSocialProofSettings();
       const now = new Date();
-      const [rows, pub, editorial] = await Promise.all([
+      const [rows, pub, editorial, flame] = await Promise.all([
         settings.topSeller.enabled ? readOrderLines(settings.topSeller.windowDays) : Promise.resolve([]),
         publicProducts(),
         settings.editorial.enabled ? readEditorial() : Promise.resolve([]),
+        getFeaturedFlamePreset(),
       ]);
-      const top = computeTopSellers(rows.filter((r) => pub.has(r.handle)), settings, now);
-      return buildBadgeMap(top, editorial.filter((e) => pub.has(e.handle)), settings, now);
+      const visibleEditorial = editorial.filter((e) => {
+        if (!pub.has(e.handle)) return false;
+        if (isPresetBadgeNote(e.note) && !flame.enabled) return false;
+        return true;
+      });
+      const top = computeTopSellers(
+        rows.filter((r) => pub.has(r.handle)),
+        settings,
+        now,
+      );
+      const map = buildBadgeMap(top, visibleEditorial, settings, now);
+      for (const e of visibleEditorial) {
+        const cur = map[e.handle];
+        if (!cur || cur.kind !== "featured") continue;
+        if (!isPresetBadgeNote(e.note) && flame.icon !== "flame") continue;
+        map[e.handle] = {
+          kind: "featured",
+          label: isPresetBadgeNote(e.note) ? flame.label : cur.label,
+          icon: isPresetBadgeNote(e.note) || flame.icon === "flame" ? flame.icon : "star",
+        };
+      }
+      return map;
     } catch {
       return {};
     }
   },
   ["merch-badges"],
-  { revalidate: 300, tags: ["product-badges", "social-proof"] },
+  { revalidate: 300, tags: ["product-badges", "social-proof", "featured-flame-preset"] },
 );
 
 async function readEditorial(): Promise<EditorialBadgeRow[]> {
-  const { data, error } = await createServiceClient().from("product_badges").select("kind, starts_at, ends_at, products(handle)").limit(500);
+  const { data, error } = await createServiceClient()
+    .from("product_badges")
+    .select("kind, starts_at, ends_at, note, products(handle)")
+    .limit(500);
   if (error || !data) return [];
   return data
     .map((r) => ({
@@ -119,6 +145,7 @@ async function readEditorial(): Promise<EditorialBadgeRow[]> {
       kind: r.kind,
       startsAt: r.starts_at,
       endsAt: r.ends_at,
+      note: (r.note as string | null) ?? null,
     }))
     .filter((r) => r.handle);
 }

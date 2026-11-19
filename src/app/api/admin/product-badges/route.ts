@@ -4,10 +4,13 @@ import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { BADGE_STAFF_ROLES } from "@/lib/content/admin-roles";
 import { editorialBadgeInputSchema } from "@/lib/content/social-proof";
+import { suppressFeaturedFlameProduct } from "@/lib/content/featured-flame-preset-server";
 
 function refresh() {
   revalidateTag("product-badges", { expire: 0 });
+  revalidateTag("featured-flame-preset", { expire: 0 });
   revalidatePath("/", "layout");
+  revalidatePath("/admin/merchandising");
 }
 
 /** Staff: set (create or replace) the editorial badge of one product. Sales claims ("Top seller") cannot be set here. */
@@ -63,11 +66,22 @@ export async function DELETE(request: Request) {
     const { staff, supabase } = await createAuthorizedStaffWriter(BADGE_STAFF_ROLES);
     const parsed = deleteSchema.safeParse(await request.json().catch(() => null));
     if (!parsed.success) return NextResponse.json({ error: "not_found" }, { status: 404 });
-    const { data: before } = await supabase.from("product_badges").select("kind, starts_at, ends_at").eq("product_id", parsed.data.productId).maybeSingle();
+    const { data: before } = await supabase
+      .from("product_badges")
+      .select("kind, starts_at, ends_at, note")
+      .eq("product_id", parsed.data.productId)
+      .maybeSingle();
     if (!before) return NextResponse.json({ error: "not_found" }, { status: 404 });
     const { error } = await supabase.from("product_badges").delete().eq("product_id", parsed.data.productId);
     if (error) return NextResponse.json({ error: "delete_failed" }, { status: 500 });
-    await supabase.from("audit_logs").insert({ actor_user_id: staff.userId, action: "product_badge.delete", entity_type: "product_badges", entity_id: parsed.data.productId, before });
+    await suppressFeaturedFlameProduct(parsed.data.productId);
+    await supabase.from("audit_logs").insert({
+      actor_user_id: staff.userId,
+      action: "product_badge.delete",
+      entity_type: "product_badges",
+      entity_id: parsed.data.productId,
+      before,
+    });
     refresh();
     return NextResponse.json({ ok: true }, { headers: { "Cache-Control": "no-store" } });
   } catch (e) {

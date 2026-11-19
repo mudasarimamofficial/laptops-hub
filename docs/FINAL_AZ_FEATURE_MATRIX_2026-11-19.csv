@@ -1,0 +1,10 @@
+Route,Feature,Interaction,Role,Viewport,Test Type,Expected,Actual,Persistence,Evidence,Status
+/,Homepage load,Load,guest,"390,1366",browser,200 + hero,PASS prior smoke,n/a,CLIENT_HANDOVER_PROD_SMOKE,PASS
+/,Mega menu open/close,Hover/Click/Escape,guest,"1366x680",browser+e2e,compact grouped panel,implemented branch,n/a,mega-menu-wordmark.spec,IN_PROGRESS
+/,Wordmark,Visual,guest,all,visual,LAPTOPS HUB uppercase,implemented branch,n/a,site-header Wordmark,IN_PROGRESS
+/admin/*,Admin shell nav,Open drawer,staff,390,browser,44px targets + uppercase brand,implemented branch,n/a,admin-shell,IN_PROGRESS
+/checkout,COD place order,Submit,guest,390,isolated e2e,durable order,prior suites / retest required,DB,p0-variant-order-journey,PENDING_RETEST
+/admin/orders,Order visibility,View,merchant,390,isolated e2e,see test order,prior suites / retest required,DB,merchant-admin-workflows,PENDING_RETEST
+Production COD,Live order,Submit,guest,prod,controlled,authorized only,BLOCKED commercial gate,n/a,CLIENT_HANDOVER,BLOCKED
+Reels product links,Curation,Link products,merchant,prod,business,merchant chooses,0 links preserved,DB,CLIENT_HANDOVER,BUSINESS_PENDING
+Screen reader,NVDA session,Manual,operator,desktop,manual,WCAG journey,NOT TESTED,n/a,CLIENT_HANDOVER,NOT_TESTED

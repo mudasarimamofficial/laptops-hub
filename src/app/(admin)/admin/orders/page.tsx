@@ -143,8 +143,8 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
           />
         </div>
       ) : (
-        <div className="mt-6 overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
-          <table className="w-full text-left text-sm">
+        <div className="adm-table-scroll mt-6 overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
+          <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="bg-[var(--adm-surface-2)] text-xs uppercase tracking-wide text-[var(--adm-ink-2)]">
               <tr>
                 <th className="px-4 py-3">Order</th>

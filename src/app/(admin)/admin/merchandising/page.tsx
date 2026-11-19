@@ -14,8 +14,11 @@ import {
   type EditorialKind,
   type OrderActivityRow,
 } from "@/lib/content/social-proof";
+import { isPresetBadgeNote } from "@/lib/content/featured-flame-preset";
+import { ensureFeaturedFlamePreset, getFeaturedFlamePreset } from "@/lib/content/featured-flame-preset-server";
 import { SocialProofForm } from "@/components/admin/social-proof-form";
 import { ProductBadgeForm, RemoveBadgeButton } from "@/components/admin/product-badge-editor";
+import { FeaturedFlamePresetPanel } from "@/components/admin/featured-flame-preset-panel";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Badges & social proof", robots: { index: false, follow: false } };
@@ -25,6 +28,7 @@ const fmt = (iso: string | null) => (iso ? new Date(iso).toLocaleString("en-PK",
 /**
  * Merchandising: data-backed "Top seller" status, editorial labels, recent-order notices and the reels heading.
  * The page always states how many real qualifying orders exist, so the merchant can see why nothing is shown yet.
+ * Visiting also idempotently installs the default 🔥 Featured flame preset when not yet installed.
  */
 export default async function AdminMerchandisingPage() {
   const staff = await requireStaffPage(BADGE_STAFF_ROLES);
@@ -32,10 +36,16 @@ export default async function AdminMerchandisingPage() {
   const sb = createServiceClient();
   const now = new Date();
 
-  const [{ data: settingsRow }, { data: badges }, { data: products }] = await Promise.all([
+  // Idempotent one-time install — does not overwrite merchant removals or redeploy churn.
+  if (canSettings) {
+    await ensureFeaturedFlamePreset({ actorUserId: staff.userId });
+  }
+
+  const [{ data: settingsRow }, { data: badges }, { data: products }, flamePreset] = await Promise.all([
     sb.from("store_settings").select("value").eq("key", SOCIAL_PROOF_KEY).maybeSingle(),
     sb.from("product_badges").select("product_id, kind, starts_at, ends_at, note, updated_at, products(handle, title)").order("updated_at", { ascending: false }).limit(500),
     sb.from("products").select("handle, title").is("deleted_at", null).eq("status", "active").order("title").limit(1000),
+    getFeaturedFlamePreset(),
   ]);
   const settings = parseSocialProof(settingsRow?.value);
 
@@ -61,6 +71,11 @@ export default async function AdminMerchandisingPage() {
   );
   const qualifying = new Set(lines.filter((l) => (QUALIFYING_STATUSES[settings.topSeller.minStatus] as readonly string[]).includes(l.status)).map((l) => l.orderId)).size;
   const top = computeTopSellers(lines, { ...settings, topSeller: { ...settings.topSeller, enabled: true } }, now);
+
+  const presetBadges = (badges || []).filter((b) => isPresetBadgeNote(b.note));
+  const exampleHandles = presetBadges
+    .map((b) => (b.products as { handle?: string } | null)?.handle)
+    .filter((h): h is string => Boolean(h));
 
   return (
     <>
@@ -88,13 +103,21 @@ export default async function AdminMerchandisingPage() {
             {settings.topSeller.enabled ? "" : " (badge switched off)"}
           </li>
           <li>Recent order notices: {settings.activity.enabled ? (qualifying ? "on" : "on, but there are no qualifying orders, so none are shown") : "off"}</li>
+          <li>
+            🔥 Featured flame preset: {flamePreset.enabled ? "on" : "off"} · {presetBadges.length} product{presetBadges.length === 1 ? "" : "s"}
+          </li>
         </ul>
       </section>
+
+      {canSettings ? (
+        <FeaturedFlamePresetPanel initial={flamePreset} productCount={presetBadges.length} exampleHandles={exampleHandles} />
+      ) : null}
 
       <section aria-labelledby="labels" className="mb-6 space-y-4 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]">
         <h2 id="labels" className="text-base font-semibold">Editorial labels</h2>
         <p className="text-sm text-[var(--adm-ink-2)]">
-          Your own picks, shown with a star and clearly different from the data-backed badge. One label per product; saving again replaces it.
+          Your own picks, shown clearly different from the data-backed badge. One label per product; saving again replaces it.
+          Removing a preset 🔥 Featured badge permanently suppresses auto-restore for that product.
           {settings.editorial.enabled ? "" : " Labels are currently switched off in the settings below."}
         </p>
         <ProductBadgeForm products={(products || []).map((p) => ({ handle: p.handle, title: p.title }))} />
@@ -115,13 +138,17 @@ export default async function AdminMerchandisingPage() {
                   const p = b.products as { handle?: string; title?: string } | null;
                   const active = editorialActive({ startsAt: b.starts_at, endsAt: b.ends_at }, now);
                   const future = b.starts_at && Date.parse(b.starts_at) > now.getTime();
+                  const preset = isPresetBadgeNote(b.note);
                   return (
-                    <tr key={b.product_id} className="border-t border-[var(--adm-divider)]" data-testid="badge-row">
+                    <tr key={b.product_id} className="border-t border-[var(--adm-divider)]" data-testid="badge-row" data-preset={preset ? "1" : "0"}>
                       <td className="py-2 pr-3">
                         <span className="font-medium">{p?.title ?? "(removed product)"}</span>
                         <span className="block font-mono text-xs text-[var(--adm-ink-2)]">{p?.handle}</span>
                       </td>
-                      <td className="py-2 pr-3">{EDITORIAL_LABELS[b.kind as EditorialKind] ?? b.kind}</td>
+                      <td className="py-2 pr-3">
+                        {EDITORIAL_LABELS[b.kind as EditorialKind] ?? b.kind}
+                        {preset ? <span className="ml-1 text-xs text-[var(--adm-ink-2)]">(🔥 preset)</span> : null}
+                      </td>
                       <td className="py-2 pr-3 text-xs">
                         {fmt(b.starts_at)} → {fmt(b.ends_at)}
                       </td>

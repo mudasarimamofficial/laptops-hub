@@ -205,12 +205,16 @@ export function activityText(item: ActivityItem): string {
 export type EditorialKind = "featured" | "popular_pick" | "staff_pick";
 export const EDITORIAL_LABELS: Record<EditorialKind, string> = { featured: "Featured", popular_pick: "Popular pick", staff_pick: "Staff pick" };
 
-/** "top_seller" is data-backed only; the others are editorial. */
-export type MerchBadge = { kind: "top_seller" } | { kind: EditorialKind };
+/** "top_seller" is data-backed only; the others are editorial. Optional label/icon are display overrides (e.g. 🔥 Featured). */
+export type MerchBadge =
+  | { kind: "top_seller" }
+  | { kind: EditorialKind; label?: string; icon?: "flame" | "star" };
 export type MerchBadgeMap = Record<string, MerchBadge>;
 
 export function badgeLabel(b: MerchBadge): string {
-  return b.kind === "top_seller" ? "Top seller" : EDITORIAL_LABELS[b.kind];
+  if (b.kind === "top_seller") return "Top seller";
+  if (b.label && b.label.trim()) return b.label.trim();
+  return EDITORIAL_LABELS[b.kind];
 }
 
 /**
@@ -238,7 +242,14 @@ export function computeTopSellers(rows: OrderActivityRow[], settings: SocialProo
     .map(([h]) => h);
 }
 
-export type EditorialBadgeRow = { handle: string; kind: string; startsAt: string | null; endsAt: string | null };
+export type EditorialBadgeRow = {
+  handle: string;
+  kind: string;
+  startsAt: string | null;
+  endsAt: string | null;
+  /** Internal note; preset rows use `preset:featured_flame_v1`. */
+  note?: string | null;
+};
 
 export function editorialActive(r: Pick<EditorialBadgeRow, "startsAt" | "endsAt">, now: Date): boolean {
   const t = now.getTime();

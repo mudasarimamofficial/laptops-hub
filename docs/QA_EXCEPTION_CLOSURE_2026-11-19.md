@@ -2,6 +2,8 @@
 
 Continuation from production `9b02526` / PR #47. Closes PARTIAL / NOT TESTED items from `INTERACTIVE_UX_QA_2026-11-19.json` without claiming 100% certification.
 
+**Shipped:** PR #48 → `5c97ac81454963448e81c4b2d52aceaf56e2191d` / production `dpl_AcoSSADs8iWiecsh8eRubaU2ndsj` (READY).
+
 ## Independent results
 
 | Item | Label | Evidence |

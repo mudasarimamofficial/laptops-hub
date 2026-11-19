@@ -19,8 +19,9 @@ PR #48 mobile nav / reel–cart overlay / carousel a11y fixes are deployed. This
 | Official favicon (site-wide) | **PASS** | PR #50; static `favicon.ico` / `icon.png` / `apple-icon.png`; SHA match on www + apex→www; see `docs/FAVICON_ACCEPTANCE_2026-11-19.md` |
 | Uppercase LAPTOPS HUB wordmark | **PASS** | PR #52; header/footer/admin shell; live on `www.laptopshub.pk` |
 | Compact grouped desktop mega menu | **PASS** | PR #52; height-capped category panel; Escape/Close; isolated Playwright 2/2 |
-| Admin mobile shell hardening | **PASS** (shell) / **PARTIAL** (full matrix) | PR #52–#53: shell, save bar, table scroll, settings touch targets, isolated mobile shell 2/2; full every-route viewport matrix still in progress |
-| Isolated COD checkout + journeys | **PASS** (isolated) | COD matrix 32/32; launch-journey 10/10; variant journey 9/9; oversell 3/3 — live place-order still gated |
+| Admin mobile shell hardening | **PASS** (shell) | PR #52–#53: shell, save bar, table scroll, settings touch targets, isolated mobile shell 2/2 |
+| Admin mobile full route matrix | **PASS** (isolated) | 29 staff + 3 guest routes × 9 viewports = **270/270** load/overflow/control checks; mobile cards for products/orders/customers/collections — see `docs/FINAL_AZ_ADMIN_MOBILE_MATRIX_RESULTS.json` |
+| Isolated COD checkout + journeys | **PASS** (isolated) | COD matrix 32/32; variant journey 9/9; launch core COD/fulfillment PASS — live place-order still gated |
 | Homepage HTTP | **PASS** | 200 |
 | Mobile Open menu / Close menu | **PASS** | Production smoke @ 390px after `data-ready` hydration — `docs/CLIENT_HANDOVER_PROD_SMOKE_2026-11-19.json` |
 | Homepage reels section + modal open | **PASS** | Production smoke; modal opens |

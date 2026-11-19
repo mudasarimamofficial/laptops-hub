@@ -92,7 +92,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
         </div>
       ) : null}
 
-      <form className="mt-2 flex flex-wrap gap-3" method="get">
+      <form className="adm-filter-bar mt-2 flex flex-wrap gap-3" method="get">
         <input
           name="q"
           defaultValue={q}
@@ -119,7 +119,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
         </select>
         <button
           type="submit"
-          className="inline-flex min-h-10 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)]"
+          className="inline-flex min-h-11 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-4 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)]"
         >
           Apply filters
         </button>
@@ -143,7 +143,30 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
           />
         </div>
       ) : (
-        <div className="adm-table-scroll mt-6 overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
+        <>
+        <div className="adm-mobile-cards mt-6" data-testid="orders-mobile-cards">
+          {orders.map((o) => (
+            <article key={`m-${o.order_number}`} className="adm-mobile-card">
+              <p className="adm-mobile-card__title">{o.order_number}</p>
+              <p className="adm-mobile-card__meta">
+                {o.customer_name}
+                {o.customer_phone_e164 ? ` · ${o.customer_phone_e164}` : ""}
+              </p>
+              <p className="adm-mobile-card__meta">{new Date(o.created_at).toLocaleString("en-PK")}</p>
+              <div className="adm-mobile-card__row">
+                <StatusBadge status={o.status} />
+                <StatusBadge status={o.payment_status} />
+              </div>
+              <p className="adm-mobile-card__meta">
+                Due {formatPkr(o.total_due_paisa)} · Collected {formatPkr(o.amount_collected_paisa)}
+              </p>
+              <Link href={`/admin/orders/${o.order_number}`} className="adm-mobile-card__action">
+                Open order
+              </Link>
+            </article>
+          ))}
+        </div>
+        <div className="adm-desktop-table adm-table-scroll mt-6 overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="bg-[var(--adm-surface-2)] text-xs uppercase tracking-wide text-[var(--adm-ink-2)]">
               <tr>
@@ -186,6 +209,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
             </tbody>
           </table>
         </div>
+        </>
       )}
     </>
   );

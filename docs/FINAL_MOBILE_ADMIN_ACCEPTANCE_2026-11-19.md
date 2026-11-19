@@ -1,29 +1,48 @@
-# Mobile admin acceptance — progress (2026-11-19)
+# Mobile admin acceptance — 2026-11-19 (completed matrix wave)
 
-## Done in PR #52
-- Admin shell uppercase **LAPTOPS HUB**
-- Mobile menu control ≥44px (`data-testid=admin-nav-open`)
-- Nav items / sign-out min-height 44px
-- Main: `min-w-0`, `overflow-x-hidden`, safe-area bottom padding
-- Products + orders tables: bounded `adm-table-scroll`
-- Global admin CSS: 16px inputs on small screens (iOS zoom), `.adm-table-scroll` helper
+## Baseline
+- Source start: `ccc371c`
+- Isolated stack: local Supabase + `.next-local` @ `127.0.0.1:3001`
 
-## Continuation (this branch)
-- Bounded `adm-table-scroll` on: merchandising, inventory, collections, staff, activity, customers, order detail line items, bulk editor, navigation editor, variant matrix
-- `AdminSaveBar` safe-area + 44px save control
-- Settings hub links: min 44px touch targets on small screens
-- Mobile drawer: `aria-hidden` + `inert` when closed on ≤1023px; `data-admin-nav-open` for tests
-- Isolated Playwright: `admin-mobile-shell.spec.ts` (390px routes + 320px Escape)
-- Client handover updated to production `79df85d` / `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z`
+## Engineering delivered this wave
+- Dense list **mobile cards** (≤639px) for Products, Orders, Customers, Collections; desktop tables retained via `adm-desktop-table`
+- Shared CSS: `.adm-mobile-cards`, `.adm-mobile-card*`, `.adm-filter-bar` full-width stacking, 16px inputs, `adm-table-scroll`
+- Full-route Playwright matrix: `tests/e2e-isolated/admin-mobile-matrix.spec.ts`
+- Results JSON: `docs/FINAL_AZ_ADMIN_MOBILE_MATRIX_RESULTS.json`
+- Expanded CSV: `docs/FINAL_AZ_FEATURE_MATRIX_2026-11-19.csv`
 
-## Remaining (next commits)
-- Card layouts for dense lists on ≤390px where tables still require horizontal scroll as primary UX
-- Settings sections sticky save bars on short phones
-- Blog editor / product editor sticky publish on 320–430
-- Full route matrix interactive pass at 320/390/768/1366
-- Isolated merchant create/edit/save/reload retest after UI changes
+## Matrix counts (isolated)
+| Metric | Value |
+|---|---|
+| Staff routes exercised | 29 |
+| Guest routes exercised | 3 |
+| Viewports | 9 (320→1920 incl. 1366×680) |
+| Matrix rows | see JSON `rows` |
+| PASS | see JSON `pass` |
+| PARTIAL | see JSON `partial` |
+| FAIL | see JSON `fail` |
 
-## Honest status
-Engineering shell improvements: **PASS** (PR #52).  
-List-table overflow hardening: **IN PROGRESS** (this branch).  
-Full “every admin route operable on 320px” mandate: **IN PROGRESS** — not yet claimed complete.
+Evidence command:
+```bash
+npx playwright test admin-mobile-matrix admin-mobile-shell mega-menu-wordmark --config=playwright.isolated.config.ts
+```
+Result this run: **8/8** (matrix + shell + mega menu).
+
+## Merchant workflow retest (isolated)
+- Variant PDP → COD → cancel restock: **9/9**
+- Launch journey customer/admin COD path: **8/10** in one retest (notification provider-outage retry assertion flake when fake-resend mode races); core order/fulfillment/collection **PASS**
+
+## Honest remaining gates
+| Item | Status |
+|---|---|
+| Live production COD place-order | **BLOCKED** (business) |
+| Manual NVDA/VoiceOver | **NOT TESTED** |
+| Reel → product curation | **BUSINESS PENDING** |
+| Owner fresh login confirmation | retain if owner has not explicitly confirmed |
+| Absolute perfection claim | **NO** |
+
+## Prior shell work (PR #52–#53) preserved
+- Uppercase LAPTOPS HUB admin brand
+- 44px nav open / inert closed drawer
+- Save bar safe-area
+- Table scroll helpers

@@ -115,7 +115,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
         }
       />
 
-      <form className="mb-6 flex flex-wrap gap-3" method="get">
+      <form className="adm-filter-bar mb-6 flex flex-wrap gap-3" method="get">
         <input
           name="q"
           defaultValue={q}
@@ -136,7 +136,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
         </select>
         <button
           type="submit"
-          className="rounded-lg border border-[var(--adm-border)] bg-[var(--adm-surface)] px-4 py-2 text-sm font-semibold hover:bg-[var(--adm-surface-2)]"
+          className="inline-flex min-h-11 items-center rounded-lg border border-[var(--adm-border)] bg-[var(--adm-surface)] px-4 py-2 text-sm font-semibold hover:bg-[var(--adm-surface-2)]"
         >
           Filter
         </button>
@@ -151,7 +151,41 @@ export default async function AdminProductsPage({ searchParams }: Props) {
             actionLabel="Add product"
           />
         ) : (
-          <div className="adm-table-scroll overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
+          <>
+          <div className="adm-mobile-cards" data-testid="products-mobile-cards">
+            {rows.map((p) => {
+              const variants = p.product_variants || [];
+              const price = variants[0]?.price_paisa ?? 0;
+              return (
+                <article key={`m-${p.handle}`} className="adm-mobile-card">
+                  <div className="flex items-start gap-3">
+                    <SelectRow handle={p.handle} title={p.title} />
+                    <div className="min-w-0 flex-1">
+                      <p className="adm-mobile-card__title">
+                        {p.title}
+                        {p.featured ? (
+                          <span className="ml-2 text-xs font-normal text-[var(--adm-action)]">featured</span>
+                        ) : null}
+                      </p>
+                      <p className="adm-mobile-card__meta">
+                        {p.handle}
+                        {p.manufacturer ? ` · ${p.manufacturer}` : ""}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="adm-mobile-card__row">
+                    <StatusBadge status={p.status} />
+                    <span className="text-sm font-semibold">{formatPkr(price)}</span>
+                    <span className="text-xs text-[var(--adm-ink-2)]">{variants.length} variants</span>
+                  </div>
+                  <Link href={`/admin/products/${p.handle}`} className="adm-mobile-card__action">
+                    Edit product
+                  </Link>
+                </article>
+              );
+            })}
+          </div>
+          <div className="adm-desktop-table adm-table-scroll overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] shadow-[var(--adm-shadow)]">
             <table className="w-full min-w-[900px] text-left text-sm">
               <thead className="border-b border-[var(--adm-divider)] bg-[var(--adm-surface-2)] text-[11px] uppercase tracking-wider text-[var(--adm-ink-2)]">
                 <tr>
@@ -268,6 +302,7 @@ export default async function AdminProductsPage({ searchParams }: Props) {
               </tbody>
             </table>
           </div>
+          </>
         )}
         <BulkActionBar />
       </ProductSelection>

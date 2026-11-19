@@ -64,12 +64,12 @@ export default async function AdminSettingsPage() {
         breadcrumbs={[{ href: "/admin", label: "Overview" }, { label: "Settings" }]}
       />
 
-      <nav aria-label="Settings categories" className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <nav aria-label="Settings categories" className="mb-8 grid gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4">
         {HUB.map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className="rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)] transition hover:border-[var(--adm-action)]"
+            className="flex min-h-11 flex-col justify-center rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-3 shadow-[var(--adm-shadow)] transition hover:border-[var(--adm-action)] sm:min-h-0 sm:p-4"
           >
             <p className="text-sm font-semibold text-[var(--adm-ink)]">{item.title}</p>
             <p className="mt-1 text-xs text-[var(--adm-ink-2)]">{item.blurb}</p>

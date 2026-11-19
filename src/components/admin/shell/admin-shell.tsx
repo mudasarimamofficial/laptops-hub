@@ -23,6 +23,7 @@ export function AdminShell({ staff, children }: Props) {
   const guest = isAdminGuestPath(pathname);
   const [open, setOpen] = useState(false);
   const [openPath, setOpenPath] = useState(pathname);
+  const [isNarrow, setIsNarrow] = useState(false);
   const navId = useId();
 
   // Close the mobile drawer on navigation (state adjusted during render, not in an effect).
@@ -32,6 +33,14 @@ export function AdminShell({ staff, children }: Props) {
   }
 
   useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const sync = () => setIsNarrow(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
@@ -39,6 +48,8 @@ export function AdminShell({ staff, children }: Props) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
+
+  const mobileDrawerClosed = isNarrow && !open;
 
   if (guest) {
     return <div className="admin-app min-h-screen">{children}</div>;
@@ -68,6 +79,9 @@ export function AdminShell({ staff, children }: Props) {
           open ? "translate-x-0" : "-translate-x-full"
         }`}
         aria-label="Admin navigation"
+        aria-hidden={mobileDrawerClosed || undefined}
+        data-admin-nav-open={open ? "true" : "false"}
+        {...(mobileDrawerClosed ? { inert: true } : {})}
       >
         <div className="flex h-[var(--adm-topbar-h)] items-center gap-2 border-b border-[var(--adm-sidebar-border)] px-4">
           <Link href="/admin" className="font-[family-name:var(--font-display)] text-[15px] font-bold tracking-[-0.02em] text-white uppercase">

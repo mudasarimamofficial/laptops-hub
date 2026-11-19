@@ -9,7 +9,11 @@
 - Global admin CSS: 16px inputs on small screens (iOS zoom), `.adm-table-scroll` helper
 
 ## Continuation (this branch)
-- Bounded `adm-table-scroll` on: merchandising, inventory, collections, staff, activity, customers, order detail line items
+- Bounded `adm-table-scroll` on: merchandising, inventory, collections, staff, activity, customers, order detail line items, bulk editor, navigation editor, variant matrix
+- `AdminSaveBar` safe-area + 44px save control
+- Settings hub links: min 44px touch targets on small screens
+- Mobile drawer: `aria-hidden` + `inert` when closed on ≤1023px; `data-admin-nav-open` for tests
+- Isolated Playwright: `admin-mobile-shell.spec.ts` (390px routes + 320px Escape)
 - Client handover updated to production `79df85d` / `dpl_3YEJSpByQsqfamyCj9MG1tjRAX5Z`
 
 ## Remaining (next commits)

@@ -89,7 +89,7 @@ export function BulkProductsForm({ initialHandles }: { initialHandles: string[] 
         Load handles
       </button>
 
-      <div className="overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)]">
+      <div className="adm-table-scroll overflow-x-auto rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)]">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="bg-[var(--adm-surface-2)] text-[11px] uppercase tracking-wider text-[var(--adm-ink-2)]">
             <tr>

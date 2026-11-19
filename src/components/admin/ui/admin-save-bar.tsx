@@ -21,13 +21,16 @@ export function AdminSaveBar({
   secondary,
 }: Props) {
   return (
-    <div className="sticky bottom-0 z-20 -mx-1 mt-6 border-t border-[var(--adm-border)] bg-[var(--adm-canvas)]/95 px-1 py-3 backdrop-blur supports-[backdrop-filter]:bg-[var(--adm-canvas)]/80">
+    <div
+      className="sticky bottom-0 z-20 -mx-1 mt-6 border-t border-[var(--adm-border)] bg-[var(--adm-canvas)]/95 px-1 py-3 backdrop-blur supports-[backdrop-filter]:bg-[var(--adm-canvas)]/80"
+      style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+    >
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
           disabled={busy || !dirty}
           onClick={onSave}
-          className="inline-flex min-h-10 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-5 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
+          className="inline-flex min-h-11 items-center rounded-[var(--adm-radius)] bg-[var(--adm-action)] px-5 text-sm font-semibold text-white hover:bg-[var(--adm-action-hover)] disabled:opacity-50"
         >
           {busy ? "Saving…" : saveLabel}
         </button>

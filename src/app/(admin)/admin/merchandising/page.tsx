@@ -122,7 +122,7 @@ export default async function AdminMerchandisingPage() {
         </p>
         <ProductBadgeForm products={(products || []).map((p) => ({ handle: p.handle, title: p.title }))} />
         {badges && badges.length ? (
-          <div className="overflow-x-auto">
+          <div className="adm-table-scroll overflow-x-auto">
             <table className="w-full min-w-[560px] text-left text-sm" data-testid="badge-table">
               <thead className="text-xs uppercase text-[var(--adm-ink-2)]">
                 <tr>

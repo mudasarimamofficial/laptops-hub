@@ -2,9 +2,10 @@
 
 **Date:** 2026-11-19  
 **Production alias:** https://www.laptopshub.pk  
-**Latest READY production deploy:** `dpl_Ghjc1ov1kKyEraHHYs21CuZygPjA` (commit `704262b`, docs note on PR #48)  
-**Last functional code deploy (PR #48):** `dpl_AcoSSADs8iWiecsh8eRubaU2ndsj` / `5c97ac8`  
-**Rollback candidates (READY):** `dpl_AcoSSADs8iWiecsh8eRubaU2ndsj` (PR #48), `dpl_9MseweuFGupgRcyohZvwzYJRQ5Hj` (pre–exception-closure docs), `dpl_3iNvTCXFq6765Q2aGV2QY9jJRnDw` (PR #47)
+**Latest READY production deploy:** `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` (commit `dff6ba4`, favicon PR #50)  
+**Prior READY (Featured flame PR #49):** `dpl_Gs2REDcGqhcLN2YEEHZwMw8xfxH5` / `c0bac99`  
+**Last functional UX deploy (PR #48):** `dpl_AcoSSADs8iWiecsh8eRubaU2ndsj` / `5c97ac8`  
+**Rollback candidates (READY):** `dpl_Gs2REDcGqhcLN2YEEHZwMw8xfxH5` (PR #49), `dpl_AcoSSADs8iWiecsh8eRubaU2ndsj` (PR #48), `dpl_AcSSA4GExsYNgomBPYP3834Jm4Y3` (handover docs)
 
 PR #48 mobile nav / reel–cart overlay / carousel a11y fixes are deployed. This document does **not** re-implement them.
 
@@ -14,7 +15,8 @@ PR #48 mobile nav / reel–cart overlay / carousel a11y fixes are deployed. This
 
 | Item | Label | Evidence |
 |---|---|---|
-| Production deploy READY + aliases | **PASS** | `dpl_Ghjc1ov1kKyEraHHYs21CuZygPjA` READY; aliases include `www.laptopshub.pk`, `laptopshub.pk` |
+| Production deploy READY + aliases | **PASS** | `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` READY; aliases include `www.laptopshub.pk`, `laptopshub.pk` |
+| Official favicon (site-wide) | **PASS** | PR #50; static `favicon.ico` / `icon.png` / `apple-icon.png`; SHA match on www + apex→www; see `docs/FAVICON_ACCEPTANCE_2026-11-19.md` |
 | Homepage HTTP | **PASS** | 200 |
 | Mobile Open menu / Close menu | **PASS** | Production smoke @ 390px after `data-ready` hydration — `docs/CLIENT_HANDOVER_PROD_SMOKE_2026-11-19.json` |
 | Homepage reels section + modal open | **PASS** | Production smoke; modal opens |
@@ -96,8 +98,10 @@ Run on https://www.laptopshub.pk and report PASS/FAIL per line:
 ### Production references
 
 - Live: https://www.laptopshub.pk  
-- Latest READY: `dpl_Ghjc1ov1kKyEraHHYs21CuZygPjA`  
+- Latest READY: `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` @ `dff6ba4` (PR #50 favicon)  
+- Prior READY (PR #49 Featured flame): `dpl_Gs2REDcGqhcLN2YEEHZwMw8xfxH5` @ `c0bac99`  
 - PR #48 code READY: `dpl_AcoSSADs8iWiecsh8eRubaU2ndsj`  
+- Favicon acceptance: `docs/FAVICON_ACCEPTANCE_2026-11-19.md`  
 - Smoke evidence: `docs/CLIENT_HANDOVER_PROD_SMOKE_2026-11-19.json`  
 - Exception closure: `docs/QA_EXCEPTION_CLOSURE_2026-11-19.md`  
 - Prior readiness matrix: `docs/CLIENT_READINESS_ACCEPTANCE_2026-11-19.md`

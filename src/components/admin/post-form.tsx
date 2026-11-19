@@ -246,10 +246,11 @@ export function PostForm({ id, initial }: { id?: string; initial: PostFormValues
               }}
             />
           </AdminField>
-          <AdminField label="Web address" error={fe.slug} hint="Shown on the public site under /guides/">
+          <AdminField label="Web address" htmlFor="post-slug" error={fe.slug} hint="Shown on the public site under /guides/">
             <span className="mt-1 flex min-w-0 items-center gap-1">
               <span className="shrink-0 text-sm text-[var(--adm-ink-2)]">/guides/</span>
               <input
+                id="post-slug"
                 className={admInputClass.replace("mt-1 ", "")}
                 value={v.slug}
                 required

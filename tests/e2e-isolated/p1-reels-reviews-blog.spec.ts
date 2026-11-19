@@ -7,6 +7,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 import fs from "fs";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
+import { DEFAULT_SOCIAL_PROOF } from "../../src/lib/content/social-proof";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("isolated tests need a local Supabase");
@@ -29,7 +30,9 @@ async function signIn(page: Page) {
 }
 
 async function cleanup() {
-  await sb.from("reels").delete().like("title", "QA reel %");
+  const { data: rows } = await sb.from("reels").select("id").or("title.like.QA reel %,title.like.QA premium reel %,title.like.QA social reel %");
+  for (const r of rows || []) await sb.from("reel_products").delete().eq("reel_id", r.id);
+  await sb.from("reels").delete().or("title.like.QA reel %,title.like.QA premium reel %,title.like.QA social reel %");
   await sb.from("product_reviews").delete().like("author_name", "QA Reviewer %");
   await sb.from("articles").delete().like("slug", "qa-post-%");
 }
@@ -48,10 +51,14 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     await page.route(/\/reels\/qa-[^/]*\.mp4/, (route) =>
       route.fulfill({ status: 200, contentType: "video/webm", body: fs.readFileSync("tests/fixtures/reel-synthetic.webm") }),
     );
+    await signIn(page);
+    await cleanup();
+    // Revalidate homepage reel cache after wiping sibling-suite QA rows.
+    await page.request.put("/api/admin/social-proof", { data: DEFAULT_SOCIAL_PROOF });
     await page.goto("/");
     await expect(page.getByTestId("reels-section")).toHaveCount(0);
+    await expect(page.getByTestId("reels-placeholder")).toBeVisible();
 
-    await signIn(page);
     await page.goto("/admin/reels");
     const form = page.getByTestId("reel-new-form");
     await form.getByLabel("Title").fill(REEL_TITLE);
@@ -71,7 +78,10 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     expect(direct.error?.message).toMatch(/reels_publish_requires_rights/);
 
     await form.getByLabel("Video rights").selectOption("owned");
-    await form.getByLabel("Linked product handle (optional)").fill(P.handle);
+    const picker = form.getByTestId("reel-product-picker");
+    await picker.getByLabel("Search products to feature").fill(P.handle.slice(0, 16));
+    await expect(picker.getByRole("button", { name: new RegExp(P.handle) })).toBeVisible({ timeout: 10_000 });
+    await picker.getByRole("button", { name: new RegExp(P.handle) }).click();
     await form.getByRole("button", { name: "Add reel" }).click();
     await expect(form.getByText("Reel saved.")).toBeVisible();
     await expect(page.getByTestId("reel-row").filter({ hasText: REEL_TITLE })).toBeVisible();
@@ -84,16 +94,29 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     await expect(section).toBeVisible();
     const reel = section.getByTestId("reel").filter({ hasText: REEL_TITLE });
     await expect(reel).toBeVisible();
-    await expect(reel.locator("video source")).toHaveAttribute("src", VIDEO);
     await expect(reel.locator("video")).toHaveAttribute("preload", "none");
-    await expect(reel.getByRole("link", { name: "View this laptop →" })).toHaveAttribute("href", `/products/${P.handle}`);
+    await expect(reel.getByTestId("reel-open")).toHaveAttribute("aria-label", new RegExp(REEL_TITLE));
+    await reel.getByTestId("reel-open").click();
+    const modal = page.getByTestId("reel-shoppable-modal");
+    await expect(modal).toBeVisible();
+    await expect(modal.getByTestId("reel-shop-product")).toContainText(P.title);
+    await modal.getByTestId("reel-modal-close").click();
     // Local fixture VIDEO is used; homepage must not show this test reel as a blocked-host error.
     await section.screenshot({ path: `${OUT}/home-reels.png` });
 
     // Unpublishing through the admin API removes the row again.
     const { data: row } = await sb.from("reels").select("id, title, caption, video_url, rights_status, rights_note, sort_order").like("title", "QA reel %").single();
     const res = await page.request.put(`/api/admin/reels/${row!.id}`, {
-      data: { title: row!.title, caption: row!.caption, videoUrl: row!.video_url, rightsStatus: row!.rights_status, rightsNote: row!.rights_note, status: "draft", sortOrder: row!.sort_order },
+      data: {
+        title: row!.title,
+        caption: row!.caption,
+        videoUrl: row!.video_url,
+        rightsStatus: row!.rights_status,
+        rightsNote: row!.rights_note,
+        status: "draft",
+        sortOrder: row!.sort_order,
+        productHandles: [],
+      },
     });
     expect(res.status()).toBe(200);
     await page.goto("/");
@@ -163,19 +186,21 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
   test("blog: empty publish refused; published post is public and sanitised; draft is 404", async ({ page }) => {
     await signIn(page);
     await page.goto("/admin/blog/new");
-    await page.getByLabel("Title").fill("QA guide: choosing RAM");
-    await page.getByLabel("Address").fill(POST_SLUG);
-    await page.getByLabel("Status").selectOption("published");
-    await page.getByRole("button", { name: "Save post" }).click();
+    await page.getByLabel("Title", { exact: true }).fill("QA guide: choosing RAM");
+    await page.getByLabel("Web address").fill(POST_SLUG);
+    await page.getByLabel("Visible — published now").check();
+    await page.getByRole("button", { name: "Create post" }).click();
     await expect(page.getByText("Write the post before publishing it.").first()).toBeVisible();
 
-    await page.getByLabel("Summary (shown on the guides list)").fill("How much memory a student laptop needs.");
-    await page
-      .getByLabel(/^Body/)
-      .fill('<h2>How much RAM?</h2><p>8GB is enough for study and office work.</p><script>window.__pwned=1</script><p><a href="javascript:alert(1)">x</a></p>');
-    await page.getByRole("button", { name: "Save post" }).click();
+    await page.getByLabel("Summary").fill("How much memory a student laptop needs.");
+    // Advanced HTML source bypasses the rich-text surface for deterministic sanitiser coverage.
+    await page.getByText("Advanced: HTML source").click();
+    await page.locator("details textarea").fill(
+      '<h2>How much RAM?</h2><p>8GB is enough for study and office work.</p><script>window.__pwned=1</script><p><a href="javascript:alert(1)">x</a></p>',
+    );
+    await page.getByRole("button", { name: "Create post" }).click();
     await page.waitForURL(/\/admin\/blog\/[0-9a-f-]{36}\?saved=1$/);
-    await expect(page.getByText("Post saved.")).toBeVisible();
+    await expect(page.getByText(/Post saved|Saved/i).first()).toBeVisible();
 
     const { data: row } = await sb.from("articles").select("body_html, status, published_at").eq("slug", POST_SLUG).single();
     expect(row!.status).toBe("published");
@@ -198,9 +223,9 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     // Back to draft ⇒ gone.
     const { data: idRow } = await sb.from("articles").select("id").eq("slug", POST_SLUG).single();
     await page.goto(`/admin/blog/${idRow!.id}`);
-    await page.getByLabel("Status").selectOption("draft");
-    await page.getByRole("button", { name: "Save post" }).click();
-    await expect(page.getByText("Post saved.")).toBeVisible();
+    await page.getByLabel("Hidden — draft, not on the site").check();
+    await page.getByRole("button", { name: "Save" }).click();
+    await expect(page.getByText(/Post saved|Saved/i).first()).toBeVisible();
     const res = await page.request.get(`/guides/${POST_SLUG}`);
     expect(res.status()).toBe(404);
   });

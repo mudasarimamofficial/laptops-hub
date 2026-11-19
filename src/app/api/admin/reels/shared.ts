@@ -43,11 +43,15 @@ export async function reelRowFromInput(supabase: SupabaseClient, body: unknown):
 
   const productIds: string[] = [];
   if (handles.length) {
-    const { data } = await supabase.from("products").select("id, handle").in("handle", handles).is("deleted_at", null);
-    const byHandle = new Map((data || []).map((p) => [p.handle, p.id]));
+    const { data } = await supabase
+      .from("products")
+      .select("id, handle, status")
+      .in("handle", handles)
+      .is("deleted_at", null);
+    const byHandle = new Map((data || []).map((p) => [p.handle, p]));
     for (const h of handles) {
-      const id = byHandle.get(h);
-      if (!id) {
+      const row = byHandle.get(h);
+      if (!row) {
         return {
           ok: false,
           status: 400,
@@ -58,7 +62,18 @@ export async function reelRowFromInput(supabase: SupabaseClient, body: unknown):
           },
         };
       }
-      if (!productIds.includes(id)) productIds.push(id);
+      if (row.status !== "active") {
+        return {
+          ok: false,
+          status: 400,
+          body: {
+            error: "validation_failed",
+            message: "Check the highlighted fields.",
+            fieldErrors: { productHandles: `“${h}” is ${row.status} and cannot be featured on the storefront.` },
+          },
+        };
+      }
+      if (!productIds.includes(row.id)) productIds.push(row.id);
     }
   }
 

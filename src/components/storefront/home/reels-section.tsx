@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import type { PublicReel } from "@/lib/content/reels";
 import { PremiumHorizontalCarousel, useCarouselControls } from "@/components/storefront/ui/premium-horizontal-carousel";
 import { ReelShoppableModal } from "@/components/storefront/home/reel-shoppable-modal";
@@ -19,6 +19,25 @@ function autoplayAllowed(enabled: boolean): boolean {
   return !conn?.saveData;
 }
 
+/** Client preference for muted autoplay (reduced-motion / Save-Data) without setState-in-effect. */
+function useAutoplayOk(enabled: boolean): boolean {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      if (typeof window === "undefined") return () => {};
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      mq.addEventListener("change", onStoreChange);
+      const conn = (navigator as Navigator & { connection?: EventTarget }).connection;
+      conn?.addEventListener?.("change", onStoreChange);
+      return () => {
+        mq.removeEventListener("change", onStoreChange);
+        conn?.removeEventListener?.("change", onStoreChange);
+      };
+    },
+    () => autoplayAllowed(enabled),
+    () => false,
+  );
+}
+
 /**
  * Homepage reels: every visible card autoplays muted + loops for its full duration.
  * Click/tap opens a centered shoppable modal. Tags/hashtags are admin-only metadata.
@@ -35,11 +54,11 @@ export function ReelsSection({
   const triggerRefs = useRef(new Map<string, HTMLButtonElement>());
   const [failed, setFailed] = useState<Set<string>>(new Set());
   const [active, setActive] = useState<PublicReel | null>(null);
+  const autoplayOk = useAutoplayOk(autoplayMuted);
   const returnFocusRef = useRef<HTMLElement | null>(null);
-  const canAutoplay = useRef(false);
 
   const syncPlayback = useCallback(() => {
-    if (!canAutoplay.current || document.hidden || active) {
+    if (!autoplayOk || document.hidden || active) {
       for (const el of videos.current.values()) {
         if (!el.paused) el.pause();
       }
@@ -79,10 +98,9 @@ export function ReelsSection({
         el.pause();
       }
     }
-  }, [active, failed, reels]);
+  }, [active, autoplayOk, failed, reels]);
 
   useEffect(() => {
-    canAutoplay.current = autoplayAllowed(autoplayMuted);
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -103,7 +121,7 @@ export function ReelsSection({
       io.disconnect();
       document.removeEventListener("visibilitychange", onVis);
     };
-  }, [autoplayMuted, reels, syncPlayback]);
+  }, [reels, syncPlayback, autoplayOk]);
 
   if (!reels.length) return null;
 
@@ -251,6 +269,27 @@ export function ReelsSection({
                         pointerEvents: "none",
                       }}
                     />
+                    {!autoplayOk ? (
+                      <span
+                        data-testid="reel-watch-fallback"
+                        style={{
+                          position: "absolute",
+                          left: 12,
+                          bottom: 12,
+                          zIndex: 1,
+                          padding: "6px 12px",
+                          borderRadius: 999,
+                          background: "rgba(10,23,48,.72)",
+                          color: "#fff",
+                          fontSize: 12,
+                          fontWeight: 600,
+                          letterSpacing: "0.02em",
+                          pointerEvents: "none",
+                        }}
+                      >
+                        Watch
+                      </span>
+                    ) : null}
                   </>
                 )}
               </button>

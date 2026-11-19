@@ -3,6 +3,8 @@
 Started from `75f0d32c7b708236ab1fce43f31c81320f0d8208` (PR #46 already shipped: checkout H1, recovery bridge, Resend/SMTP).  
 This pass closes remaining functional blockers only — no redo of Resend, bridge, checkout heading, or prior reels one-product coverage.
 
+**Shipped:** PR #47 → `f932275e327c7d86aff922024db72aaa024f4a4f` / production `dpl_3iNvTCXFq6765Q2aGV2QY9jJRnDw` (READY on www.laptopshub.pk).
+
 ## Acceptance matrix
 
 | Area | Label | Evidence |

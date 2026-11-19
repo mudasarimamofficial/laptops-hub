@@ -1,6 +1,7 @@
 # Client readiness acceptance — 2026-11-19
 
-Started from `75f0d32` (PR #46). Exception closure continues from `9b02526` / PR #47.
+Started from `75f0d32` (PR #46). Exception closure continues from `9b02526` / PR #47.  
+**Shipped:** PR #48 → `5c97ac8` / `dpl_AcoSSADs8iWiecsh8eRubaU2ndsj` (READY).
 
 ## Acceptance matrix
 

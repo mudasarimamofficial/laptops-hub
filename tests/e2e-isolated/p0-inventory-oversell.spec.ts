@@ -95,7 +95,13 @@ test.describe.serial("P0: oversell is owner/admin-only and honoured at checkout 
   test("checkout honours it: order at 0 stock succeeds, stock -1, ledger written", async () => {
     const zone = (await sb.from("shipping_zones").select("id").eq("id", fx.zone.id).single()).data!;
     const prev = (await sb.from("store_settings").select("value").eq("key", "cod_checkout").maybeSingle()).data?.value ?? null;
+    const prevTracking =
+      (await sb.from("store_settings").select("value").eq("key", "inventory_tracking").maybeSingle()).data?.value ?? null;
     await sb.from("store_settings").upsert({ key: "cod_checkout", value: { enabled: true } });
+    await sb.from("store_settings").upsert({
+      key: "inventory_tracking",
+      value: { ...(typeof prevTracking === "object" && prevTracking ? prevTracking : {}), enabled: true },
+    });
     try {
       const r = await sb.rpc("create_cod_order", {
         payload: {
@@ -114,6 +120,7 @@ test.describe.serial("P0: oversell is owner/admin-only and honoured at checkout 
       expect(l.data).toEqual([{ delta: -1, quantity_after: -1, reason: "order_placed" }]);
     } finally {
       if (prev) await sb.from("store_settings").upsert({ key: "cod_checkout", value: prev });
+      if (prevTracking) await sb.from("store_settings").upsert({ key: "inventory_tracking", value: prevTracking });
     }
   });
 });

@@ -73,7 +73,7 @@ test.describe.serial("launch journeys (isolated)", () => {
     await page.getByLabel("Street address").fill("House 1, Street 2, Model Town");
     await page.getByLabel("City").fill("Lahore");
     await page.getByLabel("Province").selectOption("Punjab");
-    await page.getByLabel(/Lahore standard \(test\)/).check();
+    await page.getByRole("radio", { name: /Lahore standard \(test\)/ }).first().check();
     await expect(page.getByText(`Cash due: ${rs(TOTAL)}`)).toBeVisible();
     await page.getByRole("checkbox", { name: /I will pay the cash-due amount/ }).check();
     await page.getByRole("button", { name: "Place COD order" }).click();
@@ -160,14 +160,14 @@ test.describe.serial("launch journeys (isolated)", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(orderNumber);
     await expect(page.getByRole("button", { name: "Update status" })).toBeEnabled({ timeout: 15_000 });
     for (const to of ["confirmed", "packing", "shipped"]) {
-      await page.getByLabel("Next status").selectOption(to);
+      await page.getByLabel("Next step").selectOption(to);
       if (to === "shipped") {
-        await page.getByLabel("Carrier (optional)").fill("Test Courier");
-        await page.getByLabel("Tracking (optional)").fill("TEST-123");
+        await page.getByLabel(/^Carrier/).fill("Test Courier");
+        await page.getByLabel(/^Tracking number/).fill("TEST-123");
       }
       await page.getByRole("button", { name: "Update status" }).click();
-      await expect(page.getByText(`Status → ${to}`)).toBeVisible({ timeout: 15_000 });
-      await expect(page.getByText(`Current: ${to}`)).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText(new RegExp(`Status →\\s*${to}`, "i"))).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText(new RegExp(`Current:\\s*${to}`, "i"))).toBeVisible({ timeout: 15_000 });
     }
     await page.getByLabel("Collector reference").fill("rider-1");
     await page.getByRole("button", { name: "Record collection" }).click();
@@ -197,9 +197,9 @@ test.describe.serial("launch journeys (isolated)", () => {
     await signIn(page, "fulfillment");
     await page.goto(`/admin/orders/${n}`);
     await expect(page.getByRole("button", { name: "Update status" })).toBeEnabled({ timeout: 15_000 });
-    await page.getByLabel("Next status").selectOption("cancelled");
+    await page.getByLabel("Next step").selectOption("cancelled");
     await page.getByRole("button", { name: "Update status" }).click();
-    await expect(page.getByText("Current: cancelled")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Current:\s*cancelled/i)).toBeVisible({ timeout: 15_000 });
     await expect(page.getByTestId("order-fulfillment-status")).toHaveText("cancelled", { timeout: 15_000 });
     await page.goto(`/order/success/${accessToken}`);
     await expect(page.getByTestId("order-status")).toHaveText("Cancelled");

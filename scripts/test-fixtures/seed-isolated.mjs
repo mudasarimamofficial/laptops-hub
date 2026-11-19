@@ -63,12 +63,26 @@ for (const p of PRODUCTS) {
   out.products.push({ handle: p.handle, title: p.title, pricePaisa: p.price, variantId: v.id, max: p.max });
 }
 
+// Avoid duplicate active zones with the same label (breaks checkout radio selectors).
+await sb.from("shipping_zones").update({ is_active: false }).eq("name", "Lahore standard (test)");
 const zone = must(
   await sb.from("shipping_zones").insert({ name: "Lahore standard (test)", provinces: ["Punjab"], cities: ["Lahore"], flat_fee_paisa: 30_000, cod_fee_paisa: 15_000, is_active: true, notes: "Test zone" }).select("id").single(),
   "zone",
 );
 out.zone = { id: zone.id, city: "Lahore", province: "Punjab", flatFeePaisa: 30_000, codFeePaisa: 15_000 };
 must(await sb.from("store_settings").upsert({ key: "cod_checkout", value: { enabled: true } }), "cod setting");
+// Isolated journeys expect sold-out / oversell / ledger behaviour; production default remains OFF for merchants.
+must(
+  await sb.from("store_settings").upsert({
+    key: "inventory_tracking",
+    value: {
+      enabled: true,
+      description:
+        "Isolated seed enables tracking so stock gates and sold-out UI can be tested. Production default is OFF.",
+    },
+  }),
+  "inventory tracking",
+);
 
 for (const role of ["owner", "manager", "fulfillment", "editor"]) {
   const email = `iso-${role}-${Date.now()}@lh-test.local`;

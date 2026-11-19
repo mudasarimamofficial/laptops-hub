@@ -148,7 +148,12 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
           {options.length ? (
             <>
               <AdminField label="Next step">
-                <select className={admInputClass} value={toStatus} onChange={(e) => setToStatus(e.target.value)}>
+                <select
+                  data-testid="order-next-status"
+                  className={admInputClass}
+                  value={toStatus}
+                  onChange={(e) => setToStatus(e.target.value)}
+                >
                   {options.map((s) => (
                     <option key={s} value={s}>
                       {STATUS_LABEL[s] || s}

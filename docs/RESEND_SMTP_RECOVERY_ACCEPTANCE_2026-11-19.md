@@ -54,7 +54,17 @@ QA COD order `LH-261118-77C0F6`: **untouched**.
 | Status | **MERGED** |
 | Merge commit | `3483603197292f20db64b008df03bcfa9d696591` |
 | CI quality | **PASS** |
-| Production deploy | follow `dpl_CMBFHte8XXf7xQXzQXuVZa3ueyoH` (building at report draft time) |
+| Production deploy | `dpl_CMBFHte8XXf7xQXzQXuVZa3ueyoH` **READY** |
+
+## PR #45 (native SMTP hash bridge)
+
+| Item | Value |
+|---|---|
+| Status | **MERGED** |
+| Merge commit | `410de49770ab4970b55f054197e317a3169f04f6` |
+| CI quality | **PASS** |
+| Production deploy | `dpl_B84pyMkwzrfcd4NAwkZC3v1LmFcG` **READY** (current production) |
+| Purpose | Hash `#type=recovery` → session cookies → `/admin/reset-password` |
 
 ## Product QA
 

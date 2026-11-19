@@ -24,4 +24,18 @@ Generation notes:
 
 - Global via shared `src/app/layout.tsx` + App Router icon files → storefront **and** admin inherit the same icons.
 - Header / wordmark logo unchanged.
-- Al Hafiz Enterprises: **not modified**.
+- Al Hafiz Enterprises: **not modified** (repo HEAD remains independent; no LH favicon work pushed there).
+
+## Production verification (2026-11-19)
+
+| Check | Result |
+| --- | --- |
+| PR | [#50](https://github.com/mudasarimamofficial/laptops-hub/pull/50) merged |
+| SHA | `dff6ba4869234b39ba5059333ff336dda4edc4bc` |
+| Deploy | `dpl_DoQMyFxj78N9y6Q5tpSCS64uWmyC` **READY** |
+| Aliases | `www.laptopshub.pk`, `laptopshub.pk` (apex 308 → www) |
+| HTML icons | `/favicon.ico` (x-icon), `/icon.png` 192, `/apple-icon.png` 180 with content-hash query |
+| Asset SHA256 | www + apex→www match repo files for ico/png/apple |
+| Admin login HTML | same three icon link tags |
+| MIME | `image/vnd.microsoft.icon` for favicon.ico after redirect |
+| Evidence | `docs/visual-evidence/favicon-2026-11-19/` |

@@ -165,11 +165,18 @@ export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
   if (hydrated && lines.length === 0) {
     return (
       <div className="lh-content py-12">
-        <PendingBlock title={buyNowMode ? "Nothing to check out" : "Your cart is empty"} label="Checkout">
-          <Link href="/collections/all" className="text-[var(--lh-action)]">
+        <p className="lh-kicker">Checkout</p>
+        <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl font-bold tracking-[-0.04em]">
+          {buyNowMode ? "Nothing to check out" : "Your cart is empty"}
+        </h1>
+        <p className="mt-2 text-[var(--lh-ink-2)]">
+          Add a laptop or accessory to continue to Cash on Delivery checkout.
+        </p>
+        <p className="mt-6">
+          <Link href="/collections/all" className="lh-btn lh-btn-primary inline-flex">
             Browse products
           </Link>
-        </PendingBlock>
+        </p>
       </div>
     );
   }

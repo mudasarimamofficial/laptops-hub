@@ -29,6 +29,18 @@ function score(ok, partial = false) {
   return "FAIL";
 }
 
+/** Wait until client handlers are attached (SiteHeader data-ready). */
+async function expectReady(page, locator, timeout = 15_000) {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    const ready = await locator.getAttribute("data-ready");
+    const enabled = await locator.isEnabled().catch(() => false);
+    if (ready === "true" && enabled) return;
+    await page.waitForTimeout(100);
+  }
+  throw new Error("control not hydration-ready within timeout");
+}
+
 async function noOverflow(page) {
   return page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 2);
 }
@@ -128,22 +140,23 @@ const browser = await chromium.launch({ headless: true });
           } else {
             row.checks.shoppableModal = "NOT TESTED";
           }
-          // Menu / header — Open menu is the mobile chrome control (aria-label).
+          // Menu / header — wait for hydration (data-ready) so clicks are not silent no-ops.
           if (vp.name === "mobile") {
-            const menuBtn = page.getByRole("button", { name: /^Open menu$/i });
+            const menuBtn = page.getByTestId("mobile-nav-open");
             if ((await menuBtn.count()) > 0) {
               try {
-                await menuBtn.click({ timeout: 5_000 });
+                await expectReady(page, menuBtn);
+                await menuBtn.click({ timeout: 8_000 });
                 const mobileNav = page.getByRole("navigation", { name: /^Mobile$/i });
                 row.checks.mobileMenu = score((await mobileNav.count()) > 0 && (await mobileNav.isVisible()));
                 const closeBtn = page.getByRole("button", { name: /^Close menu$/i });
                 if ((await closeBtn.count()) > 0) await closeBtn.click({ timeout: 3_000 });
               } catch (err) {
-                row.checks.mobileMenu = "PARTIAL";
+                row.checks.mobileMenu = "FAIL";
                 row.mobileMenuError = String(err.message || err).slice(0, 160);
               }
             } else {
-              row.checks.mobileMenu = "PARTIAL";
+              row.checks.mobileMenu = "FAIL";
             }
           }
         }
@@ -153,6 +166,15 @@ const browser = await chromium.launch({ headless: true });
           row.checks.http = "PASS";
           row.checks.guidesEmptyGate = "PASS";
           row.checks.h1 = "NOT TESTED";
+          row.note = "Empty-gate 404 is intended; published index covered by isolated blog/exception E2E";
+        }
+
+        // Guest admin auth pages have no header chrome — skip link would be artificial.
+        if (route === "/admin/login" || route === "/admin/forgot-password") {
+          const main = (await page.locator("main#admin-main").count()) > 0;
+          row.checks.mainLandmark = score(main);
+          row.checks.skipLink = main ? "PASS" : "PARTIAL";
+          row.skipLinkNote = "N/A: guest auth has no repetitive nav chrome; main landmark required instead";
         }
 
         if (route === "/cart" || route === "/checkout") {

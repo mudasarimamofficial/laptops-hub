@@ -32,9 +32,9 @@ export function AdminLoginForm({ justReset, signedOut = false }: { justReset: bo
   }
 
   return (
-    <div className="lh-content flex min-h-[60vh] items-center justify-center py-12">
-      <form method="post" onSubmit={onSubmit} className="w-full max-w-md rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-8 shadow-sm">
-        <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold">Staff sign in</h1>
+    <main id="admin-main" className="lh-content flex min-h-[60vh] items-center justify-center py-12">
+      <form method="post" onSubmit={onSubmit} aria-labelledby="admin-login-title" className="w-full max-w-md rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-8 shadow-sm">
+        <h1 id="admin-login-title" className="font-[family-name:var(--font-display)] text-2xl font-bold">Staff sign in</h1>
         <p className="mt-2 text-sm text-[var(--lh-ink-2)]">No public admin registration.</p>
         {justReset ? (
           <p role="status" className="mt-4 text-sm text-[var(--lh-success)]">
@@ -63,6 +63,6 @@ export function AdminLoginForm({ justReset, signedOut = false }: { justReset: bo
           </Link>
         </p>
       </form>
-    </div>
+    </main>
   );
 }

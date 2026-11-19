@@ -5,7 +5,8 @@
   "counts": {
     "rows": 91,
     "passChecks": 459,
-    "failChecks": 0
+    "failChecks": 0,
+    "partialOrNotTestedInSweep": 15
   },
   "results": [
     {
@@ -1199,6 +1200,113 @@
         "navs": 1,
         "dialogs": 0
       }
+    },
+    {
+      "area": "a11y_screenreader",
+      "label": "NOT TESTED",
+      "detail": "Full SR audit requires assistive tech session"
+    }
+  ],
+  "exceptionClosure": {
+    "updatedAt": "2026-11-19T08:15:45.696Z",
+    "suite": "tests/e2e-isolated/mobile-nav-reels-a11y.spec.ts",
+    "result": "5/5 PASS",
+    "priorGaps": {
+      "mobileMenu": "PASS — hydration gate on Open menu",
+      "shoppableModalViewports": "PASS — open/close/keyboard/video/cart @ 390/768/1280",
+      "guidesEmpty404": "PASS — intended publication gate",
+      "guidesPublishedFlow": "PASS — article/index/sitemap/unpublish",
+      "authSkipLink": "PASS — N/A guest chrome; main landmark instead",
+      "axeHomeLogin": "PASS — 0 critical/serious after carousel role=region",
+      "screenReader": "NOT TESTED — requires assistive-tech session",
+      "ownerPassword": "OWNER VERIFICATION REQUIRED"
+    },
+    "note": "Do not treat the 459 structural checks as full UX certification. Exception suite is the source of truth for prior PARTIAL/NOT TESTED items."
+  },
+  "priorSweepUnresolvedHonest": [
+    {
+      "route": "/",
+      "vp": "mobile",
+      "check": "shoppableModal",
+      "label": "NOT TESTED"
+    },
+    {
+      "route": "/",
+      "vp": "mobile",
+      "check": "mobileMenu",
+      "label": "PARTIAL"
+    },
+    {
+      "route": "/guides",
+      "vp": "mobile",
+      "check": "h1",
+      "label": "NOT TESTED"
+    },
+    {
+      "route": "/admin/login",
+      "vp": "mobile",
+      "check": "skipLink",
+      "label": "PARTIAL"
+    },
+    {
+      "route": "/admin/forgot-password",
+      "vp": "mobile",
+      "check": "skipLink",
+      "label": "PARTIAL"
+    },
+    {
+      "route": "/",
+      "vp": "tablet",
+      "check": "shoppableModal",
+      "label": "NOT TESTED"
+    },
+    {
+      "route": "/guides",
+      "vp": "tablet",
+      "check": "h1",
+      "label": "NOT TESTED"
+    },
+    {
+      "route": "/guides",
+      "vp": "tablet",
+      "check": "skipLink",
+      "label": "PARTIAL"
+    },
+    {
+      "route": "/admin/login",
+      "vp": "tablet",
+      "check": "skipLink",
+      "label": "PARTIAL"
+    },
+    {
+      "route": "/admin/forgot-password",
+      "vp": "tablet",
+      "check": "skipLink",
+      "label": "PARTIAL"
+    },
+    {
+      "route": "/",
+      "vp": "desktop",
+      "check": "shoppableModal",
+      "label": "NOT TESTED"
+    },
+    {
+      "route": "/guides",
+      "vp": "desktop",
+      "check": "h1",
+      "label": "NOT TESTED"
+    },
+    {
+      "route": "/admin/login",
+      "vp": "desktop",
+      "check": "skipLink",
+      "label": "PARTIAL"
+    },
+    {
+      "route": "/admin/forgot-password",
+      "vp": "desktop",
+      "check": "skipLink",
+      "label": "PARTIAL"
     },
     {
       "area": "a11y_screenreader",

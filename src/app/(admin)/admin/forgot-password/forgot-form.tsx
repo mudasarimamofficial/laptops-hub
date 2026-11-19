@@ -32,8 +32,8 @@ export function ForgotPasswordForm({ linkInvalid }: { linkInvalid: boolean }) {
   }
 
   return (
-    <form method="post" onSubmit={onSubmit} className="w-full max-w-md rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-8 shadow-sm">
-      <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold">Reset staff password</h1>
+    <form method="post" onSubmit={onSubmit} aria-labelledby="admin-forgot-title" className="w-full max-w-md rounded-[var(--lh-radius-card)] border border-[var(--lh-border)] bg-white p-8 shadow-sm">
+      <h1 id="admin-forgot-title" className="font-[family-name:var(--font-display)] text-2xl font-bold">Reset staff password</h1>
       <p className="mt-2 text-sm text-[var(--lh-ink-2)]">
         Enter the email you sign in with. We send a link to set a new password; your role and access stay the same.
       </p>

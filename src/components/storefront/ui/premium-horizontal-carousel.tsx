@@ -126,6 +126,7 @@ export function PremiumHorizontalCarousel({
       {arrows}
       <div
         ref={ref}
+        role="region"
         className={`lh-premium-carousel-viewport${className ? ` ${className}` : ""}`}
         aria-label={ariaLabel}
         style={style}

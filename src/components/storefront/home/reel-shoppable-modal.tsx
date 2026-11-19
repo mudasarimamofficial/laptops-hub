@@ -207,7 +207,7 @@ export function ReelShoppableModal({ reel, open, onClose, returnFocusRef }: Prop
                 </Link>
               </div>
             ) : (
-              products.map((p) => <ShopProductCard key={p.handle} product={p} onAdd={add} />)
+              products.map((p) => <ShopProductCard key={p.handle} product={p} onAdd={add} onClose={onClose} />)
             )}
           </div>
         </div>
@@ -233,6 +233,7 @@ export function ReelShoppableModal({ reel, open, onClose, returnFocusRef }: Prop
 function ShopProductCard({
   product: p,
   onAdd,
+  onClose,
 }: {
   product: ReelShopProduct;
   onAdd: (line: {
@@ -247,6 +248,7 @@ function ShopProductCard({
     config?: string;
     sku?: string | null;
   }) => void;
+  onClose: () => void;
 }) {
   return (
     <article
@@ -328,6 +330,8 @@ function ShopProductCard({
                   config: p.config,
                   sku: p.sku,
                 });
+                // Modal sits above the cart drawer (z-index 80 vs 71); close it so the cart is usable.
+                onClose();
                 openCartDrawer();
               }}
               style={{

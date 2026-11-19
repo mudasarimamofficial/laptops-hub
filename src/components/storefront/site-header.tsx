@@ -9,6 +9,7 @@ import { useCompare } from "@/lib/commerce/compare-store";
 import { SearchOverlay } from "@/components/storefront/search-overlay";
 import { useDialog } from "@/components/storefront/v5/use-dialog";
 import { LHImg } from "@/components/storefront/v5/lh-img";
+import { useHydrated } from "@/lib/ui/use-hydrated";
 import type { V5MenuGroup } from "@/lib/catalog/v5-model";
 
 export type MegaFeature = { href: string; img: string | null; model: string; priceText: string; stockText: string };
@@ -64,6 +65,7 @@ export { Wordmark };
 
 export function SiteHeader({ chrome }: { chrome: ChromeData }) {
   const pathname = usePathname() || "/";
+  const hydrated = useHydrated();
   const [mega, setMega] = useState(false);
   const [mnav, setMnav] = useState(false);
   const [sOpen, setSOpen] = useState(false);
@@ -119,10 +121,25 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
           <button
             type="button"
             className="v5-m-only"
+            data-testid="mobile-nav-open"
+            data-ready={hydrated ? "true" : "false"}
+            // Pre-hydration clicks look successful but never open the drawer — gate until handlers are live.
+            disabled={!hydrated}
             onClick={() => setMnav(true)}
             aria-label="Open menu"
             aria-expanded={mnav}
-            style={{ width: 44, height: 44, marginLeft: -10, border: 0, background: "transparent", placeItems: "center", cursor: "pointer", color: "var(--lh-ink)" }}
+            style={{
+              width: 44,
+              height: 44,
+              marginLeft: -10,
+              border: 0,
+              background: "transparent",
+              display: "grid",
+              placeItems: "center",
+              cursor: hydrated ? "pointer" : "wait",
+              color: "var(--lh-ink)",
+              opacity: hydrated ? 1 : 0.7,
+            }}
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
               <path d="M3 6h18M3 12h18M3 18h18" />

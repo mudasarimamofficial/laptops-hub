@@ -132,7 +132,7 @@ export default async function StorefrontLayout({
         <CompareTray />
         <CartDrawer />
         <Toast />
-        {social.activity.enabled ? <PurchaseActivity config={social.activity} /> : null}
+        {social?.activity?.enabled ? <PurchaseActivity config={social.activity} /> : null}
       </MerchBadgeProvider>
     </DiscountProvider>
   );

@@ -1,0 +1,261 @@
+{
+  "url": "http://127.0.0.1:3011/",
+  "dom": {
+    "promo": false,
+    "h1op": "1",
+    "h1xf": "none",
+    "imgs": [
+      {
+        "alt": "",
+        "fp": "low",
+        "op": "1",
+        "filter": "none",
+        "blend": "normal",
+        "transform": "xf",
+        "complete": true,
+        "w": 335,
+        "h": 97
+      },
+      {
+        "alt": "HP ProBook laptop — Laptops HUB hero",
+        "fp": "low",
+        "op": "1",
+        "filter": "none",
+        "blend": "normal",
+        "transform": "xf",
+        "complete": true,
+        "w": 145,
+        "h": 145
+      },
+      {
+        "alt": "Lenovo ThinkPad laptop — Laptops HUB her",
+        "fp": "low",
+        "op": "1",
+        "filter": "none",
+        "blend": "normal",
+        "transform": "xf",
+        "complete": true,
+        "w": 160,
+        "h": 120
+      },
+      {
+        "alt": "Dell Latitude laptop — Laptops HUB hero",
+        "fp": "high",
+        "op": "1",
+        "filter": "none",
+        "blend": "normal",
+        "transform": "none",
+        "complete": true,
+        "w": 238,
+        "h": 238
+      }
+    ],
+    "mainOuter": "<img src=\"https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&amp;width=1040\" srcset=\"https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-he"
+  },
+  "names": {
+    "InvalidateLayout": 11,
+    "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM": 4,
+    "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM": 4,
+    "GlobalFirstContentfulPaint": 1,
+    "firstContentfulPaint": 1,
+    "PageLoadMetrics.NavigationToFirstContentfulPaint": 2
+  },
+  "sample": [
+    {
+      "name": "InvalidateLayout",
+      "ts": 164994175223,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+      "ts": 164994222777,
+      "args": {
+        "main_frame_tree_node_id": 2
+      }
+    },
+    {
+      "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+      "ts": 164994222786,
+      "args": {
+        "main_frame_tree_node_id": 2
+      }
+    },
+    {
+      "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+      "ts": 164995259556,
+      "args": {
+        "main_frame_tree_node_id": 2
+      }
+    },
+    {
+      "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+      "ts": 164995259563,
+      "args": {
+        "main_frame_tree_node_id": 2
+      }
+    },
+    {
+      "name": "InvalidateLayout",
+      "ts": 164995277499,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "InvalidateLayout",
+      "ts": 164995278141,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "InvalidateLayout",
+      "ts": 164995627589,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "InvalidateLayout",
+      "ts": 164995680224,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+      "ts": 164995819781,
+      "args": {
+        "main_frame_tree_node_id": 2
+      }
+    },
+    {
+      "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+      "ts": 164995819794,
+      "args": {
+        "main_frame_tree_node_id": 2
+      }
+    },
+    {
+      "name": "InvalidateLayout",
+      "ts": 164996289109,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "InvalidateLayout",
+      "ts": 164996289145,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "GlobalFirstContentfulPaint",
+      "ts": 164997266676,
+      "args": {}
+    },
+    {
+      "name": "firstContentfulPaint",
+      "ts": 164997266676,
+      "args": {
+        "data": {
+          "navigationId": "BF4010B7E1BC4DDE59ED062BCB97E917"
+        },
+        "frame": "ED05470B001A9C5FDE0726E43AE9EC09"
+      }
+    },
+    {
+      "name": "InvalidateLayout",
+      "ts": 164997479081,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+      "ts": 164997521209,
+      "args": {
+        "main_frame_tree_node_id": 2
+      }
+    },
+    {
+      "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+      "ts": 164997521221,
+      "args": {
+        "main_frame_tree_node_id": 2
+      }
+    },
+    {
+      "name": "InvalidateLayout",
+      "ts": 164998054925,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "InvalidateLayout",
+      "ts": 164998386829,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "InvalidateLayout",
+      "ts": 164998503143,
+      "args": {
+        "data": {
+          "frame": "ED05470B001A9C5FDE0726E43AE9EC09",
+          "nodeId": 4
+        }
+      }
+    },
+    {
+      "name": "PageLoadMetrics.NavigationToFirstContentfulPaint",
+      "ts": 164994041662,
+      "args": {
+        "page_load": {
+          "navigation_id": 3,
+          "url": "http://127.0.0.1:3011/"
+        }
+      }
+    },
+    {
+      "name": "PageLoadMetrics.NavigationToFirstContentfulPaint",
+      "ts": 164997266662,
+      "args": {}
+    }
+  ]
+}

@@ -57,6 +57,7 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
   const compareCount = useCompare((s) => s.handles.length);
 
   // V5 componentDidMount: entered after 80ms (0 with reduced motion), intro finished after 2.6s.
+  // LCP-critical nodes (H1 + main laptop) stay at resting transform from first paint — see below.
   useEffect(() => {
     const mq = matchMedia("(prefers-reduced-motion: reduce)");
     const enterT = window.setTimeout(() => setEntered(true), mq.matches ? 0 : 80);
@@ -67,8 +68,10 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
     };
   }, []);
 
-  // V5 frame(): --hp from scroll, eased pointer --mx/--my.
+  // Parallax (--hp/--mx/--my) starts only after the intro window so the first LCP candidate
+  // is not continuously invalidated by style updates on every animation frame.
   useEffect(() => {
+    if (!introDone && !rm) return;
     const h = ref.current;
     if (!h) return;
     const pt = { x: 0, y: 0 };
@@ -112,17 +115,18 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
       removeEventListener("scroll", sched);
       removeEventListener("resize", sched);
     };
-  }, [rm]);
+  }, [rm, introDone]);
 
   const inn = entered || skip;
   const dd = skip || rm ? "0" : "1";
   const inT = inn ? "none" : "translate3d(0,28px,0)";
   const ringT = inn ? "scale(1)" : "scale(.86)";
-  const lapInC = inn ? "none" : "translate3d(0,60px,0) scale(.94)";
   const lapInL = inn ? "none" : "translate3d(-60px,30px,0)";
   const lapInR = inn ? "none" : "translate3d(60px,30px,0)";
   const sweepT = inn && !rm ? "translateX(190%)" : "translateX(-110%)";
   const showSkip = !introDone && !skip && !rm;
+  // Transform-only intro transitions. Opacity transitions were removed: they left LCP candidates
+  // marked animated during the 2.6s intro even when opacity stayed at 1 (lab NO_LCP on homepage).
   const tr = (props: [string, number, number, boolean?][]) =>
     props.map(([p, d, delay, eased]) => `${p} calc(var(--dd) * ${d}s) ${eased ? ease : "ease"} calc(var(--dd) * ${delay}s)`).join(",");
   // Catalog photos have white backgrounds: multiply them into the stage. The blend must sit on the transformed link,
@@ -135,27 +139,54 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
       data-screen-label="01 Hero"
       ref={ref}
       className="v5-hero"
-      style={{ ["--hp" as string]: 0, ["--mx" as string]: 0, ["--my" as string]: 0, ["--dd" as string]: dd, position: "relative", overflow: "hidden", isolation: "isolate", background: "var(--lh-canvas)", color: "var(--lh-ink)", display: "flex", flexDirection: "column" }}
+      style={{
+        ["--hp" as string]: 0,
+        ["--mx" as string]: 0,
+        ["--my" as string]: 0,
+        ["--dd" as string]: dd,
+        position: "relative",
+        // overflow/isolation deferred visually via clip on decorative layers only — keep the LCP
+        // section itself a normal stacking context until intro completes.
+        overflow: introDone ? "hidden" : "visible",
+        isolation: introDone ? "isolate" : "auto",
+        background: "var(--lh-canvas)",
+        color: "var(--lh-ink)",
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
       <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: -5, background: "radial-gradient(42% 58% at 72% 60%,rgba(33,89,212,.17),rgba(33,89,212,0) 70%),radial-gradient(26% 32% at 80% 26%,rgba(28,185,232,.12),transparent 70%),linear-gradient(180deg,rgba(255,255,255,0) 72%,rgba(223,234,247,.95) 100%),linear-gradient(118deg,#F6F9FE 0%,#FFFFFF 34%,#E4EDF8 50%,#F8FBFF 58%,#EAF2FC 100%)" }} />
       <div aria-hidden="true" style={{ position: "absolute", right: "-6%", top: "-30%", width: "60%", height: "160%", zIndex: -4, background: "linear-gradient(100deg,transparent 0%,rgba(255,255,255,.85) 46%,transparent 54%)", transform: "rotate(8deg) translate3d(calc(var(--mx) * -20px),0,0)" }} />
       <div aria-hidden="true" style={{ position: "absolute", inset: -40, zIndex: -5, backgroundImage: "radial-gradient(rgba(var(--lh-action-rgb),.2) 1px,transparent 1.4px)", backgroundSize: "26px 26px", WebkitMaskImage: "radial-gradient(48% 55% at 72% 50%,#000,transparent 78%)", maskImage: "radial-gradient(48% 55% at 72% 50%,#000,transparent 78%)", transform: "translate3d(calc(var(--mx) * -8px),calc(var(--hp) * 70px),0)" }} />
       <div aria-hidden="true" style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: "60%", zIndex: 4, pointerEvents: "none", background: "linear-gradient(100deg,transparent 0%,rgba(255,255,255,.55) 48%,transparent 62%)", transform: sweepT, transition: `transform calc(var(--dd) * 1.9s) ${ease} calc(var(--dd) * 0.35s)` }} />
       <div className="v5-hero-grid" style={{ flex: 1, width: "100%", maxWidth: 1440, margin: "0 auto", display: "grid", gap: "clamp(8px,2vw,32px)", alignItems: "center" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "clamp(18px,2vw,26px)", minWidth: 0, position: "relative", zIndex: 3, opacity: "calc(1 - var(--hp) * 1.5)", transform: "translate3d(0,calc(var(--hp) * -80px),0)" }}>
-          <span style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 12, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".2em", color: "var(--lh-ink)", whiteSpace: "nowrap", opacity: 1, transform: inT, transition: tr([["opacity", 0.6, 0.05], ["transform", 0.7, 0.05, true]]) }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "clamp(18px,2vw,26px)",
+            minWidth: 0,
+            position: "relative",
+            zIndex: 3,
+            // Until intro completes, keep literal opacity/transform so LCP text is not under animated CSS vars.
+            opacity: introDone ? "calc(1 - var(--hp) * 1.5)" : 1,
+            transform: introDone ? "translate3d(0,calc(var(--hp) * -80px),0)" : "none",
+          }}
+        >
+          <span style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 12, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".2em", color: "var(--lh-ink)", whiteSpace: "nowrap", opacity: 1, transform: inT, transition: tr([["transform", 0.7, 0.05, true]]) }}>
             <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
             DELL · HP · LENOVO
           </span>
-          <h1 className="v5-hero-h1" style={{ margin: 0, fontFamily: "var(--font-display)", fontWeight: 700, lineHeight: 0.98, letterSpacing: "-.05em", color: "var(--lh-ink)", opacity: 1, transform: inT, transition: tr([["opacity", 0.7, 0.15], ["transform", 0.8, 0.15, true]]) }}>
+          {/* H1 rests at final transform from first paint so it remains an eligible LCP text candidate. */}
+          <h1 className="v5-hero-h1" style={{ margin: 0, fontFamily: "var(--font-display)", fontWeight: 700, lineHeight: 0.98, letterSpacing: "-.05em", color: "var(--lh-ink)", opacity: 1, transform: "none" }}>
             <span style={{ display: "block" }}>The future of</span>
             <span style={{ display: "block", color: "var(--lh-action)" }}>smarter laptop</span>
             <span style={{ display: "block" }}>shopping.</span>
           </h1>
-          <p style={{ margin: 0, maxWidth: "42ch", fontSize: "clamp(16px,1.2vw,19px)", lineHeight: 1.55, color: "var(--lh-ink-2)", textWrap: "pretty", opacity: 1, transform: inT, transition: tr([["opacity", 0.7, 0.28], ["transform", 0.8, 0.28, true]]) }}>
+          <p style={{ margin: 0, maxWidth: "42ch", fontSize: "clamp(16px,1.2vw,19px)", lineHeight: 1.55, color: "var(--lh-ink-2)", textWrap: "pretty", opacity: 1, transform: inT, transition: tr([["transform", 0.8, 0.28, true]]) }}>
             Laptops from Dell, HP, Lenovo and more, with the processor, memory, storage and display listed on every page. Filter by spec, then compare up to four side by side.
           </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", opacity: 1, transform: inT, transition: tr([["opacity", 0.7, 0.4], ["transform", 0.8, 0.4, true]]) }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", opacity: 1, transform: inT, transition: tr([["transform", 0.8, 0.4, true]]) }}>
             <Link
               href="/collections/all"
               className="v5-hov-cta"
@@ -173,14 +204,14 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
           <a
             href="#chromebooks"
             className="v5-hov-bd-electric"
-            style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 10, minHeight: 42, padding: "5px 14px 5px 5px", borderRadius: 999, background: "rgba(255,255,255,.92)", border: "1px solid var(--lh-border)", color: "var(--lh-ink)", fontSize: 14, fontWeight: 600, opacity: 1, transform: inT, transition: tr([["opacity", 0.8, 0.4], ["transform", 0.8, 0.4, true]]) + ",border-color .2s ease" }}
+            style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 10, minHeight: 42, padding: "5px 14px 5px 5px", borderRadius: 999, background: "rgba(255,255,255,.92)", border: "1px solid var(--lh-border)", color: "var(--lh-ink)", fontSize: 14, fontWeight: 600, opacity: 1, transform: inT, transition: tr([["transform", 0.8, 0.4, true]]) + ",border-color .2s ease" }}
           >
             <span style={{ padding: "6px 10px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 500, letterSpacing: ".12em", whiteSpace: "nowrap" }}>CHROMEBOOKS</span>
             {chromebookCount ? (pres.showCatalogCounts ? `${chromebookCount} listed` : "Now listed") : "Ask what is available"}
             <span aria-hidden="true" style={{ color: "var(--lh-action)" }}>→</span>
           </a>
           {pres.showCatalogCounts ? (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(16px,2.4vw,36px)", paddingTop: "clamp(10px,1.4vw,18px)", borderTop: "1px solid var(--lh-border)", maxWidth: 520, opacity: 1, transition: tr([["opacity", 0.8, 0.6]]) }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "clamp(16px,2.4vw,36px)", paddingTop: "clamp(10px,1.4vw,18px)", borderTop: "1px solid var(--lh-border)", maxWidth: 520, opacity: 1 }}>
               <Link href="/collections/all" style={{ display: "flex", flexDirection: "column", gap: 2, color: "var(--lh-ink)" }}>
                 <span style={{ fontFamily: "var(--font-display)", fontSize: 26, fontWeight: 700 }}>{totalCount}</span>
                 <span style={{ fontSize: 13, color: "var(--lh-ink-2)" }}>listings</span>
@@ -198,25 +229,38 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
         </div>
 
         <div className="v5-hero-comp" style={{ position: "relative", minWidth: 0, zIndex: 1 }}>
-          <div aria-hidden="true" className="v5-hero-ghost" style={{ position: "absolute", left: "50%", fontFamily: "var(--font-display)", fontWeight: 800, lineHeight: 0.8, letterSpacing: "-.06em", color: "transparent", WebkitTextStroke: "1.5px rgba(var(--lh-action-rgb),.16)", whiteSpace: "nowrap", transform: "translate3d(calc(-50% + var(--mx) * -16px + var(--hp) * -60px),calc(var(--hp) * 40px),0)", opacity: 1, transition: tr([["opacity", 1.2, 0]]) }}>
+          <div aria-hidden="true" className="v5-hero-ghost" style={{ position: "absolute", left: "50%", fontFamily: "var(--font-display)", fontWeight: 800, lineHeight: 0.8, letterSpacing: "-.06em", color: "transparent", WebkitTextStroke: "1.5px rgba(var(--lh-action-rgb),.16)", whiteSpace: "nowrap", transform: "translate3d(calc(-50% + var(--mx) * -16px + var(--hp) * -60px),calc(var(--hp) * 40px),0)", opacity: 1 }}>
             HUB
           </div>
           <div aria-hidden="true" style={{ position: "absolute", left: "50%", top: "44%", width: "94%", aspectRatio: "1/1", transform: "translate3d(calc(-50% + var(--mx) * -10px),calc(-50% + var(--hp) * 50px + var(--my) * -6px),0) scale(calc(1 + var(--hp) * .18))" }}>
-            <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1.5px solid rgba(var(--lh-action-rgb),.3)", boxShadow: "0 0 0 14px rgba(255,255,255,.4),0 0 80px rgba(33,89,212,.16),inset 0 0 90px rgba(28,185,232,.12)", WebkitMaskImage: "linear-gradient(#000 30%,transparent 74%)", maskImage: "linear-gradient(#000 30%,transparent 74%)", opacity: 1, transform: ringT, transition: tr([["opacity", 1.2, 0.1], ["transform", 1.6, 0.1, true]]) }} />
-            <div style={{ position: "absolute", inset: 0, opacity: 1, transition: tr([["opacity", 1.4, 0.5]]) }}>
+            <div style={{ position: "absolute", inset: 0, borderRadius: "50%", border: "1.5px solid rgba(var(--lh-action-rgb),.3)", boxShadow: "0 0 0 14px rgba(255,255,255,.4),0 0 80px rgba(33,89,212,.16),inset 0 0 90px rgba(28,185,232,.12)", WebkitMaskImage: "linear-gradient(#000 30%,transparent 74%)", maskImage: "linear-gradient(#000 30%,transparent 74%)", opacity: 1, transform: ringT, transition: tr([["transform", 1.6, 0.1, true]]) }} />
+            <div style={{ position: "absolute", inset: 0, opacity: 1 }}>
               <div style={{ position: "absolute", inset: -1, borderRadius: "50%", background: "conic-gradient(from 292deg,transparent 0deg,#1CB9E8 44deg,#2159D4 88deg,transparent 122deg)", WebkitMaskImage: "radial-gradient(closest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px))", maskImage: "radial-gradient(closest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px))", transform: "rotate(calc(var(--hp) * 70deg + var(--mx) * 8deg))" }} />
             </div>
             <div style={{ position: "absolute", inset: "16%", borderRadius: "50%", background: "radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,0))" }} />
           </div>
           <div aria-hidden="true" style={{ position: "absolute", left: "-12%", right: "-12%", bottom: "-12%", height: "40%", background: "radial-gradient(50% 50% at 50% 50%,rgba(var(--lh-navy-rgb),.32) 0%,rgba(var(--lh-navy-rgb),.12) 42%,rgba(var(--lh-navy-rgb),0) 72%)", transform: "translate3d(calc(var(--mx) * 6px),0,0)" }} />
-          <div aria-hidden="true" style={{ position: "absolute", left: "18%", width: "64%", top: "-6%", height: "78%", background: "linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.8) 45%,rgba(214,230,255,0) 100%)", clipPath: "polygon(43% 0,57% 0,100% 100%,0 100%)", opacity: 1, transition: tr([["opacity", 1.4, 0.3]]) }} />
+          <div aria-hidden="true" style={{ position: "absolute", left: "18%", width: "64%", top: "-6%", height: "78%", background: "linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.8) 45%,rgba(214,230,255,0) 100%)", clipPath: "polygon(43% 0,57% 0,100% 100%,0 100%)", opacity: 1 }} />
+          {/* Decorative stage: responsive derivatives (~13–25KB) instead of full 1800px/126KB on mobile. */}
           {/* eslint-disable-next-line @next/next/no-img-element -- V5 layered stage, positioned by percentage */}
-          <img src="/v5/stage.webp" alt="" aria-hidden="true" width={1800} height={520} style={{ position: "absolute", left: "5%", width: "90%", height: "auto", bottom: "1%", transform: "translate3d(calc(var(--mx) * 8px),calc(var(--hp) * 30px),0)", opacity: 1, transition: tr([["opacity", 1, 0.15]]) }} />
+          <img
+            src="/v5/stage-960.webp"
+            srcSet="/v5/stage-640.webp 640w, /v5/stage-960.webp 960w, /v5/stage.webp 1800w"
+            sizes="(max-width: 768px) 90vw, 900px"
+            alt=""
+            aria-hidden="true"
+            width={1800}
+            height={520}
+            loading="lazy"
+            decoding="async"
+            fetchPriority="low"
+            style={{ position: "absolute", left: "5%", width: "90%", height: "auto", bottom: "1%", transform: "translate3d(calc(var(--mx) * 8px),calc(var(--hp) * 30px),0)", opacity: 1 }}
+          />
           {side1 ? (
             <Link href={side1.href} aria-label={side1.label} style={{ position: "absolute", left: "1%", bottom: "28%", width: "39%", display: "block", mixBlendMode: blend(side1), transform: "translate3d(calc(var(--mx) * 10px + var(--hp) * -70px),calc(var(--hp) * 30px + var(--my) * 4px),0)", zIndex: 1 }}>
               {side1.src ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img {...heroImgProps(side1.src, 280)} sizes={HERO_SIDE_SIZES} alt={side1.label} fetchPriority="high" decoding="async" style={{ display: "block", width: "100%", opacity: 1, transform: lapInL, transition: tr([["opacity", 0.9, 0.3], ["transform", 1.1, 0.3, true]]) }} />
+                <img {...heroImgProps(side1.src, 280)} sizes={HERO_SIDE_SIZES} alt={side1.label} fetchPriority="low" decoding="async" style={{ display: "block", width: "100%", opacity: 1, transform: lapInL, transition: tr([["transform", 1.1, 0.3, true]]) }} />
               ) : null}
             </Link>
           ) : null}
@@ -224,21 +268,46 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
             <Link href={side2.href} aria-label={side2.label} style={{ position: "absolute", right: "-1%", bottom: "29%", width: "43%", display: "block", mixBlendMode: blend(side2), transform: "translate3d(calc(var(--mx) * 12px + var(--hp) * 70px),calc(var(--hp) * 26px + var(--my) * 4px),0)", zIndex: 1 }}>
               {side2.src ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img {...heroImgProps(side2.src, 300)} sizes={HERO_SIDE_SIZES} alt={side2.label} fetchPriority="high" decoding="async" style={{ display: "block", width: "100%", opacity: 1, transform: lapInR, transition: tr([["opacity", 0.9, 0.38], ["transform", 1.1, 0.38, true]]) }} />
+                <img {...heroImgProps(side2.src, 300)} sizes={HERO_SIDE_SIZES} alt={side2.label} fetchPriority="low" decoding="async" style={{ display: "block", width: "100%", opacity: 1, transform: lapInR, transition: tr([["transform", 1.1, 0.38, true]]) }} />
               ) : null}
             </Link>
           ) : null}
-          <Link href={main.href} aria-label={main.label} style={{ position: "absolute", left: "18%", bottom: "16%", width: "64%", display: "block", mixBlendMode: blend(main), transform: "translate3d(calc(var(--mx) * 22px),calc(var(--hp) * -50px + var(--my) * 8px),0) scale(calc(1 + var(--hp) * .1))", zIndex: 2 }}>
+          <Link
+            href={main.href}
+            aria-label={main.label}
+            style={{
+              position: "absolute",
+              left: "18%",
+              bottom: "16%",
+              width: "64%",
+              display: "block",
+              // Defer mix-blend until after intro — blend modes can suppress LCP candidacy.
+              mixBlendMode: introDone ? blend(main) : undefined,
+              transform: introDone
+                ? "translate3d(calc(var(--mx) * 22px),calc(var(--hp) * -50px + var(--my) * 8px),0) scale(calc(1 + var(--hp) * .1))"
+                : "none",
+              zIndex: 2,
+              // Cutout depth via box-shadow (not filter on the <img>) so the LCP image stays filter-free.
+              boxShadow: main.cutout ? "0 30px 30px -8px rgba(var(--lh-navy-rgb),.45)" : undefined,
+            }}
+          >
             {main.src ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img {...heroImgProps(main.src, 520)} sizes={HERO_MAIN_SIZES} alt={main.label} fetchPriority="high" decoding="async" style={{ display: "block", width: "100%", filter: main.cutout ? "drop-shadow(0 30px 30px rgba(var(--lh-navy-rgb),.45))" : undefined, opacity: 1, transform: lapInC, transition: tr([["opacity", 0.9, 0.2], ["transform", 1.2, 0.2, true]]) }} />
+              <img
+                {...heroImgProps(main.src, 520)}
+                sizes={HERO_MAIN_SIZES}
+                alt={main.label}
+                fetchPriority="high"
+                decoding="async"
+                style={{ display: "block", width: "100%", opacity: 1, transform: "none" }}
+              />
             ) : null}
           </Link>
           <div className="v5-hero-chips" style={{ position: "absolute", zIndex: 3, display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: 8, alignItems: "flex-end", transform: "translate3d(calc(var(--mx) * 30px),calc(var(--hp) * -90px + var(--my) * 12px),0)" }}>
             {main.chips.map((c, i) => {
               const d = (0.6 + i * 0.1).toFixed(2);
               return (
-                <span key={c} style={{ display: "flex", alignItems: "center", gap: 8, height: 34, padding: "0 14px", borderRadius: 999, background: "rgba(255,255,255,.92)", border: "1px solid rgba(255,255,255,.95)", boxShadow: "0 12px 30px -14px rgba(var(--lh-navy-rgb),.35),inset 0 0 0 1px rgba(var(--lh-action-rgb),.08)", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-ink)", whiteSpace: "nowrap", opacity: 1, transform: inn ? "none" : "translate3d(24px,0,0)", transition: `opacity calc(var(--dd) * .6s) ease calc(var(--dd) * ${d}s),transform calc(var(--dd) * .8s) ${ease} calc(var(--dd) * ${d}s)` }}>
+                <span key={c} style={{ display: "flex", alignItems: "center", gap: 8, height: 34, padding: "0 14px", borderRadius: 999, background: "rgba(255,255,255,.92)", border: "1px solid rgba(255,255,255,.95)", boxShadow: "0 12px 30px -14px rgba(var(--lh-navy-rgb),.35),inset 0 0 0 1px rgba(var(--lh-action-rgb),.08)", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--lh-ink)", whiteSpace: "nowrap", opacity: 1, transform: inn ? "none" : "translate3d(24px,0,0)", transition: `transform calc(var(--dd) * .8s) ${ease} calc(var(--dd) * ${d}s)` }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--lh-electric)", boxShadow: "0 0 8px var(--lh-electric)" }} />
                   {c}
                 </span>
@@ -248,7 +317,7 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
           <Link
             href={main.href}
             className="v5-hero-tag v5-hov-tag"
-            style={{ position: "absolute", bottom: 0, zIndex: 3, display: "flex", alignItems: "center", gap: 14, padding: "10px 12px 10px 16px", borderRadius: 18, background: "rgba(255,255,255,.94)", border: "1px solid rgba(255,255,255,.95)", boxShadow: "0 18px 40px -18px rgba(var(--lh-navy-rgb),.45)", color: "var(--lh-ink)", opacity: 1, transition: tr([["opacity", 0.8, 0.7]]) + ",box-shadow .2s ease" }}
+            style={{ position: "absolute", bottom: 0, zIndex: 3, display: "flex", alignItems: "center", gap: 14, padding: "10px 12px 10px 16px", borderRadius: 18, background: "rgba(255,255,255,.94)", border: "1px solid rgba(255,255,255,.95)", boxShadow: "0 18px 40px -18px rgba(var(--lh-navy-rgb),.45)", color: "var(--lh-ink)", opacity: 1, transition: "box-shadow .2s ease" }}
           >
             <span style={{ display: "flex", flexDirection: "column", gap: 1 }}>
               <span style={{ fontSize: 13, fontWeight: 600 }}>{main.name}</span>

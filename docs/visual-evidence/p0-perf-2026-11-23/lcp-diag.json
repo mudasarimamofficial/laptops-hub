@@ -1,0 +1,531 @@
+{
+  "at": "2026-11-23T16:40:04.262Z",
+  "results": [
+    {
+      "label": "chrome-headless",
+      "url": "https://www.laptopshub.pk/",
+      "elapsedMs": 7336,
+      "vis": "visible",
+      "hidden": false,
+      "title": "Laptops HUB",
+      "diag": {
+        "lcp": [],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 2408
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 2408
+          }
+        ],
+        "cls": 0,
+        "longTasks": 1,
+        "longTaskMs": 69,
+        "vis": "visible"
+      },
+      "entries": [],
+      "nav": {
+        "ttfb": 335,
+        "dcl": 1785,
+        "load": 1790
+      },
+      "h1": {
+        "text": "The future ofsmarter laptopshopping.",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block",
+        "font": "Sora, sans-serif"
+      },
+      "heroHasEntered": true,
+      "imgs": [
+        {
+          "alt": "",
+          "w": 335,
+          "h": 97,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "https://www.laptopshub.pk/v5/stage.webp"
+        },
+        {
+          "alt": "HP ProBook laptop — Laptops HUB hero",
+          "w": 145,
+          "h": 145,
+          "op": "1",
+          "blend": "normal",
+          "fp": "high",
+          "complete": true,
+          "src": "981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111&width=560"
+        },
+        {
+          "alt": "Lenovo ThinkPad laptop — Laptops HUB her",
+          "w": 160,
+          "h": 120,
+          "op": "1",
+          "blend": "normal",
+          "fp": "high",
+          "complete": true,
+          "src": "4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111&width=450"
+        },
+        {
+          "alt": "Dell Latitude laptop — Laptops HUB hero",
+          "w": 238,
+          "h": 238,
+          "op": "1",
+          "blend": "normal",
+          "fp": "high",
+          "complete": true,
+          "src": "1/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+        },
+        {
+          "alt": "Dell Latitude 7420, front view",
+          "w": 331,
+          "h": 206,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "720/5393/files/dell-second_-home-sec-front.webp?v=1792935242&width=960"
+        },
+        {
+          "alt": "Dell Latitude 7420, left angle",
+          "w": 346,
+          "h": 206,
+          "op": "0",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "4720/5393/files/dell-second_-home-sec-left.webp?v=1792935243&width=960"
+        },
+        {
+          "alt": "Dell Latitude 7420, right angle",
+          "w": 346,
+          "h": 206,
+          "op": "0",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "720/5393/files/dell-second_-home-sec-right.webp?v=1792935242&width=960"
+        },
+        {
+          "alt": "Dell Latitude 7420, rear view",
+          "w": 331,
+          "h": 206,
+          "op": "0",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "4720/5393/files/dell-second_-home-sec-rear.webp?v=1792935243&width=960"
+        }
+      ],
+      "bodyStart": "Skip to content\nFLAT 5% OFF STOREWIDE — Automatically Applied. No Code Needed.→ Shop now\nLAPTOPS\nHUB"
+    },
+    {
+      "label": "chrome-headless",
+      "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "elapsedMs": 6209,
+      "vis": "visible",
+      "hidden": false,
+      "title": "Dell 5400 · Core i5, 8th Gen, 8GB RAM, 256GB Storage · Laptops HUB",
+      "diag": {
+        "lcp": [
+          {
+            "t": 1256,
+            "s": 13160,
+            "u": "",
+            "tag": "DIV",
+            "id": null,
+            "cls": "lh-promo-bar"
+          },
+          {
+            "t": 1292,
+            "s": 81075,
+            "u": "1/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280",
+            "tag": "IMG",
+            "id": null,
+            "cls": ""
+          }
+        ],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 1256
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 1256
+          }
+        ],
+        "cls": 0,
+        "longTasks": 1,
+        "longTaskMs": 76,
+        "vis": "visible"
+      },
+      "entries": [],
+      "nav": {
+        "ttfb": 195,
+        "dcl": 664,
+        "load": 1030
+      },
+      "h1": {
+        "text": "Dell 5400",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block",
+        "font": "Sora, sans-serif"
+      },
+      "heroHasEntered": false,
+      "imgs": [
+        {
+          "alt": "Dell 5400, Core i5, 8th Gen, 8GB RAM, 25",
+          "w": 377,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "high",
+          "complete": true,
+          "src": "-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280"
+        },
+        {
+          "alt": "",
+          "w": 80,
+          "h": 62,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "1-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=252"
+        },
+        {
+          "alt": "",
+          "w": 82,
+          "h": 64,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "-alt02_239dc23d-632c-4369-b956-c2db26ef19ee.jpg?v=1792270143&width=252"
+        },
+        {
+          "alt": "",
+          "w": 82,
+          "h": 64,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "-alt03_f92bafae-5c56-440c-8cb0-f84bb110df23.jpg?v=1792270142&width=252"
+        },
+        {
+          "alt": "Dell 5310, Core i5, 10th Gen, 8GB RAM, 1",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": false,
+          "src": "1-main_5620fa10-c0f7-4bcb-bebb-1dc3300a8969.jpg?v=1792269768&width=480"
+        },
+        {
+          "alt": "Dell 5310, Core i5, 10th Gen, 8GB RAM, 2",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": false,
+          "src": "1-main_4b660a7f-2d1f-458b-9097-48327a19ce47.jpg?v=1792269630&width=480"
+        },
+        {
+          "alt": "Dell Latitude 7410, Core i5, 10th Gen, 1",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": false,
+          "src": "1-main_acc278ab-93ea-427c-9f28-7f3b5a6ee82e.jpg?v=1792269437&width=480"
+        },
+        {
+          "alt": "Dell Latitude 3410, Core i5, 10th Gen, 8",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": false,
+          "src": "1-main_db3435e7-34f2-4b5f-afd9-288b5563c98e.jpg?v=1792268368&width=480"
+        }
+      ],
+      "bodyStart": "Skip to content\nFLAT 5% OFF STOREWIDE — Automatically Applied. No Code Needed.→ Shop now\nLAPTOPS\nHUB"
+    },
+    {
+      "label": "chrome-headless",
+      "url": "https://www.laptopshub.pk/collections/laptops",
+      "elapsedMs": 6208,
+      "vis": "visible",
+      "hidden": false,
+      "title": "All laptops · Laptops HUB",
+      "diag": {
+        "lcp": [
+          {
+            "t": 1332,
+            "s": 13160,
+            "u": "",
+            "tag": "DIV",
+            "id": null,
+            "cls": "lh-promo-bar"
+          },
+          {
+            "t": 1352,
+            "s": 79686,
+            "u": "81/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800",
+            "tag": "IMG",
+            "id": null,
+            "cls": ""
+          }
+        ],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 1332
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 1332
+          }
+        ],
+        "cls": 0,
+        "longTasks": 2,
+        "longTaskMs": 247,
+        "vis": "visible"
+      },
+      "entries": [],
+      "nav": {
+        "ttfb": 196,
+        "dcl": 681,
+        "load": 987
+      },
+      "h1": {
+        "text": "All laptops",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block",
+        "font": "Sora, sans-serif"
+      },
+      "heroHasEntered": false,
+      "imgs": [
+        {
+          "alt": "Dell 5400, Core i5, 8th Gen, 8GB RAM, 25",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "1-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800"
+        },
+        {
+          "alt": "HP 430 G5, Core i5, 8th Gen, 8GB RAM, 18",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "1-main_008833a7-c569-4ae6-8ca2-b0e8653280f8.jpg?v=1792270122&width=800"
+        },
+        {
+          "alt": "HP 840 G4, Core i5, 7th Gen, 8GB RAM, 18",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "1-main_4b29281e-26c1-40b2-ba2c-8f909f6862e8.jpg?v=1792270103&width=800"
+        },
+        {
+          "alt": "Lenovo ThinkPad T490, Core i7, 8th Gen, ",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": false,
+          "src": "1-main_7c9af791-2f05-46e1-9c3f-d20effe394d3.jpg?v=1792270034&width=480"
+        },
+        {
+          "alt": "Dell 5320, Core i5, 11th Gen, 8GB RAM, 1",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": false,
+          "src": "1-main_a5f4d2b5-ebc0-425d-a2b0-a3ae41add042.jpg?v=1792269965&width=480"
+        },
+        {
+          "alt": "Dell 5470, Core i5, 6th Gen, 4GB RAM, 12",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": false,
+          "src": "1-main_96a00075-0ed1-4e80-82e8-2d02c90fc3c9.jpg?v=1792269887&width=480"
+        },
+        {
+          "alt": "Dell 5510, Core i5, 10th Gen, 8GB RAM, 2",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": false,
+          "src": "1-main_643f03e4-f1f2-46b4-9983-5570b13d1b02.jpg?v=1792269927&width=480"
+        },
+        {
+          "alt": "Dell 5480, Core i5, 7th Gen, 4GB RAM, 12",
+          "w": 378,
+          "h": 302,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": false,
+          "src": "1-main_60b0dd22-d70d-40da-a002-72d87971bcea.png?v=1792269836&width=480"
+        }
+      ],
+      "bodyStart": "Skip to content\nFLAT 5% OFF STOREWIDE — Automatically Applied. No Code Needed.→ Shop now\nLAPTOPS\nHUB"
+    },
+    {
+      "label": "chrome-reduced-motion",
+      "url": "https://www.laptopshub.pk/",
+      "elapsedMs": 6437,
+      "vis": "visible",
+      "hidden": false,
+      "title": "Laptops HUB",
+      "diag": {
+        "lcp": [],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 1396
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 1396
+          }
+        ],
+        "cls": 0,
+        "longTasks": 1,
+        "longTaskMs": 69,
+        "vis": "visible"
+      },
+      "entries": [],
+      "nav": {
+        "ttfb": 220,
+        "dcl": 892,
+        "load": 906
+      },
+      "h1": {
+        "text": "The future ofsmarter laptopshopping.",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block",
+        "font": "Sora, sans-serif"
+      },
+      "heroHasEntered": true,
+      "imgs": [
+        {
+          "alt": "",
+          "w": 335,
+          "h": 97,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "https://www.laptopshub.pk/v5/stage.webp"
+        },
+        {
+          "alt": "HP ProBook laptop — Laptops HUB hero",
+          "w": 145,
+          "h": 145,
+          "op": "1",
+          "blend": "normal",
+          "fp": "high",
+          "complete": true,
+          "src": "981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111&width=560"
+        },
+        {
+          "alt": "Lenovo ThinkPad laptop — Laptops HUB her",
+          "w": 160,
+          "h": 120,
+          "op": "1",
+          "blend": "normal",
+          "fp": "high",
+          "complete": true,
+          "src": "4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111&width=450"
+        },
+        {
+          "alt": "Dell Latitude laptop — Laptops HUB hero",
+          "w": 238,
+          "h": 238,
+          "op": "1",
+          "blend": "normal",
+          "fp": "high",
+          "complete": true,
+          "src": "1/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+        },
+        {
+          "alt": "Dell Latitude 7420, front view",
+          "w": 331,
+          "h": 213,
+          "op": "1",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "720/5393/files/dell-second_-home-sec-front.webp?v=1792935242&width=960"
+        },
+        {
+          "alt": "Dell Latitude 7420, left angle",
+          "w": 346,
+          "h": 213,
+          "op": "0",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "4720/5393/files/dell-second_-home-sec-left.webp?v=1792935243&width=960"
+        },
+        {
+          "alt": "Dell Latitude 7420, right angle",
+          "w": 346,
+          "h": 213,
+          "op": "0",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "720/5393/files/dell-second_-home-sec-right.webp?v=1792935242&width=960"
+        },
+        {
+          "alt": "Dell Latitude 7420, rear view",
+          "w": 331,
+          "h": 213,
+          "op": "0",
+          "blend": "normal",
+          "fp": "auto",
+          "complete": true,
+          "src": "4720/5393/files/dell-second_-home-sec-rear.webp?v=1792935243&width=960"
+        }
+      ],
+      "bodyStart": "Skip to content\nFLAT 5% OFF STOREWIDE — Automatically Applied. No Code Needed.→ Shop now\nLAPTOPS\nHUB"
+    }
+  ]
+}

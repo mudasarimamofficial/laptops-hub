@@ -1,10 +1,15 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { LHImg } from "@/components/storefront/v5/lh-img";
-import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
 import { VariantPicker, pickerModel, variantLabel } from "@/components/commerce/variant-picker";
+
+const InquiryDialog = dynamic(
+  () => import("@/components/commerce/inquiry-dialog").then((m) => m.InquiryDialog),
+  { ssr: false },
+);
 import { canPurchase } from "@/lib/catalog/availability";
 import { useCart } from "@/lib/commerce/cart-store";
 import { openCartDrawer } from "@/lib/commerce/cart-ui";

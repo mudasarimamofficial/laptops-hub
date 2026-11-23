@@ -245,8 +245,9 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
           {/* eslint-disable-next-line @next/next/no-img-element -- V5 layered stage, positioned by percentage */}
           <img
             src="/v5/stage-960.webp"
-            srcSet="/v5/stage-640.webp 640w, /v5/stage-960.webp 960w, /v5/stage.webp 1800w"
-            sizes="(max-width: 768px) 90vw, 900px"
+            // Cap at 960w so high-DPR phones do not select the 126KB 1800px original.
+            srcSet="/v5/stage-640.webp 640w, /v5/stage-960.webp 960w"
+            sizes="(max-width: 768px) 340px, 720px"
             alt=""
             aria-hidden="true"
             width={1800}

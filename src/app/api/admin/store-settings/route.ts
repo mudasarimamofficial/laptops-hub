@@ -5,6 +5,7 @@ import {
   INVENTORY_TRACKING_KEY,
   STOREFRONT_CHECKOUT_KEY,
 } from "@/lib/commerce/store-commerce-settings";
+import { CONTACT_SOCIAL_KEY, contactSocialSchema } from "@/lib/content/contact-social";
 import { z } from "zod";
 import { createAuthorizedStaffClient, createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { maybeCreateCoalescedSnapshot } from "@/lib/admin/merchant-snapshots";
@@ -23,6 +24,7 @@ const settingsSchema = z.object({
   showCatalogCounts: z.boolean().optional(),
   showStoryAngleLabels: z.boolean().optional(),
   showSectionNumbers: z.boolean().optional(),
+  contactSocial: contactSocialSchema.optional(),
 });
 
 /**
@@ -91,6 +93,10 @@ export async function PUT(request: Request) {
     }
     if (d.showCatalogCounts !== undefined || d.showStoryAngleLabels !== undefined || d.showSectionNumbers !== undefined) {
       keysToTouch.push(STOREFRONT_PRESENTATION_KEY);
+    }
+    if (d.contactSocial !== undefined) {
+      keysToTouch.push(CONTACT_SOCIAL_KEY);
+      if (!keysToTouch.includes("business_identity")) keysToTouch.push("business_identity");
     }
 
     if (keysToTouch.length === 0) {
@@ -204,11 +210,35 @@ export async function PUT(request: Request) {
       });
     }
 
+    if (d.contactSocial) {
+      upsertPayloads.push({
+        key: CONTACT_SOCIAL_KEY,
+        value: d.contactSocial,
+        updated_at: now,
+        updated_by: staff.userId,
+      });
+      // Keep business_identity in sync as a single public identity source for name/email/primary phone.
+      const existingIdentity = currentMap.get("business_identity") || {};
+      const primaryPhone = d.contactSocial.phones.find((p) => p.enabled)?.display ?? "";
+      upsertPayloads.push({
+        key: "business_identity",
+        value: {
+          ...existingIdentity,
+          name: d.contactSocial.businessName,
+          support_email: d.contactSocial.email,
+          support_phone: primaryPhone || (existingIdentity.support_phone ?? ""),
+        },
+        updated_at: now,
+        updated_by: staff.userId,
+      });
+    }
+
     // 2. Pre-change CMS snapshot for inventory / checkout / identity (coalesced; never blocks save).
     if (
       keysToTouch.includes(INVENTORY_TRACKING_KEY) ||
       keysToTouch.includes(STOREFRONT_CHECKOUT_KEY) ||
-      keysToTouch.includes("business_identity")
+      keysToTouch.includes("business_identity") ||
+      keysToTouch.includes(CONTACT_SOCIAL_KEY)
     ) {
       try {
         await maybeCreateCoalescedSnapshot(supabase, {
@@ -275,9 +305,12 @@ export async function PUT(request: Request) {
     if (
       keysToTouch.includes(STOREFRONT_PRESENTATION_KEY) ||
       keysToTouch.includes(INVENTORY_TRACKING_KEY) ||
-      keysToTouch.includes(STOREFRONT_CHECKOUT_KEY)
+      keysToTouch.includes(STOREFRONT_CHECKOUT_KEY) ||
+      keysToTouch.includes(CONTACT_SOCIAL_KEY) ||
+      keysToTouch.includes("business_identity")
     ) {
       revalidateTag("settings", { expire: 0 });
+      revalidateTag("contact-social", { expire: 0 });
       revalidatePath("/", "layout");
       revalidatePath("/products", "layout");
       revalidatePath("/collections", "layout");

@@ -288,8 +288,7 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
                 ? "translate3d(calc(var(--mx) * 22px),calc(var(--hp) * -50px + var(--my) * 8px),0) scale(calc(1 + var(--hp) * .1))"
                 : "none",
               zIndex: 2,
-              // Cutout depth via box-shadow (not filter on the <img>) so the LCP image stays filter-free.
-              boxShadow: main.cutout ? "0 30px 30px -8px rgba(var(--lh-navy-rgb),.45)" : undefined,
+              // Transparent cutouts stay filter/shadow-free so alpha edges are not boxed.
             }}
           >
             {main.src ? (

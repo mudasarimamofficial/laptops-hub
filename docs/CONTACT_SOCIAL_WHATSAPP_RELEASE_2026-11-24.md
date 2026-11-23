@@ -19,6 +19,17 @@
 - `npm run build` — PASS
 - Visual: `docs/visual-evidence/contact-social-2026-11-24/`
 
+## Release proof
+
+| Item | Value |
+|---|---|
+| PR | https://github.com/mudasarimamofficial/laptops-hub/pull/66 |
+| Merge commit | `9e66a725333a1e4b7aa3a25e276c242eb2df46be` |
+| Vercel production deployment | `dpl_2QKZQT2ysTzXUPQQBoRBe9EhfYBa` |
+| Status | READY |
+| Production URL | https://www.laptopshub.pk |
+| Live smoke | `docs/visual-evidence/contact-social-2026-11-24/prod-smoke.json` — **PASS** |
+
 ## Known limitation
 
 - Verified WhatsApp recipient digits are empty by default (do not invent). PDP uses copy/open fallback until the merchant sets international digits in Admin → Settings → Contact & Social.

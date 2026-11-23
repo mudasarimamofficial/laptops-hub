@@ -1,0 +1,463 @@
+{
+  "at": "2026-11-23T20:44:00.852Z",
+  "base": "http://127.0.0.1:3020",
+  "tag": "after",
+  "results": [
+    {
+      "id": "1754x864",
+      "width": 1754,
+      "height": 864,
+      "vh": 864,
+      "vw": 1754,
+      "panel": {
+        "w": 1754,
+        "h": 440,
+        "t": 72,
+        "b": 512,
+        "l": 0,
+        "right": 1754
+      },
+      "panelMaxH": "440px",
+      "panelOverflow": "visible",
+      "links": {
+        "w": 846,
+        "h": 61,
+        "t": 88,
+        "b": 149,
+        "l": 439,
+        "right": 1285
+      },
+      "linkItems": 4,
+      "maxLinkW": 190,
+      "groupButtons": 9,
+      "groups": {
+        "w": 190,
+        "h": 368,
+        "t": 88,
+        "b": 456,
+        "l": 229,
+        "right": 419
+      },
+      "feat": {
+        "w": 220,
+        "h": 246,
+        "t": 88,
+        "b": 334,
+        "l": 1305,
+        "right": 1525
+      },
+      "search": {
+        "w": 156,
+        "h": 44,
+        "t": 14,
+        "b": 58,
+        "l": 1142,
+        "right": 1297
+      },
+      "searchText": "Search model, processor, RAMSearch laptops",
+      "searchOverflow": false,
+      "searchClientW": 154,
+      "searchScrollW": 154,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 459,
+        "b": 499,
+        "l": 229,
+        "right": 354
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 459,
+        "b": 499,
+        "l": 1467,
+        "right": 1525
+      },
+      "closeVisible": true,
+      "clippedFooter": false,
+      "docOverflowX": false,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\after-1754x864-screen.png"
+    },
+    {
+      "id": "1918x542",
+      "width": 1918,
+      "height": 542,
+      "vh": 542,
+      "vw": 1918,
+      "panel": {
+        "w": 1918,
+        "h": 422,
+        "t": 72,
+        "b": 494,
+        "l": 0,
+        "right": 1918
+      },
+      "panelMaxH": "469px",
+      "panelOverflow": "visible",
+      "links": {
+        "w": 846,
+        "h": 61,
+        "t": 88,
+        "b": 149,
+        "l": 521,
+        "right": 1367
+      },
+      "linkItems": 4,
+      "maxLinkW": 190,
+      "groupButtons": 9,
+      "groups": {
+        "w": 190,
+        "h": 332,
+        "t": 88,
+        "b": 420,
+        "l": 311,
+        "right": 501
+      },
+      "feat": {
+        "w": 220,
+        "h": 246,
+        "t": 88,
+        "b": 334,
+        "l": 1387,
+        "right": 1607
+      },
+      "search": {
+        "w": 156,
+        "h": 44,
+        "t": 14,
+        "b": 58,
+        "l": 1224,
+        "right": 1379
+      },
+      "searchText": "Search model, processor, RAMSearch laptops",
+      "searchOverflow": false,
+      "searchClientW": 154,
+      "searchScrollW": 154,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 441,
+        "b": 481,
+        "l": 311,
+        "right": 436
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 441,
+        "b": 481,
+        "l": 1549,
+        "right": 1607
+      },
+      "closeVisible": true,
+      "clippedFooter": false,
+      "docOverflowX": false,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\after-1918x542-screen.png"
+    },
+    {
+      "id": "1366x768",
+      "width": 1366,
+      "height": 768,
+      "vh": 768,
+      "vw": 1366,
+      "panel": {
+        "w": 1366,
+        "h": 440,
+        "t": 72,
+        "b": 512,
+        "l": 0,
+        "right": 1366
+      },
+      "panelMaxH": "440px",
+      "panelOverflow": "visible",
+      "links": {
+        "w": 846,
+        "h": 61,
+        "t": 88,
+        "b": 149,
+        "l": 245,
+        "right": 1091
+      },
+      "linkItems": 4,
+      "maxLinkW": 190,
+      "groupButtons": 9,
+      "groups": {
+        "w": 190,
+        "h": 368,
+        "t": 88,
+        "b": 456,
+        "l": 35,
+        "right": 225
+      },
+      "feat": {
+        "w": 220,
+        "h": 246,
+        "t": 88,
+        "b": 334,
+        "l": 1111,
+        "right": 1331
+      },
+      "search": {
+        "w": 156,
+        "h": 44,
+        "t": 14,
+        "b": 58,
+        "l": 948,
+        "right": 1103
+      },
+      "searchText": "Search model, processor, RAMSearch laptops",
+      "searchOverflow": false,
+      "searchClientW": 154,
+      "searchScrollW": 154,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 459,
+        "b": 499,
+        "l": 35,
+        "right": 160
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 459,
+        "b": 499,
+        "l": 1273,
+        "right": 1331
+      },
+      "closeVisible": true,
+      "clippedFooter": false,
+      "docOverflowX": false,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\after-1366x768-screen.png"
+    },
+    {
+      "id": "1280x720",
+      "width": 1280,
+      "height": 720,
+      "vh": 720,
+      "vw": 1280,
+      "panel": {
+        "w": 1280,
+        "h": 440,
+        "t": 72,
+        "b": 512,
+        "l": 0,
+        "right": 1280
+      },
+      "panelMaxH": "440px",
+      "panelOverflow": "visible",
+      "links": {
+        "w": 766,
+        "h": 103,
+        "t": 88,
+        "b": 191,
+        "l": 242,
+        "right": 1008
+      },
+      "linkItems": 4,
+      "maxLinkW": 190,
+      "groupButtons": 9,
+      "groups": {
+        "w": 190,
+        "h": 368,
+        "t": 88,
+        "b": 456,
+        "l": 32,
+        "right": 222
+      },
+      "feat": {
+        "w": 220,
+        "h": 246,
+        "t": 88,
+        "b": 334,
+        "l": 1028,
+        "right": 1248
+      },
+      "search": {
+        "w": 76,
+        "h": 44,
+        "t": 14,
+        "b": 58,
+        "l": 945,
+        "right": 1020
+      },
+      "searchText": "Search model, processor, RAMSearch laptops",
+      "searchOverflow": false,
+      "searchClientW": 74,
+      "searchScrollW": 74,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 459,
+        "b": 499,
+        "l": 32,
+        "right": 157
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 459,
+        "b": 499,
+        "l": 1190,
+        "right": 1248
+      },
+      "closeVisible": true,
+      "clippedFooter": false,
+      "docOverflowX": false,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\after-1280x720-screen.png"
+    },
+    {
+      "id": "1180x900",
+      "width": 1180,
+      "height": 900,
+      "vh": 900,
+      "vw": 1180,
+      "panel": {
+        "w": 1180,
+        "h": 440,
+        "t": 72,
+        "b": 512,
+        "l": 0,
+        "right": 1180
+      },
+      "panelMaxH": "440px",
+      "panelOverflow": "visible",
+      "links": {
+        "w": 666,
+        "h": 103,
+        "t": 88,
+        "b": 191,
+        "l": 242,
+        "right": 908
+      },
+      "linkItems": 4,
+      "maxLinkW": 190,
+      "groupButtons": 9,
+      "groups": {
+        "w": 190,
+        "h": 368,
+        "t": 88,
+        "b": 456,
+        "l": 32,
+        "right": 222
+      },
+      "feat": {
+        "w": 220,
+        "h": 246,
+        "t": 88,
+        "b": 334,
+        "l": 928,
+        "right": 1148
+      },
+      "search": {
+        "w": 44,
+        "h": 44,
+        "t": 14,
+        "b": 58,
+        "l": 945,
+        "right": 989
+      },
+      "searchText": "Search model, processor, RAMSearch laptops",
+      "searchOverflow": false,
+      "searchClientW": 42,
+      "searchScrollW": 42,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 459,
+        "b": 499,
+        "l": 32,
+        "right": 157
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 459,
+        "b": 499,
+        "l": 1090,
+        "right": 1148
+      },
+      "closeVisible": true,
+      "clippedFooter": false,
+      "docOverflowX": false,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\after-1180x900-screen.png"
+    },
+    {
+      "id": "1179x900",
+      "width": 1179,
+      "height": 900,
+      "vh": 900,
+      "vw": 1179,
+      "panel": {
+        "w": 1179,
+        "h": 440,
+        "t": 72,
+        "b": 512,
+        "l": 0,
+        "right": 1179
+      },
+      "panelMaxH": "440px",
+      "panelOverflow": "visible",
+      "links": {
+        "w": 915,
+        "h": 61,
+        "t": 88,
+        "b": 149,
+        "l": 232,
+        "right": 1147
+      },
+      "linkItems": 4,
+      "maxLinkW": 190,
+      "groupButtons": 9,
+      "groups": {
+        "w": 180,
+        "h": 368,
+        "t": 88,
+        "b": 456,
+        "l": 32,
+        "right": 212
+      },
+      "feat": {
+        "w": 0,
+        "h": 0,
+        "t": 0,
+        "b": 0,
+        "l": 0,
+        "right": 0
+      },
+      "search": {
+        "w": 212,
+        "h": 44,
+        "t": 14,
+        "b": 58,
+        "l": 707,
+        "right": 919
+      },
+      "searchText": "Search model, processor, RAMSearch laptops",
+      "searchOverflow": false,
+      "searchClientW": 210,
+      "searchScrollW": 210,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 459,
+        "b": 499,
+        "l": 32,
+        "right": 157
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 459,
+        "b": 499,
+        "l": 1089,
+        "right": 1147
+      },
+      "closeVisible": true,
+      "clippedFooter": false,
+      "docOverflowX": false,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\after-1179x900-screen.png"
+    }
+  ]
+}

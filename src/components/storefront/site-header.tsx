@@ -79,11 +79,38 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
   const [mnav, setMnav] = useState(false);
   const [sOpen, setSOpen] = useState(false);
   const [mgroup, setMgroup] = useState<string | null>("Brand");
+  const [finePointer, setFinePointer] = useState(false);
   const cartCount = useCart((s) => s.lines.reduce((n, l) => n + l.quantity, 0));
   const compareCount = useCompare((s) => s.handles.length);
   const mnavRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const closeMnav = useCallback(() => setMnav(false), []);
   useDialog(mnav, mnavRef, closeMnav);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => setFinePointer(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  // Publish sticky header (+ promo) bottom so the mega panel can bound to remaining viewport height.
+  useEffect(() => {
+    const root = document.documentElement;
+    const syncOffset = () => {
+      const header = headerRef.current;
+      if (!header) return;
+      root.style.setProperty("--lh-header-offset", `${Math.max(72, Math.round(header.getBoundingClientRect().bottom))}px`);
+    };
+    syncOffset();
+    window.addEventListener("resize", syncOffset);
+    window.addEventListener("scroll", syncOffset, { passive: true });
+    return () => {
+      window.removeEventListener("resize", syncOffset);
+      window.removeEventListener("scroll", syncOffset);
+    };
+  }, [mega]);
 
   // V5 `onHash`: any navigation closes menus and overlays.
   useEffect(() => {
@@ -96,8 +123,17 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
   useEffect(() => {
     if (!mega) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMega(false);
+    const onPointerDown = (e: PointerEvent) => {
+      const t = e.target as Node | null;
+      if (t && headerRef.current?.contains(t)) return;
+      setMega(false);
+    };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("pointerdown", onPointerDown);
+    };
   }, [mega]);
 
   const openSearch = () => {
@@ -119,7 +155,10 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
   return (
     <>
       <header
-        onMouseLeave={closeMega}
+        ref={headerRef}
+        onMouseLeave={() => {
+          if (finePointer) closeMega();
+        }}
         style={{
           position: "sticky",
           top: 0,
@@ -168,7 +207,9 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
               className="v5-hov-ice"
               data-testid="desktop-mega-trigger"
               onClick={() => (mega ? setMega(false) : openMega())}
-              onMouseEnter={openMega}
+              onMouseEnter={() => {
+                if (finePointer) openMega();
+              }}
               aria-expanded={mega}
               aria-controls="lh-mega-menu"
               style={{ height: 40, padding: "0 14px", border: 0, borderRadius: 10, background: mega ? "var(--lh-ice)" : "transparent", fontSize: 15, fontWeight: 600, color: "var(--lh-ink)", display: "flex", alignItems: "center", gap: 6, cursor: "pointer", transition: "background .2s ease" }}
@@ -205,13 +246,34 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
             type="button"
             className="v5-d-only v5-hov-search"
             onClick={openSearch}
-            style={{ width: "min(320px,26vw)", height: 44, border: "1px solid var(--lh-border)", borderRadius: 999, background: "rgba(255,255,255,.8)", display: "flex", alignItems: "center", gap: 10, padding: "0 16px", color: "var(--lh-ink-2)", fontSize: 14, cursor: "pointer", transition: "border-color .2s ease,box-shadow .2s ease", whiteSpace: "nowrap", overflow: "hidden" }}
+            aria-label="Search model, processor, RAM"
+            style={{
+              width: "clamp(44px, 18vw, 280px)",
+              maxWidth: 280,
+              height: 44,
+              border: "1px solid var(--lh-border)",
+              borderRadius: 999,
+              background: "rgba(255,255,255,.8)",
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "0 14px",
+              color: "var(--lh-ink-2)",
+              fontSize: 14,
+              cursor: "pointer",
+              transition: "border-color .2s ease,box-shadow .2s ease",
+              flexShrink: 1,
+              minWidth: 44,
+            }}
           >
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2159D4" strokeWidth="2" aria-hidden="true">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2159D4" strokeWidth="2" aria-hidden="true" style={{ flexShrink: 0 }}>
               <circle cx="11" cy="11" r="7" />
               <path d="M20 20l-3.5-3.5" />
             </svg>
-            Search model, processor, RAM
+            <span className="v5-header-search-text" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              <span className="v5-header-search-label-full">Search model, processor, RAM</span>
+              <span className="v5-header-search-label-short">Search laptops</span>
+            </span>
           </button>
           <Link
             href="/compare"
@@ -258,92 +320,91 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
             role="region"
             aria-label="Catalog menu"
             data-testid="desktop-mega-menu"
+            data-open="true"
             style={{
               position: "absolute",
               left: 0,
               right: 0,
               top: "100%",
-              maxHeight: "min(420px, calc(100vh - 88px))",
-              overflow: "hidden",
-              overscrollBehavior: "contain",
               background: "rgba(255,255,255,.98)",
               backdropFilter: "blur(24px)",
               WebkitBackdropFilter: "blur(24px)",
               borderBottom: "1px solid var(--lh-border)",
               boxShadow: "0 28px 56px -36px rgba(var(--lh-navy-rgb),.4)",
-              display: "block",
             }}
           >
-            <div style={{ height: 2, background: "linear-gradient(90deg,var(--lh-signal) 0,var(--lh-signal) 64px,var(--lh-border) 64px)" }} />
-            <div className="v5-mega-grid" style={{ maxWidth: 1360, margin: "0 auto", padding: "18px clamp(16px,3vw,32px) 14px", display: "grid", gap: "16px 24px", alignItems: "start" }}>
-              <nav aria-label="Catalog categories" className="v5-mega-groups" style={{ display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>
-                {chrome.menu.map((g) => {
-                  const selected = (activeMegaGroup?.title ?? "") === g.title;
-                  return (
-                    <button
-                      key={g.title}
-                      type="button"
-                      data-testid={`mega-group-${g.title}`}
-                      aria-pressed={selected}
-                      onMouseEnter={() => setMgroup(g.title)}
-                      onFocus={() => setMgroup(g.title)}
-                      onClick={() => setMgroup(g.title)}
-                      className="v5-hov-ice"
-                      style={{
-                        textAlign: "left",
-                        border: 0,
-                        cursor: "pointer",
-                        borderRadius: 10,
-                        padding: "10px 12px",
-                        minHeight: 44,
-                        fontFamily: "var(--font-mono)",
-                        fontSize: 12,
-                        letterSpacing: ".08em",
-                        textTransform: "uppercase",
-                        fontWeight: 600,
-                        color: selected ? "var(--lh-action)" : "var(--lh-ink)",
-                        background: selected ? "var(--lh-ice)" : "transparent",
-                      }}
-                    >
-                      {g.title}
-                    </button>
-                  );
-                })}
-              </nav>
-              <div className="v5-mega-links" style={{ minWidth: 0, maxHeight: "min(320px, calc(100vh - 180px))", overflow: "auto", overscrollBehavior: "contain" }}>
-                <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", color: "var(--lh-action)", marginBottom: 10 }}>
-                  {activeMegaGroup?.title ?? "Browse"}
+            <div style={{ height: 2, flex: "0 0 auto", background: "linear-gradient(90deg,var(--lh-signal) 0,var(--lh-signal) 64px,var(--lh-border) 64px)" }} />
+            <div className="v5-mega-body">
+              <div className="v5-mega-grid" style={{ maxWidth: 1360, margin: "0 auto", padding: "14px clamp(16px,3vw,32px) 12px", display: "grid", gap: "12px 20px" }}>
+                <nav aria-label="Catalog categories" className="v5-mega-groups" style={{ display: "flex", flexDirection: "column", gap: 1, minWidth: 0 }}>
+                  {chrome.menu.map((g) => {
+                    const selected = (activeMegaGroup?.title ?? "") === g.title;
+                    return (
+                      <button
+                        key={g.title}
+                        type="button"
+                        data-testid={`mega-group-${g.title}`}
+                        aria-pressed={selected}
+                        onMouseEnter={() => {
+                          if (finePointer) setMgroup(g.title);
+                        }}
+                        onFocus={() => setMgroup(g.title)}
+                        onClick={() => setMgroup(g.title)}
+                        className="v5-hov-ice v5-mega-group-btn"
+                        style={{
+                          textAlign: "left",
+                          border: 0,
+                          cursor: "pointer",
+                          borderRadius: 10,
+                          fontFamily: "var(--font-mono)",
+                          fontSize: 12,
+                          letterSpacing: ".08em",
+                          textTransform: "uppercase",
+                          fontWeight: 600,
+                          color: selected ? "var(--lh-action)" : "var(--lh-ink)",
+                          background: selected ? "var(--lh-ice)" : "transparent",
+                        }}
+                      >
+                        {g.title}
+                      </button>
+                    );
+                  })}
+                </nav>
+                <div className="v5-mega-links" style={{ minWidth: 0 }}>
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", color: "var(--lh-action)", marginBottom: 8 }}>
+                    {activeMegaGroup?.title ?? "Browse"}
+                  </div>
+                  <div className="v5-mega-links-grid" data-count={activeMegaGroup?.items.length ?? 0}>
+                    {(activeMegaGroup?.items ?? []).map((it) => (
+                      <Link
+                        key={it.href}
+                        href={it.href}
+                        className="v5-hov-ice"
+                        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, color: "var(--lh-ink)", fontSize: 15, transition: "background .18s ease", minHeight: 40 }}
+                      >
+                        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{it.label}</span>
+                        {chrome.showCounts ? <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-ink-2)", flexShrink: 0 }}>{countFor(it.count)}</span> : null}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "2px 16px" }}>
-                  {(activeMegaGroup?.items ?? []).map((it) => (
-                    <Link
-                      key={it.href}
-                      href={it.href}
-                      className="v5-hov-ice"
-                      style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, color: "var(--lh-ink)", fontSize: 15, transition: "background .18s ease", minHeight: 40 }}
-                    >
-                      <span>{it.label}</span>
-                      {chrome.showCounts ? <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-ink-2)" }}>{countFor(it.count)}</span> : null}
-                    </Link>
-                  ))}
-                </div>
+                {feat ? (
+                  <Link
+                    href={feat.href}
+                    className="v5-mega-feat v5-hov-bd-action"
+                    style={{ alignSelf: "start", flexDirection: "column", gap: 8, padding: 12, borderRadius: 16, background: "var(--lh-canvas)", border: "1px solid var(--lh-border)", color: "var(--lh-ink)", width: "100%", maxWidth: 220 }}
+                  >
+                    <span style={{ position: "relative", aspectRatio: "4/3", borderRadius: 12, background: "radial-gradient(100% 90% at 50% 100%,var(--lh-titanium),#FFFFFF)", overflow: "hidden" }}>
+                      <LHImg src={feat.img} alt="" pad="10px" blend="multiply" eager />
+                    </span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".08em", color: "var(--lh-action)" }}>{feat.stockText}</span>
+                    <span style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 600, lineHeight: 1.25 }}>{feat.model}</span>
+                    <span style={{ fontSize: 14, fontWeight: 700 }}>{feat.priceText}</span>
+                  </Link>
+                ) : null}
               </div>
-              {feat ? (
-                <Link
-                  href={feat.href}
-                  className="v5-mega-feat v5-hov-bd-action"
-                  style={{ alignSelf: "start", flexDirection: "column", gap: 10, padding: 12, borderRadius: 16, background: "var(--lh-canvas)", border: "1px solid var(--lh-border)", color: "var(--lh-ink)", maxWidth: 240 }}
-                >
-                  <span style={{ position: "relative", aspectRatio: "4/3", borderRadius: 12, background: "radial-gradient(100% 90% at 50% 100%,var(--lh-titanium),#FFFFFF)", overflow: "hidden" }}>
-                    <LHImg src={feat.img} alt="" pad="10px" blend="multiply" eager />
-                  </span>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".08em", color: "var(--lh-action)" }}>{feat.stockText}</span>
-                  <span style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 600 }}>{feat.model}</span>
-                  <span style={{ fontSize: 14, fontWeight: 700 }}>{feat.priceText}</span>
-                </Link>
-              ) : null}
             </div>
-            <div style={{ maxWidth: 1360, margin: "0 auto", padding: "0 clamp(16px,3vw,32px) 16px", display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
+            <div className="v5-mega-footer" style={{ maxWidth: 1360, width: "100%", margin: "0 auto", padding: "8px clamp(16px,3vw,32px) 12px", display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
               <Link href="/collections/all" style={{ display: "inline-flex", alignItems: "center", minHeight: 40, gap: 8, fontWeight: 600, fontSize: 14, color: "var(--lh-action)" }}>
                 <span>{chrome.showCounts ? `View all ${chrome.totalCount} products →` : "View all products →"}</span>
               </Link>

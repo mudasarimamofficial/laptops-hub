@@ -1,0 +1,416 @@
+{
+  "at": "2026-11-23T18:04:20.402Z",
+  "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+  "elapsedMs": 9734,
+  "device": "Pixel 7",
+  "channel": "chrome",
+  "note": "Unthrottled Playwright profile — not Lighthouse DevTools throttle.",
+  "metrics": {
+    "paints": {
+      "first-paint": 3252,
+      "first-contentful-paint": 3252
+    },
+    "lcp": [],
+    "ttfb": 247,
+    "dcl": 3783,
+    "load": 3784,
+    "longtasks": [],
+    "topResources": [
+      {
+        "name": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+        "type": "link",
+        "dur": 616,
+        "transfer": 8358,
+        "encoded": 8058
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/3b6p9ql7k2aot.js",
+        "type": "script",
+        "dur": 368,
+        "transfer": 9299,
+        "encoded": 8999
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/0dy2jzuwk91jz.js",
+        "type": "script",
+        "dur": 360,
+        "transfer": 11810,
+        "encoded": 11510
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/2jxk9d2ckbo97.js",
+        "type": "script",
+        "dur": 345,
+        "transfer": 525,
+        "encoded": 225
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/1ngk-vzprib21.js",
+        "type": "script",
+        "dur": 311,
+        "transfer": 32259,
+        "encoded": 31959
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/3kdokbdrd3qnq.js",
+        "type": "script",
+        "dur": 295,
+        "transfer": 9117,
+        "encoded": 8817
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/29z1tv_m26w5x.js",
+        "type": "script",
+        "dur": 268,
+        "transfer": 69370,
+        "encoded": 69070
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/0kzsrqwc41c04.js",
+        "type": "script",
+        "dur": 243,
+        "transfer": 73541,
+        "encoded": 73241
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/turbopack-3xd-7z66s-4wg.js",
+        "type": "script",
+        "dur": 238,
+        "transfer": 4389,
+        "encoded": 4089
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/2mw71qj4r24dx.js",
+        "type": "script",
+        "dur": 235,
+        "transfer": 4244,
+        "encoded": 3944
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/348nxbo418m7b.js",
+        "type": "script",
+        "dur": 233,
+        "transfer": 45466,
+        "encoded": 45166
+      },
+      {
+        "name": "https://www.laptopshub.pk/collections/all?_rsc=YsQVyNre4UTLo9gG",
+        "type": "fetch",
+        "dur": 217,
+        "transfer": 1313,
+        "encoded": 1013
+      },
+      {
+        "name": "https://www.laptopshub.pk/collections/dell?_rsc=BadiPgflbLmPcJyt",
+        "type": "fetch",
+        "dur": 206,
+        "transfer": 643,
+        "encoded": 343
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/39txf-b9tltlw.css",
+        "type": "link",
+        "dur": 204,
+        "transfer": 703,
+        "encoded": 403
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/2hr76b3r1v5r7.js",
+        "type": "script",
+        "dur": 202,
+        "transfer": 8823,
+        "encoded": 8523
+      },
+      {
+        "name": "https://www.laptopshub.pk/collections/dell?_rsc=YsQVyNre4UTLo9gG",
+        "type": "fetch",
+        "dur": 199,
+        "transfer": 1321,
+        "encoded": 1021
+      },
+      {
+        "name": "https://www.laptopshub.pk/collections/all?_rsc=BadiPgflbLmPcJyt",
+        "type": "fetch",
+        "dur": 198,
+        "transfer": 633,
+        "encoded": 333
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/0cuvz9n7rtr4u.css",
+        "type": "link",
+        "dur": 196,
+        "transfer": 13112,
+        "encoded": 12812
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/1yen-rt8rta3z.js",
+        "type": "link",
+        "dur": 196,
+        "transfer": 4199,
+        "encoded": 3899
+      },
+      {
+        "name": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/03-alt03_f92bafae-5c56-440c-8cb0-f84bb110df23.jpg?v=1792270142&wi",
+        "type": "img",
+        "dur": 185,
+        "transfer": 7176,
+        "encoded": 6876
+      },
+      {
+        "name": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/02-alt02_239dc23d-632c-4369-b956-c2db26ef19ee.jpg?v=1792270143&wi",
+        "type": "img",
+        "dur": 162,
+        "transfer": 9542,
+        "encoded": 9242
+      },
+      {
+        "name": "https://www.laptopshub.pk/?_rsc=h0ooDvX6enaTbmMS",
+        "type": "fetch",
+        "dur": 158,
+        "transfer": 14434,
+        "encoded": 14134
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/media/sora_latin_var-s.p.2moef4a_pkre2.woff2",
+        "type": "link",
+        "dur": 151,
+        "transfer": 33972,
+        "encoded": 33672
+      },
+      {
+        "name": "https://www.laptopshub.pk/?_rsc=BadiPgflbLmPcJyt",
+        "type": "fetch",
+        "dur": 147,
+        "transfer": 1185,
+        "encoded": 885
+      },
+      {
+        "name": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+        "type": "img",
+        "dur": 129,
+        "transfer": 4634,
+        "encoded": 4334
+      }
+    ],
+    "heaviestTransfer": [
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/0kzsrqwc41c04.js",
+        "type": "script",
+        "dur": 243,
+        "transfer": 73541,
+        "encoded": 73241
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/29z1tv_m26w5x.js",
+        "type": "script",
+        "dur": 268,
+        "transfer": 69370,
+        "encoded": 69070
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/348nxbo418m7b.js",
+        "type": "script",
+        "dur": 233,
+        "transfer": 45466,
+        "encoded": 45166
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/media/jetbrains_mono_latin_var.p.269kn9uafm0ti.woff2",
+        "type": "link",
+        "dur": 120,
+        "transfer": 40780,
+        "encoded": 40480
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/media/hanken_grotesk_latin_var-s.p.2rlmbw0a3_pri.woff2",
+        "type": "link",
+        "dur": 101,
+        "transfer": 34964,
+        "encoded": 34664
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/media/sora_latin_var-s.p.2moef4a_pkre2.woff2",
+        "type": "link",
+        "dur": 151,
+        "transfer": 33972,
+        "encoded": 33672
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/1ngk-vzprib21.js",
+        "type": "script",
+        "dur": 311,
+        "transfer": 32259,
+        "encoded": 31959
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/43jduwk2xsm7-.js",
+        "type": "script",
+        "dur": 105,
+        "transfer": 18749,
+        "encoded": 18449
+      },
+      {
+        "name": "https://www.laptopshub.pk/?_rsc=h0ooDvX6enaTbmMS",
+        "type": "fetch",
+        "dur": 158,
+        "transfer": 14434,
+        "encoded": 14134
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/0cuvz9n7rtr4u.css",
+        "type": "link",
+        "dur": 196,
+        "transfer": 13112,
+        "encoded": 12812
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/0dy2jzuwk91jz.js",
+        "type": "script",
+        "dur": 360,
+        "transfer": 11810,
+        "encoded": 11510
+      },
+      {
+        "name": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/02-alt02_239dc23d-632c-4369-b956-c2db26ef19ee.jpg?v=1792270143&wi",
+        "type": "img",
+        "dur": 162,
+        "transfer": 9542,
+        "encoded": 9242
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/3b6p9ql7k2aot.js",
+        "type": "script",
+        "dur": 368,
+        "transfer": 9299,
+        "encoded": 8999
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/0ivw9nqacaa25.js",
+        "type": "script",
+        "dur": 86,
+        "transfer": 9215,
+        "encoded": 8915
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/3kdokbdrd3qnq.js",
+        "type": "script",
+        "dur": 295,
+        "transfer": 9117,
+        "encoded": 8817
+      },
+      {
+        "name": "https://www.laptopshub.pk/_next/static/immutable/chunks/2hr76b3r1v5r7.js",
+        "type": "script",
+        "dur": 202,
+        "transfer": 8823,
+        "encoded": 8523
+      },
+      {
+        "name": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+        "type": "link",
+        "dur": 616,
+        "transfer": 8358,
+        "encoded": 8058
+      },
+      {
+        "name": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/03-alt03_f92bafae-5c56-440c-8cb0-f84bb110df23.jpg?v=1792270142&wi",
+        "type": "img",
+        "dur": 185,
+        "transfer": 7176,
+        "encoded": 6876
+      },
+      {
+        "name": "https://www.laptopshub.pk/?_rsc=dycsOXyJTspMTjzc",
+        "type": "fetch",
+        "dur": 101,
+        "transfer": 4816,
+        "encoded": 4516
+      },
+      {
+        "name": "https://www.laptopshub.pk/?_rsc=CQtSAU-KfsisQtIW",
+        "type": "fetch",
+        "dur": 97,
+        "transfer": 4733,
+        "encoded": 4433
+      }
+    ]
+  },
+  "scriptResponses": [
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/29z1tv_m26w5x.js",
+      "bytes": 258752,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/0kzsrqwc41c04.js",
+      "bytes": 229544,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/348nxbo418m7b.js",
+      "bytes": 160165,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/1ngk-vzprib21.js",
+      "bytes": 108147,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/43jduwk2xsm7-.js",
+      "bytes": 70247,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/0dy2jzuwk91jz.js",
+      "bytes": 35688,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/2hr76b3r1v5r7.js",
+      "bytes": 30356,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/3b6p9ql7k2aot.js",
+      "bytes": 28699,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/0ivw9nqacaa25.js",
+      "bytes": 25329,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/3kdokbdrd3qnq.js",
+      "bytes": 24446,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/2mw71qj4r24dx.js",
+      "bytes": 14606,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/1yen-rt8rta3z.js",
+      "bytes": 13638,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/turbopack-3xd-7z66s-4wg.js",
+      "bytes": 9974,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/0n_12-f0m38-7.js",
+      "bytes": 3486,
+      "status": 200
+    },
+    {
+      "url": "https://www.laptopshub.pk/_next/static/immutable/chunks/2jxk9d2ckbo97.js",
+      "bytes": 225,
+      "status": 200
+    }
+  ],
+  "jsCoverageTopUnused": []
+}

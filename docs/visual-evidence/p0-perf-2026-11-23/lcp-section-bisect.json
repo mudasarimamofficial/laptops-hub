@@ -1,0 +1,790 @@
+{
+  "at": "2026-11-23T18:39:06.694Z",
+  "base": "http://127.0.0.1:3000",
+  "runsPerSet": 3,
+  "summary": {
+    "hero-only": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 3464,
+      "sample": null
+    },
+    "hero+story": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 2540,
+      "sample": null
+    },
+    "hero+chromebook": {
+      "lcpPassRate": "1/3",
+      "lcpReported": true,
+      "lcpCountSpread": "0-1",
+      "fcpMedian": 1904,
+      "sample": {
+        "t": 1276,
+        "s": 65404,
+        "tag": "DIV",
+        "u": ""
+      }
+    },
+    "hero+brands": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 1856,
+      "sample": null
+    },
+    "hero+featured": {
+      "lcpPassRate": "1/3",
+      "lcpReported": true,
+      "lcpCountSpread": "0-1",
+      "fcpMedian": 2196,
+      "sample": {
+        "t": 1312,
+        "s": 65404,
+        "tag": "DIV",
+        "u": ""
+      }
+    },
+    "hero+promo": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 2120,
+      "sample": null
+    },
+    "hero+specs": {
+      "lcpPassRate": "1/3",
+      "lcpReported": true,
+      "lcpCountSpread": "0-1",
+      "fcpMedian": 2076,
+      "sample": {
+        "t": 1512,
+        "s": 65404,
+        "tag": "DIV",
+        "u": ""
+      }
+    },
+    "hero+newgen": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 2364,
+      "sample": null
+    },
+    "hero+budget": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 1992,
+      "sample": null
+    },
+    "hero+compare": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 2424,
+      "sample": null
+    },
+    "hero+reviews": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 2084,
+      "sample": null
+    },
+    "hero+inquiry": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 1864,
+      "sample": null
+    },
+    "hero+all-except-story-reels": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 2156,
+      "sample": null
+    },
+    "hero+story+featured": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 1908,
+      "sample": null
+    },
+    "all-published": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 2516,
+      "sample": null
+    },
+    "prod-home": {
+      "lcpPassRate": "0/3",
+      "lcpReported": false,
+      "lcpCountSpread": "0-0",
+      "fcpMedian": 1704,
+      "sample": null
+    },
+    "real-hero-no-chrome": {
+      "lcpPassRate": "3/3",
+      "lcpReported": true,
+      "lcpCountSpread": "3-3",
+      "fcpMedian": 1612,
+      "sample": {
+        "t": 1696,
+        "s": 64262,
+        "tag": "IMG",
+        "u": "iles/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "hero-only",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero",
+      "http": 200,
+      "fcp": 3464,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero-only-r1.png"
+    },
+    {
+      "id": "hero-only",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero",
+      "http": 200,
+      "fcp": 3492,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero-only-r2.png"
+    },
+    {
+      "id": "hero-only",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero",
+      "http": 200,
+      "fcp": 2236,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero-only-r3.png"
+    },
+    {
+      "id": "hero+story",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_product_story",
+      "http": 200,
+      "fcp": 2168,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+story-r1.png"
+    },
+    {
+      "id": "hero+story",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_product_story",
+      "http": 200,
+      "fcp": 3160,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+story-r2.png"
+    },
+    {
+      "id": "hero+story",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_product_story",
+      "http": 200,
+      "fcp": 2540,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+story-r3.png"
+    },
+    {
+      "id": "hero+chromebook",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_chromebook",
+      "http": 200,
+      "fcp": 1904,
+      "lcpCount": 1,
+      "lcp": {
+        "t": 1276,
+        "s": 65404,
+        "tag": "DIV",
+        "u": ""
+      },
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+chromebook-r1.png"
+    },
+    {
+      "id": "hero+chromebook",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_chromebook",
+      "http": 200,
+      "fcp": 2236,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+chromebook-r2.png"
+    },
+    {
+      "id": "hero+chromebook",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_chromebook",
+      "http": 200,
+      "fcp": 1736,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+chromebook-r3.png"
+    },
+    {
+      "id": "hero+brands",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_brand_grid",
+      "http": 200,
+      "fcp": 2272,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+brands-r1.png"
+    },
+    {
+      "id": "hero+brands",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_brand_grid",
+      "http": 200,
+      "fcp": 1824,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+brands-r2.png"
+    },
+    {
+      "id": "hero+brands",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_brand_grid",
+      "http": 200,
+      "fcp": 1856,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+brands-r3.png"
+    },
+    {
+      "id": "hero+featured",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_featured_products",
+      "http": 200,
+      "fcp": 2964,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+featured-r1.png"
+    },
+    {
+      "id": "hero+featured",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_featured_products",
+      "http": 200,
+      "fcp": 2196,
+      "lcpCount": 1,
+      "lcp": {
+        "t": 1312,
+        "s": 65404,
+        "tag": "DIV",
+        "u": ""
+      },
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+featured-r2.png"
+    },
+    {
+      "id": "hero+featured",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_featured_products",
+      "http": 200,
+      "fcp": 2128,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+featured-r3.png"
+    },
+    {
+      "id": "hero+promo",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_promo",
+      "http": 200,
+      "fcp": 2120,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+promo-r1.png"
+    },
+    {
+      "id": "hero+promo",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_promo",
+      "http": 200,
+      "fcp": 2108,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+promo-r2.png"
+    },
+    {
+      "id": "hero+promo",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_promo",
+      "http": 200,
+      "fcp": 2328,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+promo-r3.png"
+    },
+    {
+      "id": "hero+specs",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_spec_filters",
+      "http": 200,
+      "fcp": 2076,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+specs-r1.png"
+    },
+    {
+      "id": "hero+specs",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_spec_filters",
+      "http": 200,
+      "fcp": 1944,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+specs-r2.png"
+    },
+    {
+      "id": "hero+specs",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_spec_filters",
+      "http": 200,
+      "fcp": 2264,
+      "lcpCount": 1,
+      "lcp": {
+        "t": 1512,
+        "s": 65404,
+        "tag": "DIV",
+        "u": ""
+      },
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+specs-r3.png"
+    },
+    {
+      "id": "hero+newgen",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_new_gen",
+      "http": 200,
+      "fcp": 2364,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+newgen-r1.png"
+    },
+    {
+      "id": "hero+newgen",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_new_gen",
+      "http": 200,
+      "fcp": 2792,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+newgen-r2.png"
+    },
+    {
+      "id": "hero+newgen",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_new_gen",
+      "http": 200,
+      "fcp": 2352,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+newgen-r3.png"
+    },
+    {
+      "id": "hero+budget",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_budget_bands",
+      "http": 200,
+      "fcp": 1992,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+budget-r1.png"
+    },
+    {
+      "id": "hero+budget",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_budget_bands",
+      "http": 200,
+      "fcp": 1872,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+budget-r2.png"
+    },
+    {
+      "id": "hero+budget",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_budget_bands",
+      "http": 200,
+      "fcp": 2024,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+budget-r3.png"
+    },
+    {
+      "id": "hero+compare",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_compare_demo",
+      "http": 200,
+      "fcp": 3828,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+compare-r1.png"
+    },
+    {
+      "id": "hero+compare",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_compare_demo",
+      "http": 200,
+      "fcp": 2424,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+compare-r2.png"
+    },
+    {
+      "id": "hero+compare",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_compare_demo",
+      "http": 200,
+      "fcp": 1780,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+compare-r3.png"
+    },
+    {
+      "id": "hero+reviews",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_store_reviews",
+      "http": 200,
+      "fcp": 2016,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+reviews-r1.png"
+    },
+    {
+      "id": "hero+reviews",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_store_reviews",
+      "http": 200,
+      "fcp": 2084,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+reviews-r2.png"
+    },
+    {
+      "id": "hero+reviews",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_store_reviews",
+      "http": 200,
+      "fcp": 2248,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+reviews-r3.png"
+    },
+    {
+      "id": "hero+inquiry",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_home_inquiry",
+      "http": 200,
+      "fcp": 1864,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+inquiry-r1.png"
+    },
+    {
+      "id": "hero+inquiry",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_home_inquiry",
+      "http": 200,
+      "fcp": 1784,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+inquiry-r2.png"
+    },
+    {
+      "id": "hero+inquiry",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_home_inquiry",
+      "http": 200,
+      "fcp": 2484,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+inquiry-r3.png"
+    },
+    {
+      "id": "hero+all-except-story-reels",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_chromebook%2Cv5_brand_grid%2Cv5_featured_products%2Cv5_promo%2Cv5_spec_filters%2Cv5_new_gen%2Cv5_budget_bands%2Cv5_compare_demo%2Cv5_store_reviews%2Cv5_home_inquiry",
+      "http": 200,
+      "fcp": 2740,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+all-except-story-reels-r1.png"
+    },
+    {
+      "id": "hero+all-except-story-reels",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_chromebook%2Cv5_brand_grid%2Cv5_featured_products%2Cv5_promo%2Cv5_spec_filters%2Cv5_new_gen%2Cv5_budget_bands%2Cv5_compare_demo%2Cv5_store_reviews%2Cv5_home_inquiry",
+      "http": 200,
+      "fcp": 2156,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+all-except-story-reels-r2.png"
+    },
+    {
+      "id": "hero+all-except-story-reels",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_chromebook%2Cv5_brand_grid%2Cv5_featured_products%2Cv5_promo%2Cv5_spec_filters%2Cv5_new_gen%2Cv5_budget_bands%2Cv5_compare_demo%2Cv5_store_reviews%2Cv5_home_inquiry",
+      "http": 200,
+      "fcp": 2132,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+all-except-story-reels-r3.png"
+    },
+    {
+      "id": "hero+story+featured",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_product_story%2Cv5_featured_products",
+      "http": 200,
+      "fcp": 1888,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+story+featured-r1.png"
+    },
+    {
+      "id": "hero+story+featured",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_product_story%2Cv5_featured_products",
+      "http": 200,
+      "fcp": 1908,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+story+featured-r2.png"
+    },
+    {
+      "id": "hero+story+featured",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero%2Cv5_product_story%2Cv5_featured_products",
+      "http": 200,
+      "fcp": 2628,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-hero+story+featured-r3.png"
+    },
+    {
+      "id": "all-published",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home",
+      "http": 200,
+      "fcp": 2412,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-all-published-r1.png"
+    },
+    {
+      "id": "all-published",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home",
+      "http": 200,
+      "fcp": 3424,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-all-published-r2.png"
+    },
+    {
+      "id": "all-published",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home",
+      "http": 200,
+      "fcp": 2516,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-all-published-r3.png"
+    },
+    {
+      "id": "prod-home",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/",
+      "http": 200,
+      "fcp": 2216,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-prod-home-r1.png"
+    },
+    {
+      "id": "prod-home",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/",
+      "http": 200,
+      "fcp": 1704,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-prod-home-r2.png"
+    },
+    {
+      "id": "prod-home",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/",
+      "http": 200,
+      "fcp": 1672,
+      "lcpCount": 0,
+      "lcp": null,
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-prod-home-r3.png"
+    },
+    {
+      "id": "real-hero-no-chrome",
+      "run": 1,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-real-hero",
+      "http": 200,
+      "fcp": 1612,
+      "lcpCount": 3,
+      "lcp": {
+        "t": 1696,
+        "s": 64262,
+        "tag": "IMG",
+        "u": "iles/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      },
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-real-hero-no-chrome-r1.png"
+    },
+    {
+      "id": "real-hero-no-chrome",
+      "run": 2,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-real-hero",
+      "http": 200,
+      "fcp": 1864,
+      "lcpCount": 3,
+      "lcp": {
+        "t": 1948,
+        "s": 64262,
+        "tag": "IMG",
+        "u": "iles/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      },
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-real-hero-no-chrome-r2.png"
+    },
+    {
+      "id": "real-hero-no-chrome",
+      "run": 3,
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-real-hero",
+      "http": 200,
+      "fcp": 1348,
+      "lcpCount": 3,
+      "lcp": {
+        "t": 1448,
+        "s": 64262,
+        "tag": "IMG",
+        "u": "iles/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      },
+      "h1": "The future ofsmarter laptopshopping.",
+      "hero": true,
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\bisect-real-hero-no-chrome-r3.png"
+    }
+  ]
+}

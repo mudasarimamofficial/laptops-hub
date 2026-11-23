@@ -1,0 +1,161 @@
+{
+  "at": "2026-11-23T18:50:41.811Z",
+  "summary": {
+    "prod-home": {
+      "pass": "0/3",
+      "rows": [
+        {
+          "run": 1,
+          "fcp": 2740,
+          "lcpCount": 0,
+          "lcp": null
+        },
+        {
+          "run": 2,
+          "fcp": 2484,
+          "lcpCount": 0,
+          "lcp": null
+        },
+        {
+          "run": 3,
+          "fcp": 2208,
+          "lcpCount": 0,
+          "lcp": null
+        }
+      ]
+    },
+    "hero-only-HPV": {
+      "pass": "0/3",
+      "rows": [
+        {
+          "run": 1,
+          "fcp": 1840,
+          "lcpCount": 0,
+          "lcp": null
+        },
+        {
+          "run": 2,
+          "fcp": 2432,
+          "lcpCount": 0,
+          "lcp": null
+        },
+        {
+          "run": 3,
+          "fcp": 2416,
+          "lcpCount": 0,
+          "lcp": null
+        }
+      ]
+    },
+    "hero+story": {
+      "pass": "0/3",
+      "rows": [
+        {
+          "run": 1,
+          "fcp": 2236,
+          "lcpCount": 0,
+          "lcp": null
+        },
+        {
+          "run": 2,
+          "fcp": 3968,
+          "lcpCount": 0,
+          "lcp": null
+        },
+        {
+          "run": 3,
+          "fcp": 4124,
+          "lcpCount": 0,
+          "lcp": null
+        }
+      ]
+    },
+    "hero+featured": {
+      "pass": "0/3",
+      "rows": [
+        {
+          "run": 1,
+          "fcp": 13108,
+          "lcpCount": 0,
+          "lcp": null
+        },
+        {
+          "run": 2,
+          "fcp": 8712,
+          "lcpCount": 0,
+          "lcp": null
+        },
+        {
+          "run": 3,
+          "fcp": 7760,
+          "lcpCount": 0,
+          "lcp": null
+        }
+      ]
+    },
+    "all-published": {
+      "pass": "0/3",
+      "rows": [
+        {
+          "run": 1,
+          "fcp": 3036,
+          "lcpCount": 0,
+          "lcp": null
+        },
+        {
+          "run": 2,
+          "fcp": 7700,
+          "lcpCount": 0,
+          "lcp": null
+        },
+        {
+          "run": 3,
+          "fcp": 25780,
+          "lcpCount": 0,
+          "lcp": null
+        }
+      ]
+    },
+    "hero-in-chrome": {
+      "pass": "3/3",
+      "rows": [
+        {
+          "run": 1,
+          "fcp": 2168,
+          "lcpCount": 1,
+          "lcp": {
+            "t": 1216,
+            "s": 65404,
+            "tag": "DIV",
+            "cls": "v5-hero-ghost",
+            "u": ""
+          }
+        },
+        {
+          "run": 2,
+          "fcp": 3092,
+          "lcpCount": 1,
+          "lcp": {
+            "t": 3092,
+            "s": 78980,
+            "tag": "DIV",
+            "cls": "v5-hero-ghost",
+            "u": ""
+          }
+        },
+        {
+          "run": 3,
+          "fcp": 2964,
+          "lcpCount": 1,
+          "lcp": {
+            "t": 1760,
+            "s": 65404,
+            "tag": "DIV",
+            "cls": "v5-hero-ghost",
+            "u": ""
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "at": "2026-11-23T21:11:26.980Z",
+  "sha": "611efb91c935a3d982f4923c1b5b35eb00fb9310",
+  "dpl": "dpl_8u6nPs4HhbC5RX4HyHznP3HNjj3g",
+  "results": [
+    {
+      "id": "1754x864",
+      "width": 1754,
+      "height": 864,
+      "panel": {
+        "w": 1754,
+        "h": 440,
+        "t": 72,
+        "b": 512
+      },
+      "linkCount": 4,
+      "maxLinkW": 190,
+      "searchOverflow": false,
+      "closeVisible": true,
+      "footerVisible": true,
+      "docOverflowX": false,
+      "shot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\prod-verify-1754x864.png"
+    },
+    {
+      "id": "1918x542",
+      "width": 1918,
+      "height": 542,
+      "panel": {
+        "w": 1918,
+        "h": 422,
+        "t": 72,
+        "b": 494
+      },
+      "linkCount": 4,
+      "maxLinkW": 190,
+      "searchOverflow": false,
+      "closeVisible": true,
+      "footerVisible": true,
+      "docOverflowX": false,
+      "shot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\prod-verify-1918x542.png"
+    }
+  ]
+}

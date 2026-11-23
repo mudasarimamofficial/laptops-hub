@@ -7,6 +7,8 @@ const base: PublicProduct = {
   handle: "hp-elite",
   title: "HP EliteBook 840",
   descriptionSafe: "",
+  seoTitle: null,
+  seoDescription: null,
   manufacturer: "HP",
   productType: "Laptop",
   category: "Laptop",

@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
     return [{ source: "/:path*", headers: [{ key: "X-Robots-Tag", value: "noindex" }] }, preview];
   },
   images: {
+    // Prefer modern formats when next/image is used (admin + selective storefront).
+    // Storefront catalog cards use Shopify CDN width= params (free-plan safe; no Supabase transforms).
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [360, 420, 640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [64, 96, 128, 256, 320, 384, 480],
     remotePatterns: [
       { protocol: "https", hostname: "cdn.shopify.com" },
       { protocol: "https", hostname: "*.supabase.co" },

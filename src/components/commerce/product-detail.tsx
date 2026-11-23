@@ -12,6 +12,8 @@ import { setBuyNowLine } from "@/lib/commerce/buy-now-store";
 import { useCompare } from "@/lib/commerce/compare-store";
 import { showToast } from "@/lib/commerce/toast";
 import { fmtPkr } from "@/lib/catalog/v5-model";
+import { usePricedUnit } from "@/components/storefront/discount-provider";
+import { PriceDisplay } from "@/components/storefront/price-display";
 import type { PdpCtaMode } from "@/lib/commerce/store-commerce-settings";
 import type { PublicVariant } from "@/types/catalog";
 
@@ -34,7 +36,16 @@ export function ProductGallery({ images, model, config }: { images: string[]; mo
           }}
           style={{ position: "relative", aspectRatio: "5/4", borderRadius: 27, overflow: "hidden", background: "radial-gradient(110% 90% at 50% 105%,var(--lh-titanium) 0%,var(--lh-canvas) 50%,#FFFFFF 100%)" }}
         >
-          <LHImg src={images[i]} alt={`${model}${config ? ", " + config : ""}, photo ${i + 1} of ${n}`} pad="clamp(16px,3vw,40px)" blend="multiply" eager />
+          <LHImg
+            src={images[i]}
+            alt={`${model}${config ? ", " + config : ""}, photo ${i + 1} of ${n}`}
+            pad="clamp(16px,3vw,40px)"
+            blend="multiply"
+            eager
+            priority={i === 0}
+            displayWidth={640}
+            sizes="(max-width: 768px) 92vw, (max-width: 1200px) 48vw, 640px"
+          />
           {n > 1 ? (
             <>
               <button type="button" onClick={() => setGi(i - 1)} aria-label="Previous image" style={{ ...arrow, left: 14 }}>
@@ -64,7 +75,7 @@ export function ProductGallery({ images, model, config }: { images: string[]; mo
             aria-current={k === i}
             style={{ flex: "0 0 84px", height: 66, padding: 0, borderRadius: 14, border: k === i ? "2px solid var(--lh-action)" : "1px solid var(--lh-border)", boxShadow: k === i ? "0 0 0 3px rgba(var(--lh-electric-rgb),.25)" : "none", background: "#FFFFFF", cursor: "pointer", position: "relative", overflow: "hidden", transition: "box-shadow .2s ease" }}
           >
-            <LHImg src={src} alt="" pad="5px" />
+            <LHImg src={src} alt="" pad="5px" displayWidth={84} sizes="84px" />
           </button>
         ))}
       </div>
@@ -117,6 +128,7 @@ export function ProductBuy(p: BuyProps) {
   const label = selected && hasOptions ? variantLabel(selected, pickerModel(p.optionNames, variants), variants) : "";
   const step = { width: 48, height: "100%", border: 0, background: "transparent", fontSize: 20, cursor: "pointer", color: "var(--lh-ink)" } as const;
   const submitting = busy || pendingNav;
+  const pricedSelected = usePricedUnit(selected?.pricePaisa ?? 0);
 
   function buildLine() {
     if (!selected) return null;
@@ -160,8 +172,8 @@ export function ProductBuy(p: BuyProps) {
       {hasOptions ? (
         <>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
-            <span data-testid="pdp-price" aria-live="polite" style={{ fontFamily: "var(--font-display)", fontSize: 34, fontWeight: 700, letterSpacing: "-.03em" }}>
-              {selected ? fmtPkr(selected.pricePaisa) : "Choose an option"}
+            <span data-testid="pdp-price" aria-live="polite">
+              {selected ? <PriceDisplay priced={pricedSelected} size="lg" /> : "Choose an option"}
             </span>
           </div>
           {selected ? (
@@ -210,8 +222,8 @@ export function ProductBuy(p: BuyProps) {
                   ? "Starting checkout…"
                   : "Adding…"
                 : buyNow
-                  ? `Buy now · ${fmtPkr(selected.pricePaisa * q)}`
-                  : `Add to cart · ${fmtPkr(selected.pricePaisa * q)}`}
+                  ? `Buy now · ${fmtPkr(pricedSelected.sellingPaisa * q)}`
+                  : `Add to cart · ${fmtPkr(pricedSelected.sellingPaisa * q)}`}
             </span>
           </button>
         </div>

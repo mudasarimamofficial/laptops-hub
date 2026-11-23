@@ -11,6 +11,9 @@ import { toV5, v5Card, type V5Card } from "@/lib/catalog/v5-model";
 import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
 import { MerchBadgeFor } from "@/components/storefront/merch-badges";
 import { CARD_IMAGE_SIZES, imageSrcSet, sizedImage } from "@/lib/catalog/image-url";
+import { usePricedUnit } from "@/components/storefront/discount-provider";
+import { PriceDisplay } from "@/components/storefront/price-display";
+import { fmtPkr } from "@/lib/catalog/v5-model";
 
 /** Port of `ProductCard v5.dc.html`. Category badge only (no stock wording by design). */
 export function V5ProductCard({ item }: { item: V5Card }) {
@@ -20,6 +23,8 @@ export function V5ProductCard({ item }: { item: V5Card }) {
   const compared = useCompare((s) => s.handles.includes(item.h));
   const add = useCart((s) => s.add);
   const purchasable = canPurchase({ available: item.avail, pricePaisa: item.pricePaisa, variantId: item.variantId });
+  const listForCard = item.hasOptions ? item.fromPricePaisa : item.pricePaisa;
+  const priced = usePricedUnit(listForCard);
   // Remote catalog images can disappear from the CDN: fall back to the main photo, then to the gallery's "No image".
   const [failed, setFailed] = useState<string[]>([]);
   const candidate = hover && item.img2 && !failed.includes(item.img2) ? item.img2 : item.img;
@@ -44,10 +49,12 @@ export function V5ProductCard({ item }: { item: V5Card }) {
         {img ? (
           // eslint-disable-next-line @next/next/no-img-element -- V5 card image; remote catalog CDN
           <img
-            src={sizedImage(img, 800)}
-            srcSet={imageSrcSet(img)}
+            src={sizedImage(img, 480)}
+            srcSet={imageSrcSet(img, [320, 480, 640, 800])}
             sizes={CARD_IMAGE_SIZES}
             alt={item.alt}
+            width={480}
+            height={384}
             loading="lazy"
             decoding="async"
             onError={() => setFailed((f) => (f.includes(img) ? f : [...f, img]))}
@@ -57,7 +64,7 @@ export function V5ProductCard({ item }: { item: V5Card }) {
               // complete+0 can also mean "lazy, not fetched yet" in some engines: confirm with a probe before hiding.
               const probe = new Image();
               probe.onerror = () => setFailed((f) => (f.includes(img) ? f : [...f, img]));
-              probe.src = sizedImage(img, 800);
+              probe.src = sizedImage(img, 480);
             }}
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", padding: 18, mixBlendMode: "multiply", transform: hover ? "scale(1.03)" : "scale(1)", transition: "transform .35s ease" }}
           />
@@ -98,7 +105,12 @@ export function V5ProductCard({ item }: { item: V5Card }) {
         <div style={{ marginTop: "auto", display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "8px 10px", paddingTop: 6 }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: ".06em", textTransform: "uppercase", color: "var(--lh-ink-2,#52637B)" }}>Price</span>
-            <span style={{ fontFamily: "var(--font-display)", fontSize: 21, fontWeight: 700, letterSpacing: "-.02em", color: "var(--lh-ink,#102039)", whiteSpace: "nowrap" }}>{item.priceText}</span>
+            <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6, flexWrap: "wrap" }}>
+              {item.hasOptions ? <span style={{ fontSize: 12, fontWeight: 600, color: "var(--lh-ink-2,#52637B)" }}>From</span> : null}
+              <PriceDisplay priced={priced} size="md" />
+              {/* Fallback text for no-JS / SSR mismatch diagnostics */}
+              <span className="sr-only">{item.hasOptions ? `From ${fmtPkr(priced.sellingPaisa)}` : fmtPkr(priced.sellingPaisa)}</span>
+            </span>
           </div>
           <button
             type="button"

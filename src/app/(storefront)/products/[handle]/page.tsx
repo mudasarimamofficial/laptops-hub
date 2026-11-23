@@ -3,14 +3,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { V5ProductCard } from "@/components/commerce/product-card";
 import { ProductBuy, ProductGallery } from "@/components/commerce/product-detail";
-import { fmtPkr, getV5Catalog, V5_COLS, v5Card, v5KeySpecs, v5Related, v5SpecRows } from "@/lib/catalog/v5";
-import { canonicalFor } from "@/lib/site-url";
+import { getV5Catalog, V5_COLS, v5Card, v5KeySpecs, v5Related, v5SpecRows } from "@/lib/catalog/v5";
+import { canonicalFor, siteUrl } from "@/lib/site-url";
 import { contentVisibility } from "@/lib/content/pages";
 import { publicLinks } from "@/lib/content/links";
 import { getApprovedReviews } from "@/lib/catalog/reviews-server";
 import { ProductReviews } from "@/components/commerce/product-reviews";
 import { MerchBadgeFor } from "@/components/storefront/merch-badges";
 import { getStorefrontCheckoutSetting } from "@/lib/commerce/store-commerce-settings-server";
+import { getActiveAutomaticDiscount } from "@/lib/commerce/discounts-server";
+import { priceWithCampaign } from "@/lib/commerce/pricing";
+import { productSeoFromV5 } from "@/lib/seo/product-meta";
+import { PriceDisplay } from "@/components/storefront/price-display";
 
 export const revalidate = 60;
 
@@ -28,12 +32,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const r = await load(handle).catch(() => null);
   if (!r) return { title: "Product not found", robots: { index: false } };
   const { p } = r;
-  const description = (p.intro.split(/\n\s*\n/)[0] || `${p.model}${p.config ? ", " + p.config : ""}`).slice(0, 160);
+  const seo = productSeoFromV5(p);
   return {
-    title: p.t,
-    description,
+    title: seo.title,
+    description: seo.description,
     alternates: canonicalFor(`/products/${p.h}`),
-    openGraph: { title: p.t, description, images: p.imgs[0] ? [{ url: p.imgs[0].u }] : undefined, type: "website" },
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      images: p.imgs[0] ? [{ url: p.imgs[0].u }] : undefined,
+      type: "website",
+      url: `${siteUrl()}/products/${p.h}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: seo.title,
+      description: seo.description,
+      images: p.imgs[0] ? [p.imgs[0].u] : undefined,
+    },
   };
 }
 
@@ -48,7 +64,11 @@ const POLICIES = [
 /** Port of the V5 product template (`isProduct`). */
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
-  const [r, checkoutSetting] = await Promise.all([load(handle), getStorefrontCheckoutSetting()]);
+  const [r, checkoutSetting, campaign] = await Promise.all([
+    load(handle),
+    getStorefrontCheckoutSetting(),
+    getActiveAutomaticDiscount().catch(() => null),
+  ]);
   if (!r) notFound();
   // Only public policies are linked (published + legally approved); never an unfinished page.
   const policies = publicLinks(POLICIES, await contentVisibility());
@@ -59,39 +79,53 @@ export default async function ProductPage({ params }: Props) {
   const outro = p.intro.trim() ? "" : "Full specifications for this listing are being prepared. Ask us for any detail before you order.";
   const related = v5Related(P, p);
   const reviews = await getApprovedReviews(p.h);
+  const origin = siteUrl();
+  const pricedVariants = p.variants.map((v) => priceWithCampaign(v.pricePaisa, campaign));
+  const pricedDefault = priceWithCampaign(p.pricePaisa, campaign);
 
-  // Structured data from verified listing fields only (no stock or delivery claims). A rating is included only when
-  // approved customer reviews exist.
+  // Structured data from verified listing fields only (no stock or delivery claims). Offer prices match discounted selling prices.
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Product",
-    name: p.t,
-    sku: p.sku || undefined,
-    brand: p.brand ? { "@type": "Brand", name: p.brand } : undefined,
-    image: p.imgs.slice(0, 4).map((x) => x.u),
-    offers:
-      p.variants.length > 1
-        ? {
-            // Several purchasable variants at different prices: a range, not one variant's price.
-            "@type": "AggregateOffer",
-            lowPrice: (Math.min(...p.variants.map((v) => v.pricePaisa)) / 100).toFixed(2),
-            highPrice: (Math.max(...p.variants.map((v) => v.pricePaisa)) / 100).toFixed(2),
-            offerCount: p.variants.length,
-            priceCurrency: "PKR",
-            itemCondition: p.cond === "Used" ? "https://schema.org/UsedCondition" : undefined,
-            url: `/products/${p.h}`,
-          }
-        : {
-            "@type": "Offer",
-            price: (p.pricePaisa / 100).toFixed(2),
-            priceCurrency: "PKR",
-            itemCondition: p.cond === "Used" ? "https://schema.org/UsedCondition" : undefined,
-            url: `/products/${p.h}`,
-          },
-    aggregateRating:
-      reviews.count && reviews.average !== null
-        ? { "@type": "AggregateRating", ratingValue: reviews.average, reviewCount: reviews.count, bestRating: 5, worstRating: 1 }
-        : undefined,
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: origin },
+          { "@type": "ListItem", position: 2, name: p.brand || "Catalog", item: `${origin}${brandHref}` },
+          { "@type": "ListItem", position: 3, name: p.model, item: `${origin}/products/${p.h}` },
+        ],
+      },
+      {
+        "@type": "Product",
+        name: p.t,
+        description: intro.slice(0, 5000),
+        sku: p.sku || undefined,
+        brand: p.brand ? { "@type": "Brand", name: p.brand } : undefined,
+        image: p.imgs.slice(0, 4).map((x) => x.u),
+        offers:
+          pricedVariants.length > 1
+            ? {
+                "@type": "AggregateOffer",
+                lowPrice: (Math.min(...pricedVariants.map((v) => v.sellingPaisa)) / 100).toFixed(2),
+                highPrice: (Math.max(...pricedVariants.map((v) => v.sellingPaisa)) / 100).toFixed(2),
+                offerCount: pricedVariants.length,
+                priceCurrency: "PKR",
+                itemCondition: p.cond === "Used" ? "https://schema.org/UsedCondition" : undefined,
+                url: `${origin}/products/${p.h}`,
+              }
+            : {
+                "@type": "Offer",
+                price: (pricedDefault.sellingPaisa / 100).toFixed(2),
+                priceCurrency: "PKR",
+                itemCondition: p.cond === "Used" ? "https://schema.org/UsedCondition" : undefined,
+                url: `${origin}/products/${p.h}`,
+              },
+        aggregateRating:
+          reviews.count && reviews.average !== null
+            ? { "@type": "AggregateRating", ratingValue: reviews.average, reviewCount: reviews.count, bestRating: 5, worstRating: 1 }
+            : undefined,
+      },
+    ],
   };
 
   return (
@@ -127,7 +161,7 @@ export default async function ProductPage({ params }: Props) {
           <div style={{ display: "flex", flexDirection: "column", gap: 20, padding: 22, borderRadius: 24, background: "#FFFFFF", border: "1px solid var(--lh-border)", boxShadow: "0 24px 50px -36px rgba(var(--lh-navy-rgb),.5)" }}>
             {p.variants.length <= 1 ? (
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
-                <span style={{ fontFamily: "var(--font-display)", fontSize: 34, fontWeight: 700, letterSpacing: "-.03em" }}>{fmtPkr(p.pricePaisa)}</span>
+                <PriceDisplay priced={pricedDefault} size="lg" />
               </div>
             ) : null}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10 }}>

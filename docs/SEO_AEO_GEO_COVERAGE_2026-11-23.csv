@@ -1,0 +1,12 @@
+Route,Coverage,Metadata,JSON-LD,IndexableWhenLaunch,Notes,Status
+/,layout defaults + Organization/WebSite,title/description from layout,Organization+WebSite+SearchAction,yes if SITE_PRELAUNCH unset,Promo bar when campaign live,PASS
+/products/[handle],seo_title/seo_description or generated defaults,title+description+OG+Twitter,Product+Offer/AggregateOffer+BreadcrumbList (discounted prices),yes,Uses verified facts only,PASS
+/collections/*,existing collection metadata,existing,none added this pass,yes,Preserved,PARTIAL
+/guides/*,existing,existing,none added,yes,Preserved,PARTIAL
+/pages/*,existing CMS,existing,none added,yes,Preserved,PARTIAL
+/search,noindex,robots noindex,—,no,Unchanged,PASS
+/admin/*,noindex,—,—,no,Unchanged,PASS
+/checkout,/cart,/order/*,noindex private,—,—,no,Unchanged,PASS
+sitemap.xml,eligible public URLs only,lastmod where supported,—,empty when prelaunch,Unchanged system,PASS
+robots.ts,PRIVATE_PATHS,sitemap only in launch,—,—,Unchanged,PASS
+New products,inherit seo_* or defaults,—,—,—,Automatic via queries + productSeoDefaults,PASS

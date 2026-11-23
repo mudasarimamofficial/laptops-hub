@@ -14,6 +14,11 @@ import { getMerchBadges, getSocialProofSettings } from "@/lib/content/social-pro
 import { ensureFeaturedFlamePreset, getFeaturedFlamePreset } from "@/lib/content/featured-flame-preset-server";
 import { MerchBadgeProvider } from "@/components/storefront/merch-badges";
 import { PurchaseActivity } from "@/components/storefront/purchase-activity";
+import { DiscountProvider } from "@/components/storefront/discount-provider";
+import { PromoAnnouncement } from "@/components/storefront/promo-announcement";
+import { getActiveAutomaticDiscount } from "@/lib/commerce/discounts-server";
+import { priceWithCampaign } from "@/lib/commerce/pricing";
+import { JsonLdSite } from "@/components/storefront/json-ld-site";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -40,8 +45,9 @@ async function loadChrome(vis: Visibility, navConfig: NavigationConfig): Promise
   const support = supportHref(vis);
   const publicNav = sanitizePublicNavLinks(navConfig.headerNav, vis);
   try {
-    const P = await getV5Catalog();
+    const [P, campaign] = await Promise.all([getV5Catalog(), getActiveAutomaticDiscount()]);
     const p = P.find((x) => x.comp && x.cat !== "tablet" && x.avail);
+    const priced = p ? priceWithCampaign(p.pricePaisa, campaign) : null;
     return {
       menu: v5Menu(P)
         .map((g) => ({ ...g, items: publicLinks(g.items, vis) }))
@@ -55,7 +61,7 @@ async function loadChrome(vis: Visibility, navConfig: NavigationConfig): Promise
             href: "/products/" + encodeURIComponent(p.h),
             img: p.imgs[0]?.u ?? null,
             model: p.model,
-            priceText: fmtPkr(p.pricePaisa),
+            priceText: fmtPkr(priced?.sellingPaisa ?? p.pricePaisa),
             stockText: (p.cond ? p.cond + " " : "") + p.badge.toUpperCase(),
           }
         : null,
@@ -94,34 +100,40 @@ export default async function StorefrontLayout({
     /* storefront still renders without badges */
   }
 
-  const [vis, navConfig, pres, social, badges] = await Promise.all([
+  const [vis, navConfig, pres, social, badges, campaign] = await Promise.all([
     contentVisibility(),
     getPublishedNavigation(),
     getStorefrontPresentation(),
     getSocialProofSettings(),
     getMerchBadges(),
+    getActiveAutomaticDiscount().catch(() => null),
   ]);
   const chrome = { ...(await loadChrome(vis, navConfig)), showCounts: pres.showCatalogCounts };
   const publicFooterCols = sanitizePublicFooterColumns(navConfig.footerColumns, vis);
+  const showPromo = Boolean(campaign?.showAnnouncement && campaign.announcement?.trim());
   return (
-    <MerchBadgeProvider badges={badges}>
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-3 focus:py-2"
-      >
-        Skip to content
-      </a>
-      {mode === "prelaunch" ? <PrelaunchNotice /> : null}
-      <SiteHeader chrome={chrome} />
-      <main id="main" className="flex-1">
-        {children}
-      </main>
-      <SiteFooter totalCount={chrome.totalCount} showCounts={pres.showCatalogCounts} vis={vis} footerCols={publicFooterCols} />
-      {after}
-      <CompareTray />
-      <CartDrawer />
-      <Toast />
-      {social.activity.enabled ? <PurchaseActivity config={social.activity} /> : null}
-    </MerchBadgeProvider>
+    <DiscountProvider campaign={campaign}>
+      <MerchBadgeProvider badges={badges}>
+        <JsonLdSite />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-white focus:px-3 focus:py-2"
+        >
+          Skip to content
+        </a>
+        {mode === "prelaunch" ? <PrelaunchNotice /> : null}
+        {showPromo && campaign ? <PromoAnnouncement text={campaign.announcement} /> : null}
+        <SiteHeader chrome={chrome} />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <SiteFooter totalCount={chrome.totalCount} showCounts={pres.showCatalogCounts} vis={vis} footerCols={publicFooterCols} />
+        {after}
+        <CompareTray />
+        <CartDrawer />
+        <Toast />
+        {social.activity.enabled ? <PurchaseActivity config={social.activity} /> : null}
+      </MerchBadgeProvider>
+    </DiscountProvider>
   );
 }

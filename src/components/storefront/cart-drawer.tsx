@@ -8,6 +8,8 @@ import { useCart, cartSubtotalPaisa } from "@/lib/commerce/cart-store";
 import { closeCartDrawer, useCartUi } from "@/lib/commerce/cart-ui";
 import { fmtPkr } from "@/lib/catalog/v5-model";
 import { checkoutEnabled, lineView } from "@/components/storefront/cart-lines";
+import { useActiveDiscount } from "@/components/storefront/discount-provider";
+import { priceWithCampaign } from "@/lib/commerce/pricing";
 
 /** V5 slide-out cart (`drawer`). */
 export function CartDrawer() {
@@ -21,7 +23,11 @@ function Drawer() {
   const lines = useCart((s) => s.lines);
   const update = useCart((s) => s.update);
   const remove = useCart((s) => s.remove);
+  const campaign = useActiveDiscount();
   const count = lines.reduce((n, l) => n + l.quantity, 0);
+  const sellingSubtotal = lines.reduce((n, l) => n + priceWithCampaign(l.unitPricePaisa, campaign).sellingPaisa * l.quantity, 0);
+  const listSubtotal = cartSubtotalPaisa(lines);
+  const savings = Math.max(0, listSubtotal - sellingSubtotal);
   useDialog(true, ref, closeCartDrawer);
   const step = { width: 44, height: "100%", border: 0, background: "transparent", fontSize: 17, cursor: "pointer", color: "var(--lh-ink)" } as const;
 
@@ -71,7 +77,9 @@ function Drawer() {
                             +
                           </button>
                         </div>
-                        <span style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 700 }}>{fmtPkr(l.unitPricePaisa * l.quantity)}</span>
+                        <span style={{ fontFamily: "var(--font-display)", fontSize: 15, fontWeight: 700 }}>
+                          {fmtPkr(priceWithCampaign(l.unitPricePaisa, campaign).sellingPaisa * l.quantity)}
+                        </span>
                       </div>
                       <button type="button" onClick={() => remove(l.variantId)} style={{ alignSelf: "flex-start", border: 0, background: "transparent", fontSize: 12, fontWeight: 700, color: "var(--lh-error)", cursor: "pointer", padding: "4px 0" }}>
                         Remove
@@ -84,8 +92,14 @@ function Drawer() {
             <div style={{ padding: "18px 20px 22px", borderTop: "1px solid var(--lh-border)", display: "flex", flexDirection: "column", gap: 12 }}>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 18, fontWeight: 700 }}>
                 <span>Subtotal</span>
-                <span style={{ fontFamily: "var(--font-display)" }}>{fmtPkr(cartSubtotalPaisa(lines))}</span>
+                <span style={{ fontFamily: "var(--font-display)" }}>{fmtPkr(sellingSubtotal)}</span>
               </div>
+              {savings > 0 ? (
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--lh-ink-2)" }}>
+                  <span>Storewide savings</span>
+                  <span>−{fmtPkr(savings)}</span>
+                </div>
+              ) : null}
               <Link href="/cart" onClick={closeCartDrawer} className="v5-hov-bright-10" style={{ height: 52, borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontSize: 15, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 12px 28px -12px rgba(var(--lh-action-rgb),.9)" }}>
                 View cart
               </Link>

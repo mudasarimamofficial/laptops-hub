@@ -1,5 +1,27 @@
 /* Admin console tokens — separate from frozen V5 storefront. Admin VNext design system. */
 .admin-app {
+  scrollbar-width: thin;
+  scrollbar-color: #8494b0 #eef3fa;
+}
+@media (pointer: fine) {
+  .admin-app *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .admin-app *::-webkit-scrollbar-track {
+    background: #eef3fa;
+    border-radius: 999px;
+  }
+  .admin-app *::-webkit-scrollbar-thumb {
+    background: #8494b0;
+    border-radius: 999px;
+    border: 2px solid #eef3fa;
+  }
+  .admin-app *::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+  }
+}
+.admin-app {
   --adm-sidebar-w: 248px;
   --adm-sidebar-bg: #0b1528;
   --adm-sidebar-border: rgba(255, 255, 255, 0.08);

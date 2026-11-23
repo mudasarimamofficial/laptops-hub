@@ -24,6 +24,9 @@ import { getPublishedReels } from "@/lib/content/reels-server";
 import { ReelsSection } from "@/components/storefront/home/reels-section";
 import { getMerchBadges, getSocialProofSettings } from "@/lib/content/social-proof-server";
 import { cpuFmt, fmtPkr, getV5Catalog, ord, stoFmt, v5Card, v5Link, type V5Product } from "@/lib/catalog/v5";
+import { formatProductDisplayName } from "@/lib/catalog/product-display-name";
+import { getActiveAutomaticDiscount } from "@/lib/commerce/discounts-server";
+import { priceWithCampaign } from "@/lib/commerce/pricing";
 import { normalizeHomepageLayout, sectionNumbers } from "@/lib/content/homepage-layout";
 import type { SectionInstance, SectionType } from "@/lib/content/site-builder-schema";
 import {
@@ -53,10 +56,11 @@ function heroShot(
     settings,
     catalogImageUrl: p.imgs[0]?.u || null,
   });
+  const displayName = formatProductDisplayName(p.brand, p.model);
   return {
     href: href(p),
-    label: resolved.alt || p.model,
-    name: p.model,
+    label: resolved.alt || displayName,
+    name: displayName,
     src: resolved.src,
     cutout: resolved.cutout,
   };
@@ -83,14 +87,17 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
     );
   }
 
-  const [pres, reels, social, testimonials, vis, merchBadges] = await Promise.all([
+  const [pres, reels, social, testimonials, vis, merchBadges, campaign] = await Promise.all([
     getStorefrontPresentation(),
     getPublishedReels(),
     getSocialProofSettings(),
     getPublishedTestimonials(),
     contentVisibility(),
     getMerchBadges(),
+    getActiveAutomaticDiscount().catch(() => null),
   ]);
+  /** Active selling price (campaign applied once). Catalog list prices stay untouched. */
+  const sellFmt = (listPaisa: number) => fmtPkr(priceWithCampaign(listPaisa, campaign).sellingPaisa);
 
   // Without a theme layout every setting stays at the approved V5 defaults (exactly the original composition).
   const fromTheme = sections != null;
@@ -147,7 +154,13 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
       : "No Chromebooks are listed right now. Ask us what you are looking for.",
     countText: cbL.length + (cbL.length === 1 ? " CHROMEBOOK" : " CHROMEBOOKS") + " LISTED",
     p: c
-      ? { href: href(c), model: c.model, img: c.imgs[0]?.u ?? null, alt: c.model + (c.config ? ", " + c.config : ""), priceText: fmtPkr(c.pricePaisa) }
+      ? {
+          href: href(c),
+          model: formatProductDisplayName(c.brand, c.model),
+          img: c.imgs[0]?.u ?? null,
+          alt: formatProductDisplayName(c.brand, c.model) + (c.config ? ", " + c.config : ""),
+          priceText: sellFmt(c.pricePaisa),
+        }
       : { href: "/collections/chromebooks", model: "Chromebooks", img: null, alt: "", priceText: "" },
   };
 
@@ -159,7 +172,7 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
     brand: promoP.brand,
     model: promoP.model,
     config: promoP.config,
-    priceText: fmtPkr(promoP.pricePaisa),
+    priceText: sellFmt(promoP.pricePaisa),
     rows: (
       [
         ["Processor", promoP.specs.Processor],
@@ -181,11 +194,11 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
       ["Memory", (p) => (p.ramN ? p.ramN + "GB" : "—")],
       ["Storage", (p) => (p.stoN ? stoFmt(p.stoN) : "—")],
       ["Screen", (p) => (p.size ? p.size + '"' : "—")],
-      ["Price", (p) => fmtPkr(p.pricePaisa)],
+      ["Price", (p) => sellFmt(p.pricePaisa)],
     ];
     cmpDemo = {
-      a: { model: a.model, img: a.imgs[0]?.u ?? null },
-      b: { model: b.model, img: b.imgs[0]?.u ?? null },
+      a: { model: formatProductDisplayName(a.brand, a.model), img: a.imgs[0]?.u ?? null },
+      b: { model: formatProductDisplayName(b.brand, b.model), img: b.imgs[0]?.u ?? null },
       rows: R.map(([k, f]) => ({ k, a: f(a), b: f(b), diff: f(a) !== f(b) })),
     };
   }
@@ -201,7 +214,9 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
     return {
       name,
       count: l.length,
-      fromText: l.length ? fmtPkr(Math.min(...l.map((p) => p.pricePaisa))) : "",
+      fromText: l.length
+        ? fmtPkr(Math.min(...l.map((p) => priceWithCampaign(p.pricePaisa, campaign).sellingPaisa)))
+        : "",
       lines: lines.length ? lines.join(", ") + " models" : "Laptops",
       img: l[0]?.imgs[0]?.u ?? null,
       tint: tints[bi],
@@ -253,7 +268,7 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
           accCount={accN}
           main={{
             ...heroShot(heroMain, "main", heroSettings),
-            priceText: fmtPkr(heroMain.pricePaisa),
+            priceText: sellFmt(heroMain.pricePaisa),
             stockText: stockText(heroMain),
             chips: heroMain.chips,
           }}
@@ -267,9 +282,9 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
         pres={presFor("v5_product_story")}
         handle={HM.h}
         title={HM.t}
-        model={HM.model}
+        model={formatProductDisplayName(HM.brand, HM.model)}
         config={HM.config}
-        priceText={fmtPkr(HM.pricePaisa)}
+        priceText={sellFmt(HM.pricePaisa)}
         stockText={stockText(HM)}
         pricePaisa={HM.pricePaisa}
         variantId={HM.variantId}

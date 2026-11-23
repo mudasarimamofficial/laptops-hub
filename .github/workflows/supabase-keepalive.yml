@@ -1,4 +1,4 @@
-# Lightweight Supabase Free-plan activity pings (independent of Vercel Hobby's single daily cron).
+# Lightweight Supabase Free-plan activity pings (supplemental to Vercel notification cron).
 # Calls /api/cron/keepalive with CRON_SECRET. Does NOT guarantee the project never pauses.
 # See docs/SUPABASE_FREE_RESILIENCE_2026-11-23.md.
 name: supabase-keepalive
@@ -26,12 +26,12 @@ jobs:
           ENDPOINT: ${{ vars.KEEPALIVE_CRON_URL || 'https://www.laptopshub.pk/api/cron/keepalive?source=github' }}
         run: |
           if [ -z "$CRON_SECRET" ]; then
-            echo "CRON_SECRET is not set — skipping (configure repository secret to activate)."
-            exit 0
+            echo "::error::CRON_SECRET repository secret is not set. Keepalive cannot run. Configure the secret to match Vercel Production CRON_SECRET."
+            exit 1
           fi
           code=$(curl -sS -o body.json -w '%{http_code}' --max-time 45 -H "Authorization: Bearer $CRON_SECRET" "$ENDPOINT") || true
           code=${code:-000}
           echo "HTTP $code"
           cat body.json || true
           [ "$code" = "200" ] || { echo "::error::keepalive returned HTTP $code"; exit 1; }
-          node -e 'const j=require("./body.json"); if(!j.ok){console.error(j); process.exit(1)} console.log("ok mode="+j.mode)'
+          node -e 'const j=require("./body.json"); if(!j.ok){console.error(j); process.exit(1)}; if(!j.mode){console.error("missing mode"); process.exit(1)}; console.log("ok mode="+j.mode+" ping_count="+(j.ping_count||"n/a"))'

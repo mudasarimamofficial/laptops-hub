@@ -88,10 +88,19 @@ export function campaignIsLive(c: Pick<DiscountCampaign, "status" | "startsAt" |
   return c.status === "active" || c.status === "scheduled";
 }
 
-/** Apply the single automatic campaign (no stacking). */
+/**
+ * Apply the single automatic campaign (no stacking).
+ * Only `storewide` scope is applied in the shared engine until product/collection
+ * targeting is fully wired end-to-end (admin + storefront + COD RPC).
+ */
 export function priceWithCampaign(listPaisa: number, campaign: DiscountCampaign | null | undefined, now = new Date()): PricedUnit {
   const list = Math.max(0, Math.round(listPaisa));
-  if (!campaign || !campaignIsLive(campaign, now) || campaign.codeRequired) {
+  if (
+    !campaign ||
+    !campaignIsLive(campaign, now) ||
+    campaign.codeRequired ||
+    campaign.scope !== "storewide"
+  ) {
     return { listPaisa: list, sellingPaisa: list, discountPaisa: 0, percentOff: null, campaignId: null, campaignName: null };
   }
   const base =

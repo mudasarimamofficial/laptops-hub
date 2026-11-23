@@ -1,0 +1,733 @@
+{
+  "date": "2026-11-23T11:00:43.932Z",
+  "base": "https://www.laptopshub.pk",
+  "device": "Pixel 7 emulated DPR2",
+  "note": "Lab diagnostic only — not CrUX field CWV. LCP from PerformanceObserver buffer may be incomplete without wait.",
+  "results": [
+    {
+      "route": "/",
+      "elapsedMs": 7700,
+      "metrics": {
+        "dpr": 2,
+        "paint": {
+          "first-paint": 2988,
+          "first-contentful-paint": 2988
+        },
+        "lcpMs": null,
+        "domContentLoadedMs": 3153,
+        "imgs": [
+          {
+            "alt": "",
+            "cssW": 335,
+            "cssH": 97,
+            "naturalW": 1800,
+            "naturalH": 520,
+            "currentSrc": "https://www.laptopshub.pk/v5/stage.webp",
+            "loading": "auto",
+            "complete": true
+          },
+          {
+            "alt": "HP ProBook laptop — Laptops HUB hero",
+            "cssW": 145,
+            "cssH": 145,
+            "naturalW": 1254,
+            "naturalH": 1254,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111",
+            "loading": "auto",
+            "complete": true
+          },
+          {
+            "alt": "Lenovo ThinkPad laptop — Laptops HUB hero",
+            "cssW": 160,
+            "cssH": 120,
+            "naturalW": 1448,
+            "naturalH": 1086,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111",
+            "loading": "auto",
+            "complete": true
+          },
+          {
+            "alt": "Dell Latitude laptop — Laptops HUB hero",
+            "cssW": 238,
+            "cssH": 238,
+            "naturalW": 1254,
+            "naturalH": 1254,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111",
+            "loading": "auto",
+            "complete": true
+          },
+          {
+            "alt": "Dell Latitude 7420, front view",
+            "cssW": 233,
+            "cssH": 146,
+            "naturalW": 1536,
+            "naturalH": 1024,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/dell-second_-home-sec-front.webp?v=1792935242",
+            "loading": "eager",
+            "complete": true
+          },
+          {
+            "alt": "Dell Latitude 7420, left angle",
+            "cssW": 244,
+            "cssH": 146,
+            "naturalW": 1536,
+            "naturalH": 1024,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/dell-second_-home-sec-left.webp?v=1792935243",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell Latitude 7420, right angle",
+            "cssW": 244,
+            "cssH": 146,
+            "naturalW": 1536,
+            "naturalH": 1024,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/dell-second_-home-sec-right.webp?v=1792935242",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell Latitude 7420, rear view",
+            "cssW": 233,
+            "cssH": 146,
+            "naturalW": 1536,
+            "naturalH": 1024,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/dell-second_-home-sec-rear.webp?v=1792935243",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "HP Chromebook 14 G5, 4GB RAM, 32GB Storage",
+            "cssW": 272,
+            "cssH": 207,
+            "naturalW": 640,
+            "naturalH": 640,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_a28241aa-b454-4761-b78a-52a363790721.jpg?v=1792377655&width=1280",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "",
+            "cssW": 326,
+            "cssH": 182,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "",
+            "cssW": 326,
+            "cssH": 182,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_008833a7-c569-4ae6-8ca2-b0e8653280f8.jpg?v=1792270122&width=1280",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "",
+            "cssW": 326,
+            "cssH": 182,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_7c9af791-2f05-46e1-9c3f-d20effe394d3.jpg?v=1792270034&width=1280",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Lenovo ThinkPad E590, Core i5, 8th Gen, 8GB RAM, 256GB Stora",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_94397768-2aa1-42ec-8163-f7b5a6838676.jpg?v=1792270664&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell 5580, Core i5, 7th Gen, 4GB RAM, 180GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_4c7ecfc2-5df6-4071-8d33-e6f8bdaaf914.jpg?v=1792270630&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "HP 650 G2, Core i5, 6th Gen, 4GB RAM, 180GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_1455faa7-1970-4289-ae04-6b1d901c8185.jpg?v=1792270691&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "HP Envy x360, Core i5, 8th Gen, 8GB RAM, 256GB Storage (phot",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_0276fd54-47a7-4797-9f0e-94e6a3cb7a1b.png?v=1792270674&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "HP 450 G4, Core i7, 7th Gen, 8GB RAM, 256GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_f1163715-9bca-4980-8607-9abdc9fdb634.png?v=1792270699&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell 5570, Core i7, 6th Gen, 4GB RAM, 180GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_7b55633b-36ee-421d-96d1-dad369ef9bdb.jpg?v=1792270715&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell 5400, Core i5, 8th Gen, 8GB RAM, 256GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "HP 430 G5, Core i5, 8th Gen, 8GB RAM, 180GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_008833a7-c569-4ae6-8ca2-b0e8653280f8.jpg?v=1792270122&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "LATITUDE 3440 I5 13TH 8/256 DELL front view",
+            "cssW": 377,
+            "cssH": 259,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_2ec2fc29-f2aa-40a1-84b1-e292708394a6.jpg?v=1792269293&width=1280",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell Latitude 3440, Core i5, 13th Gen, 8GB RAM, 256GB Storag",
+            "cssW": 268,
+            "cssH": 214,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_2ec2fc29-f2aa-40a1-84b1-e292708394a6.jpg?v=1792269293&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "HP ProBook 440 G9, Core i5, 12th Gen (photo 1 of 5)",
+            "cssW": 268,
+            "cssH": 214,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_7f2e4ee5-32d5-40ed-8408-f0489c0171c7.jpg?v=1792268723&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "HP ZBook Firefly 14 G8, Core i5, 12th Gen, 16GB DDR5, 512GB ",
+            "cssW": 268,
+            "cssH": 214,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_6301ddbf-ece4-42e2-834e-dd4d97a592bd.png?v=1792368792&width=480",
+            "loading": "lazy",
+            "complete": false
+          }
+        ],
+        "promoText": true,
+        "featuredHeading": "Dell Dell Latitude 3440"
+      },
+      "imageResponses": 15,
+      "imageBytes": 1065764,
+      "oversized": [
+        {
+          "alt": "",
+          "cssW": 335,
+          "cssH": 97,
+          "naturalW": 1800,
+          "naturalH": 520,
+          "currentSrc": "https://www.laptopshub.pk/v5/stage.webp",
+          "loading": "auto",
+          "complete": true
+        },
+        {
+          "alt": "HP ProBook laptop — Laptops HUB hero",
+          "cssW": 145,
+          "cssH": 145,
+          "naturalW": 1254,
+          "naturalH": 1254,
+          "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111",
+          "loading": "auto",
+          "complete": true
+        },
+        {
+          "alt": "Lenovo ThinkPad laptop — Laptops HUB hero",
+          "cssW": 160,
+          "cssH": 120,
+          "naturalW": 1448,
+          "naturalH": 1086,
+          "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111",
+          "loading": "auto",
+          "complete": true
+        },
+        {
+          "alt": "Dell Latitude laptop — Laptops HUB hero",
+          "cssW": 238,
+          "cssH": 238,
+          "naturalW": 1254,
+          "naturalH": 1254,
+          "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111",
+          "loading": "auto",
+          "complete": true
+        },
+        {
+          "alt": "Dell Latitude 7420, front view",
+          "cssW": 233,
+          "cssH": 146,
+          "naturalW": 1536,
+          "naturalH": 1024,
+          "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/dell-second_-home-sec-front.webp?v=1792935242",
+          "loading": "eager",
+          "complete": true
+        },
+        {
+          "alt": "Dell Latitude 7420, left angle",
+          "cssW": 244,
+          "cssH": 146,
+          "naturalW": 1536,
+          "naturalH": 1024,
+          "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/dell-second_-home-sec-left.webp?v=1792935243",
+          "loading": "lazy",
+          "complete": true
+        },
+        {
+          "alt": "Dell Latitude 7420, right angle",
+          "cssW": 244,
+          "cssH": 146,
+          "naturalW": 1536,
+          "naturalH": 1024,
+          "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/dell-second_-home-sec-right.webp?v=1792935242",
+          "loading": "lazy",
+          "complete": true
+        },
+        {
+          "alt": "Dell Latitude 7420, rear view",
+          "cssW": 233,
+          "cssH": 146,
+          "naturalW": 1536,
+          "naturalH": 1024,
+          "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/dell-second_-home-sec-rear.webp?v=1792935243",
+          "loading": "lazy",
+          "complete": true
+        }
+      ],
+      "screenshot": "docs\\visual-evidence\\perf-2026-11-23\\_.png"
+    },
+    {
+      "route": "/collections/laptops",
+      "elapsedMs": 4148,
+      "metrics": {
+        "dpr": 2,
+        "paint": {
+          "first-paint": 528,
+          "first-contentful-paint": 528
+        },
+        "lcpMs": null,
+        "domContentLoadedMs": 633,
+        "imgs": [
+          {
+            "alt": "Dell 5400, Core i5, 8th Gen, 8GB RAM, 256GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 215,
+            "naturalH": 146,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "HP 430 G5, Core i5, 8th Gen, 8GB RAM, 180GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 236,
+            "naturalH": 152,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_008833a7-c569-4ae6-8ca2-b0e8653280f8.jpg?v=1792270122&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "HP 840 G4, Core i5, 7th Gen, 8GB RAM, 180GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 379,
+            "naturalH": 284,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_4b29281e-26c1-40b2-ba2c-8f909f6862e8.jpg?v=1792270103&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Lenovo ThinkPad T490, Core i7, 8th Gen, 8GB RAM, 180GB Stora",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 379,
+            "naturalH": 322,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_7c9af791-2f05-46e1-9c3f-d20effe394d3.jpg?v=1792270034&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5320, Core i5, 11th Gen, 8GB RAM, 128GB Storage (photo ",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 379,
+            "naturalH": 379,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_a5f4d2b5-ebc0-425d-a2b0-a3ae41add042.jpg?v=1792269965&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5470, Core i5, 6th Gen, 4GB RAM, 128GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 379,
+            "naturalH": 228,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_96a00075-0ed1-4e80-82e8-2d02c90fc3c9.jpg?v=1792269887&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5510, Core i5, 10th Gen, 8GB RAM, 256GB Storage (photo ",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_643f03e4-f1f2-46b4-9983-5570b13d1b02.jpg?v=1792269927&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell 5480, Core i5, 7th Gen, 4GB RAM, 128GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_60b0dd22-d70d-40da-a002-72d87971bcea.png?v=1792269836&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell 5480, Core i7, 7th Gen, 4GB RAM, 128GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_da147c62-da2a-40e6-83f5-97dad243d7a3.jpg?v=1792269861&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell 5480, Core i7, 7th Gen, 4GB RAM, 128GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_4cf72196-f599-4ce5-bd92-7d1709d36f17.jpg?v=1792269795&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell 5310, Core i5, 10th Gen, 8GB RAM, 180GB Storage (photo ",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_5620fa10-c0f7-4bcb-bebb-1dc3300a8969.jpg?v=1792269768&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell Latitude 5320, Core i5, 11th Gen, 16GB RAM, 256GB Stora",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_aab618eb-bcb4-41d0-8b7d-87020a4e5180.jpg?v=1792269717&width=480",
+            "loading": "lazy",
+            "complete": false
+          }
+        ],
+        "promoText": true,
+        "featuredHeading": null
+      },
+      "imageResponses": 6,
+      "imageBytes": 150236,
+      "oversized": [],
+      "screenshot": "docs\\visual-evidence\\perf-2026-11-23\\_collections_laptops.png"
+    },
+    {
+      "route": "/search?q=dell",
+      "elapsedMs": 3475,
+      "metrics": {
+        "dpr": 2,
+        "paint": {
+          "first-paint": 680,
+          "first-contentful-paint": 680
+        },
+        "lcpMs": null,
+        "domContentLoadedMs": 656,
+        "imgs": [
+          {
+            "alt": "Dell 5400, Core i5, 8th Gen, 8GB RAM, 256GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 215,
+            "naturalH": 146,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5320, Core i5, 11th Gen, 8GB RAM, 128GB Storage (photo ",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 379,
+            "naturalH": 379,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_a5f4d2b5-ebc0-425d-a2b0-a3ae41add042.jpg?v=1792269965&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5470, Core i5, 6th Gen, 4GB RAM, 128GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 379,
+            "naturalH": 228,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_96a00075-0ed1-4e80-82e8-2d02c90fc3c9.jpg?v=1792269887&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5510, Core i5, 10th Gen, 8GB RAM, 256GB Storage (photo ",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 379,
+            "naturalH": 272,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_643f03e4-f1f2-46b4-9983-5570b13d1b02.jpg?v=1792269927&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5480, Core i5, 7th Gen, 4GB RAM, 128GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 331,
+            "naturalH": 331,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_60b0dd22-d70d-40da-a002-72d87971bcea.png?v=1792269836&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5480, Core i7, 7th Gen, 4GB RAM, 128GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 379,
+            "naturalH": 379,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_da147c62-da2a-40e6-83f5-97dad243d7a3.jpg?v=1792269861&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5480, Core i7, 7th Gen, 4GB RAM, 128GB Storage (photo 1",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_4cf72196-f599-4ce5-bd92-7d1709d36f17.jpg?v=1792269795&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell 5310, Core i5, 10th Gen, 8GB RAM, 180GB Storage (photo ",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_5620fa10-c0f7-4bcb-bebb-1dc3300a8969.jpg?v=1792269768&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell Latitude 5320, Core i5, 11th Gen, 16GB RAM, 256GB Stora",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_aab618eb-bcb4-41d0-8b7d-87020a4e5180.jpg?v=1792269717&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell Latitude 5320, Core i5, 11th Gen, 16GB RAM, 256GB Stora",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_edf4edb1-7187-4861-a197-0627fcf6def8.jpg?v=1792269674&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell 5310, Core i5, 10th Gen, 8GB RAM, 256GB Storage (photo ",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_4b660a7f-2d1f-458b-9097-48327a19ce47.jpg?v=1792269630&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell Latitude 5420, Core i5, 11th Gen, 8GB RAM, 256GB Storag",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_89eae905-5b43-44e6-94f1-a226acd1f24d.jpg?v=1792269579&width=480",
+            "loading": "lazy",
+            "complete": false
+          }
+        ],
+        "promoText": true,
+        "featuredHeading": null
+      },
+      "imageResponses": 6,
+      "imageBytes": 182040,
+      "oversized": [],
+      "screenshot": "docs\\visual-evidence\\perf-2026-11-23\\_search_q_dell.png"
+    },
+    {
+      "route": "/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "elapsedMs": 3346,
+      "metrics": {
+        "dpr": 2,
+        "paint": {
+          "first-paint": 664,
+          "first-contentful-paint": 664
+        },
+        "lcpMs": null,
+        "domContentLoadedMs": 605,
+        "imgs": [
+          {
+            "alt": "Dell 5400, Core i5, 8th Gen, 8GB RAM, 256GB Storage, photo 1",
+            "cssW": 377,
+            "cssH": 302,
+            "naturalW": 179,
+            "naturalH": 122,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=960",
+            "loading": "eager",
+            "complete": true
+          },
+          {
+            "alt": "",
+            "cssW": 80,
+            "cssH": 62,
+            "naturalW": 84,
+            "naturalH": 57,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=168",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "",
+            "cssW": 82,
+            "cssH": 64,
+            "naturalW": 84,
+            "naturalH": 62,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/02-alt02_239dc23d-632c-4369-b956-c2db26ef19ee.jpg?v=1792270143&width=168",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "",
+            "cssW": 82,
+            "cssH": 64,
+            "naturalW": 84,
+            "naturalH": 50,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/03-alt03_f92bafae-5c56-440c-8cb0-f84bb110df23.jpg?v=1792270142&width=168",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5310, Core i5, 10th Gen, 8GB RAM, 180GB Storage (photo ",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 379,
+            "naturalH": 379,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_5620fa10-c0f7-4bcb-bebb-1dc3300a8969.jpg?v=1792269768&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell 5310, Core i5, 10th Gen, 8GB RAM, 256GB Storage (photo ",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 379,
+            "naturalH": 379,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_4b660a7f-2d1f-458b-9097-48327a19ce47.jpg?v=1792269630&width=800",
+            "loading": "lazy",
+            "complete": true
+          },
+          {
+            "alt": "Dell Latitude 7410, Core i5, 10th Gen, 16GB RAM (photo 1 of ",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_acc278ab-93ea-427c-9f28-7f3b5a6ee82e.jpg?v=1792269437&width=480",
+            "loading": "lazy",
+            "complete": false
+          },
+          {
+            "alt": "Dell Latitude 3410, Core i5, 10th Gen, 8GB RAM, 256GB Storag",
+            "cssW": 378,
+            "cssH": 302,
+            "naturalW": 0,
+            "naturalH": 0,
+            "currentSrc": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_db3435e7-34f2-4b5f-afd9-288b5563c98e.jpg?v=1792268368&width=480",
+            "loading": "lazy",
+            "complete": false
+          }
+        ],
+        "promoText": true,
+        "featuredHeading": "More from Dell"
+      },
+      "imageResponses": 6,
+      "imageBytes": 90591,
+      "oversized": [],
+      "screenshot": "docs\\visual-evidence\\perf-2026-11-23\\_products_dell_5400_core_i5_8th_gen_8gb_ram_256gb_storage.png"
+    }
+  ]
+}

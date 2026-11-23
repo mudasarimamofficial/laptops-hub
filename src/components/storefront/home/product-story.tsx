@@ -7,6 +7,16 @@ import { openCartDrawer } from "@/lib/commerce/cart-ui";
 import { canPurchase } from "@/lib/catalog/availability";
 import { DEFAULT_STOREFRONT_PRESENTATION, sectionLabel, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import { setStoryInView } from "@/lib/commerce/story-ui";
+import { imageSrcSet, sizedImage } from "@/lib/catalog/image-url";
+
+const STORY_SIZES = "(max-width: 768px) 70vw, 480px";
+function storySrc(src: string) {
+  return {
+    src: sizedImage(src, 960),
+    srcSet: imageSrcSet(src, [320, 480, 640, 960, 1200]),
+    sizes: STORY_SIZES,
+  };
+}
 
 export type StoryProps = {
   handle: string;
@@ -204,9 +214,10 @@ export function ProductStory(p: StoryProps) {
                       // eslint-disable-next-line @next/next/no-img-element -- V5 layered story stage
                       <img
                         key={i}
-                        src={a.src}
+                        {...storySrc(a.src)}
                         alt={`${p.model}, ${ALT[i]}`}
                         loading={i === 0 ? "eager" : "lazy"}
+                        decoding="async"
                         style={{ position: "absolute", left: POS[i].left, top: "6%", width: POS[i].width, height: "82%", objectFit: "contain", opacity: `var(--o${i})`, ...(a.cutout ? {} : { background: "#FFFFFF", borderRadius: 18 }) }}
                       />
                     ) : null,
@@ -219,7 +230,7 @@ export function ProductStory(p: StoryProps) {
                     <figure key={i} style={{ margin: 0, display: "flex", flexDirection: "column", gap: 6, padding: 8, borderRadius: 12, background: "rgba(255,255,255,.05)", border: "1px solid rgba(var(--lh-haze-rgb),.18)" }}>
                       {a.src ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={a.src} alt={`${p.model}, ${LABELS[i].toLowerCase()} view`} loading="lazy" style={{ width: "100%", aspectRatio: "16/10", objectFit: "contain" }} />
+                        <img {...storySrc(a.src)} alt={`${p.model}, ${LABELS[i].toLowerCase()} view`} loading="lazy" decoding="async" style={{ width: "100%", aspectRatio: "16/10", objectFit: "contain" }} />
                       ) : null}
                       <figcaption style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--lh-on-dark-2)", textAlign: "center" }}>{LABELS[i]}</figcaption>
                     </figure>

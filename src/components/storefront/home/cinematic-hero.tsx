@@ -4,6 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { DEFAULT_STOREFRONT_PRESENTATION, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import { useCompare } from "@/lib/commerce/compare-store";
+import { imageSrcSet, sizedImage } from "@/lib/catalog/image-url";
+
+const HERO_MAIN_SIZES = "(max-width: 768px) 70vw, 520px";
+const HERO_SIDE_SIZES = "(max-width: 768px) 40vw, 280px";
+
+function heroImgProps(src: string, displayCssPx: number) {
+  return {
+    src: sizedImage(src, Math.round(displayCssPx * 2)),
+    srcSet: imageSrcSet(src, [Math.round(displayCssPx), Math.round(displayCssPx * 1.5), Math.round(displayCssPx * 2), Math.round(displayCssPx * 3)]),
+  };
+}
 
 /** One hero laptop: V5 cutout when approved media is configured, otherwise the catalog photo (multiply blend). */
 /** `label` is the image alt text; `name` is the product name shown to shoppers on the price tag. */
@@ -205,7 +216,7 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
             <Link href={side1.href} aria-label={side1.label} style={{ position: "absolute", left: "1%", bottom: "28%", width: "39%", display: "block", mixBlendMode: blend(side1), transform: "translate3d(calc(var(--mx) * 10px + var(--hp) * -70px),calc(var(--hp) * 30px + var(--my) * 4px),0)", zIndex: 1 }}>
               {side1.src ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={side1.src} alt={side1.label} fetchPriority="high" style={{ display: "block", width: "100%", opacity: 1, transform: lapInL, transition: tr([["opacity", 0.9, 0.3], ["transform", 1.1, 0.3, true]]) }} />
+                <img {...heroImgProps(side1.src, 280)} sizes={HERO_SIDE_SIZES} alt={side1.label} fetchPriority="high" decoding="async" style={{ display: "block", width: "100%", opacity: 1, transform: lapInL, transition: tr([["opacity", 0.9, 0.3], ["transform", 1.1, 0.3, true]]) }} />
               ) : null}
             </Link>
           ) : null}
@@ -213,14 +224,14 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
             <Link href={side2.href} aria-label={side2.label} style={{ position: "absolute", right: "-1%", bottom: "29%", width: "43%", display: "block", mixBlendMode: blend(side2), transform: "translate3d(calc(var(--mx) * 12px + var(--hp) * 70px),calc(var(--hp) * 26px + var(--my) * 4px),0)", zIndex: 1 }}>
               {side2.src ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={side2.src} alt={side2.label} fetchPriority="high" style={{ display: "block", width: "100%", opacity: 1, transform: lapInR, transition: tr([["opacity", 0.9, 0.38], ["transform", 1.1, 0.38, true]]) }} />
+                <img {...heroImgProps(side2.src, 300)} sizes={HERO_SIDE_SIZES} alt={side2.label} fetchPriority="high" decoding="async" style={{ display: "block", width: "100%", opacity: 1, transform: lapInR, transition: tr([["opacity", 0.9, 0.38], ["transform", 1.1, 0.38, true]]) }} />
               ) : null}
             </Link>
           ) : null}
           <Link href={main.href} aria-label={main.label} style={{ position: "absolute", left: "18%", bottom: "16%", width: "64%", display: "block", mixBlendMode: blend(main), transform: "translate3d(calc(var(--mx) * 22px),calc(var(--hp) * -50px + var(--my) * 8px),0) scale(calc(1 + var(--hp) * .1))", zIndex: 2 }}>
             {main.src ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={main.src} alt={main.label} fetchPriority="high" style={{ display: "block", width: "100%", filter: main.cutout ? "drop-shadow(0 30px 30px rgba(var(--lh-navy-rgb),.45))" : undefined, opacity: 1, transform: lapInC, transition: tr([["opacity", 0.9, 0.2], ["transform", 1.2, 0.2, true]]) }} />
+              <img {...heroImgProps(main.src, 520)} sizes={HERO_MAIN_SIZES} alt={main.label} fetchPriority="high" decoding="async" style={{ display: "block", width: "100%", filter: main.cutout ? "drop-shadow(0 30px 30px rgba(var(--lh-navy-rgb),.45))" : undefined, opacity: 1, transform: lapInC, transition: tr([["opacity", 0.9, 0.2], ["transform", 1.2, 0.2, true]]) }} />
             ) : null}
           </Link>
           <div className="v5-hero-chips" style={{ position: "absolute", zIndex: 3, display: "flex", flexWrap: "wrap", justifyContent: "flex-end", gap: 8, alignItems: "flex-end", transform: "translate3d(calc(var(--mx) * 30px),calc(var(--hp) * -90px + var(--my) * 12px),0)" }}>

@@ -15,7 +15,10 @@ const upsertSchema = z.object({
   description: z.string().trim().max(2000).optional().default(""),
   kind: z.enum(["percent", "fixed_paisa"]),
   value: z.number().int().positive(),
-  scope: z.enum(["storewide", "products", "collections"]).default("storewide"),
+  // Product/collection targeting is reserved in the schema but not yet fully wired
+  // across storefront + COD. Reject non-storewide writes so admin cannot create
+  // campaigns that silently apply (or fail to apply) incorrectly.
+  scope: z.literal("storewide").default("storewide"),
   status: z.enum(["draft", "active", "scheduled", "expired", "disabled"]),
   startsAt: z.string().datetime().nullable().optional(),
   endsAt: z.string().datetime().nullable().optional(),
@@ -61,13 +64,19 @@ export async function POST(request: Request) {
   if (d.kind === "percent" && (d.value < 1 || d.value > 90)) {
     return NextResponse.json({ error: "invalid_percent" }, { status: 400 });
   }
+  if (d.status === "scheduled" && !d.startsAt) {
+    return NextResponse.json({ error: "scheduled_requires_starts_at" }, { status: 400 });
+  }
+  if (d.startsAt && d.endsAt && Date.parse(d.endsAt) <= Date.parse(d.startsAt)) {
+    return NextResponse.json({ error: "invalid_schedule_window" }, { status: 400 });
+  }
   const sb = createServiceClient();
   const row = {
     name: d.name,
     description: d.description,
     kind: d.kind,
     value: d.value,
-    scope: d.scope,
+    scope: "storewide" as const,
     status: d.status,
     starts_at: d.startsAt ?? null,
     ends_at: d.endsAt ?? null,

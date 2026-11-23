@@ -1,0 +1,172 @@
+{
+  "at": "2026-11-23T17:17:36.014Z",
+  "commit": "379e71a",
+  "deployment": "dpl_5TzXUuuy3anhd5RjJj2Rhzy8nu36",
+  "browser": "Chrome stable channel via Playwright",
+  "device": "Pixel 7",
+  "results": [
+    {
+      "label": "home-1",
+      "url": "https://www.laptopshub.pk/",
+      "elapsedMs": 11231,
+      "imgBytes": 628355,
+      "fcp": 3944,
+      "lcp": null,
+      "lcpCount": 0,
+      "ttfb": 228,
+      "stage": [
+        {
+          "src": "stage-960.webp",
+          "currentSrc": "https://www.laptopshub.pk/v5/stage-960.webp",
+          "w": 340,
+          "cssW": 335,
+          "srcSet": "/v5/stage-640.webp 640w, /v5/stage-960.webp 960w"
+        }
+      ],
+      "featured": true,
+      "cartReady": true,
+      "title": "Laptops HUB",
+      "failedNet": [],
+      "consoleErrors": [],
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\prod-pr60-home-1.png"
+    },
+    {
+      "label": "home-2",
+      "url": "https://www.laptopshub.pk/",
+      "elapsedMs": 8402,
+      "imgBytes": 628355,
+      "fcp": 2748,
+      "lcp": null,
+      "lcpCount": 0,
+      "ttfb": 212,
+      "stage": [
+        {
+          "src": "stage-960.webp",
+          "currentSrc": "https://www.laptopshub.pk/v5/stage-960.webp",
+          "w": 340,
+          "cssW": 335,
+          "srcSet": "/v5/stage-640.webp 640w, /v5/stage-960.webp 960w"
+        }
+      ],
+      "featured": true,
+      "cartReady": true,
+      "title": "Laptops HUB",
+      "failedNet": [],
+      "consoleErrors": [],
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\prod-pr60-home-2.png"
+    },
+    {
+      "label": "home-3",
+      "url": "https://www.laptopshub.pk/",
+      "elapsedMs": 7862,
+      "imgBytes": 628355,
+      "fcp": 2412,
+      "lcp": null,
+      "lcpCount": 0,
+      "ttfb": 230,
+      "stage": [
+        {
+          "src": "stage-960.webp",
+          "currentSrc": "https://www.laptopshub.pk/v5/stage-960.webp",
+          "w": 340,
+          "cssW": 335,
+          "srcSet": "/v5/stage-640.webp 640w, /v5/stage-960.webp 960w"
+        }
+      ],
+      "featured": true,
+      "cartReady": true,
+      "title": "Laptops HUB",
+      "failedNet": [],
+      "consoleErrors": [],
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\prod-pr60-home-3.png"
+    },
+    {
+      "label": "pdp",
+      "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "elapsedMs": 9168,
+      "imgBytes": 31606,
+      "fcp": 1976,
+      "lcp": {
+        "t": 1976,
+        "s": 81075,
+        "tag": "IMG",
+        "u": "3/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280"
+      },
+      "lcpCount": 1,
+      "ttfb": 189,
+      "stage": [],
+      "featured": true,
+      "cartReady": true,
+      "title": "Dell 5400 · Core i5, 8th Gen, 8GB RAM, 256GB Storage · Laptops HUB",
+      "failedNet": [],
+      "consoleErrors": [],
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\prod-pr60-pdp.png"
+    },
+    {
+      "label": "coll",
+      "url": "https://www.laptopshub.pk/collections/laptops",
+      "elapsedMs": 10312,
+      "imgBytes": 53632,
+      "fcp": 1768,
+      "lcp": {
+        "t": 1784,
+        "s": 79686,
+        "tag": "IMG",
+        "u": "93/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800"
+      },
+      "lcpCount": 2,
+      "ttfb": 198,
+      "stage": [],
+      "featured": false,
+      "cartReady": true,
+      "title": "All laptops · Laptops HUB",
+      "failedNet": [],
+      "consoleErrors": [],
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\prod-pr60-coll.png"
+    },
+    {
+      "label": "search",
+      "url": "https://www.laptopshub.pk/search?q=dell",
+      "elapsedMs": 7710,
+      "imgBytes": 83918,
+      "fcp": 2084,
+      "lcp": {
+        "t": 2116,
+        "s": 79686,
+        "tag": "IMG",
+        "u": "93/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800"
+      },
+      "lcpCount": 2,
+      "ttfb": 223,
+      "stage": [],
+      "featured": false,
+      "cartReady": true,
+      "title": "Results for “dell” · Laptops HUB",
+      "failedNet": [],
+      "consoleErrors": [],
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\prod-pr60-search.png"
+    },
+    {
+      "label": "cart",
+      "url": "https://www.laptopshub.pk/cart",
+      "elapsedMs": 7198,
+      "imgBytes": 3096,
+      "fcp": 1872,
+      "lcp": {
+        "t": 1872,
+        "s": 13160,
+        "tag": "DIV",
+        "u": ""
+      },
+      "lcpCount": 1,
+      "ttfb": 190,
+      "stage": [],
+      "featured": false,
+      "cartReady": true,
+      "title": "Laptops HUB",
+      "failedNet": [],
+      "consoleErrors": [],
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\prod-pr60-cart.png"
+    }
+  ]
+}

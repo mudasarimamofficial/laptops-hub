@@ -9,6 +9,34 @@ html {
   scroll-padding-top: 84px;
   /* V5 relies on the UA default line-height; Tailwind preflight would set 1.5. */
   line-height: normal;
+  /* Premium scrollbar (Firefox) — Arctic Titanium palette. */
+  scrollbar-width: thin;
+  scrollbar-color: #9bb0cc #e8eef7;
+}
+
+/* Premium scrollbar (Chromium / WebKit). Mobile UAs keep overlay system scrollbars. */
+@media (pointer: fine) {
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: #e8eef7;
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #9bb0cc;
+    border-radius: 999px;
+    border: 2px solid #e8eef7;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: #7a93b5;
+  }
+}
+@media (prefers-contrast: more) {
+  html {
+    scrollbar-color: #102039 #ffffff;
+  }
 }
 button {
   color: buttontext;

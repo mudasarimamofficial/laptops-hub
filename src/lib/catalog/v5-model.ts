@@ -44,6 +44,8 @@ export type V5Product = {
   fromPricePaisa: number;
   /** Public listing description (V5 `intro`). */
   intro: string;
+  seoTitle: string | null;
+  seoDescription: string | null;
 };
 
 const CAT: Record<string, V5Cat> = {
@@ -131,6 +133,8 @@ export function toV5(p: PublicProduct, i: number): V5Product {
     hasOptions: (p.variantCount ?? p.variants?.length ?? 1) > 1,
     fromPricePaisa: p.fromPricePaisa ?? p.pricePaisa,
     intro: p.descriptionSafe || "",
+    seoTitle: p.seoTitle ?? null,
+    seoDescription: p.seoDescription ?? null,
   };
 }
 
@@ -227,7 +231,10 @@ export type V5Card = {
   alt: string;
   chips: string[];
   priceText: string;
+  /** Catalog list price for the default / selected card variant (paisa). */
   pricePaisa: number;
+  /** Lowest purchasable list price (paisa) — used for "From" on multi-variant cards. */
+  fromPricePaisa: number;
   avail: boolean;
   badge: string;
   variantId: string;
@@ -252,6 +259,7 @@ export function v5Card(p: V5Product): V5Card {
     chips: p.chips,
     priceText: p.hasOptions ? "From " + fmtPkr(p.fromPricePaisa) : fmtPkr(p.pricePaisa),
     pricePaisa: p.pricePaisa,
+    fromPricePaisa: p.fromPricePaisa,
     avail: p.avail,
     badge: p.badge,
     variantId: p.variantId,

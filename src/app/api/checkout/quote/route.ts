@@ -4,6 +4,8 @@ import { INVENTORY_TRACKING_KEY, parseInventoryTracking } from "@/lib/commerce/s
 import { z } from "zod";
 import { createServiceClient } from "@/lib/supabase/server";
 import { clientIp, rateLimit } from "@/lib/security/rate-limit";
+import { getActiveAutomaticDiscount } from "@/lib/commerce/discounts-server";
+import { priceWithCampaign } from "@/lib/commerce/pricing";
 
 const schema = z.object({
   address: z.object({
@@ -64,8 +66,10 @@ export async function POST(request: Request) {
     .maybeSingle();
   const inventoryTrackingOn = parseInventoryTracking(trackingRow?.value).enabled;
 
-  // Optional: reprice lines server-side when provided
+  // Optional: reprice lines server-side when provided (list × active automatic discount, once).
   let subtotalPaisa = 0;
+  let merchandiseSavingsPaisa = 0;
+  const campaign = await getActiveAutomaticDiscount().catch(() => null);
   if (parsed.data.lines?.length) {
     for (const line of parsed.data.lines) {
       const { data: variant } = await supabase
@@ -95,7 +99,9 @@ export async function POST(request: Request) {
           { status: 409, headers: { "Cache-Control": "no-store" } },
         );
       }
-      subtotalPaisa += variant.price_paisa * line.quantity;
+      const priced = priceWithCampaign(variant.price_paisa, campaign);
+      subtotalPaisa += priced.sellingPaisa * line.quantity;
+      merchandiseSavingsPaisa += priced.discountPaisa * line.quantity;
     }
   }
 
@@ -134,6 +140,8 @@ export async function POST(request: Request) {
           ? {
               shippingZoneId: selected.id,
               subtotalPaisa,
+              merchandiseSavingsPaisa,
+              discountCampaignId: campaign?.id ?? null,
               shippingPaisa,
               freeDeliveryApplied: freeDelivery,
               codFeePaisa,

@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-23",
+  "notes": "Lab measurements are diagnostic. Field CWV not invented. Strategy avoids paid Supabase image transforms.",
+  "strategy": {
+    "catalogCards": "Shopify CDN width= + srcset [320,480,640,800] with CARD_IMAGE_SIZES ~280px desktop",
+    "lhImg": "Container-aware sizedImage + srcset via displayWidth; priority for LCP gallery slide",
+    "nextImage": "formats avif/webp; tuned deviceSizes/imageSizes; admin continues selective next/image",
+    "avoided": "Supabase image transformation API (not on Free plan); unrestricted remotePatterns"
+  },
+  "before": {
+    "productCardDefaultSrcWidth": 800,
+    "productCardSrcSet": [400, 600, 800],
+    "lhImg": "full remote URL, no srcset/sizes",
+    "labLighthouseMobile": "NOT TESTED this pass (baseline prior audits only)",
+    "oversizedRisk": "HIGH for non-Shopify and full-URL LHImg tiles"
+  },
+  "after": {
+    "productCardDefaultSrcWidth": 480,
+    "productCardSrcSet": [320, 480, 640, 800],
+    "lhImg": "sized + srcset when Shopify CDN; lazy by default; priority on first PDP slide",
+    "labLighthouseMobile": "NOT TESTED post-change (deploy then smoke)",
+    "unitEvidence": "tests/unit/image-url.test.ts PASS"
+  },
+  "acceptance": {
+    "responsiveDelivery": "PASS (Shopify CDN paths)",
+    "nonShopifyHosts": "PASS (left untouched — no broken transforms)",
+    "fieldCWV": "NOT TESTED",
+    "lighthouse90": "NOT TESTED"
+  }
+}

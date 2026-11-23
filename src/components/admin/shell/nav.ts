@@ -61,6 +61,11 @@ export const ADMIN_NAV: AdminNavSection[] = [
         roles: ["owner", "admin", "manager"],
       },
       {
+        href: "/admin/discounts",
+        label: "Discounts",
+        roles: ["owner", "admin", "manager"],
+      },
+      {
         href: "/admin/reviews",
         label: "Reviews",
         roles: ["owner", "admin", "manager", "editor"],

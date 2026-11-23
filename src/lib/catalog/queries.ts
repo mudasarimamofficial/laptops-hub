@@ -10,6 +10,8 @@ type ProductRow = {
   handle: string;
   title: string;
   description_safe: string;
+  seo_title: string | null;
+  seo_description: string | null;
   manufacturer: string | null;
   product_type: string | null;
   category: string | null;
@@ -105,6 +107,8 @@ function mapProduct(row: ProductRow): PublicProduct | null {
       handle: row.handle,
       title: row.title,
       descriptionSafe: publicDescription(row.description_safe),
+      seoTitle: row.seo_title?.trim() || null,
+      seoDescription: row.seo_description?.trim() || null,
       manufacturer: row.manufacturer,
       productType: row.product_type,
       category: row.category,
@@ -137,6 +141,8 @@ function mapListing(row: ListingRow, media: { url: string; alt: string | null; p
     handle: row.handle,
     title: row.title,
     descriptionSafe: publicDescription(row.description_safe),
+    seoTitle: null,
+    seoDescription: null,
     manufacturer: row.manufacturer,
     productType: row.product_type,
     category: row.category,
@@ -231,7 +237,7 @@ async function loadMediaByProduct(supabase: Db, ids: string[]) {
 }
 
 const productSelect = `
-  id, handle, title, description_safe, manufacturer, product_type, category,
+  id, handle, title, description_safe, seo_title, seo_description, manufacturer, product_type, category,
   featured, tags, specs, option_names,
   product_variants ( id, sku, title, option_values, price_paisa, compare_at_paisa, max_per_order, purchasable, position, media_id ),
   product_media ( url, alt, position )

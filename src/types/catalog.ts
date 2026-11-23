@@ -17,6 +17,10 @@ export type PublicProduct = {
   handle: string;
   title: string;
   descriptionSafe: string;
+  /** Merchant-authored SEO title; when set, preferred over generated defaults. */
+  seoTitle: string | null;
+  /** Merchant-authored SEO description. */
+  seoDescription: string | null;
   manufacturer: string | null;
   productType: string | null;
   category: string | null;

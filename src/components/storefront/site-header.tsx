@@ -84,6 +84,8 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
   const compareCount = useCompare((s) => s.handles.length);
   const mnavRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLElement>(null);
+  /** Ignore the mouse click that immediately follows a hover-open (same gesture would toggle closed). */
+  const suppressClickCloseRef = useRef(false);
   const closeMnav = useCallback(() => setMnav(false), []);
   useDialog(mnav, mnavRef, closeMnav);
 
@@ -206,9 +208,21 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
               type="button"
               className="v5-hov-ice"
               data-testid="desktop-mega-trigger"
-              onClick={() => (mega ? setMega(false) : openMega())}
+              onClick={() => {
+                if (suppressClickCloseRef.current) {
+                  suppressClickCloseRef.current = false;
+                  if (!mega) openMega();
+                  return;
+                }
+                if (mega) setMega(false);
+                else openMega();
+              }}
               onMouseEnter={() => {
-                if (finePointer) openMega();
+                if (!finePointer) return;
+                if (!mega) {
+                  openMega();
+                  suppressClickCloseRef.current = true;
+                }
               }}
               aria-expanded={mega}
               aria-controls="lh-mega-menu"

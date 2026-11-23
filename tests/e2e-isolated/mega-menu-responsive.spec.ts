@@ -101,6 +101,16 @@ test.describe("mega-menu responsive layout", () => {
     await expect(page.getByTestId("desktop-mega-menu")).toHaveCount(0);
   });
 
+  test("hover-open is not immediately closed by the same click gesture", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    const trigger = page.getByTestId("desktop-mega-trigger");
+    await trigger.hover();
+    await expect(page.getByTestId("desktop-mega-menu")).toBeVisible();
+    await trigger.click();
+    await expect(page.getByTestId("desktop-mega-menu")).toBeVisible();
+  });
+
   test("every catalog group is reachable and lists links", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/", { waitUntil: "domcontentloaded" });

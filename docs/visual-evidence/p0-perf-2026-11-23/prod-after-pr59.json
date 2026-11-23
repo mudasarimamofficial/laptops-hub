@@ -1,0 +1,84 @@
+{
+  "at": "2026-11-23T17:07:01.244Z",
+  "commit": "e373ef1",
+  "results": [
+    {
+      "label": "home-1",
+      "url": "https://www.laptopshub.pk/",
+      "imgBytes": 729817,
+      "fcp": 2464,
+      "lcp": null,
+      "lcpCount": 0,
+      "stage": [
+        {
+          "src": "stage.webp",
+          "w": 370,
+          "cssW": 335
+        }
+      ],
+      "featured": true
+    },
+    {
+      "label": "home-2",
+      "url": "https://www.laptopshub.pk/",
+      "imgBytes": 729817,
+      "fcp": 1884,
+      "lcp": null,
+      "lcpCount": 0,
+      "stage": [
+        {
+          "src": "stage.webp",
+          "w": 370,
+          "cssW": 335
+        }
+      ],
+      "featured": true
+    },
+    {
+      "label": "home-3",
+      "url": "https://www.laptopshub.pk/",
+      "imgBytes": 729817,
+      "fcp": 2148,
+      "lcp": null,
+      "lcpCount": 0,
+      "stage": [
+        {
+          "src": "stage.webp",
+          "w": 370,
+          "cssW": 335
+        }
+      ],
+      "featured": true
+    },
+    {
+      "label": "pdp",
+      "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "imgBytes": 31606,
+      "fcp": 1500,
+      "lcp": {
+        "t": 1500,
+        "s": 81075,
+        "tag": "IMG",
+        "u": "1162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280"
+      },
+      "lcpCount": 1,
+      "stage": [],
+      "featured": false
+    },
+    {
+      "label": "coll",
+      "url": "https://www.laptopshub.pk/collections/laptops",
+      "imgBytes": 53632,
+      "fcp": 1308,
+      "lcp": {
+        "t": 1340,
+        "s": 79686,
+        "tag": "IMG",
+        "u": "61162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800"
+      },
+      "lcpCount": 2,
+      "stage": [],
+      "featured": false
+    }
+  ]
+}

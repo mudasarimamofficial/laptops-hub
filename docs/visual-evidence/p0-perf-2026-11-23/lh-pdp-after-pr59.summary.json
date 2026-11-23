@@ -1,0 +1,58 @@
+{
+  "lighthouseVersion": "12.4.0",
+  "fetchTime": "2026-11-23T17:08:32.481Z",
+  "requestedUrl": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+  "finalUrl": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+  "runtimeError": null,
+  "performanceScore": 0.38,
+  "audits": {
+    "largest-contentful-paint": {
+      "score": 0.18,
+      "displayValue": "5.6 s",
+      "numericValue": 5574.622,
+      "errorMessage": null
+    },
+    "first-contentful-paint": {
+      "score": 0.06,
+      "displayValue": "5.5 s",
+      "numericValue": 5541.251,
+      "errorMessage": null
+    },
+    "total-blocking-time": {
+      "score": 0.1,
+      "displayValue": "1,740 ms",
+      "numericValue": 1738.8859999999995,
+      "errorMessage": null
+    },
+    "cumulative-layout-shift": {
+      "score": 1,
+      "displayValue": "0",
+      "numericValue": 0,
+      "errorMessage": null
+    },
+    "server-response-time": {
+      "score": 1,
+      "displayValue": "Root document took 560 ms",
+      "numericValue": 562.5,
+      "errorMessage": null
+    },
+    "total-byte-weight": {
+      "score": 1,
+      "displayValue": "Total size was 525 KiB",
+      "numericValue": 537856,
+      "errorMessage": null
+    },
+    "mainthread-work-breakdown": {
+      "score": 0,
+      "displayValue": "7.9 s",
+      "numericValue": 7889.191000000007,
+      "errorMessage": null
+    },
+    "bootup-time": {
+      "score": 0,
+      "displayValue": "3.5 s",
+      "numericValue": 3490.547999999997,
+      "errorMessage": null
+    }
+  }
+}

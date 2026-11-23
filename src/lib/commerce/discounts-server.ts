@@ -59,10 +59,11 @@ export const getActiveAutomaticDiscount = cache(async (): Promise<DiscountCampai
 
   if (error || !data?.length) return null;
   const now = new Date();
+  // Product/collection scopes are not fully supported in the storefront engine yet —
+  // only storewide automatic campaigns influence public prices (matches COD RPC path for storewide).
   const live = (data as Row[])
     .map(mapDiscountRow)
-    .filter((c) => campaignIsLive(c, now))
-    .sort((a, b) => (a.scope === "storewide" ? 0 : 1) - (b.scope === "storewide" ? 0 : 1));
+    .filter((c) => c.scope === "storewide" && campaignIsLive(c, now));
   return live[0] ?? null;
 });
 

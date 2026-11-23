@@ -145,7 +145,7 @@ export function DiscountCampaignForm({ initial }: { initial: DiscountCampaign[] 
               onChange={(e) => setEditing({ ...editing, description: e.target.value })}
             />
           </label>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          <div className="adm-discount-fields" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10 }}>
             <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
               Type
               <select
@@ -183,6 +183,45 @@ export function DiscountCampaignForm({ initial }: { initial: DiscountCampaign[] 
               <option value="expired">Expired</option>
             </select>
           </label>
+          <p style={{ margin: 0, fontSize: 12, color: "var(--adm-muted, #64748B)" }}>
+            Scope is storewide only. Product/collection targeting is disabled until it is fully supported in
+            checkout and storefront pricing.
+          </p>
+          <div className="adm-discount-fields" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10 }}>
+            <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+              Starts at (UTC, optional)
+              <input
+                className="adm-input"
+                type="datetime-local"
+                value={editing.startsAt ? editing.startsAt.slice(0, 16) : ""}
+                onChange={(e) =>
+                  setEditing({
+                    ...editing,
+                    startsAt: e.target.value ? new Date(e.target.value).toISOString() : null,
+                  })
+                }
+              />
+            </label>
+            <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+              Ends at (UTC, optional)
+              <input
+                className="adm-input"
+                type="datetime-local"
+                value={editing.endsAt ? editing.endsAt.slice(0, 16) : ""}
+                onChange={(e) =>
+                  setEditing({
+                    ...editing,
+                    endsAt: e.target.value ? new Date(e.target.value).toISOString() : null,
+                  })
+                }
+              />
+            </label>
+          </div>
+          {editing.status === "scheduled" && !editing.startsAt ? (
+            <p role="alert" style={{ margin: 0, fontSize: 12, color: "#991B1B" }}>
+              Scheduled campaigns require a start time.
+            </p>
+          ) : null}
           <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
             Announcement bar text
             <input
@@ -220,8 +259,13 @@ export function DiscountCampaignForm({ initial }: { initial: DiscountCampaign[] 
             <button
               type="button"
               className="adm-btn adm-btn-primary"
-              disabled={pending || !editing.name.trim() || editing.value <= 0}
-              onClick={() => void save(editing)}
+              disabled={
+                pending ||
+                !editing.name.trim() ||
+                editing.value <= 0 ||
+                (editing.status === "scheduled" && !editing.startsAt)
+              }
+              onClick={() => void save({ ...editing, scope: "storewide" })}
             >
               {pending ? "Saving…" : "Save"}
             </button>

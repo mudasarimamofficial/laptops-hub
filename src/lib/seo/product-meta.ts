@@ -1,5 +1,10 @@
 import type { PublicProduct } from "@/types/catalog";
 import type { V5Product } from "@/lib/catalog/v5-model";
+import {
+  collapseAdjacentDuplicateWords,
+  formatProductDisplayName,
+  formatProductSeoTitleParts,
+} from "@/lib/catalog/product-display-name";
 
 /** Build unique product SEO title/description from verified facts only — never invents warranty, ratings, or delivery. */
 export function productSeoDefaults(p: {
@@ -13,18 +18,25 @@ export function productSeoDefaults(p: {
   seoTitle?: string | null;
   seoDescription?: string | null;
 }): { title: string; description: string } {
+  const generated = formatProductSeoTitleParts({
+    brand: p.brand,
+    model: p.model,
+    title: p.title,
+    config: p.config,
+  });
   const title =
-    (p.seoTitle && p.seoTitle.trim()) ||
-    [p.brand, p.model || p.title, p.config].filter(Boolean).join(" · ").slice(0, 70) ||
+    (p.seoTitle && collapseAdjacentDuplicateWords(p.seoTitle.trim())) ||
+    generated.slice(0, 70) ||
     p.title;
 
+  const displayName = formatProductDisplayName(p.brand, p.model || p.title);
   const fromIntro = (p.intro || "").split(/\n\s*\n/)[0]?.trim() || "";
   const description =
     (p.seoDescription && p.seoDescription.trim()) ||
     (
       fromIntro ||
       [
-        p.model || p.title,
+        displayName,
         p.config,
         p.condition ? `${p.condition} condition` : null,
         p.category ? `in ${p.category}` : null,

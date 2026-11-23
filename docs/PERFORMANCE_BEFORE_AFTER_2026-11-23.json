@@ -1,30 +1,39 @@
 {
   "date": "2026-11-23",
-  "notes": "Lab measurements are diagnostic. Field CWV not invented. Strategy avoids paid Supabase image transforms.",
-  "strategy": {
-    "catalogCards": "Shopify CDN width= + srcset [320,480,640,800] with CARD_IMAGE_SIZES ~280px desktop",
-    "lhImg": "Container-aware sizedImage + srcset via displayWidth; priority for LCP gallery slide",
-    "nextImage": "formats avif/webp; tuned deviceSizes/imageSizes; admin continues selective next/image",
-    "avoided": "Supabase image transformation API (not on Free plan); unrestricted remotePatterns"
+  "notes": "Lab measurements are diagnostic. Field CWV not invented. No fabricated before/after delta claimed for Lighthouse score.",
+  "probeBeforeGapClosure": {
+    "device": "Pixel 7 emulated DPR2",
+    "source": "scripts/tmp-image-perf-probe.mjs against production @ 2480f47",
+    "home": {
+      "imageBytes": 1065764,
+      "oversizedCount": 8,
+      "featuredHeadingBug": "Dell Dell Latitude 3440",
+      "promoBar": true,
+      "notes": "Hero/story Shopify URLs without width=; stage.webp full 1800px"
+    },
+    "collectionsLaptops": { "imageBytes": 150236, "oversizedCount": 0 },
+    "searchDell": { "imageBytes": 182040, "oversizedCount": 0 },
+    "pdpDell5400": { "imageBytes": 90591, "oversizedCount": 0 }
   },
-  "before": {
-    "productCardDefaultSrcWidth": 800,
-    "productCardSrcSet": [400, 600, 800],
-    "lhImg": "full remote URL, no srcset/sizes",
-    "labLighthouseMobile": "NOT TESTED this pass (baseline prior audits only)",
-    "oversizedRisk": "HIGH for non-Shopify and full-URL LHImg tiles"
+  "lighthouseMobileHomePreFixDeploy": {
+    "file": "docs/visual-evidence/perf-2026-11-23/lighthouse-home.json",
+    "FCP": "1.8 s",
+    "speedIndex": "5.6 s",
+    "CLS": "0",
+    "totalByteWeight": "1536 KiB",
+    "perfScore": "see JSON categories (tool reported null in summary extract — inspect file)",
+    "status": "RECORDED_PRE_HERO_SRCSET_FIX"
   },
-  "after": {
-    "productCardDefaultSrcWidth": 480,
-    "productCardSrcSet": [320, 480, 640, 800],
-    "lhImg": "sized + srcset when Shopify CDN; lazy by default; priority on first PDP slide",
-    "labLighthouseMobile": "NOT TESTED post-change (deploy then smoke)",
-    "unitEvidence": "tests/unit/image-url.test.ts PASS"
+  "strategyAfterThisPR": {
+    "heroStory": "Shopify width= + srcset on cinematic hero and product story",
+    "cards": "existing CARD_IMAGE_SIZES + srcset",
+    "naming": "formatProductDisplayName",
+    "homepagePrices": "priceWithCampaign"
   },
   "acceptance": {
-    "responsiveDelivery": "PASS (Shopify CDN paths)",
-    "nonShopifyHosts": "PASS (left untouched — no broken transforms)",
+    "responsiveDeliveryCards": "PASS",
+    "heroSrcset": "PASS (code) — re-probe after deploy",
     "fieldCWV": "NOT TESTED",
-    "lighthouse90": "NOT TESTED"
+    "lighthouse90": "NOT CLAIMED"
   }
 }

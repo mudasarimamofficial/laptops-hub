@@ -4,6 +4,7 @@ import { V5ProductCard } from "@/components/commerce/product-card";
 import { CompareCount, NewGenRow } from "@/components/storefront/home/home-client";
 import { DEFAULT_STOREFRONT_PRESENTATION, sectionLabel, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import type { V5Card, V5Link } from "@/lib/catalog/v5-model";
+import { formatProductDisplayName } from "@/lib/catalog/product-display-name";
 
 /** Server-rendered V5 home sections 04–10 (`Laptops Hub Storefront v5.dc.html`). */
 
@@ -101,7 +102,7 @@ export function PromoSection({ promo, pres = DEFAULT_STOREFRONT_PRESENTATION }: 
         <div style={{ display: "flex", flexDirection: "column", gap: 20, minWidth: 0 }}>
           <Kicker onDark>{sectionLabel("06", "FEATURED CONFIGURATION", pres)}</Kicker>
           <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(32px,3.6vw,54px)", letterSpacing: "-.04em", lineHeight: 1.02, fontWeight: 700 }}>
-            {promo.brand} {promo.model}
+            {formatProductDisplayName(promo.brand, promo.model)}
           </h2>
           <p style={{ margin: 0, fontSize: 17, color: "var(--lh-on-dark-2)" }}>{promo.config}</p>
           <div style={{ display: "flex", flexDirection: "column", borderRadius: 18, background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.1)", backdropFilter: "blur(14px)", WebkitBackdropFilter: "blur(14px)" }}>

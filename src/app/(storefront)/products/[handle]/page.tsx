@@ -15,6 +15,7 @@ import { getActiveAutomaticDiscount } from "@/lib/commerce/discounts-server";
 import { priceWithCampaign } from "@/lib/commerce/pricing";
 import { productSeoFromV5 } from "@/lib/seo/product-meta";
 import { PriceDisplay } from "@/components/storefront/price-display";
+import { getContactSocial } from "@/lib/content/contact-social-server";
 
 export const revalidate = 60;
 
@@ -64,10 +65,11 @@ const POLICIES = [
 /** Port of the V5 product template (`isProduct`). */
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
-  const [r, checkoutSetting, campaign] = await Promise.all([
+  const [r, checkoutSetting, campaign, contact] = await Promise.all([
     load(handle),
     getStorefrontCheckoutSetting(),
     getActiveAutomaticDiscount().catch(() => null),
+    getContactSocial(),
   ]);
   if (!r) notFound();
   // Only public policies are linked (published + legally approved); never an unfinished page.
@@ -172,7 +174,23 @@ export default async function ProductPage({ params }: Props) {
                 </div>
               ))}
             </div>
-            <ProductBuy handle={p.h} title={p.t} model={p.model} config={p.config} sku={p.sku} variantId={p.variantId} pricePaisa={p.pricePaisa} maxPerOrder={p.maxPerOrder} available={p.avail} imageUrl={p.imgs[0]?.u ?? null} optionNames={p.optionNames} variants={p.variants} pdpCta={checkoutSetting.pdpCta} />
+            <ProductBuy
+              handle={p.h}
+              title={p.t}
+              model={p.model}
+              config={p.config}
+              sku={p.sku}
+              variantId={p.variantId}
+              pricePaisa={p.pricePaisa}
+              maxPerOrder={p.maxPerOrder}
+              available={p.avail}
+              imageUrl={p.imgs[0]?.u ?? null}
+              optionNames={p.optionNames}
+              variants={p.variants}
+              pdpCta={checkoutSetting.pdpCta}
+              contact={contact}
+              productUrl={`${siteUrl()}/products/${encodeURIComponent(p.h)}`}
+            />
           </div>
           {policies.length ? (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,150px),1fr))", gap: 8 }}>

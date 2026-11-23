@@ -21,6 +21,8 @@ import { usePricedUnit } from "@/components/storefront/discount-provider";
 import { PriceDisplay } from "@/components/storefront/price-display";
 import type { PdpCtaMode } from "@/lib/commerce/store-commerce-settings";
 import type { PublicVariant } from "@/types/catalog";
+import type { ContactSocialSettings } from "@/lib/content/contact-social";
+import { WhatsAppOrderCta } from "@/components/commerce/whatsapp-order-cta";
 
 const arrow = { position: "absolute", top: "50%", transform: "translateY(-50%)", width: 46, height: 46, borderRadius: "50%", border: "1px solid var(--lh-border)", background: "rgba(255,255,255,.92)", boxShadow: "0 8px 20px -12px rgba(var(--lh-navy-rgb),.6)", cursor: "pointer", display: "grid", placeItems: "center" } as const;
 
@@ -103,6 +105,10 @@ export type BuyProps = {
   variants: PublicVariant[];
   /** Merchant setting: only the main PDP CTA. Product cards stay Add to cart. */
   pdpCta?: PdpCtaMode;
+  /** Contact / WhatsApp settings for secondary Order on WhatsApp CTA. */
+  contact?: ContactSocialSettings | null;
+  /** Canonical product URL for WhatsApp message (server-provided). */
+  productUrl?: string;
 };
 
 /** V5 PDP purchase panel controls: variant picker, quantity stepper + add to cart / buy now (or inquiry), compare toggle. */
@@ -134,6 +140,10 @@ export function ProductBuy(p: BuyProps) {
   const step = { width: 48, height: "100%", border: 0, background: "transparent", fontSize: 20, cursor: "pointer", color: "var(--lh-ink)" } as const;
   const submitting = busy || pendingNav;
   const pricedSelected = usePricedUnit(selected?.pricePaisa ?? 0);
+  const wa = p.contact?.whatsapp;
+  const showWaOrder = Boolean(wa?.orderingEnabled && purchasable && selected);
+  const showWaInquire = Boolean(wa?.soldOutInquiryEnabled && soldOut && selected);
+  const productUrl = p.productUrl || `/products/${encodeURIComponent(p.handle)}`;
 
   function buildLine() {
     if (!selected) return null;
@@ -246,6 +256,43 @@ export function ProductBuy(p: BuyProps) {
           <InquiryDialog open={asking} onClose={() => setAsking(false)} productTitle={p.title} productHandle={p.handle} />
         </div>
       )}
+      {showWaOrder && p.contact && selected ? (
+        <WhatsAppOrderCta
+          businessName={p.contact.businessName}
+          productName={p.title}
+          variantLabel={label}
+          configuration={hasOptions ? label : p.config}
+          sku={selected.sku}
+          quantity={q}
+          unitPriceText={fmtPkr(pricedSelected.sellingPaisa)}
+          subtotalText={fmtPkr(pricedSelected.sellingPaisa * q)}
+          productUrl={productUrl}
+          whatsapp={p.contact.whatsapp}
+          mode="order"
+          disabled={!selected}
+          disabledReason="Choose an option first"
+        />
+      ) : null}
+      {showWaInquire && p.contact && selected ? (
+        <WhatsAppOrderCta
+          businessName={p.contact.businessName}
+          productName={p.title}
+          variantLabel={label}
+          configuration={hasOptions ? label : p.config}
+          sku={selected.sku}
+          quantity={1}
+          unitPriceText={fmtPkr(pricedSelected.sellingPaisa)}
+          subtotalText={fmtPkr(pricedSelected.sellingPaisa)}
+          productUrl={productUrl}
+          whatsapp={p.contact.whatsapp}
+          mode="inquire"
+        />
+      ) : null}
+      {hasOptions && !selected ? (
+        <p data-testid="pdp-whatsapp-need-option" style={{ margin: 0, fontSize: 13, color: "var(--lh-ink-2)" }}>
+          Select an option before ordering on WhatsApp.
+        </p>
+      ) : null}
       <button
         type="button"
         onClick={() => toggle(p.handle)}

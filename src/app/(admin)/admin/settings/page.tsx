@@ -6,11 +6,13 @@ import { formatPkr } from "@/lib/money";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { AdminCard } from "@/components/admin/ui/admin-card";
 import { StoreSettingsForm } from "@/components/admin/store-settings-form";
+import { ContactSocialForm } from "@/components/admin/contact-social-form";
 import { BackupsPanel } from "@/components/admin/backups-panel";
 import { CheckoutReadinessPanel } from "@/components/admin/checkout-readiness-panel";
 import { ChangePasswordForm } from "@/components/admin/change-password-form";
 import { loadCheckoutReadiness } from "@/lib/commerce/checkout-readiness-server";
 import { parseStorefrontPresentation, STOREFRONT_PRESENTATION_KEY } from "@/lib/content/storefront-presentation";
+import { CONTACT_SOCIAL_KEY, parseContactSocial } from "@/lib/content/contact-social";
 import {
   INVENTORY_TRACKING_KEY,
   STOREFRONT_CHECKOUT_KEY,
@@ -29,6 +31,7 @@ function readJson(settings: { key: string; value: unknown }[] | null, key: strin
 
 const HUB = [
   { href: "#general", title: "Store details", blurb: "Business name and support contacts" },
+  { href: "#contact-social", title: "Contact & Social", blurb: "Phones, social links, WhatsApp" },
   { href: "#security", title: "Security", blurb: "Change your admin password" },
   { href: "#inventory", title: "Products & inventory", blurb: "Tracking defaults and stock alerts" },
   { href: "#checkout", title: "Checkout & storefront", blurb: "Buy now / cart and presentation" },
@@ -96,6 +99,10 @@ export default async function AdminSettingsPage() {
           }}
         />
       </div>
+
+      <ContactSocialForm
+        initial={parseContactSocial((settings || []).find((r) => r.key === CONTACT_SOCIAL_KEY)?.value)}
+      />
 
       <div id="security" className="mt-8 scroll-mt-24">
         <AdminCard

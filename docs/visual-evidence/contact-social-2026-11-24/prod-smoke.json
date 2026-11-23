@@ -1,0 +1,24 @@
+{
+  "pass": true,
+  "checks": {
+    "address": "Laptops HUB, 1st Floor, Al Raheem Center Plaza, University Chowk, Bahawalpur, Pakistan",
+    "emailHref": "mailto:infolaptopshub@gmail.com",
+    "p1": "tel:03093372974",
+    "p2": "tel:03136565663",
+    "p3": "tel:03399100199",
+    "fb": "https://www.facebook.com/LaptopshubII.pk",
+    "ig": "https://www.instagram.com/laptopshub.pk",
+    "tt": "https://www.tiktok.com/@laptopshub.pk",
+    "yt": "https://www.youtube.com/@Laptopshub",
+    "waFooter": "https://api.whatsapp.com/message/NT5WBBX234POA1",
+    "waFloat": "https://api.whatsapp.com/message/NT5WBBX234POA1",
+    "pdpPrimaryBelow": true,
+    "waPrefilled": "0",
+    "fallbackVisible": true,
+    "msgHasProduct": true,
+    "openGeneral": "https://api.whatsapp.com/message/NT5WBBX234POA1"
+  },
+  "deployment": "dpl_2QKZQT2ysTzXUPQQBoRBe9EhfYBa",
+  "sha": "9e66a725333a1e4b7aa3a25e276c242eb2df46be",
+  "at": "2026-11-23T21:53:32.152Z"
+}

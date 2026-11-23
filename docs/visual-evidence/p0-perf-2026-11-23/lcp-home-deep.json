@@ -1,0 +1,146 @@
+{
+  "ssrCheck": {
+    "hasH1": true,
+    "hasPromo": true,
+    "hasHeroImg": true
+  },
+  "data": {
+    "x": {
+      "lcp": [],
+      "soft": [],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 1804
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 1804
+        }
+      ]
+    },
+    "promoChain": [
+      {
+        "tag": "DIV",
+        "cls": "lh-promo-bar",
+        "op": "1",
+        "vis": "visible",
+        "display": "block",
+        "filter": "none",
+        "transform": "none",
+        "contentVis": "visible",
+        "isolation": "auto"
+      }
+    ],
+    "h1Chain": [
+      {
+        "tag": "H1",
+        "cls": "v5-hero-h1",
+        "op": "1",
+        "vis": "visible",
+        "display": "block",
+        "filter": "none",
+        "transform": "none",
+        "contentVis": "visible",
+        "isolation": "auto"
+      },
+      {
+        "tag": "DIV",
+        "cls": "",
+        "op": "1",
+        "vis": "visible",
+        "display": "flex",
+        "filter": "none",
+        "transform": "xf",
+        "contentVis": "visible",
+        "isolation": "auto"
+      },
+      {
+        "tag": "DIV",
+        "cls": "v5-hero-grid",
+        "op": "1",
+        "vis": "visible",
+        "display": "grid",
+        "filter": "none",
+        "transform": "none",
+        "contentVis": "visible",
+        "isolation": "auto"
+      },
+      {
+        "tag": "SECTION",
+        "cls": "v5-hero",
+        "op": "1",
+        "vis": "visible",
+        "display": "flex",
+        "filter": "none",
+        "transform": "none",
+        "contentVis": "visible",
+        "isolation": "isolate"
+      },
+      {
+        "tag": "MAIN",
+        "cls": "flex-1",
+        "op": "1",
+        "vis": "visible",
+        "display": "block",
+        "filter": "none",
+        "transform": "none",
+        "contentVis": "visible",
+        "isolation": "auto"
+      }
+    ],
+    "heroOp": "1",
+    "heroIso": "isolate",
+    "overlays": [],
+    "op0": [
+      {
+        "tag": "DIV",
+        "cls": "",
+        "id": ""
+      },
+      {
+        "tag": "IMG",
+        "cls": "",
+        "id": ""
+      },
+      {
+        "tag": "IMG",
+        "cls": "",
+        "id": ""
+      },
+      {
+        "tag": "IMG",
+        "cls": "",
+        "id": ""
+      },
+      {
+        "tag": "DIV",
+        "cls": "v5-story-spec",
+        "id": ""
+      },
+      {
+        "tag": "DIV",
+        "cls": "v5-story-spec",
+        "id": ""
+      },
+      {
+        "tag": "DIV",
+        "cls": "v5-story-spec",
+        "id": ""
+      },
+      {
+        "tag": "DIV",
+        "cls": "v5-story-spec",
+        "id": ""
+      },
+      {
+        "tag": "DIV",
+        "cls": "",
+        "id": ""
+      }
+    ],
+    "paintCount": 2,
+    "lcpNative": 0
+  },
+  "metrics": []
+}

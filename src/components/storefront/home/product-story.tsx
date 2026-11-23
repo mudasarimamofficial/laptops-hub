@@ -82,6 +82,7 @@ export function ProductStory(p: StoryProps) {
     const s = ref.current;
     if (!s) return;
     let raf = 0;
+    let armed = false;
     const set = (k: string, v: number | string) => s.style.setProperty(k, typeof v === "number" ? v.toFixed(4) : v);
     const frame = () => {
       raf = 0;
@@ -126,15 +127,38 @@ export function ProductStory(p: StoryProps) {
       }
     };
     const sched = () => {
+      if (!armed) return;
       if (!raf) raf = requestAnimationFrame(frame);
     };
-    addEventListener("scroll", sched, { passive: true });
-    addEventListener("resize", sched);
-    sched();
+    const onScroll = () => sched();
+    const onResize = () => sched();
+    // Defer scroll-linked work until the story approaches the viewport (homepage LCP quiet period).
+    const io =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            ([e]) => {
+              if (!e.isIntersecting && e.boundingClientRect.top > 0) return;
+              if (armed) return;
+              armed = true;
+              addEventListener("scroll", onScroll, { passive: true });
+              addEventListener("resize", onResize);
+              sched();
+            },
+            { rootMargin: "200px 0px" },
+          )
+        : null;
+    if (io) io.observe(s);
+    else {
+      armed = true;
+      addEventListener("scroll", onScroll, { passive: true });
+      addEventListener("resize", onResize);
+      sched();
+    }
     return () => {
       cancelAnimationFrame(raf);
-      removeEventListener("scroll", sched);
-      removeEventListener("resize", sched);
+      io?.disconnect();
+      removeEventListener("scroll", onScroll);
+      removeEventListener("resize", onResize);
       setStoryInView(false);
     };
   }, [rm]);

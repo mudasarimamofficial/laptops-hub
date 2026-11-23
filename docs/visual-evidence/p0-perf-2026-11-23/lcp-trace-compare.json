@@ -1,0 +1,638 @@
+{
+  "at": "2026-11-23T16:44:33.036Z",
+  "home": {
+    "label": "home",
+    "url": "https://www.laptopshub.pk/",
+    "interestingCount": 1316,
+    "interestingNames": {
+      "EndActivateToSubmitCompositorFrame": 274,
+      "SubmitCompositorFrameToPresentationCompositorFrame": 270,
+      "PaintTimingVisualizer::LayoutObjectPainted": 225,
+      "InvalidateLayout": 20,
+      "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM": 4,
+      "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM": 4,
+      "PaintTimingVisualizer::Viewport": 2,
+      "PaintTiming::NotifyScroll": 2,
+      "PageLoadMetrics.NavigationToFirstContentfulPaint": 2,
+      "GlobalFirstContentfulPaint": 1,
+      "firstContentfulPaint": 1
+    },
+    "sample": [
+      {
+        "name": "InvalidateLayout",
+        "ts": 164231827111,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164231850620,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164231850625,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164232076433,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164232454307,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164232518054,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164232518061,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164232736126,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164232736153,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "GlobalFirstContentfulPaint",
+        "ts": 164233319548,
+        "ph": "I",
+        "args": {}
+      },
+      {
+        "name": "firstContentfulPaint",
+        "ts": 164233319548,
+        "ph": "R",
+        "args": {
+          "data": {
+            "navigationId": "702BA642CF23CFF3AFD0B8E3CA2EFDE9"
+          },
+          "frame": "4D656308542C0496DCA268B9D6C8393E"
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164233359934,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164233411045,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164233416413,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164233420917,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164233438249,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164233561410,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164233561417,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164234088583,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164234288647,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164234421927,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164234539298,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164234705497,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164234705504,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164234739952,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164234844105,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164234939795,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164235040493,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164235338799,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164235338820,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "4D656308542C0496DCA268B9D6C8393E",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "PageLoadMetrics.NavigationToFirstContentfulPaint",
+        "ts": 164231567233,
+        "ph": "b",
+        "args": {
+          "page_load": {
+            "navigation_id": 3,
+            "url": "https://www.laptopshub.pk/"
+          }
+        }
+      },
+      {
+        "name": "PageLoadMetrics.NavigationToFirstContentfulPaint",
+        "ts": 164233319233,
+        "ph": "e",
+        "args": {}
+      }
+    ]
+  },
+  "pdp": {
+    "label": "pdp",
+    "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+    "interestingCount": 467,
+    "interestingNames": {
+      "PaintTimingVisualizer::LayoutObjectPainted": 169,
+      "EndActivateToSubmitCompositorFrame": 70,
+      "SubmitCompositorFrameToPresentationCompositorFrame": 70,
+      "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM": 7,
+      "InvalidateLayout": 6,
+      "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM": 5,
+      "PaintTimingVisualizer::Viewport": 2,
+      "NavStartToLargestContentfulPaint::Candidate::AllFrames::UKM": 2,
+      "PageLoadMetrics.NavigationToFirstContentfulPaint": 2,
+      "GlobalFirstContentfulPaint": 1,
+      "firstContentfulPaint": 1,
+      "largestContentfulPaint::Candidate": 1,
+      "PageLoadMetrics.NavigationToLargestContentfulPaint": 1,
+      "PageLoad.PaintTiming.LargestContentfulPaintCandidate": 1
+    },
+    "sample": [
+      {
+        "name": "InvalidateLayout",
+        "ts": 164238942090,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "46985948CBCCB0588D2BC7F9AA553CF8",
+            "nodeId": 2
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164238982353,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "46985948CBCCB0588D2BC7F9AA553CF8",
+            "nodeId": 2
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164239886756,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "82123345E50C7493E17285E6BA20FDDA",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164239937802,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164239937809,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164240052531,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164240052538,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164240104703,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164240104708,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164240562740,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "82123345E50C7493E17285E6BA20FDDA",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164240584169,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164240584298,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164240686490,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164240686494,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "GlobalFirstContentfulPaint",
+        "ts": 164240943847,
+        "ph": "I",
+        "args": {}
+      },
+      {
+        "name": "firstContentfulPaint",
+        "ts": 164240943847,
+        "ph": "R",
+        "args": {
+          "data": {
+            "navigationId": "897D07D29A44693E7583A4DEEA6C010D"
+          },
+          "frame": "82123345E50C7493E17285E6BA20FDDA"
+        }
+      },
+      {
+        "name": "largestContentfulPaint::Candidate",
+        "ts": 164240943847,
+        "ph": "R",
+        "args": {
+          "data": {
+            "candidateIndex": 1,
+            "imageDiscoveryTime": 581.4000000059605,
+            "imageLoadEnd": 668.4000000059605,
+            "imageLoadStart": 632.9000000059605,
+            "isMainFrame": true,
+            "isOutermostMainFrame": true,
+            "loadingAttr": "eager",
+            "navigationId": "897D07D29A44693E7583A4DEEA6C010D",
+            "nodeId": 77,
+            "nodeName": "IMG",
+            "performanceTimelineNavigationId": 6726,
+            "size": 81075,
+            "type": "image"
+          },
+          "frame": "82123345E50C7493E17285E6BA20FDDA"
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164241007423,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "82123345E50C7493E17285E6BA20FDDA",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "InvalidateLayout",
+        "ts": 164241007688,
+        "ph": "I",
+        "args": {
+          "data": {
+            "frame": "82123345E50C7493E17285E6BA20FDDA",
+            "nodeId": 4
+          }
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Candidate::AllFrames::UKM",
+        "ts": 164241185831,
+        "ph": "I",
+        "args": {
+          "data": {
+            "durationInMilliseconds": 1577,
+            "inMainFrame": true,
+            "isAnimated": false,
+            "loadEndInMilliseconds": 668,
+            "loadStartInMilliseconds": 633,
+            "size": 81075,
+            "type": "image"
+          },
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164241185845,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToLargestContentfulPaint::Candidate::AllFrames::UKM",
+        "ts": 164242172500,
+        "ph": "I",
+        "args": {
+          "data": {
+            "durationInMilliseconds": 1577,
+            "inMainFrame": true,
+            "isAnimated": false,
+            "loadEndInMilliseconds": 668,
+            "loadStartInMilliseconds": 633,
+            "size": 81075,
+            "type": "image"
+          },
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "NavStartToExperimentalLargestContentfulPaint::Invalidate::AllFrames::UKM",
+        "ts": 164242172508,
+        "ph": "I",
+        "args": {
+          "main_frame_tree_node_id": 2
+        }
+      },
+      {
+        "name": "PageLoadMetrics.NavigationToLargestContentfulPaint",
+        "ts": 164239366580,
+        "ph": "b",
+        "args": {
+          "page_load": {
+            "navigation_id": 3,
+            "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage"
+          }
+        }
+      },
+      {
+        "name": "PageLoadMetrics.NavigationToFirstContentfulPaint",
+        "ts": 164239366580,
+        "ph": "b",
+        "args": {
+          "page_load": {
+            "navigation_id": 3,
+            "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage"
+          }
+        }
+      },
+      {
+        "name": "PageLoad.PaintTiming.LargestContentfulPaintCandidate",
+        "ts": 164240943580,
+        "ph": "n",
+        "args": {
+          "page_load": {
+            "navigation_id": 3
+          }
+        }
+      },
+      {
+        "name": "PageLoadMetrics.NavigationToFirstContentfulPaint",
+        "ts": 164240943580,
+        "ph": "e",
+        "args": {}
+      }
+    ]
+  }
+}

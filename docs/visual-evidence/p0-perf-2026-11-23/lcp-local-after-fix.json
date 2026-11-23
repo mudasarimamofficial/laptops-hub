@@ -1,0 +1,172 @@
+{
+  "at": "2026-11-23T16:57:13.098Z",
+  "base": "http://127.0.0.1:3011",
+  "results": [
+    {
+      "label": "home-cold-1",
+      "url": "http://127.0.0.1:3011/",
+      "elapsedMs": 4904,
+      "lcp": [],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 2124
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 2124
+        }
+      ],
+      "title": "Laptops HUB",
+      "h1": "The future ofsmarter laptopshopping."
+    },
+    {
+      "label": "home-cold-2",
+      "url": "http://127.0.0.1:3011/",
+      "elapsedMs": 4927,
+      "lcp": [],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 2856
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 2856
+        }
+      ],
+      "title": "Laptops HUB",
+      "h1": "The future ofsmarter laptopshopping."
+    },
+    {
+      "label": "home-cold-3",
+      "url": "http://127.0.0.1:3011/",
+      "elapsedMs": 4751,
+      "lcp": [],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 2892
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 2892
+        }
+      ],
+      "title": "Laptops HUB",
+      "h1": "The future ofsmarter laptopshopping."
+    },
+    {
+      "label": "collection",
+      "url": "http://127.0.0.1:3011/collections/laptops",
+      "elapsedMs": 5734,
+      "lcp": [
+        {
+          "t": 2380,
+          "s": 7611,
+          "tag": "H1",
+          "cls": "",
+          "u": ""
+        },
+        {
+          "t": 2428,
+          "s": 79686,
+          "tag": "IMG",
+          "cls": "",
+          "u": "1-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800"
+        }
+      ],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 2380
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 2380
+        }
+      ],
+      "title": "All laptops · Laptops HUB",
+      "h1": "All laptops"
+    },
+    {
+      "label": "pdp",
+      "url": "http://127.0.0.1:3011/products/hp-probook-640-g2-core-i5-6th-gen-8gb-ram-256gb-storage",
+      "elapsedMs": 5704,
+      "lcp": [
+        {
+          "t": 1924,
+          "s": 10830,
+          "tag": "H1",
+          "cls": "",
+          "u": ""
+        },
+        {
+          "t": 2072,
+          "s": 72630,
+          "tag": "IMG",
+          "cls": "",
+          "u": "-main_70e4489b-4e0c-4f24-b6ce-e134b90b3e7b.jpg?v=1792268462&width=1280"
+        }
+      ],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 1924
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 1924
+        }
+      ],
+      "title": "HP ProBook 640 G2 · Core i5, 6th Gen, 8GB RAM, 256GB Storage · Laptops HUB",
+      "h1": "HP ProBook 640 G2"
+    }
+  ],
+  "summary": [
+    {
+      "label": "home-cold-1",
+      "fcp": 2124,
+      "lcpCount": 0,
+      "h1": "The future ofsmarter laptopshopping."
+    },
+    {
+      "label": "home-cold-2",
+      "fcp": 2856,
+      "lcpCount": 0,
+      "h1": "The future ofsmarter laptopshopping."
+    },
+    {
+      "label": "home-cold-3",
+      "fcp": 2892,
+      "lcpCount": 0,
+      "h1": "The future ofsmarter laptopshopping."
+    },
+    {
+      "label": "collection",
+      "fcp": 2380,
+      "lcpCount": 2,
+      "lastLcp": {
+        "t": 2428,
+        "s": 79686,
+        "tag": "IMG",
+        "cls": "",
+        "u": "1-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800"
+      },
+      "h1": "All laptops"
+    },
+    {
+      "label": "pdp",
+      "fcp": 1924,
+      "lcpCount": 2,
+      "lastLcp": {
+        "t": 2072,
+        "s": 72630,
+        "tag": "IMG",
+        "cls": "",
+        "u": "-main_70e4489b-4e0c-4f24-b6ce-e134b90b3e7b.jpg?v=1792268462&width=1280"
+      },
+      "h1": "HP ProBook 640 G2"
+    }
+  ]
+}

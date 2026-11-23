@@ -1,0 +1,99 @@
+{
+  "at": "2026-11-23T16:43:08.765Z",
+  "results": [
+    {
+      "label": "home-headless",
+      "url": "https://www.laptopshub.pk/",
+      "headless": true,
+      "lcp": [],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 1544
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 1544
+        }
+      ],
+      "vis": "hidden",
+      "sw": false
+    },
+    {
+      "label": "pdp-headless",
+      "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "headless": true,
+      "lcp": [
+        {
+          "t": 1336,
+          "s": 13160,
+          "tag": "DIV"
+        },
+        {
+          "t": 1772,
+          "s": 81075,
+          "tag": "IMG"
+        }
+      ],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 1336
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 1336
+        }
+      ],
+      "vis": "hidden",
+      "sw": false
+    },
+    {
+      "label": "coll-headless",
+      "url": "https://www.laptopshub.pk/collections/laptops",
+      "headless": true,
+      "lcp": [
+        {
+          "t": 1176,
+          "s": 13160,
+          "tag": "DIV"
+        },
+        {
+          "t": 1256,
+          "s": 79686,
+          "tag": "IMG"
+        }
+      ],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 1176
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 1176
+        }
+      ],
+      "vis": "hidden",
+      "sw": false
+    },
+    {
+      "label": "home-headed",
+      "url": "https://www.laptopshub.pk/",
+      "headless": false,
+      "lcp": [],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 1408
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 1408
+        }
+      ],
+      "vis": "hidden",
+      "sw": false
+    }
+  ]
+}

@@ -24,6 +24,7 @@ export function ChromebookSection({ cb, pres = DEFAULT_STOREFRONT_PRESENTATION }
     if (!c) return;
     const mq = matchMedia("(prefers-reduced-motion: reduce)");
     let raf = 0;
+    let armed = false;
     const frame = () => {
       raf = 0;
       const r = c.getBoundingClientRect();
@@ -31,15 +32,37 @@ export function ChromebookSection({ cb, pres = DEFAULT_STOREFRONT_PRESENTATION }
       c.style.setProperty("--cp", (mq.matches ? 0.5 : Math.max(0, Math.min(1, (vh - r.top) / (vh + r.height)))).toFixed(4));
     };
     const sched = () => {
+      if (!armed) return;
       if (!raf) raf = requestAnimationFrame(frame);
     };
-    addEventListener("scroll", sched, { passive: true });
-    addEventListener("resize", sched);
-    sched();
+    const onScroll = () => sched();
+    const onResize = () => sched();
+    const io =
+      typeof IntersectionObserver !== "undefined"
+        ? new IntersectionObserver(
+            ([e]) => {
+              if (!e.isIntersecting && e.boundingClientRect.top > 0) return;
+              if (armed) return;
+              armed = true;
+              addEventListener("scroll", onScroll, { passive: true });
+              addEventListener("resize", onResize);
+              sched();
+            },
+            { rootMargin: "200px 0px" },
+          )
+        : null;
+    if (io) io.observe(c);
+    else {
+      armed = true;
+      addEventListener("scroll", onScroll, { passive: true });
+      addEventListener("resize", onResize);
+      sched();
+    }
     return () => {
       cancelAnimationFrame(raf);
-      removeEventListener("scroll", sched);
-      removeEventListener("resize", sched);
+      io?.disconnect();
+      removeEventListener("scroll", onScroll);
+      removeEventListener("resize", onResize);
     };
   }, []);
 

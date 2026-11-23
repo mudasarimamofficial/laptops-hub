@@ -1,0 +1,479 @@
+{
+  "at": "2026-11-23T15:48:59.394Z",
+  "mobileCold": [
+    {
+      "route": "/",
+      "metrics": {
+        "dpr": 2,
+        "paints": {
+          "first-paint": 8408,
+          "first-contentful-paint": 8408
+        },
+        "lcpMs": null,
+        "lcpUrl": null,
+        "lcpSize": null,
+        "cls": 0,
+        "featured": "Dell Latitude 3440",
+        "promo": true,
+        "title": "Laptops HUB"
+      },
+      "imageBytes": 669381,
+      "imageCount": 15,
+      "consoleErrors": [],
+      "sampleImgs": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-hp-lap.webp?v=1792934111&width=420",
+          "bytes": 36728,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/laptop-hub-hero-lenovo-lap.webp?v=1792934111&width=450",
+          "bytes": 24697,
+          "status": 200
+        },
+        {
+          "url": "https://www.laptopshub.pk/v5/stage.webp",
+          "bytes": 126246,
+          "status": 200
+        },
+        {
+          "url": "https://ronin.pk/cdn/shop/files/preview_images/60e23404277a4066a256fb3afc45c894.thumbnail.0000000000.jpg?v=1780981139&wi",
+          "bytes": 1844,
+          "status": 200
+        },
+        {
+          "url": "https://ronin.pk/cdn/shop/files/preview_images/baa79652b29248b48c21eff60fbe0985.thumbnail.0000000000.jpg?v=1780980252&wi",
+          "bytes": 19738,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "route": "/collections/laptops",
+      "metrics": {
+        "dpr": 2,
+        "paints": {
+          "first-paint": 616,
+          "first-contentful-paint": 616
+        },
+        "lcpMs": null,
+        "lcpUrl": null,
+        "lcpSize": null,
+        "cls": 0,
+        "featured": null,
+        "promo": true,
+        "title": "All laptops · Laptops HUB"
+      },
+      "imageBytes": 150236,
+      "imageCount": 6,
+      "consoleErrors": [],
+      "sampleImgs": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+          "bytes": 8058,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_008833a7-c569-4ae6-8ca2-b0e8653280f8.jpg?v=1792270122&wid",
+          "bytes": 10508,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_4b29281e-26c1-40b2-ba2c-8f909f6862e8.jpg?v=1792270103&wid",
+          "bytes": 31970,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_7c9af791-2f05-46e1-9c3f-d20effe394d3.jpg?v=1792270034&wid",
+          "bytes": 26936,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_96a00075-0ed1-4e80-82e8-2d02c90fc3c9.jpg?v=1792269887&wid",
+          "bytes": 21936,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "route": "/search?q=dell",
+      "metrics": {
+        "dpr": 2,
+        "paints": {
+          "first-paint": 1248,
+          "first-contentful-paint": 1248
+        },
+        "lcpMs": null,
+        "lcpUrl": null,
+        "lcpSize": null,
+        "cls": 0,
+        "featured": null,
+        "promo": true,
+        "title": "Results for “dell” · Laptops HUB"
+      },
+      "imageBytes": 182040,
+      "imageCount": 6,
+      "consoleErrors": [],
+      "sampleImgs": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+          "bytes": 8058,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_a5f4d2b5-ebc0-425d-a2b0-a3ae41add042.jpg?v=1792269965&wid",
+          "bytes": 50828,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_96a00075-0ed1-4e80-82e8-2d02c90fc3c9.jpg?v=1792269887&wid",
+          "bytes": 21936,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_da147c62-da2a-40e6-83f5-97dad243d7a3.jpg?v=1792269861&wid",
+          "bytes": 21344,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_60b0dd22-d70d-40da-a002-72d87971bcea.png?v=1792269836&wid",
+          "bytes": 16622,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "route": "/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "metrics": {
+        "dpr": 2,
+        "paints": {
+          "first-paint": 808,
+          "first-contentful-paint": 808
+        },
+        "lcpMs": null,
+        "lcpUrl": null,
+        "lcpSize": null,
+        "cls": 0,
+        "featured": "More from Dell",
+        "promo": true,
+        "title": "Dell 5400 · Core i5, 8th Gen, 8GB RAM, 256GB Storage · Laptops HUB"
+      },
+      "imageBytes": 90591,
+      "imageCount": 6,
+      "consoleErrors": [],
+      "sampleImgs": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+          "bytes": 8058,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/02-alt02_239dc23d-632c-4369-b956-c2db26ef19ee.jpg?v=1792270143&wi",
+          "bytes": 5150,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+          "bytes": 2890,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_4b660a7f-2d1f-458b-9097-48327a19ce47.jpg?v=1792269630&wid",
+          "bytes": 34430,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_5620fa10-c0f7-4bcb-bebb-1dc3300a8969.jpg?v=1792269768&wid",
+          "bytes": 35882,
+          "status": 200
+        }
+      ]
+    }
+  ],
+  "mobileWarm": [
+    {
+      "route": "/",
+      "metrics": {
+        "dpr": 2,
+        "paints": {
+          "first-paint": 21700,
+          "first-contentful-paint": 21700
+        },
+        "lcpMs": null,
+        "lcpUrl": null,
+        "lcpSize": null,
+        "cls": 0,
+        "featured": "Dell Latitude 3440",
+        "promo": true,
+        "title": "Laptops HUB"
+      },
+      "imageBytes": 669381,
+      "imageCount": 15,
+      "consoleErrors": [],
+      "sampleImgs": [
+        {
+          "url": "https://www.laptopshub.pk/v5/stage.webp",
+          "bytes": 126246,
+          "status": 200
+        },
+        {
+          "url": "https://ronin.pk/cdn/shop/files/preview_images/60e23404277a4066a256fb3afc45c894.thumbnail.0000000000.jpg?v=1780981139&wi",
+          "bytes": 1844,
+          "status": 200
+        },
+        {
+          "url": "https://ronin.pk/cdn/shop/files/preview_images/b6c93ac2e09a49fba5eb347744affbd7.thumbnail.0000000000.jpg?v=1779773491&wi",
+          "bytes": 13286,
+          "status": 200
+        },
+        {
+          "url": "https://ronin.pk/cdn/shop/files/preview_images/d272a9174b5e4461ba1b8bbca796bea2.thumbnail.0000000000.jpg?v=1780980252&wi",
+          "bytes": 30558,
+          "status": 200
+        },
+        {
+          "url": "https://ronin.pk/cdn/shop/files/preview_images/cc38b2f364024547a6930204297784a5.thumbnail.0000000000.jpg?v=1780980251&wi",
+          "bytes": 32428,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "route": "/collections/laptops",
+      "metrics": {
+        "dpr": 2,
+        "paints": {
+          "first-paint": 648,
+          "first-contentful-paint": 648
+        },
+        "lcpMs": null,
+        "lcpUrl": null,
+        "lcpSize": null,
+        "cls": 0,
+        "featured": null,
+        "promo": true,
+        "title": "All laptops · Laptops HUB"
+      },
+      "imageBytes": 150236,
+      "imageCount": 6,
+      "consoleErrors": [],
+      "sampleImgs": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+          "bytes": 8058,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_008833a7-c569-4ae6-8ca2-b0e8653280f8.jpg?v=1792270122&wid",
+          "bytes": 10508,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_4b29281e-26c1-40b2-ba2c-8f909f6862e8.jpg?v=1792270103&wid",
+          "bytes": 31970,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_7c9af791-2f05-46e1-9c3f-d20effe394d3.jpg?v=1792270034&wid",
+          "bytes": 26936,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_96a00075-0ed1-4e80-82e8-2d02c90fc3c9.jpg?v=1792269887&wid",
+          "bytes": 21936,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "route": "/search?q=dell",
+      "metrics": {
+        "dpr": 2,
+        "paints": {
+          "first-paint": 912,
+          "first-contentful-paint": 912
+        },
+        "lcpMs": null,
+        "lcpUrl": null,
+        "lcpSize": null,
+        "cls": 0,
+        "featured": null,
+        "promo": true,
+        "title": "Results for “dell” · Laptops HUB"
+      },
+      "imageBytes": 182040,
+      "imageCount": 6,
+      "consoleErrors": [],
+      "sampleImgs": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+          "bytes": 8058,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_a5f4d2b5-ebc0-425d-a2b0-a3ae41add042.jpg?v=1792269965&wid",
+          "bytes": 50828,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_96a00075-0ed1-4e80-82e8-2d02c90fc3c9.jpg?v=1792269887&wid",
+          "bytes": 21936,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_60b0dd22-d70d-40da-a002-72d87971bcea.png?v=1792269836&wid",
+          "bytes": 16622,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_da147c62-da2a-40e6-83f5-97dad243d7a3.jpg?v=1792269861&wid",
+          "bytes": 21344,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "route": "/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "metrics": {
+        "dpr": 2,
+        "paints": {
+          "first-paint": 576,
+          "first-contentful-paint": 576
+        },
+        "lcpMs": null,
+        "lcpUrl": null,
+        "lcpSize": null,
+        "cls": 0,
+        "featured": "More from Dell",
+        "promo": true,
+        "title": "Dell 5400 · Core i5, 8th Gen, 8GB RAM, 256GB Storage · Laptops HUB"
+      },
+      "imageBytes": 90591,
+      "imageCount": 6,
+      "consoleErrors": [],
+      "sampleImgs": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+          "bytes": 8058,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/03-alt03_f92bafae-5c56-440c-8cb0-f84bb110df23.jpg?v=1792270142&wi",
+          "bytes": 4181,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/02-alt02_239dc23d-632c-4369-b956-c2db26ef19ee.jpg?v=1792270143&wi",
+          "bytes": 5150,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+          "bytes": 2890,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_5620fa10-c0f7-4bcb-bebb-1dc3300a8969.jpg?v=1792269768&wid",
+          "bytes": 35882,
+          "status": 200
+        }
+      ]
+    }
+  ],
+  "desktop": [
+    {
+      "route": "/",
+      "metrics": {
+        "dpr": 1,
+        "paints": {
+          "first-paint": 2860,
+          "first-contentful-paint": 2860
+        },
+        "lcpMs": null,
+        "lcpUrl": null,
+        "lcpSize": null,
+        "cls": 0,
+        "featured": "Dell Latitude 3440",
+        "promo": true,
+        "title": "Laptops HUB"
+      },
+      "imageBytes": 497944,
+      "imageCount": 18,
+      "consoleErrors": [],
+      "sampleImgs": [
+        {
+          "url": "https://www.laptopshub.pk/v5/stage.webp",
+          "bytes": 126246,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/dell-second_-home-sec-front.webp?v=1792935242&width=480",
+          "bytes": 30410,
+          "status": 200
+        },
+        {
+          "url": "https://ronin.pk/cdn/shop/files/preview_images/b6c93ac2e09a49fba5eb347744affbd7.thumbnail.0000000000.jpg?v=1779773491&wi",
+          "bytes": 13286,
+          "status": 200
+        },
+        {
+          "url": "https://ronin.pk/cdn/shop/files/preview_images/60e23404277a4066a256fb3afc45c894.thumbnail.0000000000.jpg?v=1780981139&wi",
+          "bytes": 1844,
+          "status": 200
+        },
+        {
+          "url": "https://ronin.pk/cdn/shop/files/preview_images/d94ca727a1b54495a826611c2b9fe264.thumbnail.0000000000.jpg?v=1780981139&wi",
+          "bytes": 1844,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "route": "/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "metrics": {
+        "dpr": 1,
+        "paints": {
+          "first-paint": 752,
+          "first-contentful-paint": 752
+        },
+        "lcpMs": null,
+        "lcpUrl": null,
+        "lcpSize": null,
+        "cls": 0,
+        "featured": "More from Dell",
+        "promo": true,
+        "title": "Dell 5400 · Core i5, 8th Gen, 8GB RAM, 256GB Storage · Laptops HUB"
+      },
+      "imageBytes": 52194,
+      "imageCount": 8,
+      "consoleErrors": [],
+      "sampleImgs": [
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+          "bytes": 8058,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&wid",
+          "bytes": 1671,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/03-alt03_f92bafae-5c56-440c-8cb0-f84bb110df23.jpg?v=1792270142&wi",
+          "bytes": 2031,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/02-alt02_239dc23d-632c-4369-b956-c2db26ef19ee.jpg?v=1792270143&wi",
+          "bytes": 2205,
+          "status": 200
+        },
+        {
+          "url": "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/01-main_acc278ab-93ea-427c-9f28-7f3b5a6ee82e.jpg?v=1792269437&wid",
+          "bytes": 15122,
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

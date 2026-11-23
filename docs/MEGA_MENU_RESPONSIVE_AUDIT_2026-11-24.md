@@ -1,8 +1,11 @@
 # Mega-menu responsive repair & site audit — 2026-11-24
 
-Branch: `fix/mega-menu-responsive-2026-11-24`  
-Base: `main` @ `6fe4f3dd86c91149563e0c1d150e5555c9c20409`  
-PR #62 (LCP lab): **untouched**
+Shipped on `main`:
+- PR #63 → `611efb91c935a3d982f4923c1b5b35eb00fb9310` (`dpl_8u6nPs4HhbC5RX4HyHznP3HNjj3g`)
+- PR #64 hover-click race → `2e33341f2a138075291dc3c3d4843d04beb501a0` (`dpl_FixJZyXiwNVFq1adMEKdu5yJtPtW`, **READY**)
+
+Base before work: `6fe4f3dd86c91149563e0c1d150e5555c9c20409`  
+PR #62 (LCP lab): **untouched** (still open draft)
 
 ## Mega-menu root causes
 
@@ -28,14 +31,15 @@ PR #62 (LCP lab): **untouched**
 |---|---|
 | Before 1918×542 | `searchOverflow: true`, `closeVisible: false` |
 | After 1754×864 / 1918×542 | `searchOverflow: false`, `closeVisible: true`, `maxLinkW: 190`, `clippedFooter: false`, `docOverflowX: false` |
-| Playwright `mega-menu-responsive.spec.ts` | **4/4 passed** (local `:3020`) |
+| Playwright `mega-menu-responsive.spec.ts` | **5/5 passed** (local `:3020`) |
 | Site audit (7 routes × 6 viewports + mega Close/search) | **0 findings** |
+| Production smoke 1754×864 / 1918×542 | `searchOverflow:false`, `closeVisible:true`, `maxLinkW:190`, `docOverflowX:false` |
 | `npm run build` | pass |
 | `npm run lint` | 0 errors |
 | `npm run test:unit` | pass |
 | PR #62 | not merged / not modified |
 
-Evidence: `docs/visual-evidence/mega-menu-responsive-2026-11-24/` (`before-*`, `after-*`, `*-metrics.json`, `site-audit.json`).
+Evidence: `docs/visual-evidence/mega-menu-responsive-2026-11-24/` (`before-*`, `after-*`, `prod-verify-*`, `*-metrics.json`, `site-audit.json`).
 
 ## Menu groups exercised
 

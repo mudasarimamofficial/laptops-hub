@@ -9,9 +9,14 @@ html {
   scroll-padding-top: 84px;
   /* V5 relies on the UA default line-height; Tailwind preflight would set 1.5. */
   line-height: normal;
+  /* Decorative hero/story ghosts may paint outside the viewport; keep them from creating page scroll. */
+  overflow-x: clip;
   /* Premium scrollbar (Firefox) — Arctic Titanium palette. */
   scrollbar-width: thin;
   scrollbar-color: #9bb0cc #e8eef7;
+}
+body {
+  overflow-x: clip;
 }
 
 /* Premium scrollbar (Chromium / WebKit). Mobile UAs keep overlay system scrollbars. */
@@ -153,19 +158,102 @@ button {
   border-color: var(--lh-action, #2159d4) !important;
 }
 
-/* ── Header / compact grouped mega menu ───────────────────── */
+/* ── Header / content-aware mega menu ─────────────────────── */
+.v5-header-search-label-full {
+  display: none;
+}
+.v5-header-search-label-short {
+  display: inline;
+}
+@media (min-width: 1320px) {
+  .v5-header-search-label-full {
+    display: inline;
+  }
+  .v5-header-search-label-short {
+    display: none;
+  }
+}
+@media (max-width: 1023.98px) and (min-width: 760px) {
+  .v5-header-search-text {
+    display: none;
+  }
+}
+
+.v5-mega-panel {
+  display: flex;
+  flex-direction: column;
+  /* Prefer available space below sticky header; keep panel from dominating short desktops. */
+  max-height: min(440px, calc(100dvh - var(--lh-header-offset, 88px)));
+}
+.v5-mega-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.v5-mega-footer {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--lh-border);
+  background: rgba(255, 255, 255, 0.98);
+}
 .v5-mega-grid {
-  grid-template-columns: minmax(140px, 200px) minmax(0, 1fr);
+  grid-template-columns: minmax(132px, 180px) minmax(0, 1fr);
+  align-items: start;
+  column-gap: 24px;
 }
 .v5-mega-feat {
   display: none;
 }
+.v5-mega-groups {
+  position: sticky;
+  top: 0;
+  max-height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.v5-mega-group-btn {
+  min-height: 40px;
+  padding: 8px 12px;
+}
+.v5-mega-links {
+  min-width: 0;
+  max-width: 100%;
+}
+.v5-mega-links-grid {
+  /* Flex wrap keeps sparse groups compact; items never stretch to fill the middle column. */
+  display: flex;
+  flex-wrap: wrap;
+  align-content: start;
+  justify-content: flex-start;
+  gap: 2px 10px;
+  max-width: 100%;
+}
+.v5-mega-links-grid > a {
+  flex: 0 1 190px;
+  width: 190px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 @media (min-width: 1180px) {
   .v5-mega-grid {
-    grid-template-columns: minmax(160px, 210px) minmax(0, 1fr) minmax(200px, 240px);
+    grid-template-columns: minmax(148px, 190px) minmax(0, 1fr) minmax(190px, 220px);
   }
   .v5-mega-feat {
     display: flex;
+  }
+}
+@media (max-height: 700px) {
+  .v5-mega-panel {
+    max-height: min(360px, calc(100dvh - var(--lh-header-offset, 88px)));
+  }
+  .v5-mega-group-btn {
+    min-height: 36px;
+    padding: 6px 10px;
+  }
+}
+@media (max-height: 580px) {
+  .v5-mega-panel {
+    max-height: calc(100dvh - var(--lh-header-offset, 72px));
   }
 }
 

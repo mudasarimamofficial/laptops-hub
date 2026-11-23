@@ -1,0 +1,456 @@
+{
+  "at": "2026-11-23T20:30:14.056Z",
+  "base": "https://www.laptopshub.pk",
+  "results": [
+    {
+      "id": "1754x864",
+      "width": 1754,
+      "height": 864,
+      "vh": 864,
+      "vw": 1754,
+      "panel": {
+        "w": 1754,
+        "h": 420,
+        "t": 108,
+        "b": 528,
+        "l": 0,
+        "right": 1754
+      },
+      "panelMaxH": "420px",
+      "panelOverflow": "hidden",
+      "links": {
+        "w": 798,
+        "h": 63,
+        "t": 128,
+        "b": 191,
+        "l": 463,
+        "right": 1261
+      },
+      "linkItems": 4,
+      "groupButtons": 9,
+      "groups": {
+        "w": 210,
+        "h": 412,
+        "t": 128,
+        "b": 540,
+        "l": 229,
+        "right": 439
+      },
+      "feat": {
+        "w": 240,
+        "h": 268,
+        "t": 128,
+        "b": 395,
+        "l": 1285,
+        "right": 1525
+      },
+      "search": {
+        "w": 156,
+        "h": 44,
+        "t": 50,
+        "b": 94,
+        "l": 1142,
+        "right": 1297
+      },
+      "searchText": "Search model, processor, RAM",
+      "searchOverflow": true,
+      "searchClientW": 154,
+      "searchScrollW": 230,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 229,
+        "right": 354
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 1467,
+        "right": 1525
+      },
+      "closeVisible": true,
+      "clippedFooter": true,
+      "docOverflowX": true,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\before-1754x864-screen.png"
+    },
+    {
+      "id": "1918x542",
+      "width": 1918,
+      "height": 542,
+      "vh": 542,
+      "vw": 1918,
+      "panel": {
+        "w": 1918,
+        "h": 420,
+        "t": 108,
+        "b": 528,
+        "l": 0,
+        "right": 1918
+      },
+      "panelMaxH": "420px",
+      "panelOverflow": "hidden",
+      "links": {
+        "w": 798,
+        "h": 63,
+        "t": 128,
+        "b": 191,
+        "l": 545,
+        "right": 1343
+      },
+      "linkItems": 4,
+      "groupButtons": 9,
+      "groups": {
+        "w": 210,
+        "h": 412,
+        "t": 128,
+        "b": 540,
+        "l": 311,
+        "right": 521
+      },
+      "feat": {
+        "w": 240,
+        "h": 268,
+        "t": 128,
+        "b": 395,
+        "l": 1367,
+        "right": 1607
+      },
+      "search": {
+        "w": 156,
+        "h": 44,
+        "t": 50,
+        "b": 94,
+        "l": 1224,
+        "right": 1379
+      },
+      "searchText": "Search model, processor, RAM",
+      "searchOverflow": true,
+      "searchClientW": 154,
+      "searchScrollW": 230,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 311,
+        "right": 436
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 1549,
+        "right": 1607
+      },
+      "closeVisible": false,
+      "clippedFooter": true,
+      "docOverflowX": true,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\before-1918x542-screen.png"
+    },
+    {
+      "id": "1366x768",
+      "width": 1366,
+      "height": 768,
+      "vh": 768,
+      "vw": 1366,
+      "panel": {
+        "w": 1366,
+        "h": 420,
+        "t": 108,
+        "b": 528,
+        "l": 0,
+        "right": 1366
+      },
+      "panelMaxH": "420px",
+      "panelOverflow": "hidden",
+      "links": {
+        "w": 798,
+        "h": 63,
+        "t": 128,
+        "b": 191,
+        "l": 269,
+        "right": 1067
+      },
+      "linkItems": 4,
+      "groupButtons": 9,
+      "groups": {
+        "w": 210,
+        "h": 412,
+        "t": 128,
+        "b": 540,
+        "l": 35,
+        "right": 245
+      },
+      "feat": {
+        "w": 240,
+        "h": 268,
+        "t": 128,
+        "b": 395,
+        "l": 1091,
+        "right": 1331
+      },
+      "search": {
+        "w": 156,
+        "h": 44,
+        "t": 50,
+        "b": 94,
+        "l": 948,
+        "right": 1103
+      },
+      "searchText": "Search model, processor, RAM",
+      "searchOverflow": true,
+      "searchClientW": 154,
+      "searchScrollW": 230,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 35,
+        "right": 160
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 1273,
+        "right": 1331
+      },
+      "closeVisible": true,
+      "clippedFooter": true,
+      "docOverflowX": true,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\before-1366x768-screen.png"
+    },
+    {
+      "id": "1280x720",
+      "width": 1280,
+      "height": 720,
+      "vh": 720,
+      "vw": 1280,
+      "panel": {
+        "w": 1280,
+        "h": 420,
+        "t": 108,
+        "b": 528,
+        "l": 0,
+        "right": 1280
+      },
+      "panelMaxH": "420px",
+      "panelOverflow": "hidden",
+      "links": {
+        "w": 718,
+        "h": 63,
+        "t": 128,
+        "b": 191,
+        "l": 266,
+        "right": 984
+      },
+      "linkItems": 4,
+      "groupButtons": 9,
+      "groups": {
+        "w": 210,
+        "h": 412,
+        "t": 128,
+        "b": 540,
+        "l": 32,
+        "right": 242
+      },
+      "feat": {
+        "w": 240,
+        "h": 268,
+        "t": 128,
+        "b": 395,
+        "l": 1008,
+        "right": 1248
+      },
+      "search": {
+        "w": 76,
+        "h": 44,
+        "t": 50,
+        "b": 94,
+        "l": 945,
+        "right": 1020
+      },
+      "searchText": "Search model, processor, RAM",
+      "searchOverflow": true,
+      "searchClientW": 74,
+      "searchScrollW": 230,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 32,
+        "right": 157
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 1190,
+        "right": 1248
+      },
+      "closeVisible": true,
+      "clippedFooter": true,
+      "docOverflowX": true,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\before-1280x720-screen.png"
+    },
+    {
+      "id": "1180x900",
+      "width": 1180,
+      "height": 900,
+      "vh": 900,
+      "vw": 1180,
+      "panel": {
+        "w": 1180,
+        "h": 420,
+        "t": 108,
+        "b": 528,
+        "l": 0,
+        "right": 1180
+      },
+      "panelMaxH": "420px",
+      "panelOverflow": "hidden",
+      "links": {
+        "w": 618,
+        "h": 105,
+        "t": 128,
+        "b": 233,
+        "l": 266,
+        "right": 884
+      },
+      "linkItems": 4,
+      "groupButtons": 9,
+      "groups": {
+        "w": 210,
+        "h": 412,
+        "t": 128,
+        "b": 540,
+        "l": 32,
+        "right": 242
+      },
+      "feat": {
+        "w": 240,
+        "h": 268,
+        "t": 128,
+        "b": 395,
+        "l": 908,
+        "right": 1148
+      },
+      "search": {
+        "w": 34,
+        "h": 44,
+        "t": 50,
+        "b": 94,
+        "l": 945,
+        "right": 979
+      },
+      "searchText": "Search model, processor, RAM",
+      "searchOverflow": true,
+      "searchClientW": 32,
+      "searchScrollW": 230,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 32,
+        "right": 157
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 1090,
+        "right": 1148
+      },
+      "closeVisible": true,
+      "clippedFooter": true,
+      "docOverflowX": true,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\before-1180x900-screen.png"
+    },
+    {
+      "id": "1179x900",
+      "width": 1179,
+      "height": 900,
+      "vh": 900,
+      "vw": 1179,
+      "panel": {
+        "w": 1179,
+        "h": 420,
+        "t": 108,
+        "b": 528,
+        "l": 0,
+        "right": 1179
+      },
+      "panelMaxH": "420px",
+      "panelOverflow": "hidden",
+      "links": {
+        "w": 891,
+        "h": 63,
+        "t": 128,
+        "b": 191,
+        "l": 256,
+        "right": 1147
+      },
+      "linkItems": 4,
+      "groupButtons": 9,
+      "groups": {
+        "w": 200,
+        "h": 412,
+        "t": 128,
+        "b": 540,
+        "l": 32,
+        "right": 232
+      },
+      "feat": {
+        "w": 0,
+        "h": 0,
+        "t": 0,
+        "b": 0,
+        "l": 0,
+        "right": 0
+      },
+      "search": {
+        "w": 307,
+        "h": 44,
+        "t": 50,
+        "b": 94,
+        "l": 613,
+        "right": 919
+      },
+      "searchText": "Search model, processor, RAM",
+      "searchOverflow": false,
+      "searchClientW": 305,
+      "searchScrollW": 305,
+      "footer": {
+        "w": 125,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 32,
+        "right": 157
+      },
+      "close": {
+        "w": 58,
+        "h": 40,
+        "t": 554,
+        "b": 594,
+        "l": 1089,
+        "right": 1147
+      },
+      "closeVisible": true,
+      "clippedFooter": true,
+      "docOverflowX": true,
+      "screenshot": "docs\\visual-evidence\\mega-menu-responsive-2026-11-24\\before-1179x900-screen.png"
+    }
+  ]
+}

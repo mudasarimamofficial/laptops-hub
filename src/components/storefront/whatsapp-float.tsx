@@ -48,7 +48,8 @@ export function WhatsAppFloat({ settings }: { settings: WhatsAppSettings }) {
         width: settings.widgetLabel ? "auto" : 52,
         justifyContent: "center",
         borderRadius: 999,
-        background: "#25D366",
+        // WhatsApp dark green: white text needs ≥4.5:1 (WCAG AA); #25D366 was 1.98:1, #075E54 is 7.67:1 (LH-026).
+        background: "#075E54",
         color: "#FFFFFF",
         fontWeight: 700,
         fontSize: 14,

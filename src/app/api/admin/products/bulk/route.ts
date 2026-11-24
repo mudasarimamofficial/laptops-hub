@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
+import { makeSellableOnActivate, purchasableAfterPrice } from "@/lib/catalog/sellable";
 import { withCatalogRefresh } from "@/lib/catalog/refresh";
 import { isCrossSite } from "@/lib/validation/contact";
 
@@ -64,7 +65,7 @@ async function handlePOST(request: Request) {
       if (item.pricePkr !== undefined || item.inventoryMode !== undefined) {
         const { data: variants } = await supabase
           .from("product_variants")
-          .select("id")
+          .select("id, price_paisa, purchasable")
           .eq("product_id", product.id)
           .order("created_at")
           .limit(1);
@@ -74,8 +75,8 @@ async function handlePOST(request: Request) {
           if (item.pricePkr !== undefined) {
             const price = pkrMajorToPaisa(item.pricePkr);
             vPatch.price_paisa = price;
-            const status = (item.status ?? product.status) as string;
-            vPatch.purchasable = price > 0 && status === "active";
+            const v0 = variants![0];
+            vPatch.purchasable = purchasableAfterPrice(Number(v0.price_paisa), price, !!v0.purchasable);
           }
           if (item.inventoryMode !== undefined) {
             vPatch.inventory_mode = item.inventoryMode;
@@ -84,6 +85,8 @@ async function handlePOST(request: Request) {
           await supabase.from("product_variants").update(vPatch).eq("id", vid);
         }
       }
+
+      if (item.status === "active" && product.status !== "active") await makeSellableOnActivate(supabase, product.id);
 
       results.push({ handle: item.handle, ok: true });
     }

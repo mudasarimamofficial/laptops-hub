@@ -127,7 +127,8 @@ async function handlePOST(request: Request) {
       title: "Default",
       sku: data.sku || null,
       price_paisa: pricePaisa,
-      purchasable: data.status === "active" && pricePaisa > 0,
+      // Sell switch only; drafts stay hidden by status (catalog view and create_cod_order require active).
+      purchasable: pricePaisa > 0,
       inventory_mode: data.inventoryMode,
       quantity_on_hand: data.inventoryMode === "tracked" ? data.quantityOnHand : null,
       option_values: {},

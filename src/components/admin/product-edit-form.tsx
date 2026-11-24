@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatPkr, paisaToMajor } from "@/lib/money";
 import { useHydrated } from "@/lib/ui/use-hydrated";
@@ -52,6 +52,11 @@ export function ProductEditForm(props: Props) {
     selected?.inventoryMode === "tracked" ? "tracked" : "untracked",
   );
   const [quantityOnHand, setQuantityOnHand] = useState(String(selected?.quantityOnHand ?? 0));
+  /** Stock as loaded for the selected variant: what a stock edit is based on (see save()). */
+  const loadedStock = useRef({
+    mode: selected?.inventoryMode === "tracked" ? "tracked" : "untracked",
+    qty: Number(selected?.quantityOnHand ?? 0),
+  });
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -109,6 +114,7 @@ export function ProductEditForm(props: Props) {
       setPricePkr(String(paisaToMajor(v.pricePaisa)));
       setInventoryMode(v.inventoryMode === "tracked" ? "tracked" : "untracked");
       setQuantityOnHand(String(v.quantityOnHand ?? 0));
+      loadedStock.current = { mode: v.inventoryMode === "tracked" ? "tracked" : "untracked", qty: Number(v.quantityOnHand ?? 0) };
     }
   }
 
@@ -132,7 +138,12 @@ export function ProductEditForm(props: Props) {
         body.variantId = variantId;
         body.pricePkr = Number(pricePkr);
         body.inventoryMode = inventoryMode;
-        body.quantityOnHand = inventoryMode === "tracked" ? Number(quantityOnHand) : null;
+        // Send a count only when it was edited (or tracking is being switched on), with the count it was based on:
+        // the server refuses it if an order changed the stock meanwhile, instead of silently overwriting it.
+        if (inventoryMode !== loadedStock.current.mode || Number(quantityOnHand) !== loadedStock.current.qty) {
+          body.quantityOnHand = inventoryMode === "tracked" ? Number(quantityOnHand) : null;
+          body.expectedQuantityOnHand = loadedStock.current.qty;
+        }
       }
       const res = await fetch(`/api/admin/products/${encodeURIComponent(props.handle)}`, {
         method: "PATCH",
@@ -141,9 +152,15 @@ export function ProductEditForm(props: Props) {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+        if (res.status === 409 && typeof data.currentQuantity === "number") {
+          // Show the real count; the next save leaves stock alone unless it is edited again.
+          loadedStock.current = { mode: "tracked", qty: data.currentQuantity };
+          setQuantityOnHand(String(data.currentQuantity));
+        }
         setErr(data.message || data.error || `Save failed (${res.status})`);
         return;
       }
+      loadedStock.current = { mode: inventoryMode, qty: Number(quantityOnHand) };
       setBaseline(snapshot);
       setMsg("Product saved.");
       router.refresh();

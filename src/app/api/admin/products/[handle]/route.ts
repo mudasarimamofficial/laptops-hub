@@ -3,6 +3,8 @@ import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
 import { withCatalogRefresh } from "@/lib/catalog/refresh";
+import { INVENTORY_ADJUST_ROLES, inventoryProblemMessage } from "@/lib/commerce/inventory-adjust";
+import { makeSellableOnActivate, purchasableAfterPrice } from "@/lib/catalog/sellable";
 
 const patchSchema = z
   .object({
@@ -24,6 +26,11 @@ const patchSchema = z
     compareAtPkr: z.number().min(0).max(10_000_000).nullable().optional(),
     inventoryMode: z.enum(["tracked", "untracked"]).optional(),
     quantityOnHand: z.number().int().min(0).max(1_000_000).nullable().optional(),
+    /**
+     * Stock the editor loaded. Required to change the count of a variant that already tracks stock: the change goes
+     * through adjust_inventory (ledger + stale check), so an order placed meanwhile is never overwritten.
+     */
+    expectedQuantityOnHand: z.number().int().nullable().optional(),
     sku: z.string().trim().max(120).nullable().optional(),
     restore: z.boolean().optional(),
   })
@@ -108,6 +115,36 @@ async function handlePATCH(request: Request, ctx: Ctx) {
     if (parsed.data.seoTitle !== undefined) productPatch.seo_title = parsed.data.seoTitle;
     if (parsed.data.seoDescription !== undefined) productPatch.seo_description = parsed.data.seoDescription;
 
+    // Stock change on a variant that already tracks stock: validate before writing anything, so a stale count never
+    // leaves a half-saved product. adjust_inventory re-checks atomically below.
+    let stockSet: { variantId: string; amount: number; expected: number } | null = null;
+    if (parsed.data.variantId && typeof parsed.data.quantityOnHand === "number" && parsed.data.inventoryMode !== "untracked") {
+      const { data: cur } = await supabase
+        .from("product_variants")
+        .select("id, product_id, inventory_mode, quantity_on_hand")
+        .eq("id", parsed.data.variantId)
+        .maybeSingle();
+      if (cur && cur.product_id === existing.id && cur.inventory_mode === "tracked") {
+        const current = Number(cur.quantity_on_hand ?? 0);
+        if (parsed.data.quantityOnHand !== current) {
+          if (!INVENTORY_ADJUST_ROLES.includes(staff.role)) {
+            return NextResponse.json({ error: "forbidden", message: inventoryProblemMessage("forbidden") }, { status: 403 });
+          }
+          if (parsed.data.expectedQuantityOnHand !== current) {
+            return NextResponse.json(
+              {
+                error: "stale_quantity",
+                message: `${inventoryProblemMessage("stale_quantity")} Stock is now ${current}. Nothing was saved.`,
+                currentQuantity: current,
+              },
+              { status: 409 },
+            );
+          }
+          stockSet = { variantId: cur.id, amount: parsed.data.quantityOnHand, expected: current };
+        }
+      }
+    }
+
     if (Object.keys(productPatch).length > 1) {
       const { error } = await supabase.from("products").update(productPatch).eq("id", existing.id);
       if (error) {
@@ -123,7 +160,7 @@ async function handlePATCH(request: Request, ctx: Ctx) {
     if (parsed.data.variantId) {
       const { data: variant, error: vErr } = await supabase
         .from("product_variants")
-        .select("id, product_id, price_paisa, inventory_mode, quantity_on_hand")
+        .select("id, product_id, price_paisa, purchasable, inventory_mode, quantity_on_hand")
         .eq("id", parsed.data.variantId)
         .maybeSingle();
       if (vErr || !variant || variant.product_id !== existing.id) {
@@ -136,25 +173,22 @@ async function handlePATCH(request: Request, ctx: Ctx) {
       const variantPatch: Record<string, unknown> = {};
       if (parsed.data.pricePkr !== undefined) {
         const price = pkrMajorToPaisa(parsed.data.pricePkr);
-        const status = (parsed.data.status ?? existing.status) as string;
         variantPatch.price_paisa = price;
-        variantPatch.purchasable = price > 0 && status === "active";
+        // Keep the variant's Sell switch (set in the variant matrix) unless the price makes it unsellable/sellable.
+        variantPatch.purchasable = purchasableAfterPrice(Number(variant.price_paisa), price, !!variant.purchasable);
       }
       if (parsed.data.compareAtPkr !== undefined) {
         variantPatch.compare_at_paisa =
           parsed.data.compareAtPkr === null ? null : pkrMajorToPaisa(parsed.data.compareAtPkr);
       }
       if (parsed.data.sku !== undefined) variantPatch.sku = parsed.data.sku;
-      if (parsed.data.inventoryMode !== undefined) {
+      // Stock counts: a variant that already tracks stock changes only through adjust_inventory (below). Writing
+      // quantity_on_hand here is limited to switching tracking on (starting count) or off.
+      const wasTracked = variant.inventory_mode === "tracked";
+      if (parsed.data.inventoryMode !== undefined && parsed.data.inventoryMode !== variant.inventory_mode) {
         variantPatch.inventory_mode = parsed.data.inventoryMode;
-        if (parsed.data.inventoryMode === "untracked") {
-          // Preserve history of quantity; clear active on-hand pointer semantics for untracked
-          variantPatch.quantity_on_hand = null;
-        } else if (parsed.data.quantityOnHand !== undefined) {
-          variantPatch.quantity_on_hand = parsed.data.quantityOnHand;
-        }
-      } else if (parsed.data.quantityOnHand !== undefined) {
-        variantPatch.quantity_on_hand = parsed.data.quantityOnHand;
+        if (parsed.data.inventoryMode === "untracked") variantPatch.quantity_on_hand = null;
+        else if (parsed.data.quantityOnHand !== undefined) variantPatch.quantity_on_hand = parsed.data.quantityOnHand;
       }
 
       if (Object.keys(variantPatch).length) {
@@ -165,7 +199,30 @@ async function handlePATCH(request: Request, ctx: Ctx) {
           .eq("product_id", existing.id);
         if (error) return NextResponse.json({ error: "server_error", message: "The change could not be saved. Try again." }, { status: 500 });
       }
+
+      if (stockSet && wasTracked) {
+        const { error } = await supabase.rpc("adjust_inventory", {
+          payload: {
+            variant_id: stockSet.variantId,
+            mode: "set",
+            amount: stockSet.amount,
+            reason: "count_correction",
+            actor_user_id: staff.userId,
+            expected_quantity: stockSet.expected,
+          },
+        });
+        if (error) {
+          const code = (error.message || "").match(/[a-z_]+/)?.[0] ?? "adjust_failed";
+          const known = inventoryProblemMessage(code);
+          return NextResponse.json(
+            { error: known ? code : "adjust_failed", message: `Other changes were saved, but the stock was not changed: ${known ?? "try again."}` },
+            { status: known ? 409 : 500 },
+          );
+        }
+      }
     }
+
+    if (parsed.data.status === "active" && existing.status !== "active") await makeSellableOnActivate(supabase, existing.id);
 
     await supabase.from("audit_logs").insert({
       actor_user_id: staff.userId,

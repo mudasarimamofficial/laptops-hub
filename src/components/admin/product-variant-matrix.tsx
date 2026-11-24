@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import { paisaToMajor } from "@/lib/money";
@@ -85,6 +85,10 @@ export function ProductVariantMatrix({ handle, optionNames, variants, canSetOver
         ],
   );
   const [rows, setRows] = useState<EditableRow[]>(() => variants.map(toEditable));
+  /** Stock per saved variant as last loaded/saved: the server keeps live stock for rows whose count was not edited. */
+  const loadedQty = useRef<Record<string, number>>(
+    Object.fromEntries(variants.filter((v) => v.id).map((v) => [v.id, Number(v.quantityOnHand ?? 0)])),
+  );
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -164,6 +168,8 @@ export function ProductVariantMatrix({ handle, optionNames, variants, canSetOver
             compareAtPkr: r.compareAtPkr === "" ? null : Number(r.compareAtPkr),
             inventoryMode: r.inventoryMode,
             quantityOnHand: r.inventoryMode === "tracked" ? Number(r.quantityOnHand) || 0 : null,
+            // What this row's count was when loaded: the server keeps live stock unless the count was edited.
+            expectedQuantityOnHand: r.id ? (loadedQty.current[r.id] ?? null) : null,
             purchasable: r.purchasable,
             // Only owner/admin send it; for others the server keeps the stored value.
             ...(canSetOversell ? { allowOversell: r.inventoryMode === "tracked" && r.allowOversell } : {}),
@@ -174,9 +180,15 @@ export function ProductVariantMatrix({ handle, optionNames, variants, canSetOver
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
+        if (res.status === 409 && typeof data.variantId === "string" && typeof data.currentQuantity === "number") {
+          // Show the real count for that variant; saving again keeps it unless it is edited.
+          loadedQty.current[data.variantId] = data.currentQuantity;
+          setRows((list) => list.map((r) => (r.id === data.variantId ? { ...r, quantityOnHand: String(data.currentQuantity) } : r)));
+        }
         setErr(data.message || data.error || `Save failed (${res.status})`);
         return;
       }
+      loadedQty.current = Object.fromEntries(rows.filter((r) => r.id).map((r) => [r.id, Number(r.quantityOnHand) || 0]));
       setMsg(data.notice || `Saved ${data.results?.length || rows.length} variants.`);
       router.refresh();
     } catch {

@@ -9,6 +9,7 @@ import {
   publishBlockers,
   splitRows,
   testimonialInputSchema,
+  testimonialSaveErrorMessage,
   toRow,
 } from "../../src/lib/content/testimonials";
 import {
@@ -147,5 +148,13 @@ for (const mod of ["testimonials", "home-sections"]) {
   const src = readFileSync(`src/lib/content/${mod}.ts`, "utf8");
   assert.ok(!/4\.9|\b157\b/.test(src), `${mod} has no hard-coded rating/count`);
 }
+
+// LH-019: a database still enforcing the strict Google-link rule gets a clear message, not "Could not save".
+assert.match(
+  testimonialSaveErrorMessage({ message: 'new row for relation "store_testimonials" violates check constraint "store_testimonials_google_needs_link"' }),
+  /Google Maps link/,
+);
+assert.equal(testimonialSaveErrorMessage({ message: "something else" }), "Could not save. Check the fields and try again.");
+assert.equal(testimonialSaveErrorMessage(null), "Could not save. Check the fields and try again.");
 
 console.log("testimonials-map tests passed");

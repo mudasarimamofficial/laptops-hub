@@ -9,6 +9,7 @@ import fs from "fs";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
 import { assertIsolatedAppAligned } from "../../scripts/test-fixtures/check-isolated-app.mjs";
 import { DEFAULT_SOCIAL_PROOF } from "../../src/lib/content/social-proof";
+import { productJsonLd } from "./helpers/json-ld";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("isolated tests need a local Supabase");
@@ -238,7 +239,9 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     const box = page.getByTestId("pdp-reviews");
     await expect(box.getByText(/No reviews yet/)).toBeVisible();
     await expect(box.getByTestId("review-summary")).toHaveCount(0);
-    expect(await page.locator('script[type="application/ld+json"]').first().textContent()).not.toContain("aggregateRating");
+    const ldBefore = await productJsonLd(page);
+    expect(ldBefore, "product JSON-LD present").not.toBeNull();
+    expect(ldBefore).not.toHaveProperty("aggregateRating");
 
     // Cross-site posts are refused; validation errors never echo DB text.
     const cross = await page.request.post("/api/reviews", { headers: { Origin: "https://evil.example" }, data: { handle: P.handle } });
@@ -280,8 +283,8 @@ test.describe.serial("P1: reels, reviews, blog (isolated)", () => {
     await expect(after.getByTestId("review").filter({ hasText: REVIEWER })).toBeVisible();
     await expect(after.getByTestId("review-summary")).toContainText("4.0 out of 5 · 1 review");
     await expect(after).not.toContainText("qa-reviewer@example.test");
-    const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').first().textContent()) || "{}");
-    expect(ld.aggregateRating).toMatchObject({ ratingValue: 4, reviewCount: 1 });
+    const ld = await productJsonLd(page);
+    expect(ld?.aggregateRating).toMatchObject({ ratingValue: 4, reviewCount: 1 });
     await after.screenshot({ path: `${OUT}/pdp-reviews.png` });
 
     // Rejecting hides it again.

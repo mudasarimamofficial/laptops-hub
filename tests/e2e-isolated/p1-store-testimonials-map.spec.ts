@@ -147,6 +147,18 @@ test.describe.serial("Store reviews + map (isolated)", () => {
       published_at: new Date().toISOString(),
     }));
     expect((await sb.from("store_testimonials").insert(rows)).error).toBeNull();
+    // One entry waiting for approval. Seeded here rather than reused from the editor test, which cleans up its own rows.
+    expect(
+      (
+        await sb.from("store_testimonials").insert({
+          author_name: EDITOR_NAME,
+          body: "Bought a refurbished ThinkPad here; it arrived exactly as described.",
+          source: "website",
+          consent_confirmed: true,
+          status: "pending",
+        })
+      ).error,
+    ).toBeNull();
 
     await signIn(page, "owner");
     await page.goto("/admin/reviews");

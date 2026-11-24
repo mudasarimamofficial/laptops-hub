@@ -193,7 +193,8 @@ Please let me know if this option (or a similar configuration) is available. Tha
                   minHeight: 44,
                   padding: "0 16px",
                   borderRadius: 999,
-                  background: "#25D366",
+                  // WhatsApp dark green: white text needs ≥4.5:1 (WCAG AA); #25D366 was 1.98:1, #075E54 is 7.67:1 (LH-026).
+                  background: "#075E54",
                   color: "#fff",
                   fontWeight: 700,
                   display: "inline-flex",

@@ -16,6 +16,8 @@ import { priceWithCampaign } from "@/lib/commerce/pricing";
 import { productSeoFromV5 } from "@/lib/seo/product-meta";
 import { PriceDisplay } from "@/components/storefront/price-display";
 import { getContactSocial } from "@/lib/content/contact-social-server";
+import { getPublishedThemeGlobals } from "@/lib/content/published-homepage";
+import { withBrand } from "@/lib/content/theme-globals";
 
 export const revalidate = 60;
 
@@ -56,20 +58,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const crumbLink = { color: "var(--lh-ink-2)" } as const;
 const h2 = { margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(26px,2.6vw,36px)", letterSpacing: "-.03em", fontWeight: 700 } as const;
+/** Policy links; labels come from the theme editor (Product pages), destinations are fixed. */
 const POLICIES = [
-  { label: "Delivery", href: "/pages/shipping" },
-  { label: "Returns", href: "/pages/returns" },
-  { label: "Warranty", href: "/pages/warranty" },
+  { copyKey: "pdpPolicyDelivery", href: "/pages/shipping" },
+  { copyKey: "pdpPolicyReturns", href: "/pages/returns" },
+  { copyKey: "pdpPolicyWarranty", href: "/pages/warranty" },
 ];
 
 /** Port of the V5 product template (`isProduct`). */
 export default async function ProductPage({ params }: Props) {
   const { handle } = await params;
-  const [r, checkoutSetting, campaign, contact] = await Promise.all([
+  const [r, checkoutSetting, campaign, contact, tc] = await Promise.all([
     load(handle),
     getStorefrontCheckoutSetting(),
     getActiveAutomaticDiscount().catch(() => null),
     getContactSocial(),
+    getPublishedThemeGlobals(),
   ]);
   if (!r) notFound();
   // Only public policies are linked (published + legally approved); never an unfinished page.
@@ -78,7 +82,7 @@ export default async function ProductPage({ params }: Props) {
   const bid = p.brand.toLowerCase();
   const brandHref = V5_COLS[bid] ? `/collections/${bid}` : `/search?q=${encodeURIComponent(p.brand)}`;
   const intro = p.intro.trim() || `${p.model}${p.config ? ", " + p.config : ""}. Listed in ${(p.sub || p.catLabel).toLowerCase()}s by ${p.brand}.`;
-  const outro = p.intro.trim() ? "" : "Full specifications for this listing are being prepared. Ask us for any detail before you order.";
+  const outro = p.intro.trim() ? "" : tc.pdpNoIntroText;
   const related = v5Related(P, p);
   const reviews = await getApprovedReviews(p.h);
   const origin = siteUrl();
@@ -196,8 +200,8 @@ export default async function ProductPage({ params }: Props) {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,150px),1fr))", gap: 8 }}>
               {policies.map((pl) => (
                 <Link key={pl.href} href={pl.href} className="v5-hov-bd-action" style={{ display: "flex", flexDirection: "column", gap: 3, padding: "12px 14px", borderRadius: 14, background: "#FFFFFF", border: "1px solid var(--lh-border)", color: "var(--lh-ink)" }}>
-                  <span style={{ fontSize: 14, fontWeight: 700 }}>{pl.label}</span>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".06em", color: "var(--lh-ink-2)" }}>READ POLICY</span>
+                  <span style={{ fontSize: 14, fontWeight: 700 }}>{tc[pl.copyKey]}</span>
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".06em", color: "var(--lh-ink-2)" }}>{tc.pdpPolicyCta}</span>
                 </Link>
               ))}
             </div>
@@ -207,9 +211,9 @@ export default async function ProductPage({ params }: Props) {
 
       <div className="v5-pdp-cols" style={{ marginTop: 64, borderRadius: 30, backgroundColor: "var(--lh-navy)", backgroundImage: "radial-gradient(50% 80% at 100% 0%,rgba(var(--lh-iris-rgb),.28),transparent 70%),radial-gradient(40% 60% at 0% 100%,rgba(var(--lh-action-rgb),.28),transparent 70%)", color: "#FFFFFF", padding: "clamp(24px,4vw,48px)", display: "grid", gap: "clamp(24px,4vw,56px)" }}>
         <section aria-labelledby="pdp-specs" style={{ display: "flex", flexDirection: "column", gap: 18, minWidth: 0 }}>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".1em", color: "var(--lh-electric)" }}>SPEC SHEET</span>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".1em", color: "var(--lh-electric)" }}>{tc.pdpSpecKicker}</span>
           <h2 id="pdp-specs" style={h2}>
-            Specifications
+            {tc.pdpSpecHeading}
           </h2>
           <dl style={{ margin: 0, borderRadius: 18, background: "rgba(255,255,255,.04)", border: "1px solid rgba(255,255,255,.1)", overflow: "hidden" }}>
             {v5SpecRows(p).map((row) => (
@@ -221,8 +225,8 @@ export default async function ProductPage({ params }: Props) {
           </dl>
         </section>
         <div style={{ display: "flex", flexDirection: "column", gap: 18, minWidth: 0 }}>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".1em", color: "var(--lh-electric)" }}>LISTING</span>
-          <h2 style={h2}>About this listing</h2>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".1em", color: "var(--lh-electric)" }}>{tc.pdpAboutKicker}</span>
+          <h2 style={h2}>{tc.pdpAboutHeading}</h2>
           <p style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: "var(--lh-on-dark-2)", textWrap: "pretty" }}>{intro}</p>
           <p style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: "var(--lh-on-dark-2)", textWrap: "pretty" }}>{outro}</p>
         </div>
@@ -233,10 +237,10 @@ export default async function ProductPage({ params }: Props) {
       <section aria-labelledby="pdp-related" style={{ marginTop: 64, display: "flex", flexDirection: "column", gap: 24 }}>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
           <h2 id="pdp-related" style={h2}>
-            More from {p.brand}
+            {withBrand(tc.pdpRelatedHeading, p.brand)}
           </h2>
           <Link href={brandHref} style={{ display: "inline-flex", alignItems: "center", minHeight: 44, fontWeight: 700, fontSize: 15, color: "var(--lh-action)" }}>
-            View all →
+            {tc.pdpRelatedCta} →
           </Link>
         </div>
         <div className="v5-card-grid">

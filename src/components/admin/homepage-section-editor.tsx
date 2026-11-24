@@ -24,10 +24,20 @@ import {
   defaultStorySectionSettings,
 } from "@/lib/content/homepage-image-presets";
 import { isSafeCopyHref } from "@/lib/content/home-copy";
-import { GLOBAL_COPY, GLOBAL_COPY_GROUPS, cleanGlobalsForSave } from "@/lib/content/theme-globals";
+import {
+  GLOBAL_COPY,
+  GLOBAL_COPY_GROUPS,
+  GLOBAL_COPY_PANELS,
+  cleanGlobalsForSave,
+  type GlobalCopyPanel,
+} from "@/lib/content/theme-globals";
 
-/** Pseudo-selection id for the site-wide "Header & footer" panel (not a homepage section). */
-const GLOBALS_ID = "__globals__";
+/** Pseudo-selection ids for the site-wide panels (Header & footer, page templates); never a homepage section id. */
+const PANEL_PREFIX = "__panel__:";
+const panelOf = (id: string | null): GlobalCopyPanel | null =>
+  id && id.startsWith(PANEL_PREFIX) ? (id.slice(PANEL_PREFIX.length) as GlobalCopyPanel) : null;
+/** Kept for the existing tests: the Header & footer entry is `theme-globals`, templates `theme-panel-<id>`. */
+const panelTestId = (id: GlobalCopyPanel) => (id === "chrome" ? "theme-globals" : `theme-panel-${id}`);
 
 const STORY_ANGLES = ["front", "left", "right", "rear"] as const;
 
@@ -120,6 +130,7 @@ export function HomepageSectionEditor() {
   }, [dirty]);
 
   const selected = sections.find((s) => s.id === selectedId) || null;
+  const activePanel = GLOBAL_COPY_PANELS.find((p) => p.id === panelOf(selectedId)) ?? null;
   const registry = selected ? SECTION_REGISTRY[selected.type] : null;
 
   function updateSetting(key: string, value: unknown) {
@@ -580,28 +591,39 @@ export function HomepageSectionEditor() {
     <div data-testid="theme-editor-grid" className="grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)_320px]">
       <aside className="min-w-0 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-3 shadow-[var(--adm-shadow)]">
         <p className="px-2 text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">
-          Sections {dirty ? "· unsaved" : ""}
-        </p>
-        <p className="mt-1 px-2 text-xs text-[var(--adm-ink-2)]">
-          Homepage order, top to bottom. Use the arrows to move a section; the hero stays first and the map stays
-          last.
+          Theme {dirty ? "· unsaved changes" : ""}
         </p>
         <p className="sr-only" role="status" aria-live="polite">
           {announce}
         </p>
-        <button
-          type="button"
-          data-testid="theme-globals"
-          disabled={!loaded}
-          onClick={() => setSelectedId(GLOBALS_ID)}
-          aria-current={selectedId === GLOBALS_ID ? "true" : undefined}
-          className={`mt-2 flex w-full items-center gap-2 rounded-lg border border-[var(--adm-border)] px-2 py-2 text-left text-sm ${
-            selectedId === GLOBALS_ID ? "bg-[var(--adm-info-bg)] font-semibold" : "hover:bg-[var(--adm-surface-2)]"
-          } disabled:opacity-50`}
-        >
-          <span className="min-w-0 flex-1 truncate">Header &amp; footer</span>
-          <span className="text-[10px] font-semibold uppercase text-[var(--adm-ink-2)]">All pages</span>
-        </button>
+        <p className="mt-3 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">Site-wide text</p>
+        <ul className="mt-1 space-y-1" data-testid="theme-panel-list">
+          {GLOBAL_COPY_PANELS.map((pn) => {
+            const id = PANEL_PREFIX + pn.id;
+            return (
+              <li key={pn.id}>
+                <button
+                  type="button"
+                  data-testid={panelTestId(pn.id)}
+                  disabled={!loaded}
+                  onClick={() => setSelectedId(id)}
+                  aria-current={selectedId === id ? "true" : undefined}
+                  className={`flex w-full items-center gap-2 rounded-lg border border-[var(--adm-border)] px-2 py-2 text-left text-sm ${
+                    selectedId === id ? "bg-[var(--adm-info-bg)] font-semibold" : "hover:bg-[var(--adm-surface-2)]"
+                  } disabled:opacity-50`}
+                >
+                  <span className="min-w-0 flex-1 truncate">{pn.title}</span>
+                  <span className="text-[10px] font-semibold uppercase text-[var(--adm-ink-2)]">{pn.badge}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="mt-3 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">Homepage sections</p>
+        <p className="mt-1 px-2 text-xs text-[var(--adm-ink-2)]">
+          Top to bottom. Use the arrows to move a section; the hero stays first and the map stays
+          last.
+        </p>
         <ol className="mt-2 space-y-1" data-testid="theme-section-list">
           {sections.map((s, i) => {
             const fixed = FIXED_REASON[s.type];
@@ -787,17 +809,17 @@ export function HomepageSectionEditor() {
       </section>
 
       <aside className="min-w-0 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)]">
-        {selectedId === GLOBALS_ID ? (
+        {activePanel ? (
           <>
-            <h2 className="font-[family-name:var(--font-display)] text-base font-bold">Header &amp; footer</h2>
+            <h2 className="font-[family-name:var(--font-display)] text-base font-bold">{activePanel.title}</h2>
             <p className="mt-1 text-xs text-[var(--adm-ink-2)]" data-testid="theme-globals-note">
-              Text shown on every page. Like homepage changes, it reaches customers only when you publish, and
-              restoring an earlier version restores this text too. The full preview shows homepage sections only; the
-              header and footer there still show the live text until you publish. Menu links themselves are edited
-              under Navigation.
+              {activePanel.note} Like homepage changes, it reaches customers only when you publish, and restoring an
+              earlier version restores this text too. The full preview shows homepage sections only; other pages show
+              the live text until you publish.
+              {activePanel.id === "chrome" ? " Menu links themselves are edited under Navigation." : ""}
             </p>
             <div className="mt-4 max-h-[50vh] space-y-4 overflow-y-auto pr-1">
-              {GLOBAL_COPY_GROUPS.map((grp) => (
+              {GLOBAL_COPY_GROUPS.filter((grp) => grp.panel === activePanel.id).map((grp) => (
                 <fieldset key={grp.id} className="space-y-3" data-testid={`theme-globals-group-${grp.id}`}>
                   <legend className="text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">{grp.title}</legend>
                   {GLOBAL_COPY.filter((f) => f.group === grp.id).map((f) => (

@@ -7,6 +7,7 @@ import { V5ProductCard } from "@/components/commerce/product-card";
 import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
 import { useDialog } from "@/components/storefront/v5/use-dialog";
 import { SORT_OPTS, type CollectionView as View, type FacetOpt } from "@/lib/catalog/v5-collection";
+import { DEFAULT_THEME_GLOBALS, type ThemeGlobals } from "@/lib/content/theme-globals";
 
 /** V5 `cbNeeded`. */
 const CB_NEEDED = [
@@ -23,7 +24,7 @@ const countStyle = { fontFamily: "var(--font-mono)", fontSize: 12, color: "var(-
 const box = { width: 17, height: 17, margin: 0, accentColor: "var(--lh-action)" } as const;
 
 /** Port of the V5 collection / search view (`isCollection`). Filter state lives in the URL. */
-export function CollectionView({ title, view }: { title: string; view: View }) {
+export function CollectionView({ title, view, copy = DEFAULT_THEME_GLOBALS }: { title: string; view: View; copy?: ThemeGlobals }) {
   const router = useRouter();
   const pathname = usePathname();
   const [, start] = useTransition();
@@ -142,13 +143,13 @@ export function CollectionView({ title, view }: { title: string; view: View }) {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,340px),1fr))", gap: 18 }}>
                 <div style={{ position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", gap: 16, padding: "clamp(24px,3vw,36px)", borderRadius: 24, background: "linear-gradient(160deg,#FFFFFF,var(--lh-ice))", border: "1px solid var(--lh-border)" }}>
                   <span style={{ alignSelf: "flex-start", padding: "6px 12px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".12em", whiteSpace: "nowrap" }}>ASK US</span>
-                  <span style={{ fontFamily: "var(--font-display)", fontSize: "clamp(24px,2.4vw,32px)", fontWeight: 700, letterSpacing: "-.03em", lineHeight: 1.1, color: "var(--lh-ink)" }}>No Chromebooks listed right now.</span>
+                  <span style={{ fontFamily: "var(--font-display)", fontSize: "clamp(24px,2.4vw,32px)", fontWeight: 700, letterSpacing: "-.03em", lineHeight: 1.1, color: "var(--lh-ink)" }}>{copy.colCbEmptyHeading}</span>
                   <span style={{ fontSize: 15, lineHeight: 1.6, color: "var(--lh-ink-2)", maxWidth: "52ch" }}>
-                    There are no Chromebooks in the catalog at the moment. Tell us the model, budget or specifications you need and our team can tell you what is available.
+                    {copy.colCbEmptyText}
                   </span>
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 4 }}>
                     <button type="button" onClick={() => setAsking(true)} className="v5-hov-bg-action" style={{ height: 48, padding: "0 22px", border: 0, borderRadius: 999, background: "var(--lh-action)", color: "#FFFFFF", fontSize: 14, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>
-                      Ask about Chromebooks
+                      {copy.colCbAsk}
                     </button>
                     <Link href="/collections/all" className="v5-hov-bd-action" style={{ height: 48, padding: "0 20px", borderRadius: 999, border: "1px solid var(--lh-border)", background: "#FFFFFF", color: "var(--lh-ink)", fontSize: 14, fontWeight: 600, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
                       Browse all products
@@ -169,14 +170,14 @@ export function CollectionView({ title, view }: { title: string; view: View }) {
             ) : null}
             {view.noResults ? (
               <div style={{ padding: "64px 24px", textAlign: "center", background: "#FFFFFF", border: "1px solid var(--lh-border)", borderRadius: 22, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-                <span style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700 }}>No products match these filters</span>
-                <span style={{ fontSize: 15, color: "var(--lh-ink-2)" }}>Remove a filter or browse the full catalog.</span>
+                <span style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700 }}>{copy.colNoResultsHeading}</span>
+                <span style={{ fontSize: 15, color: "var(--lh-ink-2)" }}>{copy.colNoResultsText}</span>
                 <div style={{ display: "flex", gap: 10, marginTop: 6, flexWrap: "wrap", justifyContent: "center" }}>
                   <button type="button" onClick={() => go(view.clearHref)} style={{ height: 46, padding: "0 20px", border: "1px solid var(--lh-border)", borderRadius: 999, background: "#FFFFFF", fontSize: 14, fontWeight: 600, cursor: "pointer", color: "var(--lh-ink)", whiteSpace: "nowrap" }}>
-                    Clear filters
+                    {copy.colClearFilters}
                   </button>
                   <Link href="/collections/all" style={{ height: 46, padding: "0 20px", borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontSize: 14, fontWeight: 700, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
-                    All laptops
+                    {copy.colAllLaptops}
                   </Link>
                 </div>
               </div>
@@ -195,7 +196,7 @@ export function CollectionView({ title, view }: { title: string; view: View }) {
                   Showing {view.shownCount} of {view.resultCount}
                 </span>
                 <Link href={pathname + view.moreHref} scroll={false} replace style={{ height: 48, padding: "0 28px", border: 0, borderRadius: 999, background: "var(--lh-ink)", fontSize: 15, fontWeight: 700, cursor: "pointer", color: "#FFFFFF", display: "flex", alignItems: "center" }}>
-                  Load more
+                  {copy.colLoadMore}
                 </Link>
               </div>
             ) : null}

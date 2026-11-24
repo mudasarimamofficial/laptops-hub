@@ -3,6 +3,7 @@ import { PendingBlock } from "@/components/ui/pending-block";
 import { getV5Catalog, V5_COLS, v5Search } from "@/lib/catalog/v5";
 import { buildCollectionView, type RawParams } from "@/lib/catalog/v5-collection";
 import type { StorefrontCollection } from "@/lib/collections/storefront";
+import { getPublishedThemeGlobals } from "@/lib/content/published-homepage";
 
 /**
  * Server wrapper shared by collection and search routes. `id` is a V5 collection id, `custom` a merchant-made
@@ -36,7 +37,8 @@ export async function CollectionPage({
     const byHandle = new Map(P.map((p) => [p.h, p]));
     base = custom.handles.map((h) => byHandle.get(h)).filter((p): p is (typeof P)[number] => Boolean(p));
   }
+  const copy = await getPublishedThemeGlobals();
   const view = buildCollectionView(base, searchParams, { isChromebooks: id === "chromebooks", extra: isSearch ? { q } : {} });
   const title = isSearch ? `Results for “${q}”` : custom ? custom.title : col!.t;
-  return <CollectionView title={title} view={view} />;
+  return <CollectionView title={title} view={view} copy={copy} />;
 }

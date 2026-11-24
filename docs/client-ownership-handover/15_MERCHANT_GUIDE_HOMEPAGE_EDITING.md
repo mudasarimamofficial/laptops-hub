@@ -41,6 +41,15 @@ stays last (they are built that way). Save draft → Preview → Publish.
 4. The full preview shows homepage sections only; its header and footer still show the live text until you publish.
 5. Links must be a page on this site (for example `/collections/gaming-laptops`) or a full `https://` link.
 
+## Change product-page, collection-page or "not found" text
+Online Store → under **Site-wide text** choose **Product pages**, **Collection pages** or **Page not found**, edit,
+**Save draft**, then **Publish to live site**. Every product (or collection, or missing-page) page changes at once.
+- Product pages: headings such as "Specifications" and "About this listing", the policy link labels, and the related
+  products heading — write `{brand}` where the brand name should appear (for example `More {brand} laptops`).
+- Prices, stock, options, buttons and the product details themselves are edited under **Products**, not here.
+- Collection pages: what shoppers see when filters match nothing, the "Load more" button and the empty-Chromebooks box.
+- Page not found: the headings and messages for a missing page or product, and the button (label and link).
+
 ## Page title ending (SEO)
 Settings → **SEO title suffix**: what follows every page title in Google and browser tabs, e.g. `| Laptops HUB`.
 Leave it empty to keep the standard "· Laptops HUB".
@@ -60,4 +69,5 @@ to see their changes (recommended), or **OK** to replace their draft with yours.
 | Catalog counts and section numbers on/off | Settings → Storefront labels |
 
 ## Not editable yet without a developer
-Product-page, collection-page, cart/checkout and 404 wording; the mega-menu groups; site colours and fonts. These are listed as Phase 2 in `05_THEME_EDITOR_SPEC_AND_ACCEPTANCE.md`.
+Cart/checkout and compare wording, product reviews wording, filter/sort labels; the mega-menu groups; site colours
+and fonts. These are listed as Phase 2 in `05_THEME_EDITOR_SPEC_AND_ACCEPTANCE.md`.

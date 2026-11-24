@@ -1,5 +1,11 @@
 # Resume here
 
+> **2026-11-24 theme Phase 2a (Claude Opus 5.5):** PR #71 merged (`0f9e29d`) and deployed (`dpl_9kgUXMDyyRHpbMDsbpReSSuk66ng`).
+> Online Store → "Header & footer" edits 11 site-wide texts stored in `theme_settings.globals` (draft/publish/restore);
+> draft PUT no longer wipes `theme_settings` (LH-020); nav Guides/Support keyed by id (LH-009); Settings SEO title suffix
+> drives titles (LH-010). Evidence: `docs/client-ownership-handover/18_FINAL_PRODUCTION_EVIDENCE.md`. Open: LH-018,
+> LH-019, LH-022 (isolated-test failures), Phase 2b page templates (PDP/collection/404 copy).
+
 > **2026-11-24 client-ownership audit (Claude Opus 5.5) — read first:** `docs/client-ownership-handover/` (start with
 > `00_EXECUTIVE_STATUS.md`, `02_DEFECT_REGISTER_AND_GAPS.md`). Branch `feat/theme-editor-live-publish-copy-2026-11-24`:
 > theme Publish now goes live without `THEME_PUBLISHED_ENABLED` (emergency off: `THEME_PUBLISHED_DISABLED=1`), 46 editable

@@ -28,3 +28,20 @@
 | `/api/admin/theme/homepage` anonymous | 401 (staff only) |
 | Production data | `theme_publications` 0, `orders` 1 — unchanged by the release; no migrations, no env changes |
 | Owner-session admin check of `/admin/online-store` on production | NOT TESTED (needs the owner's sign-in; engineering does not use the owner password) |
+
+## Phase 2a release — site-wide header/footer copy (verified 2026-11-24, read-only)
+| Check | Result |
+|---|---|
+| PR | https://github.com/mudasarimamofficial/laptops-hub/pull/71 — CI `quality` + Vercel preview pass; merged as `0f9e29de9c9a49a50ea6667ddbdc090b4c02be11` |
+| Deployment | `dpl_9kgUXMDyyRHpbMDsbpReSSuk66ng` READY, target production, aliases `www.laptopshub.pk`, `laptopshub.pk` |
+| Previous deployment (rollback candidate) | `dpl_4tWeJ3nKFXGhKgTqPTEqLjRavuUe` @ `539f370` |
+| `/`, `/collections/all`, `/admin/login` | 200, 200, 200; `/` title "Laptops HUB", H1 V5 default |
+| Header/footer defaults on a non-home page | footer description, "Visit & contact", "Chat on WhatsApp", search label "Search model, processor, RAM", title "All products · Laptops HUB" all present (unchanged) |
+| Mega menu / nav | trigger "Laptops"; "View all products →" `/collections/all`, "Chromebooks →" `/collections/chromebooks`; Guides and Support links present with V5 hrefs (id-based behaviour matches the old label-based output) |
+| Browser | 0 console errors, 0 px horizontal overflow at the pane width |
+| Security headers | nosniff, SAMEORIGIN, Referrer-Policy, Permissions-Policy present; `X-Powered-By` absent |
+| Apex / CRM | `laptopshub.pk` 308 → www; `app.laptopshub.pk` 200 (untouched) |
+| `/api/admin/theme/homepage` anonymous | 401 |
+| Production data | `theme_publications` 0, `orders` 1, `seo_defaults.title_suffix` "" , theme_versions created in last 3 h: 0 — no writes, no migrations, no env changes |
+| Owner editing header/footer on production | NOT TESTED (owner sign-in required; first publish is the merchant's own action) |
+

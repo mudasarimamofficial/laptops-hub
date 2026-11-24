@@ -2,6 +2,10 @@ import assert from "node:assert/strict";
 import {
   DEFAULT_THEME_GLOBALS,
   GLOBAL_COPY,
+  GLOBAL_COPY_GROUPS,
+  GLOBAL_COPY_PANELS,
+  panelFields,
+  withBrand,
   cleanGlobalsForSave,
   globalsFromThemeSettings,
   isDefaultGlobal,
@@ -79,5 +83,31 @@ assert.notEqual(
   draftStateFingerprint(secs, { globals: { footerTagline: "A" } }),
   draftStateFingerprint(secs, { globals: { footerTagline: "B" } }),
 );
+
+// Phase 2b: page templates — defaults equal the V5 text.
+assert.equal(DEFAULT_THEME_GLOBALS.pdpSpecHeading, "Specifications");
+assert.equal(DEFAULT_THEME_GLOBALS.pdpAboutHeading, "About this listing");
+assert.equal(DEFAULT_THEME_GLOBALS.pdpRelatedHeading, "More from {brand}");
+assert.equal(DEFAULT_THEME_GLOBALS.pdpPolicyCta, "READ POLICY");
+assert.equal(DEFAULT_THEME_GLOBALS.colNoResultsHeading, "No products match these filters");
+assert.equal(DEFAULT_THEME_GLOBALS.colLoadMore, "Load more");
+assert.equal(DEFAULT_THEME_GLOBALS.nfTitle, "This page doesn’t exist");
+assert.equal(DEFAULT_THEME_GLOBALS.nfProductTitle, "This product isn’t in the catalog");
+assert.equal(DEFAULT_THEME_GLOBALS.nfButtonHref, "/collections/all");
+assert.equal(withBrand("More from {brand}", "Dell"), "More from Dell");
+assert.equal(withBrand("{brand} & {brand}", "HP"), "HP & HP");
+assert.equal(withBrand("Related", "HP"), "Related");
+// Every field belongs to exactly one panel; panels cover all fields.
+const covered = GLOBAL_COPY_PANELS.flatMap((p) => panelFields(p.id).map((f) => f.key));
+assert.equal(covered.length, GLOBAL_COPY.length);
+assert.equal(new Set(covered).size, GLOBAL_COPY.length);
+for (const f of GLOBAL_COPY) assert.ok(GLOBAL_COPY_GROUPS.some((g) => g.id === f.group), `group for ${f.key}`);
+// Problems are labelled with the panel the merchant sees.
+const p2 = themeGlobalsProblems({ nfButtonHref: "ftp://x", pdpSpecHeading: "s".repeat(61) });
+assert.equal(p2.length, 2, p2.join(" | "));
+assert.ok(p2.some((m) => m.startsWith("Page not found → Button goes to")));
+assert.ok(p2.some((m) => m.startsWith("Product pages → Specifications: heading")));
+// Overrides resolve for templates too.
+assert.equal(themeGlobals({ colLoadMore: " Show more " }).colLoadMore, "Show more");
 
 console.log("theme-globals: ok");

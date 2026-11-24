@@ -1,5 +1,7 @@
 import { NotFoundView } from "@/components/storefront/v5/not-found-view";
+import { getPublishedThemeGlobals } from "@/lib/content/published-homepage";
 
-export default function ProductNotFound() {
-  return <NotFoundView title="This product isn’t in the catalog" msg="The link may point to a product that is no longer listed." />;
+export default async function ProductNotFound() {
+  const c = await getPublishedThemeGlobals();
+  return <NotFoundView title={c.nfProductTitle} msg={c.nfProductText} buttonLabel={c.nfButton} buttonHref={c.nfButtonHref} />;
 }

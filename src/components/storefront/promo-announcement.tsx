@@ -1,7 +1,16 @@
 import Link from "next/link";
 
 /** Slim sitewide promo bar — shown only when an active automatic campaign requests it. */
-export function PromoAnnouncement({ text, href = "/collections/all" }: { text: string; href?: string }) {
+export function PromoAnnouncement({
+  text,
+  href = "/collections/all",
+  ctaLabel = "Shop now",
+}: {
+  text: string;
+  href?: string;
+  /** Theme editor → Header & footer → Promotion bar button. */
+  ctaLabel?: string;
+}) {
   if (!text.trim()) return null;
   return (
     <div
@@ -22,7 +31,7 @@ export function PromoAnnouncement({ text, href = "/collections/all" }: { text: s
       <Link href={href} style={{ color: "inherit", textDecoration: "none" }}>
         {text.trim()}
         <span aria-hidden="true" style={{ marginLeft: 8, opacity: 0.85 }}>
-          → Shop now
+          → {ctaLabel}
         </span>
       </Link>
     </div>

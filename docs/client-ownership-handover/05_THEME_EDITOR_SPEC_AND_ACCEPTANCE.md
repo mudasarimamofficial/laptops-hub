@@ -34,10 +34,42 @@
 Regression: `p1-theme-ordering-preview` (reorder/hide/preview/publish/rollback, editor fit at 1024/1280/1440 px) and
 `p1-storefront-labels`, `home-inquiry` — see `18_FINAL_PRODUCTION_EVIDENCE.md` for the run table.
 
-## Phase 2 — not built yet (honest gap list)
-Shopify-style "Online Store → Themes → Customize" across templates needs, in order of merchant value:
-1. **Global/footer/header settings**: footer tagline and headings, WhatsApp link label, announcement link, header
-   "Laptops" trigger label; nav behaviour keyed by link id instead of label (LH-009).
+## Phase 2a — site-wide header & footer copy (`feat/theme-phase2-global-copy-2026-11-24`)
+- **Storage, no migration:** `theme_versions.theme_settings.globals` of the homepage theme. The publish RPC already
+  copies `theme_settings` into the immutable snapshot, so header/footer text gets draft → publish → restore for free.
+- **Latent bug fixed:** the draft API never sent `theme_settings`, and `save_homepage_draft` replaces it wholesale
+  (`COALESCE(payload->'theme_settings','{}')`), so any stored theme settings were wiped on every save. The API now always
+  sends the stored object, replacing only `globals` when the request carries them. Older clients (sections only) keep
+  the stored text (tested).
+- **Registry:** `src/lib/content/theme-globals.ts` — 11 fields in three groups (Header & menu: menu button, search text
+  ×2, mega-menu "all products" label, second link label + link; Footer: description, contact heading, WhatsApp button;
+  Promotion bar: button label + link). Defaults are the approved V5 text; plain text only, length-capped, links validated
+  by the same rules as homepage buttons; unknown keys dropped on save.
+- **Read path:** `getPublishedThemeGlobals()` (service role, server only, cached 60 s under the `homepage-theme` tag)
+  → storefront layout → header, footer, promotion bar on **every** page. Publish/restore now also expire the whole
+  layout (`revalidatePath("/", "layout")`).
+- **Count text kept honest:** "View all N products →" and the drawer "NEW" badge only appear while the label/link are
+  at their defaults, so a renamed link never inherits a count or "NEW" claim it was not written for.
+- **Nav behaviour by id (LH-009):** "Guides" hiding, the Support link destination and the active state now key off the
+  navigation ids `h-guides` / `h-support` (label fallback for links saved without an id), so renaming a link in
+  Navigation keeps its behaviour.
+- **SEO title suffix (LH-010):** Settings → "SEO title suffix" now drives the page-title template
+  (`"%s " + suffix`); empty keeps the V5 `"%s · Laptops HUB"`. Production value is empty (checked read-only), so titles
+  do not change on deploy.
+- **Editor:** "Header & footer · All pages" entry above the section list; same input/Reset/validation UI as section copy
+  (shared `CopyInput`). Also fixed a race where clicking a panel before the draft finished loading was reset to the
+  first section.
+- **Known limitation:** the full draft preview renders the live header/footer (the storefront layout must stay static),
+  so header/footer edits are seen in the editor fields and on the live site after publishing. Stated in the panel.
+
+### Phase 2a acceptance (isolated, `p2-theme-globals-publish.spec.ts`, 3 tests)
+unsafe link refused (400) · save without `globals` keeps stored text · owner edits 4 fields + invalid link + Reset →
+draft survives reload → public `/collections/all` unchanged → publish → footer description, WhatsApp button, search
+label and mega-menu link change on a non-home page → restore → original text back · SEO suffix changes `<title>`, empty
+restores the V5 template. Screenshots: `docs/evidence/theme-globals/`.
+
+## Phase 2b+ — not built yet (honest gap list)
+1. (done above)
 2. **Content page template**: editable kicker/intro per page (today only title/body are editable).
 3. **Product page template**: section labels (Specifications, About this listing, More from brand), policy link labels,
    section order/visibility — never price/stock/cart logic.

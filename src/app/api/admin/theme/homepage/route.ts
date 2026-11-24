@@ -9,7 +9,8 @@ import { type SectionInstance } from "@/lib/content/site-builder-schema";
 import { homeSectionSettingProblems } from "@/lib/content/home-sections";
 import { homepageLayoutProblems, normalizeHomepageLayout } from "@/lib/content/homepage-layout";
 import { publishedThemesLive } from "@/lib/content/published-homepage";
-import { draftFingerprint } from "@/lib/content/theme-draft-fingerprint";
+import { draftStateFingerprint } from "@/lib/content/theme-draft-fingerprint";
+import { cleanGlobalsForSave, globalsFromThemeSettings, themeGlobalsProblems } from "@/lib/content/theme-globals";
 
 /** What customers see right now, for the editor's explanation. */
 const liveState = () => ({ publishedThemesEnabled: publishedThemesLive() });
@@ -32,6 +33,11 @@ const saveSchema = z.object({
   baseFingerprint: z.string().max(80).optional(),
   /** Explicit "overwrite the other person's draft" after the editor has shown the conflict. */
   overwrite: z.boolean().optional(),
+  /**
+   * Site-wide copy (header, menu, footer, promotion bar) → theme_settings.globals. Omitted by older clients: the
+   * stored value is then kept unchanged.
+   */
+  globals: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -93,9 +99,10 @@ export async function GET() {
         migrationRequired: false,
         versionId: version?.id ?? null,
         label: version?.label ?? null,
-        draftFingerprint: draftFingerprint(version?.sections ?? null),
+        draftFingerprint: draftStateFingerprint(version?.sections ?? null, version?.theme_settings ?? null),
         sections,
         themeSettings: version?.theme_settings ?? {},
+        globals: globalsFromThemeSettings(version?.theme_settings),
         livePublishedVersionId: publication?.published_version_id ?? null,
         ...liveState(),
         publishedVersions: publishedList || [],
@@ -119,6 +126,7 @@ export async function PUT(request: Request) {
     const problems = [
       ...homepageLayoutProblems(parsed.data.sections),
       ...homeSectionSettingProblems(parsed.data.sections),
+      ...themeGlobalsProblems(parsed.data.globals),
     ];
     if (problems.length) {
       return NextResponse.json({ error: "validation_failed", message: problems.join(" ") }, { status: 400 });
@@ -142,13 +150,13 @@ export async function PUT(request: Request) {
 
     const { data: existing } = await supabase
       .from("theme_versions")
-      .select("id, sections")
+      .select("id, sections, theme_settings")
       .eq("template_id", template.id)
       .eq("label", "working-draft")
       .maybeSingle();
 
     // Optimistic concurrency: refuse to overwrite a draft saved by someone else since this editor loaded it.
-    const currentFingerprint = draftFingerprint(existing?.sections ?? null);
+    const currentFingerprint = draftStateFingerprint(existing?.sections ?? null, existing?.theme_settings ?? null);
     if (parsed.data.baseFingerprint && !parsed.data.overwrite && parsed.data.baseFingerprint !== currentFingerprint) {
       return NextResponse.json(
         {
@@ -161,11 +169,25 @@ export async function PUT(request: Request) {
       );
     }
 
+    // save_homepage_draft replaces theme_settings wholesale, so always send the full object: the stored settings,
+    // with `globals` replaced only when this request carries them.
+    const storedSettings =
+      existing?.theme_settings && typeof existing.theme_settings === "object" && !Array.isArray(existing.theme_settings)
+        ? (existing.theme_settings as Record<string, unknown>)
+        : {};
+    const themeSettings: Record<string, unknown> = { ...storedSettings };
+    if (parsed.data.globals !== undefined) {
+      const g = cleanGlobalsForSave(parsed.data.globals);
+      if (Object.keys(g).length) themeSettings.globals = g;
+      else delete themeSettings.globals;
+    }
+
     const { data: saved, error: saveErr } = await supabase.rpc("save_homepage_draft", {
       payload: {
         actor_user_id: staff.userId,
         // Saved in the order given (validated above); marks the layout as ordered.
         sections: normalizeHomepageLayout(parsed.data.sections as SectionInstance[]),
+        theme_settings: themeSettings,
       },
     });
     if (saveErr) {
@@ -174,14 +196,18 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "draft_save_failed", message: msg }, { status });
     }
     const versionId = (saved as { version_id?: string } | null)?.version_id || existing?.id || null;
-    const { data: after } = await supabase.from("theme_versions").select("sections").eq("id", versionId).maybeSingle();
+    const { data: after } = await supabase
+      .from("theme_versions")
+      .select("sections, theme_settings")
+      .eq("id", versionId)
+      .maybeSingle();
 
     return NextResponse.json(
       {
         ok: true,
         published: false,
         versionId,
-        draftFingerprint: draftFingerprint(after?.sections ?? null),
+        draftFingerprint: draftStateFingerprint(after?.sections ?? null, after?.theme_settings ?? null),
         notice: "Draft saved. Customers still see the currently published homepage until you press Publish.",
       },
       { headers: { "Cache-Control": "no-store" } },

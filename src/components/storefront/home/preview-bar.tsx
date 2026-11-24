@@ -8,13 +8,27 @@ const MODES: { mode: PreviewMode; label: string }[] = [
 ];
 
 /**
- * Staff-only banner above the previewed homepage: what is shown, how it compares with what customers see, and the
- * way back to the editor. Only rendered by /preview/homepage (which answers 404 to everyone but staff).
+ * Staff-only banner above a previewed template: what is shown, how it compares with what customers see, and the
+ * way back to the editor. Only rendered by the /preview/* routes (which answer 404 to everyone but staff).
+ * `kind` names the template ("homepage", "product", …) and prefixes the test ids; `basePath` is the preview route.
  */
-export function PreviewBar({ src, flagOn }: { src: PreviewSource; flagOn: boolean }) {
+export function PreviewBar({
+  src,
+  flagOn,
+  kind = "homepage",
+  title = "Homepage",
+  basePath = "/preview/homepage",
+}: {
+  src: PreviewSource;
+  flagOn: boolean;
+  kind?: string;
+  title?: string;
+  basePath?: string;
+}) {
   const live = flagOn
     ? "Customers see the published version (published themes are switched on)."
-    : "Customers see the V5 default: published themes are switched off, so publishing does not change the live homepage yet.";
+    : `Customers see the V5 default: published themes are switched off, so publishing does not change the live ${title.toLowerCase()} yet.`;
+  const sep = basePath.includes("?") ? "&" : "?";
   const shown =
     src.mode === "default"
       ? "the built-in V5 default layout"
@@ -27,23 +41,23 @@ export function PreviewBar({ src, flagOn }: { src: PreviewSource; flagOn: boolea
           : `the published version ${src.versionLabel ?? ""}`.trim();
   return (
     <div
-      data-testid="homepage-preview-bar"
+      data-testid={`${kind}-preview-bar`}
       role="region"
-      aria-label="Homepage preview"
+      aria-label={`${title} preview`}
       style={{ background: "var(--lh-navy)", color: "#fff", fontSize: 13, lineHeight: 1.45 }}
     >
       <div style={{ maxWidth: 1360, margin: "0 auto", padding: "10px clamp(16px,3vw,32px)", display: "flex", flexWrap: "wrap", gap: "8px 16px", alignItems: "center" }}>
         <p style={{ margin: 0, flex: "1 1 320px" }}>
           <strong>Draft preview only — customers cannot see this page.</strong> Showing{" "}
-          <span data-testid="homepage-preview-shown">{shown}</span>. {live} Links open the live store.
+          <span data-testid={`${kind}-preview-shown`}>{shown}</span>. {live} Links open the live store.
         </p>
         <nav aria-label="Compare versions" style={{ display: "flex", gap: 6 }}>
           {MODES.map((m) => (
             <Link
               key={m.mode}
-              href={`/preview/homepage?v=${m.mode}`}
+              href={`${basePath}${sep}v=${m.mode}`}
               aria-current={m.mode === src.mode ? "page" : undefined}
-              data-testid={`homepage-preview-mode-${m.mode}`}
+              data-testid={`${kind}-preview-mode-${m.mode}`}
               style={{
                 padding: "5px 10px",
                 borderRadius: 999,
@@ -58,7 +72,7 @@ export function PreviewBar({ src, flagOn }: { src: PreviewSource; flagOn: boolea
             </Link>
           ))}
         </nav>
-        <Link href="/admin/online-store" target="_top" data-testid="homepage-preview-back" style={{ color: "#fff", fontWeight: 700, textDecoration: "underline" }}>
+        <Link href="/admin/online-store" target="_top" data-testid={`${kind}-preview-back`} style={{ color: "#fff", fontWeight: 700, textDecoration: "underline" }}>
           Back to editor
         </Link>
       </div>

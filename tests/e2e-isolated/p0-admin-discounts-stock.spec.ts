@@ -2,9 +2,9 @@
  * Admin P0 fixes (ISOLATED stack only):
  *  1. Discounts: the owner can CREATE a discount from the admin UI (the form used to send `id: ""`, so every create
  *     failed with 400), and can re-save one whose dates came back from Postgres as "+00:00".
- *  2. Product edit: saving other fields never resets stock to the count loaded with the page (an order placed in
- *     between used to be silently undone); a stale stock edit is refused with the real count; a fresh stock edit goes
- *     through the inventory ledger.
+ *  2. Product edit and variant matrix: saving never resets stock to the count loaded with the page (an order placed
+ *     in between used to be silently undone); a stale stock edit is refused with the real count; a fresh stock edit
+ *     on the product form goes through the inventory ledger.
  * QA rows are created on the local database and removed afterwards; the product is restored to its starting state.
  */
 import { expect, test, type Page } from "@playwright/test";
@@ -85,7 +85,7 @@ test.describe.serial("Admin P0: discounts create/edit, stock not overwritten (is
   test("product save keeps an order's stock change; stale stock edit refused; fresh edit is ledgered", async ({ page }) => {
     await signIn(page);
     await page.goto(`/admin/products/${encodeURIComponent(PRODUCT.handle)}`);
-    const qty = page.getByLabel("Quantity on hand");
+    const qty = page.getByLabel("Quantity on hand", { exact: true });
     await expect(qty).toHaveValue("5");
 
     // An order comes in while the page is open: 5 → 3.
@@ -113,5 +113,20 @@ test.describe.serial("Admin P0: discounts create/edit, stock not overwritten (is
     expect((await sb.from("product_variants").select("quantity_on_hand").eq("id", PRODUCT.variantId).single()).data!.quantity_on_hand).toBe(7);
     const { count: ledgerAfter } = await sb.from("inventory_ledger").select("*", { count: "exact", head: true }).eq("variant_id", PRODUCT.variantId);
     expect((ledgerAfter ?? 0) - (ledgerBefore ?? 0)).toBe(1);
+
+    // Variant matrix (absolute counts for every row): an unedited row keeps live stock; a stale edit is refused.
+    await page.reload();
+    const mqty = page.getByLabel(/^Quantity on hand for /).first();
+    await expect(mqty).toHaveValue("7");
+    await sb.from("product_variants").update({ quantity_on_hand: 6 }).eq("id", PRODUCT.variantId); // another order
+    await page.getByRole("button", { name: "Save variants" }).click();
+    await expect(page.getByText(/Saved \d+ variants?/)).toBeVisible();
+    expect((await sb.from("product_variants").select("quantity_on_hand").eq("id", PRODUCT.variantId).single()).data!.quantity_on_hand).toBe(6);
+    await sb.from("product_variants").update({ quantity_on_hand: 4 }).eq("id", PRODUCT.variantId); // and another
+    await mqty.fill("9");
+    await page.getByRole("button", { name: "Save variants" }).click();
+    await expect(page.getByText(/now has 4/)).toBeVisible();
+    await expect(mqty).toHaveValue("4");
+    expect((await sb.from("product_variants").select("quantity_on_hand").eq("id", PRODUCT.variantId).single()).data!.quantity_on_hand).toBe(4);
   });
 });

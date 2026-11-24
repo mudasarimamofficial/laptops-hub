@@ -6,6 +6,7 @@ import {
   staffErrorResponse,
 } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
+import { INVENTORY_ADJUST_ROLES, inventoryProblemMessage } from "@/lib/commerce/inventory-adjust";
 import {
   generateVariantMatrix,
   normalizeOptionName,
@@ -31,6 +32,8 @@ const variantRowSchema = z.object({
   compareAtPkr: z.number().min(0).max(10_000_000).nullable().optional(),
   inventoryMode: z.enum(["tracked", "untracked"]).default("untracked"),
   quantityOnHand: z.number().int().min(0).max(1_000_000).nullable().optional(),
+  /** Count the editor loaded for this row; lets the server tell an edit from a stale copy (see handlePUT). */
+  expectedQuantityOnHand: z.number().int().nullable().optional(),
   purchasable: z.boolean().optional(),
   /** "Continue selling when out of stock". Omitted → the stored value is kept. Only owner/admin may change it. */
   allowOversell: z.boolean().optional(),
@@ -143,9 +146,42 @@ async function handlePUT(request: Request, ctx: Ctx) {
     // keeps what is stored (it used to reset to false on every save).
     const { data: storedRows } = await supabase
       .from("product_variants")
-      .select("id, allow_oversell")
+      .select("id, title, allow_oversell, inventory_mode, quantity_on_hand")
       .eq("product_id", product.id);
     const storedOversell = new Map((storedRows || []).map((r) => [r.id as string, r.allow_oversell === true]));
+
+    // Stock counts. sync_product_variants writes absolute quantities, so a save used to undo any order placed while
+    // the matrix was open. For a variant that already tracks stock: an unedited count is replaced by the live count;
+    // an edited count must be based on the live count (else 409, nothing saved) and needs an inventory role.
+    const stored = new Map((storedRows || []).map((r) => [r.id as string, r]));
+    const liveQty = new Map<string, number>();
+    for (const row of parsed.data.variants) {
+      const cur = row.id ? stored.get(row.id) : undefined;
+      if (!cur || cur.inventory_mode !== "tracked" || row.inventoryMode !== "tracked") continue;
+      const live = Number(cur.quantity_on_hand ?? 0);
+      const sent = row.quantityOnHand ?? 0;
+      const expected = row.expectedQuantityOnHand;
+      const edited = expected === undefined || expected === null ? sent !== live : sent !== expected;
+      if (!edited) {
+        liveQty.set(cur.id as string, live);
+        continue;
+      }
+      if (sent === live) continue;
+      if (!INVENTORY_ADJUST_ROLES.includes(staff.role)) {
+        return NextResponse.json({ error: "forbidden", message: inventoryProblemMessage("forbidden") }, { status: 403 });
+      }
+      if (expected !== undefined && expected !== null && expected !== live) {
+        return NextResponse.json(
+          {
+            error: "stale_quantity",
+            message: `${inventoryProblemMessage("stale_quantity")} "${cur.title}" now has ${live}. Nothing was saved.`,
+            variantId: cur.id,
+            currentQuantity: live,
+          },
+          { status: 409 },
+        );
+      }
+    }
     const canSetOversell = staff.role === "owner" || staff.role === "admin";
     for (const row of parsed.data.variants) {
       if (row.allowOversell === undefined) continue;
@@ -171,7 +207,8 @@ async function handlePUT(request: Request, ctx: Ctx) {
         price_paisa: pkrMajorToPaisa(row.pricePkr),
         compare_at_paisa: row.compareAtPkr == null ? null : pkrMajorToPaisa(row.compareAtPkr),
         inventory_mode: row.inventoryMode,
-        quantity_on_hand: row.inventoryMode === "tracked" ? (row.quantityOnHand ?? 0) : null,
+        quantity_on_hand:
+          row.inventoryMode === "tracked" ? (row.id && liveQty.has(row.id) ? liveQty.get(row.id)! : (row.quantityOnHand ?? 0)) : null,
         purchasable: row.purchasable !== false,
         allow_oversell:
           row.inventoryMode === "tracked"

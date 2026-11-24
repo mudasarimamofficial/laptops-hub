@@ -17,7 +17,9 @@ import {
 } from "@/components/storefront/home/home-sections";
 import { PendingBlock } from "@/components/ui/pending-block";
 import { HomeInquirySection } from "@/components/storefront/home/home-inquiry";
-import { confirmedPhones, telHref } from "@/lib/business";
+import { getContactSocial } from "@/lib/content/contact-social-server";
+import { enabledPhones, telHref } from "@/lib/content/contact-social";
+import { homeCopy } from "@/lib/content/home-copy";
 import { contentVisibility } from "@/lib/content/pages";
 import { getStorefrontPresentation } from "@/lib/content/storefront-presentation-server";
 import { getPublishedReels } from "@/lib/content/reels-server";
@@ -87,7 +89,7 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
     );
   }
 
-  const [pres, reels, social, testimonials, vis, merchBadges, campaign] = await Promise.all([
+  const [pres, reels, social, testimonials, vis, merchBadges, campaign, contact] = await Promise.all([
     getStorefrontPresentation(),
     getPublishedReels(),
     getSocialProofSettings(),
@@ -95,6 +97,7 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
     contentVisibility(),
     getMerchBadges(),
     getActiveAutomaticDiscount().catch(() => null),
+    getContactSocial(),
   ]);
   /** Active selling price (campaign applied once). Catalog list prices stay untouched. */
   const sellFmt = (listPaisa: number) => fmtPkr(priceWithCampaign(listPaisa, campaign).sellingPaisa);
@@ -132,13 +135,15 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
   const nums = sectionNumbers(layout);
   const presFor = (type: SectionType) => (nums[type] ? { ...pres, sectionNumber: nums[type] } : pres);
   const reviewsCfg = reviewsSettings(fromTheme ? of("v5_store_reviews")?.settings : undefined);
+  /** Merchant copy of a section (published layout only; otherwise the approved V5 text). */
+  const copyFor = (type: SectionType) => homeCopy(type, fromTheme ? of(type)?.settings : undefined);
 
   const hs = HM.specs;
   const os = hs["Operating system"];
   const storyRows = [
     ["DISPLAY", hs.Display ? hs.Display.replace(" Display", "") : null],
     // V5 shows the cleaned processor line for the 7420; other fallbacks derive it from the listing.
-    ["PROCESSOR", HM.h === HM_HANDLE ? "Core i5-1145G7 · 11th gen" : HM.cpu ? cpuFmt(HM.cpu) + (HM.gen ? " · " + ord(HM.gen) + " gen" : "") : null],
+    ["PROCESSOR", HM.h === DEFAULT_HM ? "Core i5-1145G7 · 11th gen" : HM.cpu ? cpuFmt(HM.cpu) + (HM.gen ? " · " + ord(HM.gen) + " gen" : "") : null],
     ["MEMORY · STORAGE", (HM.ramN ? HM.ramN + "GB RAM" : "") + (HM.stoN ? " · " + stoFmt(HM.stoN) : "")],
     ["GRAPHICS · OS", [hs.Graphics, os].filter(Boolean).join(" · ")],
   ]
@@ -274,6 +279,7 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
           }}
           side1={H1 ? heroShot(H1, "side1", heroSettings) : null}
           side2={H2 ? heroShot(H2, "side2", heroSettings) : null}
+          copy={copyFor("v5_cinematic_hero")}
         />
       );
     },
@@ -301,10 +307,11 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
           return { src: resolved.src, cutout: resolved.cutout };
         })}
         rows={storyRows}
+        copy={copyFor("v5_product_story")}
       />
     ),
-    v5_chromebook: () => <ChromebookSection cb={cb} pres={presFor("v5_chromebook")} />,
-    v5_brand_grid: () => <BrandSection tiles={brandTiles} pres={presFor("v5_brand_grid")} />,
+    v5_chromebook: () => <ChromebookSection cb={cb} pres={presFor("v5_chromebook")} copy={copyFor("v5_chromebook")} />,
+    v5_brand_grid: () => <BrandSection tiles={brandTiles} pres={presFor("v5_brand_grid")} copy={copyFor("v5_brand_grid")} />,
     v5_featured_products: () => {
       // Prefer staff-assigned Featured badges; fill remaining slots from available catalog stock.
       const featuredHandles = new Set(
@@ -323,20 +330,22 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
           brandTotal={brandN}
           accCount={accN}
           pres={presFor("v5_featured_products")}
+          copy={copyFor("v5_featured_products")}
         />
       );
     },
-    v5_promo: () => <PromoSection promo={promo} pres={presFor("v5_promo")} />,
-    v5_spec_filters: () => <SpecSection links={quickLinks} pres={presFor("v5_spec_filters")} />,
+    v5_promo: () => <PromoSection promo={promo} pres={presFor("v5_promo")} copy={copyFor("v5_promo")} />,
+    v5_spec_filters: () => <SpecSection links={quickLinks} pres={presFor("v5_spec_filters")} copy={copyFor("v5_spec_filters")} />,
     v5_new_gen: () => (
       <NewGenSection
         pres={presFor("v5_new_gen")}
         cards={[...newGen].sort((x, y) => (y.gen ?? 0) - (x.gen ?? 0) || x.i - y.i).slice(0, 10).map(v5Card)}
         count={newGen.length}
+        copy={copyFor("v5_new_gen")}
       />
     ),
-    v5_budget_bands: () => <BudgetSection tiles={["under-40k", "40k-60k", "over-60k"].map((id) => v5Link(P, id))} pres={presFor("v5_budget_bands")} />,
-    v5_compare_demo: () => <CompareDemoSection demo={cmpDemo} pres={presFor("v5_compare_demo")} />,
+    v5_budget_bands: () => <BudgetSection tiles={["under-40k", "40k-60k", "over-60k"].map((id) => v5Link(P, id))} pres={presFor("v5_budget_bands")} copy={copyFor("v5_budget_bands")} />,
+    v5_compare_demo: () => <CompareDemoSection demo={cmpDemo} pres={presFor("v5_compare_demo")} copy={copyFor("v5_compare_demo")} />,
     // Published store testimonials only; nothing renders when there are none.
     v5_store_reviews: () =>
       testimonials.length ? (
@@ -349,10 +358,12 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
       ) : null,
     v5_home_inquiry: () => (
       <HomeInquirySection
-        phones={confirmedPhones().map((p) => ({ display: p.display, href: telHref(p) }))}
+        // Same phone list as the footer (Admin → Settings → Contact & social), so one edit updates both.
+        phones={enabledPhones(contact).map((p) => ({ display: p.display, href: telHref(p.tel) }))}
         privacyHref={vis.pages.privacy ? "/pages/privacy" : null}
         showSectionNumbers={pres.showSectionNumbers}
         sectionNumber={nums.v5_home_inquiry}
+        copy={copyFor("v5_home_inquiry")}
       />
     ),
     v5_store_map: () => null, // rendered after the footer

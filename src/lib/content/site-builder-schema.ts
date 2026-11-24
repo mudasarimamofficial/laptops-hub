@@ -8,6 +8,7 @@ import {
   defaultStorySectionSettings,
 } from "@/lib/content/homepage-image-presets";
 import { defaultMapSettings, defaultReviewsSettings } from "@/lib/content/home-sections";
+import { HOME_COPY } from "@/lib/content/home-copy";
 
 export type SectionType =
   | "v5_cinematic_hero"
@@ -46,8 +47,16 @@ export type SectionField = {
     | "url"
     | "image_url"
     | "angle_images"
-    | "select";
+    | "select"
+    /** Merchant copy link: site path, #anchor or https URL (see home-copy.ts). */
+    | "link";
   help?: string;
+  /** Approved default text for merchant copy fields (shown as placeholder; empty = default). */
+  defaultText?: string;
+  /** Max characters for merchant copy fields. */
+  max?: number;
+  /** Marks a merchant copy field (text/link resolved through homeCopy). */
+  copy?: boolean;
   /** For kind "select". */
   options?: { value: string; label: string }[];
   /** When set, Reset restores this HTTPS URL. */
@@ -215,6 +224,16 @@ export const SECTION_REGISTRY: Record<
     ],
   },
 };
+
+// Merchant copy fields (headings, kickers, intros, button labels/links) come first in each section's settings panel.
+for (const [type, fields] of Object.entries(HOME_COPY) as [SectionType, NonNullable<(typeof HOME_COPY)[SectionType]>][]) {
+  SECTION_REGISTRY[type].fields = [
+    ...fields.map(
+      (f): SectionField => ({ key: f.key, label: f.label, kind: f.kind, help: f.help, defaultText: f.default, max: f.max, copy: true }),
+    ),
+    ...SECTION_REGISTRY[type].fields,
+  ];
+}
 
 /**
  * Default V5 homepage sections, in the approved V5 order (see homepage-layout.ts: hero always first, map always

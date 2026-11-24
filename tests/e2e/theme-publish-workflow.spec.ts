@@ -1,6 +1,6 @@
 /**
  * Authenticated browser theme workflow against local Supabase.
- * Requires: NEXT_PUBLIC_SUPABASE_* local, THEME_PUBLISHED_ENABLED=1 on the app under test,
+ * Requires: NEXT_PUBLIC_SUPABASE_* local, published themes live by default on the app under test (THEME_PUBLISHED_DISABLED unset),
  * Playwright Chromium, and migrations through 20261025150000.
  */
 import { expect, test, type Browser, type Page } from "@playwright/test";
@@ -209,7 +209,7 @@ test.describe.serial("theme publish/rollback browser workflow", () => {
     });
     await expect(page.getByTestId("theme-publish")).toBeEnabled({ timeout: 20_000 });
     await page.getByTestId("theme-publish").click();
-    await expect(page.getByTestId("theme-notice")).toContainText(/Published immutable snapshot/i, {
+    await expect(page.getByTestId("theme-notice")).toContainText(/Published. Customers see this homepage/i, {
       timeout: 45_000,
     });
 

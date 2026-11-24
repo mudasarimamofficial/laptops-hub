@@ -143,7 +143,7 @@ export async function POST(request: Request) {
         label: result.label,
         sectionCount: result.section_count,
         notice:
-          "Published immutable snapshot. Visitors see it when THEME_PUBLISHED_ENABLED=1. Draft rows were not used as the live pointer.",
+          "Published. Customers see this homepage within about a minute. You can restore an earlier version under Published history.",
       },
       { headers: { "Cache-Control": "no-store" } },
     );

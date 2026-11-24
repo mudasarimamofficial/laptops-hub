@@ -1,6 +1,6 @@
 /**
  * Theme editor: real section ordering, hide/show, the staff-only full homepage preview, publish, rollback and
- * public/draft isolation — on the ISOLATED stack (local Supabase, `next start` with THEME_PUBLISHED_ENABLED=1).
+ * public/draft isolation — on the ISOLATED stack (local Supabase, `next start`; published themes are live unless THEME_PUBLISHED_DISABLED=1).
  * The owner's draft and the live publication are restored afterwards.
  */
 import { expect, test, type Browser, type Page } from "@playwright/test";
@@ -157,7 +157,7 @@ test.describe.serial("Theme ordering + full preview (isolated)", () => {
     page.on("dialog", (d) => d.accept());
     await signIn(page, "owner");
     await page.goto("/admin/online-store");
-    await expect(page.getByTestId("theme-live-state")).toContainText(/Published themes are on/i);
+    await expect(page.getByTestId("theme-live-state")).toContainText(/Live publishing is on/i);
     const list = page.getByTestId("theme-section-list");
     await expect(list.locator("li")).toHaveCount(13);
     await expect(list.locator("li").first()).toHaveAttribute("data-testid", "theme-section-v5_cinematic_hero");
@@ -243,7 +243,7 @@ test.describe.serial("Theme ordering + full preview (isolated)", () => {
 
     // Publish → the public homepage follows the new order/visibility/settings right away (cache invalidated).
     await page.getByTestId("theme-publish").click();
-    await expect(page.getByTestId("theme-notice")).toContainText(/Published immutable snapshot/i);
+    await expect(page.getByTestId("theme-notice")).toContainText(/Published. Customers see this homepage/i);
     const a2 = await anon(browser);
     await a2.page.goto("/");
     const live = await renderedOrder(a2.page);

@@ -8,9 +8,11 @@ import {
 import { type SectionInstance } from "@/lib/content/site-builder-schema";
 import { homeSectionSettingProblems } from "@/lib/content/home-sections";
 import { homepageLayoutProblems, normalizeHomepageLayout } from "@/lib/content/homepage-layout";
+import { publishedThemesLive } from "@/lib/content/published-homepage";
+import { draftFingerprint } from "@/lib/content/theme-draft-fingerprint";
 
 /** What customers see right now, for the editor's explanation. */
-const liveState = () => ({ publishedThemesEnabled: process.env.THEME_PUBLISHED_ENABLED === "1" });
+const liveState = () => ({ publishedThemesEnabled: publishedThemesLive() });
 
 const saveSchema = z.object({
   sections: z.array(
@@ -22,6 +24,14 @@ const saveSchema = z.object({
       settings: z.record(z.string(), z.unknown()),
     }),
   ),
+  /**
+   * Fingerprint of the draft this editor loaded (from GET / the previous PUT). When it no longer matches the stored
+   * draft, someone else saved in between and the save is refused (409) instead of silently overwriting their work.
+   * Omitted by older clients: then the save is accepted as before.
+   */
+  baseFingerprint: z.string().max(80).optional(),
+  /** Explicit "overwrite the other person's draft" after the editor has shown the conflict. */
+  overwrite: z.boolean().optional(),
 });
 
 /**
@@ -83,6 +93,7 @@ export async function GET() {
         migrationRequired: false,
         versionId: version?.id ?? null,
         label: version?.label ?? null,
+        draftFingerprint: draftFingerprint(version?.sections ?? null),
         sections,
         themeSettings: version?.theme_settings ?? {},
         livePublishedVersionId: publication?.published_version_id ?? null,
@@ -131,10 +142,24 @@ export async function PUT(request: Request) {
 
     const { data: existing } = await supabase
       .from("theme_versions")
-      .select("id")
+      .select("id, sections")
       .eq("template_id", template.id)
       .eq("label", "working-draft")
       .maybeSingle();
+
+    // Optimistic concurrency: refuse to overwrite a draft saved by someone else since this editor loaded it.
+    const currentFingerprint = draftFingerprint(existing?.sections ?? null);
+    if (parsed.data.baseFingerprint && !parsed.data.overwrite && parsed.data.baseFingerprint !== currentFingerprint) {
+      return NextResponse.json(
+        {
+          error: "draft_conflict",
+          message:
+            "Someone else saved this draft after you opened the editor. Reload to see their changes, or choose to overwrite them.",
+          currentFingerprint,
+        },
+        { status: 409, headers: { "Cache-Control": "no-store" } },
+      );
+    }
 
     const { data: saved, error: saveErr } = await supabase.rpc("save_homepage_draft", {
       payload: {
@@ -149,14 +174,15 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "draft_save_failed", message: msg }, { status });
     }
     const versionId = (saved as { version_id?: string } | null)?.version_id || existing?.id || null;
+    const { data: after } = await supabase.from("theme_versions").select("sections").eq("id", versionId).maybeSingle();
 
     return NextResponse.json(
       {
         ok: true,
         published: false,
         versionId,
-        notice:
-          "Draft saved via authorized RPC. Logged-out visitors still see the last published snapshot (or V5 code defaults). Publish creates a new immutable published version.",
+        draftFingerprint: draftFingerprint(after?.sections ?? null),
+        notice: "Draft saved. Customers still see the currently published homepage until you press Publish.",
       },
       { headers: { "Cache-Control": "no-store" } },
     );

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LHImg } from "@/components/storefront/v5/lh-img";
 import { InquiryDialog } from "@/components/commerce/inquiry-dialog";
 import { DEFAULT_STOREFRONT_PRESENTATION, sectionLabel, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
+import { homeCopy } from "@/lib/content/home-copy";
 import { useCompare } from "@/lib/commerce/compare-store";
 import { PremiumHorizontalCarousel, useCarouselControls } from "@/components/storefront/ui/premium-horizontal-carousel";
 
@@ -15,7 +16,8 @@ export type CbData = {
 };
 
 /** Port of V5 section `#chromebooks` ("03 Chromebooks") with its scroll-linked `--cp` parallax. */
-export function ChromebookSection({ cb, pres = DEFAULT_STOREFRONT_PRESENTATION }: { cb: CbData; pres?: StorefrontPresentation }) {
+export function ChromebookSection({ cb, pres = DEFAULT_STOREFRONT_PRESENTATION, copy }: { cb: CbData; pres?: StorefrontPresentation; copy?: Record<string, string> }) {
+  const t = copy ?? homeCopy("v5_chromebook");
   const ref = useRef<HTMLElement>(null);
   const [asking, setAsking] = useState(false);
 
@@ -83,11 +85,11 @@ export function ChromebookSection({ cb, pres = DEFAULT_STOREFRONT_PRESENTATION }
       <div className="v5-cb-grid" style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(72px,9vw,128px) clamp(16px,3vw,32px) clamp(64px,8vw,112px)", display: "grid", gap: "clamp(36px,5vw,72px)", alignItems: "center" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 22, minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <span style={{ padding: "7px 12px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".14em", whiteSpace: "nowrap" }}>{sectionLabel("03", "CHROMEBOOKS", pres)}</span>
-            <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".12em", color: "var(--lh-ink-2)" }}>NOW LISTED</span>
+            <span style={{ padding: "7px 12px", borderRadius: 999, background: "var(--lh-navy)", color: "#FFFFFF", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".14em", whiteSpace: "nowrap" }}>{sectionLabel("03", t.kicker, pres)}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: ".12em", color: "var(--lh-ink-2)" }}>{t.tag}</span>
           </div>
           <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(38px,4.8vw,76px)", lineHeight: 0.98, letterSpacing: "-.05em", fontWeight: 700, color: "var(--lh-ink)", textWrap: "balance" }}>
-            Chromebooks, made for <span style={{ color: "var(--lh-action)" }}>everyday speed.</span>
+            {t.heading} <span style={{ color: "var(--lh-action)" }}>{t.headingAccent}</span>
           </h2>
           <p style={{ margin: 0, maxWidth: "48ch", fontSize: "clamp(16px,1.2vw,18px)", lineHeight: 1.6, color: "var(--lh-ink-2)", textWrap: "pretty" }}>{cb.text}</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -101,11 +103,11 @@ export function ChromebookSection({ cb, pres = DEFAULT_STOREFRONT_PRESENTATION }
             </div>
           </div>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <Link href="/collections/chromebooks" className="v5-hov-bg-action" style={{ height: 54, padding: "0 26px", borderRadius: 999, background: "var(--lh-action)", color: "#FFFFFF", fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", gap: 10, whiteSpace: "nowrap", boxShadow: "0 16px 36px -16px rgba(var(--lh-action-rgb),.85)" }}>
-              View Chromebook collection <span aria-hidden="true">→</span>
+            <Link href={t.primaryHref} className="v5-hov-bg-action" style={{ height: 54, padding: "0 26px", borderRadius: 999, background: "var(--lh-action)", color: "#FFFFFF", fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", gap: 10, whiteSpace: "nowrap", boxShadow: "0 16px 36px -16px rgba(var(--lh-action-rgb),.85)" }}>
+              {t.primaryLabel} <span aria-hidden="true">→</span>
             </Link>
             <button type="button" onClick={() => setAsking(true)} className="v5-hov-bd-action" style={{ height: 54, padding: "0 24px", borderRadius: 999, border: "1px solid var(--lh-border)", background: "#FFFFFF", color: "var(--lh-ink)", fontWeight: 600, fontSize: 15, cursor: "pointer", whiteSpace: "nowrap" }}>
-              Ask about Chromebooks
+              {t.askLabel}
             </button>
           </div>
         </div>
@@ -138,7 +140,9 @@ export function ChromebookSection({ cb, pres = DEFAULT_STOREFRONT_PRESENTATION }
 }
 
 /** V5 "08 — Newer generations" scroll-snap row with premium progress (±600px). */
-export function NewGenRow({ count, children, pres = DEFAULT_STOREFRONT_PRESENTATION }: { count: number; children: ReactNode; pres?: StorefrontPresentation }) {
+export function NewGenRow({ count, children, pres = DEFAULT_STOREFRONT_PRESENTATION, copy }: { count: number; children: ReactNode; pres?: StorefrontPresentation; copy?: Record<string, string> }) {
+  const t = copy ?? homeCopy("v5_new_gen");
+  const ctaDefault = t.ctaLabel === homeCopy("v5_new_gen").ctaLabel;
   const { viewportRef, scrollLeft, scrollRight } = useCarouselControls(600);
   const btn = { width: 44, height: 44, borderRadius: "50%", border: "1px solid var(--lh-border)", background: "#FFFFFF", cursor: "pointer", display: "grid", placeItems: "center" } as const;
   return (
@@ -147,14 +151,14 @@ export function NewGenRow({ count, children, pres = DEFAULT_STOREFRONT_PRESENTAT
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".12em", color: "var(--lh-ink-2)" }}>
             <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
-            {sectionLabel("08", "NEWER GENERATIONS", pres)}
+            {sectionLabel("08", t.kicker, pres)}
           </span>
-          <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(28px,3vw,44px)", letterSpacing: "-.035em", fontWeight: 700 }}>10th gen and newer</h2>
-          <span style={{ fontSize: 16, color: "var(--lh-ink-2)" }}>Intel Core 10th, 11th, 12th and 13th generation models.</span>
+          <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(28px,3vw,44px)", letterSpacing: "-.035em", fontWeight: 700 }}>{t.heading}</h2>
+          <span style={{ fontSize: 16, color: "var(--lh-ink-2)" }}>{t.intro}</span>
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-          <Link href="/collections/gen-10-plus" className="v5-hov-color-action" style={{ display: "inline-flex", alignItems: "center", minHeight: 44, fontWeight: 600, fontSize: 15, color: "var(--lh-action)", marginRight: 6, whiteSpace: "nowrap" }}>
-            <span>{pres.showCatalogCounts ? `View all ${count} →` : "View all →"}</span>
+          <Link href={t.ctaHref} className="v5-hov-color-action" style={{ display: "inline-flex", alignItems: "center", minHeight: 44, fontWeight: 600, fontSize: 15, color: "var(--lh-action)", marginRight: 6, whiteSpace: "nowrap" }}>
+            <span>{pres.showCatalogCounts && ctaDefault ? `View all ${count} →` : t.ctaLabel}</span>
           </Link>
           <button type="button" aria-label="Scroll left" className="v5-hov-bd-action" style={btn} onClick={scrollLeft}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#102039" strokeWidth="2" aria-hidden="true">

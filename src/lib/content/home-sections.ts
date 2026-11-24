@@ -4,6 +4,7 @@
  * from a published theme goes through `reviewsSettings` / `mapSettings`, which fall back to safe defaults and refuse
  * anything that is not a Google Maps URL.
  */
+import { homeCopyProblems } from "./home-copy";
 
 /** The store's own Google listing, taken from the owner-supplied embed (place "LAPTOPS HUB", Bahawalpur). */
 export const STORE_MAP_EMBED_SRC =
@@ -87,8 +88,10 @@ export function mapSettings(raw: Record<string, unknown> | null | undefined): Ma
 }
 
 /** Server-side save check: problems the owner must fix before a draft with these sections is stored. */
-export function homeSectionSettingProblems(sections: { type: string; settings: Record<string, unknown> }[]): string[] {
-  const out: string[] = [];
+export function homeSectionSettingProblems(
+  sections: { type: string; label?: string; settings: Record<string, unknown> }[],
+): string[] {
+  const out: string[] = [...homeCopyProblems(sections)];
   for (const s of sections) {
     if (s.type === "v5_store_map") {
       const v = s.settings;

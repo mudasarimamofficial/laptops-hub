@@ -37,11 +37,18 @@ const readPublishedSections = unstable_cache(
 );
 
 /**
- * Load published homepage sections when explicitly enabled (THEME_PUBLISHED_ENABLED=1).
- * Default: null, so callers render the approved V5 default layout.
+ * True unless the developer emergency switch `THEME_PUBLISHED_DISABLED=1` is set. Publishing in the admin is the
+ * merchant's own switch: with no publication the homepage renders the approved V5 default layout, so nothing changes
+ * for customers until the merchant presses Publish.
+ */
+export const publishedThemesLive = () => process.env.THEME_PUBLISHED_DISABLED !== "1";
+
+/**
+ * Load the published homepage sections. `null` (nothing published, a read error, or the emergency switch) makes
+ * callers render the approved V5 default layout.
  */
 export async function getPublishedHomepageSections(): Promise<SectionInstance[] | null> {
-  if (process.env.THEME_PUBLISHED_ENABLED !== "1") return null;
+  if (!publishedThemesLive()) return null;
   return readPublishedSections();
 }
 

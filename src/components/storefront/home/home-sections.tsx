@@ -5,6 +5,9 @@ import { CompareCount, NewGenRow } from "@/components/storefront/home/home-clien
 import { DEFAULT_STOREFRONT_PRESENTATION, sectionLabel, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import type { V5Card, V5Link } from "@/lib/catalog/v5-model";
 import { formatProductDisplayName } from "@/lib/catalog/product-display-name";
+import { homeCopy } from "@/lib/content/home-copy";
+
+type Copy = Record<string, string>;
 
 /** Server-rendered V5 home sections 04–10 (`Laptops Hub Storefront v5.dc.html`). */
 
@@ -22,12 +25,13 @@ const SECTION = { maxWidth: 1360, margin: "0 auto", padding: "clamp(56px,7vw,96p
 
 export type BrandTile = { name: string; count: number; fromText: string; lines: string; img: string | null; tint: string; href: string };
 
-export function BrandSection({ tiles, pres = DEFAULT_STOREFRONT_PRESENTATION }: { tiles: BrandTile[]; pres?: StorefrontPresentation }) {
+export function BrandSection({ tiles, pres = DEFAULT_STOREFRONT_PRESENTATION, copy }: { tiles: BrandTile[]; pres?: StorefrontPresentation; copy?: Copy }) {
+  const t = copy ?? homeCopy("v5_brand_grid");
   return (
     <section id="brands" data-screen-label="04 Brands" style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(24px,3vw,40px) clamp(16px,3vw,32px) 0" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
-        <Kicker>{sectionLabel("04", "BRANDS", pres)}</Kicker>
-        <h2 style={H2}>Shop by brand</h2>
+        <Kicker>{sectionLabel("04", t.kicker, pres)}</Kicker>
+        <h2 style={H2}>{t.heading}</h2>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,300px),1fr))", gap: 18 }}>
         {tiles.map((b) => (
@@ -53,7 +57,7 @@ export function BrandSection({ tiles, pres = DEFAULT_STOREFRONT_PRESENTATION }: 
               <span style={{ fontSize: 14, color: "var(--lh-ink-2)" }}>
                 From <strong style={{ color: "var(--lh-ink)" }}>{b.fromText}</strong>
               </span>
-              <span style={{ fontSize: 14, fontWeight: 700, color: "var(--lh-action)", whiteSpace: "nowrap" }}>View products →</span>
+              <span style={{ fontSize: 14, fontWeight: 700, color: "var(--lh-action)", whiteSpace: "nowrap" }}>{t.cardCta}</span>
             </div>
           </Link>
         ))}
@@ -62,21 +66,23 @@ export function BrandSection({ tiles, pres = DEFAULT_STOREFRONT_PRESENTATION }: 
   );
 }
 
-export function FeaturedSection({ cards, laptopCount, brandTotal, accCount, pres = DEFAULT_STOREFRONT_PRESENTATION }: { cards: V5Card[]; laptopCount: number; brandTotal: number; accCount: number; pres?: StorefrontPresentation }) {
+export function FeaturedSection({ cards, laptopCount, brandTotal, accCount, pres = DEFAULT_STOREFRONT_PRESENTATION, copy }: { cards: V5Card[]; laptopCount: number; brandTotal: number; accCount: number; pres?: StorefrontPresentation; copy?: Copy }) {
+  const t = copy ?? homeCopy("v5_featured_products");
+  const ctaDefault = t.ctaLabel === homeCopy("v5_featured_products").ctaLabel;
   return (
     <section style={SECTION}>
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, marginBottom: 28, flexWrap: "wrap" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <Kicker>{sectionLabel("05", "FEATURED", pres)}</Kicker>
-          <h2 style={H2}>Featured laptops</h2>
+          <Kicker>{sectionLabel("05", t.kicker, pres)}</Kicker>
+          <h2 style={H2}>{t.heading}</h2>
           {pres.showCatalogCounts ? (
             <span style={{ fontSize: 16, color: "var(--lh-ink-2)" }}>
               {laptopCount} laptops from {brandTotal} brands, plus {accCount} accessories.
             </span>
           ) : null}
         </div>
-        <Link href="/collections/laptops" className="v5-hov-bd-action" style={{ height: 44, padding: "0 20px", borderRadius: 999, border: "1px solid var(--lh-border)", background: "#FFFFFF", color: "var(--lh-ink)", fontWeight: 600, fontSize: 15, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
-          <span>{pres.showCatalogCounts ? `View all ${laptopCount} →` : "View all laptops →"}</span>
+        <Link href={t.ctaHref} className="v5-hov-bd-action" style={{ height: 44, padding: "0 20px", borderRadius: 999, border: "1px solid var(--lh-border)", background: "#FFFFFF", color: "var(--lh-ink)", fontWeight: 600, fontSize: 15, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
+          <span>{pres.showCatalogCounts && ctaDefault ? `View all ${laptopCount} →` : t.ctaLabel}</span>
         </Link>
       </div>
       <div className="v5-card-grid">
@@ -90,7 +96,8 @@ export function FeaturedSection({ cards, laptopCount, brandTotal, accCount, pres
 
 export type Promo = { href: string; img: string | null; alt: string; brand: string; model: string; config: string; priceText: string; rows: { k: string; v: string }[] };
 
-export function PromoSection({ promo, pres = DEFAULT_STOREFRONT_PRESENTATION }: { promo: Promo; pres?: StorefrontPresentation }) {
+export function PromoSection({ promo, pres = DEFAULT_STOREFRONT_PRESENTATION, copy }: { promo: Promo; pres?: StorefrontPresentation; copy?: Copy }) {
+  const t = copy ?? homeCopy("v5_promo");
   return (
     <section style={{ marginTop: "clamp(56px,7vw,96px)", backgroundColor: "var(--lh-navy)", backgroundImage: "radial-gradient(50% 80% at 0% 50%,rgba(var(--lh-action-rgb),.32),transparent 70%),radial-gradient(40% 70% at 100% 0%,rgba(var(--lh-iris-rgb),.3),transparent 70%)", color: "#FFFFFF", overflow: "hidden" }}>
       <div className="v5-promo-grid" style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(48px,6vw,88px) clamp(16px,3vw,32px)", display: "grid", gap: "clamp(28px,4vw,64px)", alignItems: "center" }}>
@@ -100,7 +107,7 @@ export function PromoSection({ promo, pres = DEFAULT_STOREFRONT_PRESENTATION }: 
           </span>
         </Link>
         <div style={{ display: "flex", flexDirection: "column", gap: 20, minWidth: 0 }}>
-          <Kicker onDark>{sectionLabel("06", "FEATURED CONFIGURATION", pres)}</Kicker>
+          <Kicker onDark>{sectionLabel("06", t.kicker, pres)}</Kicker>
           <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(32px,3.6vw,54px)", letterSpacing: "-.04em", lineHeight: 1.02, fontWeight: 700 }}>
             {formatProductDisplayName(promo.brand, promo.model)}
           </h2>
@@ -116,7 +123,7 @@ export function PromoSection({ promo, pres = DEFAULT_STOREFRONT_PRESENTATION }: 
           <div style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
             <span style={{ fontFamily: "var(--font-display)", fontSize: 30, fontWeight: 700 }}>{promo.priceText}</span>
             <Link href={promo.href} className="v5-hov-white-ice" style={{ height: 50, padding: "0 24px", borderRadius: 999, background: "#FFFFFF", color: "var(--lh-ink)", fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
-              View laptop →
+              {t.ctaLabel}
             </Link>
           </div>
         </div>
@@ -125,12 +132,13 @@ export function PromoSection({ promo, pres = DEFAULT_STOREFRONT_PRESENTATION }: 
   );
 }
 
-export function SpecSection({ links, pres = DEFAULT_STOREFRONT_PRESENTATION }: { links: (V5Link & { bar: string; share: string })[]; pres?: StorefrontPresentation }) {
+export function SpecSection({ links, pres = DEFAULT_STOREFRONT_PRESENTATION, copy }: { links: (V5Link & { bar: string; share: string })[]; pres?: StorefrontPresentation; copy?: Copy }) {
+  const t = copy ?? homeCopy("v5_spec_filters");
   return (
     <section style={SECTION}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
-        <Kicker>{sectionLabel("07", "SPECIFICATIONS", pres)}</Kicker>
-        <h2 style={H2}>Shop by spec</h2>
+        <Kicker>{sectionLabel("07", t.kicker, pres)}</Kicker>
+        <h2 style={H2}>{t.heading}</h2>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,240px),1fr))", gap: 12 }}>
         {links.map((q) => (
@@ -156,11 +164,11 @@ export function SpecSection({ links, pres = DEFAULT_STOREFRONT_PRESENTATION }: {
   );
 }
 
-export function NewGenSection({ cards, count, pres = DEFAULT_STOREFRONT_PRESENTATION }: { cards: V5Card[]; count: number; pres?: StorefrontPresentation }) {
+export function NewGenSection({ cards, count, pres = DEFAULT_STOREFRONT_PRESENTATION, copy }: { cards: V5Card[]; count: number; pres?: StorefrontPresentation; copy?: Copy }) {
   return (
     <section style={{ marginTop: "clamp(56px,7vw,96px)", background: "linear-gradient(180deg,var(--lh-ice),var(--lh-canvas))", color: "var(--lh-ink)" }}>
       <div style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(48px,6vw,88px) clamp(16px,3vw,32px)" }}>
-        <NewGenRow count={count} pres={pres}>
+        <NewGenRow count={count} pres={pres} copy={copy}>
           {cards.map((c) => (
             <div key={c.h} style={{ scrollSnapAlign: "start" }}>
               <V5ProductCard item={c} />
@@ -172,12 +180,13 @@ export function NewGenSection({ cards, count, pres = DEFAULT_STOREFRONT_PRESENTA
   );
 }
 
-export function BudgetSection({ tiles, pres = DEFAULT_STOREFRONT_PRESENTATION }: { tiles: V5Link[]; pres?: StorefrontPresentation }) {
+export function BudgetSection({ tiles, pres = DEFAULT_STOREFRONT_PRESENTATION, copy }: { tiles: V5Link[]; pres?: StorefrontPresentation; copy?: Copy }) {
+  const t = copy ?? homeCopy("v5_budget_bands");
   return (
     <section style={SECTION}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
-        <Kicker>{sectionLabel("09", "BUDGET", pres)}</Kicker>
-        <h2 style={H2}>Shop by budget</h2>
+        <Kicker>{sectionLabel("09", t.kicker, pres)}</Kicker>
+        <h2 style={H2}>{t.heading}</h2>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: 18 }}>
         {tiles.map((b) => (
@@ -200,16 +209,17 @@ export function BudgetSection({ tiles, pres = DEFAULT_STOREFRONT_PRESENTATION }:
 
 export type CmpDemo = { a: { model: string; img: string | null }; b: { model: string; img: string | null }; rows: { k: string; a: string; b: string; diff: boolean }[] };
 
-export function CompareDemoSection({ demo, pres = DEFAULT_STOREFRONT_PRESENTATION }: { demo: CmpDemo | null; pres?: StorefrontPresentation }) {
+export function CompareDemoSection({ demo, pres = DEFAULT_STOREFRONT_PRESENTATION, copy }: { demo: CmpDemo | null; pres?: StorefrontPresentation; copy?: Copy }) {
+  const t = copy ?? homeCopy("v5_compare_demo");
   const cols = "90px minmax(0,1fr) minmax(0,1fr)";
   return (
     <section style={{ maxWidth: 1360, margin: "0 auto", padding: "clamp(56px,7vw,96px) clamp(16px,3vw,32px) clamp(64px,8vw,112px)" }}>
       <div className="v5-cmp-grid" style={{ position: "relative", overflow: "hidden", borderRadius: 32, backgroundColor: "var(--lh-navy)", backgroundImage: "radial-gradient(60% 90% at 100% 100%,rgba(var(--lh-iris-rgb),.45),transparent 70%),radial-gradient(50% 80% at 0% 0%,rgba(var(--lh-action-rgb),.4),transparent 70%)", color: "#FFFFFF", padding: "clamp(28px,4vw,56px)", display: "grid", gap: "clamp(28px,4vw,56px)", alignItems: "center" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <Kicker onDark>{sectionLabel("10", "COMPARE", pres)}</Kicker>
-          <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(30px,3.2vw,48px)", letterSpacing: "-.04em", lineHeight: 1.04, fontWeight: 700 }}>Compare before you buy.</h2>
+          <Kicker onDark>{sectionLabel("10", t.kicker, pres)}</Kicker>
+          <h2 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(30px,3.2vw,48px)", letterSpacing: "-.04em", lineHeight: 1.04, fontWeight: 700 }}>{t.heading}</h2>
           <p style={{ margin: 0, fontSize: 17, lineHeight: 1.55, color: "var(--lh-on-dark-2)", maxWidth: "46ch" }}>
-            Add up to four laptops and line up processor, memory, storage, display and price. Rows that differ are highlighted.
+            {t.intro}
           </p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <Link href="/compare" className="v5-hov-bright" style={{ height: 52, padding: "0 24px", borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontWeight: 700, fontSize: 15, display: "flex", alignItems: "center", whiteSpace: "nowrap", boxShadow: "0 12px 30px -12px rgba(var(--lh-electric-rgb),.8)" }}>
@@ -217,8 +227,8 @@ export function CompareDemoSection({ demo, pres = DEFAULT_STOREFRONT_PRESENTATIO
                 Open compare (<CompareCount />)
               </span>
             </Link>
-            <Link href="/collections/all" className="v5-hov-bd-electric" style={{ height: 52, padding: "0 22px", borderRadius: 999, border: "1px solid rgba(255,255,255,.2)", color: "#FFFFFF", fontWeight: 600, fontSize: 15, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
-              Pick laptops
+            <Link href={t.secondaryHref} className="v5-hov-bd-electric" style={{ height: 52, padding: "0 22px", borderRadius: 999, border: "1px solid rgba(255,255,255,.2)", color: "#FFFFFF", fontWeight: 600, fontSize: 15, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
+              {t.secondaryLabel}
             </Link>
           </div>
         </div>

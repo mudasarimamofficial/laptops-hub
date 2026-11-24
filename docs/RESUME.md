@@ -1,5 +1,13 @@
 # Resume here
 
+> **2026-11-24 client-ownership audit (Claude Opus 5.5) — read first:** `docs/client-ownership-handover/` (start with
+> `00_EXECUTIVE_STATUS.md`, `02_DEFECT_REGISTER_AND_GAPS.md`). Branch `feat/theme-editor-live-publish-copy-2026-11-24`:
+> theme Publish now goes live without `THEME_PUBLISHED_ENABLED` (emergency off: `THEME_PUBLISHED_DISABLED=1`), 46 editable
+> homepage copy fields, draft-conflict 409, inquiry phones from Settings, baseline security headers. **Local isolated
+> runs: use `node scripts/dev/isolated-next.mjs build|start`** — this workstation's `.env.production.local` holds
+> production keys and otherwise wins over `.env.local` in `next build/start` (LH-013). Next: theme editor Phase 2
+> (templates beyond the homepage), owner decisions (Vercel Hobby plan, backups, COD go-live).
+
 > **2026-11-16 engineering closeout (Claude Opus 5.5) — read first:** start with `docs/IDE_AI_HANDOFF_CURRENT.md` and
 > `docs/LAPTOPS_HUB_ENGINEERING_CLOSEOUT.md` (final classification, run table, not-done list). Several claims in the
 > 2026-11-15 entry below were **not true** and are superseded: the "restored anon SELECT grants" was a manual local grant

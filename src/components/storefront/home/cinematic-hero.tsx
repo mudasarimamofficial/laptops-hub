@@ -5,6 +5,7 @@ import Link from "next/link";
 import { DEFAULT_STOREFRONT_PRESENTATION, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import { useCompare } from "@/lib/commerce/compare-store";
 import { imageSrcSet, sizedImage } from "@/lib/catalog/image-url";
+import { homeCopy } from "@/lib/content/home-copy";
 
 const HERO_MAIN_SIZES = "(max-width: 768px) 70vw, 520px";
 const HERO_SIDE_SIZES = "(max-width: 768px) 40vw, 280px";
@@ -31,6 +32,8 @@ export type HeroProps = {
   pres?: StorefrontPresentation;
   side1: HeroShot | null;
   side2: HeroShot | null;
+  /** Merchant copy (Admin → Online Store → Cinematic hero); defaults are the approved V5 text. */
+  copy?: Record<string, string>;
 };
 
 function usePrefersReducedMotion() {
@@ -48,7 +51,8 @@ function usePrefersReducedMotion() {
 const ease = "cubic-bezier(.2,.7,.2,1)";
 
 /** Port of V5 section `#top` ("01 Hero"): layered stage, scroll (--hp) and pointer (--mx/--my) parallax, intro. */
-export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCount, main, side1, side2, pres = DEFAULT_STOREFRONT_PRESENTATION }: HeroProps) {
+export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCount, main, side1, side2, pres = DEFAULT_STOREFRONT_PRESENTATION, copy }: HeroProps) {
+  const t = copy ?? homeCopy("v5_cinematic_hero");
   const rm = usePrefersReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const [entered, setEntered] = useState(false);
@@ -175,27 +179,27 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
         >
           <span style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 12, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".2em", color: "var(--lh-ink)", whiteSpace: "nowrap", opacity: 1, transform: inT, transition: tr([["transform", 0.7, 0.05, true]]) }}>
             <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
-            DELL · HP · LENOVO
+            {t.eyebrow}
           </span>
           {/* H1 rests at final transform from first paint so it remains an eligible LCP text candidate. */}
           <h1 className="v5-hero-h1" style={{ margin: 0, fontFamily: "var(--font-display)", fontWeight: 700, lineHeight: 0.98, letterSpacing: "-.05em", color: "var(--lh-ink)", opacity: 1, transform: "none" }}>
-            <span style={{ display: "block" }}>The future of</span>
-            <span style={{ display: "block", color: "var(--lh-action)" }}>smarter laptop</span>
-            <span style={{ display: "block" }}>shopping.</span>
+            <span style={{ display: "block" }}>{t.headingLine1}</span>
+            <span style={{ display: "block", color: "var(--lh-action)" }}>{t.headingAccent}</span>
+            <span style={{ display: "block" }}>{t.headingLine3}</span>
           </h1>
           <p style={{ margin: 0, maxWidth: "42ch", fontSize: "clamp(16px,1.2vw,19px)", lineHeight: 1.55, color: "var(--lh-ink-2)", textWrap: "pretty", opacity: 1, transform: inT, transition: tr([["transform", 0.8, 0.28, true]]) }}>
-            Laptops from Dell, HP, Lenovo and more, with the processor, memory, storage and display listed on every page. Filter by spec, then compare up to four side by side.
+            {t.intro}
           </p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center", opacity: 1, transform: inT, transition: tr([["transform", 0.8, 0.4, true]]) }}>
             <Link
-              href="/collections/all"
+              href={t.primaryHref}
               className="v5-hov-cta"
               style={{ position: "relative", overflow: "hidden", height: 56, padding: "0 28px", borderRadius: 14, background: "var(--lh-grad-action)", color: "#FFFFFF", fontWeight: 700, fontSize: 16, display: "flex", alignItems: "center", gap: 12, whiteSpace: "nowrap", boxShadow: "0 18px 40px -16px rgba(var(--lh-action-rgb),.85),inset 0 1px 0 rgba(255,255,255,.35)", transition: "transform .2s ease,box-shadow .2s ease" }}
             >
-              Shop laptops <span aria-hidden="true">→</span>
+              {t.primaryLabel} <span aria-hidden="true">→</span>
             </Link>
-            <a href="#brands" className="v5-hov-bd-action" style={{ height: 56, padding: "0 24px", borderRadius: 14, border: "1px solid var(--lh-border)", background: "rgba(255,255,255,.75)", color: "var(--lh-ink)", fontWeight: 600, fontSize: 16, display: "flex", alignItems: "center", whiteSpace: "nowrap", transition: "border-color .2s ease" }}>
-              Explore categories
+            <a href={t.secondaryHref} className="v5-hov-bd-action" style={{ height: 56, padding: "0 24px", borderRadius: 14, border: "1px solid var(--lh-border)", background: "rgba(255,255,255,.75)", color: "var(--lh-ink)", fontWeight: 600, fontSize: 16, display: "flex", alignItems: "center", whiteSpace: "nowrap", transition: "border-color .2s ease" }}>
+              {t.secondaryLabel}
             </a>
             <Link href="/compare" className="v5-hov-color-action" style={{ height: 56, padding: "0 10px", color: "var(--lh-action)", fontWeight: 600, fontSize: 16, display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
               Compare <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--lh-ink-2)" }}>({compareCount})</span>

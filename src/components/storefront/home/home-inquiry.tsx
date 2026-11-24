@@ -6,6 +6,7 @@ import { normalizePakistanMobile } from "@/lib/phone";
 import { INQUIRY_BUDGETS, INQUIRY_TOPICS } from "@/lib/validation/contact";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import { sectionLabel } from "@/lib/content/storefront-presentation";
+import { homeCopy } from "@/lib/content/home-copy";
 
 type Phone = { display: string; href: string };
 type Fields = { name: string; phone: string; email: string; preferred: "" | "call" | "email"; topic: string; budget: string; useCase: string; msg: string };
@@ -25,13 +26,17 @@ export function HomeInquirySection({
   privacyHref,
   showSectionNumbers = false,
   sectionNumber,
+  copy,
 }: {
   phones: Phone[];
   privacyHref: string | null;
   showSectionNumbers?: boolean;
   /** Number in the current homepage order (default V5 "11"). */
   sectionNumber?: string;
+  /** Merchant copy (Admin → Online Store → Home inquiry); defaults are the approved V5 text. */
+  copy?: Record<string, string>;
 }) {
+  const t = copy ?? homeCopy("v5_home_inquiry");
   const id = useId();
   const hydrated = useHydrated();
   const [f, setF] = useState<Fields>(EMPTY);
@@ -125,18 +130,17 @@ export function HomeInquirySection({
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".12em", color: "var(--lh-ink-2)" }}>
             <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
-            {sectionLabel("11", "NEED HELP CHOOSING?", { showSectionNumbers, sectionNumber })}
+            {sectionLabel("11", t.kicker, { showSectionNumbers, sectionNumber })}
           </span>
           <h2 id={`${id}-h`} style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(30px,3.2vw,48px)", letterSpacing: "-.04em", lineHeight: 1.04, fontWeight: 700 }}>
-            Tell us what you&apos;re looking for.
+            {t.heading}
           </h2>
           <p style={{ margin: 0, fontSize: 17, lineHeight: 1.55, color: "var(--lh-ink-2)", maxWidth: "46ch" }}>
-            Looking for a laptop for work, studies, gaming or everyday use? Share your requirements or ask about a model. Our team can review your
-            message and contact you using the details you provide.
+            {t.intro}
           </p>
           {phones.length ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <span style={{ fontSize: 14, fontWeight: 700 }}>Or call Laptops HUB</span>
+              <span style={{ fontSize: 14, fontWeight: 700 }}>{t.callLabel}</span>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                 {phones.map((p) => (
                   <a key={p.href} href={p.href} className="v5-hov-bd-action" style={{ height: 44, padding: "0 18px", borderRadius: 999, background: "#FFFFFF", border: "1px solid var(--lh-border)", color: "var(--lh-ink)", fontSize: 15, fontWeight: 700, display: "flex", alignItems: "center", fontFamily: "var(--font-mono)" }}>
@@ -270,7 +274,7 @@ export function HomeInquirySection({
                 className="v5-hov-bright"
                 style={{ alignSelf: "flex-start", height: 52, padding: "0 28px", border: 0, borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontSize: 15, fontWeight: 700, cursor: status.kind === "sending" ? "wait" : "pointer", opacity: status.kind === "sending" ? 0.7 : 1 }}
               >
-                {status.kind === "sending" ? "Sending…" : "Send my inquiry"}
+                {status.kind === "sending" ? "Sending…" : t.submitLabel}
               </button>
             </form>
           ) : (

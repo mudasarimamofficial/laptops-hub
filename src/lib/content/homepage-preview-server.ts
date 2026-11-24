@@ -8,8 +8,8 @@ export const PREVIEW_ROLES: StaffRole[] = ["owner", "admin", "editor"];
 export const previewMode = (v: unknown): PreviewMode =>
   v === "published" || v === "default" ? v : "draft";
 
-/** True when the live homepage reads published layouts (production env flag). */
-export const publishedThemesEnabled = () => process.env.THEME_PUBLISHED_ENABLED === "1";
+/** True when the live homepage reads published layouts (off only with the emergency THEME_PUBLISHED_DISABLED=1). */
+export { publishedThemesLive as publishedThemesEnabled } from "./published-homepage";
 
 export type PreviewSource = {
   mode: PreviewMode;

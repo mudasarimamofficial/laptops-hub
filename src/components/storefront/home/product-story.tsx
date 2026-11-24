@@ -8,6 +8,7 @@ import { canPurchase } from "@/lib/catalog/availability";
 import { DEFAULT_STOREFRONT_PRESENTATION, sectionLabel, type StorefrontPresentation } from "@/lib/content/storefront-presentation";
 import { setStoryInView } from "@/lib/commerce/story-ui";
 import { imageSrcSet, sizedImage } from "@/lib/catalog/image-url";
+import { homeCopy } from "@/lib/content/home-copy";
 
 const STORY_SIZES = "(max-width: 768px) 70vw, 480px";
 function storySrc(src: string) {
@@ -34,6 +35,8 @@ export type StoryProps = {
   /** Four angles (front, left, right, rear): V5 cutouts when approved, otherwise catalog photos. */
   angles: { src: string | null; cutout: boolean }[];
   rows: { k: string; v: string }[];
+  /** Merchant copy (Admin → Online Store → Product story); defaults are the approved V5 text. */
+  copy?: Record<string, string>;
   /** Storefront label switches (Admin → Settings → Storefront labels). */
   pres?: StorefrontPresentation;
 };
@@ -218,7 +221,7 @@ export function ProductStory(p: StoryProps) {
                   {pres.showSectionNumbers ? (
                     <span style={{ display: "flex", alignItems: "center", gap: 10, fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: ".14em", color: "var(--lh-on-dark-2)" }}>
                       <span style={{ width: 12, height: 2, background: "var(--lh-signal)" }} />
-                      {sectionLabel("02", "PRODUCT STORY", pres)}
+                      {sectionLabel("02", (p.copy ?? homeCopy("v5_product_story")).kicker, pres)}
                     </span>
                   ) : <span />}
                   {pres.showStoryAngleLabels ? (
@@ -269,7 +272,7 @@ export function ProductStory(p: StoryProps) {
             <div className="v5-story-panel" style={{ display: "flex", flexDirection: "column", justifyContent: "safe center", minWidth: 0, minHeight: 0 }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <h2 className="v5-story-h2" style={{ margin: 0, fontFamily: "var(--font-display)", lineHeight: 1, letterSpacing: "-.045em", fontWeight: 700, textWrap: "balance" }}>
-                  Find your next machine.
+                  {(p.copy ?? homeCopy("v5_product_story")).heading}
                 </h2>
                 <span className="v5-story-sub" style={{ fontSize: "clamp(15px,1.1vw,17px)", color: "var(--lh-on-dark-2)" }}>
                   {p.model} · {p.config}

@@ -23,6 +23,7 @@ import {
   defaultHeroSectionSettings,
   defaultStorySectionSettings,
 } from "@/lib/content/homepage-image-presets";
+import { isSafeCopyHref } from "@/lib/content/home-copy";
 
 const STORY_ANGLES = ["front", "left", "right", "rear"] as const;
 
@@ -53,6 +54,8 @@ export function HomepageSectionEditor() {
   const [themesLive, setThemesLive] = useState(false);
   const [announce, setAnnounce] = useState("");
   const [frameKey, setFrameKey] = useState(0);
+  /** Fingerprint of the stored draft this editor is based on (optimistic concurrency, see the theme API). */
+  const baseFingerprint = useRef<string | null>(null);
   const moveRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const pendingFocus = useRef<string | null>(null);
 
@@ -74,6 +77,7 @@ export function HomepageSectionEditor() {
         setSavedSnapshot(JSON.stringify(next));
         setSource(data.source || "");
         setVersionId(data.versionId || null);
+        baseFingerprint.current = data.draftFingerprint || null;
         setLivePublishedVersionId(data.livePublishedVersionId || null);
         setPublishedVersions(data.publishedVersions || []);
         setMigrationRequired(!!data.migrationRequired);
@@ -109,6 +113,19 @@ export function HomepageSectionEditor() {
       list.map((s) =>
         s.id === selected.id ? { ...s, settings: { ...s.settings, [key]: value } } : s,
       ),
+    );
+  }
+
+  /** Remove a merchant copy override so the section shows its approved default text again. */
+  function clearSetting(key: string) {
+    if (!selected) return;
+    setSections((list) =>
+      list.map((s) => {
+        if (s.id !== selected.id) return s;
+        const next = { ...s.settings };
+        delete next[key];
+        return { ...s, settings: next };
+      }),
     );
   }
 
@@ -185,25 +202,45 @@ export function HomepageSectionEditor() {
     pendingFocus.current = null;
   }, [sections]);
 
+  /**
+   * PUT the draft with the fingerprint it was based on. If someone else saved in between (409 draft_conflict), ask
+   * whether to overwrite their draft; otherwise nothing is written and the editor keeps the local changes.
+   */
+  async function putDraft(): Promise<{ ok: boolean; data: Record<string, unknown>; status: number }> {
+    const send = (overwrite: boolean) =>
+      fetch("/api/admin/theme/homepage", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sections, baseFingerprint: baseFingerprint.current || undefined, overwrite }),
+      });
+    let res = await send(false);
+    let data = await res.json().catch(() => ({}));
+    if (res.status === 409 && data.error === "draft_conflict") {
+      const overwrite = window.confirm(
+        "Someone else saved this homepage draft after you opened the editor.\n\nOK = replace their draft with yours.\nCancel = keep their draft (reload the page to see it; your unsaved edits stay on screen until you leave).",
+      );
+      if (!overwrite) return { ok: false, data: { ...data, message: String(data.message || "Draft not saved.") }, status: 409 };
+      res = await send(true);
+      data = await res.json().catch(() => ({}));
+    }
+    if (res.ok && typeof data.draftFingerprint === "string") baseFingerprint.current = data.draftFingerprint;
+    return { ok: res.ok, data, status: res.status };
+  }
+
   async function saveDraft() {
     setBusy(true);
     setErr(null);
     setNotice(null);
     try {
-      const res = await fetch("/api/admin/theme/homepage", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sections }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setErr(data.message || data.error || `Save failed (${res.status})`);
+      const { ok, data, status } = await putDraft();
+      if (!ok) {
+        setErr(String(data.message || data.error || `Save failed (${status})`));
         return false;
       }
-      setVersionId(data.versionId || versionId);
+      setVersionId((data.versionId as string) || versionId);
       setSavedSnapshot(JSON.stringify(sections));
       setFrameKey((k) => k + 1);
-      setNotice(data.notice || "Draft saved. Public storefront unchanged until publish.");
+      setNotice(String(data.notice || "Draft saved. Public storefront unchanged until publish."));
       return true;
     } catch {
       setErr("Network error");
@@ -223,7 +260,7 @@ export function HomepageSectionEditor() {
       !window.confirm(
         themesLive
           ? "Publish this draft? Customers will see it on the homepage within about a minute. You can restore an earlier version afterwards."
-          : "Publish this draft as a new version? Customers keep seeing the V5 default until published themes are switched on (THEME_PUBLISHED_ENABLED).",
+          : "Publish this draft as a new version? Live theme publishing is paused by the site administrator, so customers keep seeing the V5 default for now.",
       )
     ) {
       return;
@@ -232,17 +269,12 @@ export function HomepageSectionEditor() {
     setErr(null);
     setNotice(null);
     try {
-      const saveRes = await fetch("/api/admin/theme/homepage", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sections }),
-      });
-      const saveData = await saveRes.json().catch(() => ({}));
-      if (!saveRes.ok) {
-        setErr(saveData.message || saveData.error || "Save before publish failed");
+      const { ok: saveOk, data: saveData } = await putDraft();
+      if (!saveOk) {
+        setErr(String(saveData.message || saveData.error || "Save before publish failed"));
         return;
       }
-      setVersionId(saveData.versionId || versionId);
+      setVersionId((saveData.versionId as string) || versionId);
       setSavedSnapshot(JSON.stringify(sections));
 
       const res = await fetch("/api/admin/theme/homepage/publish", {
@@ -250,7 +282,7 @@ export function HomepageSectionEditor() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           confirmPublish: true,
-          sourceVersionId: saveData.versionId || versionId,
+          sourceVersionId: (saveData.versionId as string) || versionId,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -279,7 +311,7 @@ export function HomepageSectionEditor() {
       !window.confirm(
         themesLive
           ? "Restore this published version? Customers will see it on the homepage within about a minute."
-          : "Restore this published version as the current publication? Customers keep seeing the V5 default until published themes are switched on.",
+          : "Restore this published version as the current publication? Live theme publishing is paused by the site administrator, so customers keep seeing the V5 default for now.",
       )
     ) {
       return;
@@ -324,6 +356,52 @@ export function HomepageSectionEditor() {
   function renderField(f: SectionField) {
     if (!selected) return null;
     const val = selected.settings[f.key];
+
+    if (f.copy) {
+      // Merchant copy: empty = approved default (shown as the placeholder). Links are checked again on save.
+      const current = typeof val === "string" ? val : "";
+      const customised = current.trim() !== "" && current.trim() !== f.defaultText;
+      const linkBad = f.kind === "link" && current.trim() !== "" && !isSafeCopyHref(current);
+      const inputId = `theme-copy-${selected.id}-${f.key}`;
+      const common = {
+        id: inputId,
+        className: `mt-1 w-full rounded-lg border px-2 py-1.5 text-sm ${linkBad ? "border-[var(--adm-danger)]" : "border-[var(--adm-border)]"}`,
+        "data-testid": `theme-field-${f.key}`,
+        value: current,
+        placeholder: f.defaultText,
+        maxLength: f.max,
+        "aria-invalid": linkBad || undefined,
+        "aria-describedby": `${inputId}-help`,
+        onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updateSetting(f.key, e.target.value),
+      };
+      return (
+        <div key={f.key} className="block text-sm">
+          <div className="flex items-center justify-between gap-2">
+            <label htmlFor={inputId} className="font-medium">
+              {f.label}
+            </label>
+            {current !== "" ? (
+              <button
+                type="button"
+                className="text-xs text-[var(--adm-action)] underline"
+                data-testid={`theme-reset-${f.key}`}
+                onClick={() => clearSetting(f.key)}
+              >
+                Reset to default
+              </button>
+            ) : null}
+          </div>
+          {f.kind === "textarea" ? <textarea rows={3} {...common} /> : <input type="text" inputMode={f.kind === "link" ? "url" : undefined} {...common} />}
+          <p id={`${inputId}-help`} className={`mt-1 text-xs ${linkBad ? "text-[var(--adm-danger)]" : "text-[var(--adm-ink-2)]"}`}>
+            {linkBad
+              ? "Use a site path such as /collections/all, a #section, or a full https:// link."
+              : customised
+                ? "Custom text. Reset to go back to the default."
+                : f.help || "Leave empty to use the default shown."}
+          </p>
+        </div>
+      );
+    }
 
     if (f.kind === "product_handles") {
       const text = Array.isArray(val) ? val.join(", ") : String(val ?? "");
@@ -628,20 +706,22 @@ export function HomepageSectionEditor() {
         <div
           data-testid="theme-live-state"
           className={`mt-3 rounded-lg border p-3 text-sm ${
-            themesLive ? "border-[var(--adm-success)]" : "border-[var(--adm-warning)] bg-[var(--adm-surface-2)]"
+            !loaded ? "border-[var(--adm-border)]" : themesLive ? "border-[var(--adm-success)]" : "border-[var(--adm-warning)] bg-[var(--adm-surface-2)]"
           }`}
         >
-          {themesLive ? (
+          {!loaded ? (
+            <p>Loading what customers see…</p>
+          ) : themesLive ? (
             <p>
-              <strong>Published themes are on.</strong> Customers see the published version
-              {livePublishedVersionId ? "" : " (nothing published yet, so the V5 default)"}. Publishing or restoring a
-              version updates the live homepage within about a minute.
+              <strong>Live publishing is on.</strong> Customers see the published version
+              {livePublishedVersionId ? "" : " (nothing published yet, so the approved V5 default)"}. Publishing or
+              restoring a version updates the live homepage within about a minute.
             </p>
           ) : (
             <p>
-              <strong>Published themes are off</strong> (<code>THEME_PUBLISHED_ENABLED</code> is not set). Customers
-              see the built-in V5 homepage. Saving and publishing keep versions ready, but the live homepage changes
-              only after the owner switches published themes on in the hosting settings.
+              <strong>Live publishing is paused</strong> by the site administrator (emergency switch). Customers see
+              the built-in V5 homepage. Saving and publishing keep versions ready; they go live when the switch is
+              turned off again.
             </p>
           )}
           <p className="mt-1 text-xs text-[var(--adm-ink-2)]">
@@ -775,7 +855,7 @@ export function HomepageSectionEditor() {
           onClick={publishDraft}
           className="mt-2 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2 text-sm font-semibold disabled:opacity-50"
         >
-          Publish (immutable snapshot)
+          Publish to live site
         </button>
         {notice ? (
           <p data-testid="theme-notice" role="status" className="mt-2 text-xs text-[var(--adm-success)]">

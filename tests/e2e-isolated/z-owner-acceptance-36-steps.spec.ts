@@ -1,6 +1,6 @@
 /**
  * The owner's 36-step operational acceptance scenario, run end to end through the real admin and storefront UI on the
- * ISOLATED stack (local Supabase + `next start` built with THEME_PUBLISHED_ENABLED=1, the stand-in email provider).
+ * ISOLATED stack (local Supabase + `next start` (published themes live by default), the stand-in email provider).
  * A protected staging Preview is not available yet (docs/LAPTOPS_HUB_STAGING_CERTIFICATION_REPORT.md); this is the
  * same scenario, step for step, so it can be re-run unchanged against staging once it exists.
  *
@@ -473,7 +473,7 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
       await page.getByTestId("theme-save-draft").click();
       await expect(page.getByText(/draft saved/i)).toBeVisible();
       await page.getByTestId("theme-publish").click();
-      await expect(page.getByTestId("theme-notice")).toContainText(/Published immutable snapshot/i);
+      await expect(page.getByTestId("theme-notice")).toContainText(/Published. Customers see this homepage/i);
     }
     const { data: base } = await sb.from("theme_publications").select("published_version_id").eq("template_key", "homepage").single();
     state.baselineThemeId = base!.published_version_id;
@@ -503,7 +503,7 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
 
     await expect(page.getByTestId("theme-publish")).toBeEnabled(); // 31
     await page.getByTestId("theme-publish").click();
-    await expect(page.getByTestId("theme-notice")).toContainText(/Published immutable snapshot/i);
+    await expect(page.getByTestId("theme-notice")).toContainText(/Published. Customers see this homepage/i);
     const pub2 = await publicContext(browser);
     expect(await heroMainSrc(pub2.page)).toContain("laptop-hub-hero-lenovo-lap");
     await pub2.ctx.close();

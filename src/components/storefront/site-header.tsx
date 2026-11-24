@@ -11,6 +11,7 @@ import { useDialog } from "@/components/storefront/v5/use-dialog";
 import { LHImg } from "@/components/storefront/v5/lh-img";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import type { V5MenuGroup } from "@/lib/catalog/v5-model";
+import { DEFAULT_THEME_GLOBALS, isDefaultGlobal, type ThemeGlobals } from "@/lib/content/theme-globals";
 
 export type MegaFeature = { href: string; img: string | null; model: string; priceText: string; stockText: string };
 /** `supportHref`: first public help page (FAQ → contact → order inquiries), else order tracking. */
@@ -23,18 +24,30 @@ export type ChromeData = {
   supportHref: string;
   guidesPublic: boolean;
   navLinks?: { id?: string; label: string; href: string; isNew?: boolean }[];
+  /** Published site-wide copy (theme editor → Header & footer); V5 defaults when absent. */
+  globals?: ThemeGlobals;
 };
 
 /** V5 `navLinks` (shown at ≥1180px). */
-const NAV_LINKS: { label: string; href: string; isNew?: boolean }[] = [
+const NAV_LINKS: { id?: string; label: string; href: string; isNew?: boolean }[] = [
   { label: "Dell", href: "/collections/dell" },
   { label: "HP", href: "/collections/hp" },
   { label: "Lenovo", href: "/collections/lenovo" },
   { label: "Chromebooks", href: "/collections/chromebooks", isNew: true },
   { label: "Accessories", href: "/collections/accessories" },
-  { label: "Guides", href: "/guides" },
-  { label: "Support", href: "/pages/faq" },
+  { id: "h-guides", label: "Guides", href: "/guides" },
+  { id: "h-support", label: "Support", href: "/pages/faq" },
 ];
+
+/**
+ * Special header links are recognised by their navigation id (Admin → Navigation keeps ids when a link is renamed),
+ * falling back to the V5 label for links saved without an id. Renaming "Support" to "Help" keeps its behaviour.
+ */
+function navRole(l: { id?: string; label: string }): "guides" | "support" | null {
+  if (l.id === "h-guides" || (!l.id && l.label === "Guides")) return "guides";
+  if (l.id === "h-support" || (!l.id && l.label === "Support")) return "support";
+  return null;
+}
 
 function Wordmark({ size, onDark }: { size: number; onDark?: boolean }) {
   return (
@@ -150,8 +163,11 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
   const closeMega = () => mega && setMega(false);
   const activeMegaGroup = chrome.menu.find((g) => g.title === mgroup) ?? chrome.menu[0] ?? null;
   const countFor = (c: number | string) => (c === "__compare__" ? `${compareCount}/4` : c);
-  const isCur = (href: string, label: string) =>
-    pathname === href || (label === "Guides" && pathname.startsWith("/guides")) || (label === "Support" && pathname.startsWith("/pages/"));
+  const isCur = (l: { id?: string; href: string; label: string }) =>
+    pathname === l.href ||
+    (navRole(l) === "guides" && pathname.startsWith("/guides")) ||
+    (navRole(l) === "support" && pathname.startsWith("/pages/"));
+  const gc = chrome.globals ?? DEFAULT_THEME_GLOBALS;
   const feat = chrome.megaFeat;
 
   return (
@@ -228,16 +244,16 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
               aria-controls="lh-mega-menu"
               style={{ height: 40, padding: "0 14px", border: 0, borderRadius: 10, background: mega ? "var(--lh-ice)" : "transparent", fontSize: 15, fontWeight: 600, color: "var(--lh-ink)", display: "flex", alignItems: "center", gap: 6, cursor: "pointer", transition: "background .2s ease" }}
             >
-              Laptops
+              {gc.laptopsMenuLabel}
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#2159D4" strokeWidth="2.4" aria-hidden="true">
                 <path d="M6 9l6 6 6-6" />
               </svg>
             </button>
             {((chrome.navLinks && chrome.navLinks.length > 0 ? chrome.navLinks : NAV_LINKS))
-              .filter((n) => n.label !== "Guides" || chrome.guidesPublic)
-              .map((n) => (n.label === "Support" && chrome.supportHref ? { ...n, href: chrome.supportHref } : n))
+              .filter((n) => navRole(n) !== "guides" || chrome.guidesPublic)
+              .map((n) => (navRole(n) === "support" && chrome.supportHref ? { ...n, href: chrome.supportHref } : n))
               .map((l) => {
-              const cur = isCur(l.href, l.label);
+              const cur = isCur(l);
               return (
                 <Link
                   key={l.href}
@@ -260,7 +276,7 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
             type="button"
             className="v5-d-only v5-hov-search"
             onClick={openSearch}
-            aria-label="Search model, processor, RAM"
+            aria-label={gc.searchLabel}
             style={{
               width: "clamp(44px, 18vw, 280px)",
               maxWidth: 280,
@@ -285,8 +301,8 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
               <path d="M20 20l-3.5-3.5" />
             </svg>
             <span className="v5-header-search-text" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              <span className="v5-header-search-label-full">Search model, processor, RAM</span>
-              <span className="v5-header-search-label-short">Search laptops</span>
+              <span className="v5-header-search-label-full">{gc.searchLabel}</span>
+              <span className="v5-header-search-label-short">{gc.searchShortLabel}</span>
             </span>
           </button>
           <Link
@@ -420,10 +436,10 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
             </div>
             <div className="v5-mega-footer" style={{ maxWidth: 1360, width: "100%", margin: "0 auto", padding: "8px clamp(16px,3vw,32px) 12px", display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
               <Link href="/collections/all" style={{ display: "inline-flex", alignItems: "center", minHeight: 40, gap: 8, fontWeight: 600, fontSize: 14, color: "var(--lh-action)" }}>
-                <span>{chrome.showCounts ? `View all ${chrome.totalCount} products →` : "View all products →"}</span>
+                <span>{chrome.showCounts && isDefaultGlobal(gc, "menuAllLabel") ? `View all ${chrome.totalCount} products →` : `${gc.menuAllLabel} →`}</span>
               </Link>
-              <Link href="/collections/chromebooks" style={{ display: "inline-flex", alignItems: "center", minHeight: 40, gap: 8, fontWeight: 600, fontSize: 14, color: "var(--lh-ink)" }}>
-                Chromebooks →
+              <Link href={gc.menuSecondHref} style={{ display: "inline-flex", alignItems: "center", minHeight: 40, gap: 8, fontWeight: 600, fontSize: 14, color: "var(--lh-ink)" }}>
+                {gc.menuSecondLabel} →
               </Link>
               <button
                 type="button"
@@ -466,14 +482,14 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
                 <circle cx="11" cy="11" r="7" />
                 <path d="M20 20l-3.5-3.5" />
               </svg>
-              Search laptops
+              {gc.searchShortLabel}
             </button>
             <Link href="/collections/all" style={{ padding: 16, fontSize: 16, fontWeight: 700, color: "var(--lh-ink)", borderBottom: "1px solid var(--lh-border)" }}>
               All products{chrome.showCounts ? <> <span style={{ color: "var(--lh-action)", fontFamily: "var(--font-mono)", fontSize: 13 }}>{chrome.totalCount}</span></> : null}
             </Link>
-            <Link href="/collections/chromebooks" style={{ padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, fontSize: 16, fontWeight: 700, color: "var(--lh-ink)", borderBottom: "1px solid var(--lh-border)" }}>
-              Chromebooks
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".1em", padding: "4px 8px", borderRadius: 999, background: "var(--lh-ice)", color: "var(--lh-action-hover)" }}>NEW</span>
+            <Link href={gc.menuSecondHref} style={{ padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, fontSize: 16, fontWeight: 700, color: "var(--lh-ink)", borderBottom: "1px solid var(--lh-border)" }}>
+              {gc.menuSecondLabel}
+              {isDefaultGlobal(gc, "menuSecondLabel") && isDefaultGlobal(gc, "menuSecondHref") ? <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".1em", padding: "4px 8px", borderRadius: 999, background: "var(--lh-ice)", color: "var(--lh-action-hover)" }}>NEW</span> : null}
             </Link>
             {chrome.menu.map((g) => {
               const open = mgroup === g.title;

@@ -97,7 +97,6 @@ export const HOME_COPY: Partial<Record<SectionType, CopyField[]>> = {
 export const copyFields = (type: SectionType | string): CopyField[] => HOME_COPY[type as SectionType] ?? [];
 
 /** All copy keys of a type, for quick membership checks. */
-const copyKeySet = (type: string) => new Set(copyFields(type).map((f) => f.key));
 
 const CONTROL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
 
@@ -133,14 +132,38 @@ function cleanText(v: unknown, max: number): string | null {
  * keys are ignored, invalid links and empty strings fall back to the default.
  */
 export function homeCopy(type: SectionType, settings?: Record<string, unknown> | null): Record<string, string> {
+  return resolveCopy(copyFields(type), settings);
+}
+
+/** Generic resolver shared by homepage sections and the site-wide header/footer copy (theme-globals). */
+export function resolveCopy(fields: CopyField[], settings?: Record<string, unknown> | null): Record<string, string> {
   const out: Record<string, string> = {};
-  for (const f of copyFields(type)) {
+  for (const f of fields) {
     const raw = settings?.[f.key];
     if (f.kind === "link") {
       out[f.key] = isSafeCopyHref(raw) ? raw.trim() : f.default;
     } else {
       out[f.key] = cleanText(raw, f.max) ?? f.default;
     }
+  }
+  return out;
+}
+
+/** Validation messages for one set of copy values (`where` prefixes each message). */
+export function copyValueProblems(fields: CopyField[], settings: Record<string, unknown> | null | undefined, where: string): string[] {
+  const out: string[] = [];
+  for (const f of fields) {
+    const v = settings?.[f.key];
+    // Empty or whitespace-only = "use the default" (the resolver treats it the same way).
+    if (v === undefined || v === null || (typeof v === "string" && v.trim() === "")) continue;
+    const at = `${where} → ${f.label}`;
+    if (typeof v !== "string") {
+      out.push(`${at}: must be text.`);
+      continue;
+    }
+    if (v.length > f.max) out.push(`${at}: keep it under ${f.max} characters.`);
+    if (f.kind === "link" && !isSafeCopyHref(v))
+      out.push(`${at}: use a site path such as /collections/all, a #section, or a full https:// link.`);
   }
   return out;
 }
@@ -154,22 +177,5 @@ export function isDefaultCopy(type: SectionType, settings: Record<string, unknow
 
 /** Validation messages for a draft save (shown to the merchant; nothing is saved while any remain). */
 export function homeCopyProblems(sections: { type: string; label?: string; settings: Record<string, unknown> }[]): string[] {
-  const out: string[] = [];
-  for (const s of sections) {
-    const keys = copyKeySet(s.type);
-    if (!keys.size) continue;
-    for (const f of copyFields(s.type)) {
-      const v = s.settings?.[f.key];
-      if (v === undefined || v === null || v === "") continue;
-      const where = `${s.label || s.type} → ${f.label}`;
-      if (typeof v !== "string") {
-        out.push(`${where}: must be text.`);
-        continue;
-      }
-      if (v.length > f.max) out.push(`${where}: keep it under ${f.max} characters.`);
-      if (f.kind === "link" && !isSafeCopyHref(v))
-        out.push(`${where}: use a site path such as /collections/all, a #section, or a full https:// link.`);
-    }
-  }
-  return out;
+  return sections.flatMap((x) => copyValueProblems(copyFields(x.type), x.settings, x.label || x.type));
 }

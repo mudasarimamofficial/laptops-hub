@@ -10,6 +10,7 @@ import {
   type ContactSocialSettings,
 } from "@/lib/content/contact-social";
 import { IconMail, IconPhone, IconPin, IconWhatsApp, socialIcon } from "@/components/storefront/social-icons";
+import { DEFAULT_THEME_GLOBALS, type ThemeGlobals } from "@/lib/content/theme-globals";
 
 /** V5 `footerCols`. */
 const FOOTER_COLS = [
@@ -83,12 +84,15 @@ export function SiteFooter({
   vis,
   footerCols,
   contact,
+  globals = DEFAULT_THEME_GLOBALS,
 }: {
   totalCount: number;
   showCounts?: boolean;
   vis: Visibility;
   footerCols?: FooterNavColumn[];
   contact: ContactSocialSettings;
+  /** Published site-wide copy (theme editor → Header & footer). */
+  globals?: ThemeGlobals;
 }) {
   const source = footerCols && footerCols.length > 0 ? footerCols : FOOTER_COLS;
   const cols = source.map((c) => ({ ...c, links: publicLinks(c.links, vis) })).filter((c) => c.links.length > 0);
@@ -128,7 +132,7 @@ export function SiteFooter({
             <Wordmark size={22} onDark />
           </Link>
           <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: "var(--lh-on-dark-2)" }}>
-            Used Dell, HP and Lenovo laptops. Prices in PKR. Visit us in Bahawalpur or shop online.
+            {globals.footerTagline}
           </p>
           {social.length ? (
             <div>
@@ -179,7 +183,7 @@ export function SiteFooter({
         ))}
 
         <div data-testid="footer-contact" style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <span style={monoLabel}>Visit &amp; contact</span>
+          <span style={monoLabel}>{globals.footerContactHeading}</span>
           <p style={{ margin: 0, display: "flex", gap: 10, alignItems: "flex-start", fontSize: 14, lineHeight: 1.5, color: "var(--lh-on-dark-2)" }}>
             <span style={{ color: "var(--lh-electric-text)", flexShrink: 0, marginTop: 2 }}>
               <IconPin />
@@ -237,7 +241,7 @@ export function SiteFooter({
               }}
             >
               <IconWhatsApp size={18} />
-              Chat on WhatsApp
+              {globals.footerWhatsappLabel}
             </a>
           ) : null}
         </div>

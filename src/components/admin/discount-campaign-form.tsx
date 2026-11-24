@@ -6,6 +6,17 @@ import type { DiscountCampaign } from "@/lib/commerce/pricing";
 import { formatPkr } from "@/lib/money";
 import { applyPercentOff, applyFixedOff } from "@/lib/commerce/pricing";
 
+/** Plain-language messages for the discounts API error codes. */
+const DISCOUNT_ERRORS: Record<string, string> = {
+  validation_failed: "Check the fields: name (2–120 characters), a whole-number value and valid dates.",
+  invalid_percent: "A percentage discount must be between 1 and 90.",
+  scheduled_requires_starts_at: "A scheduled discount needs a start date.",
+  invalid_schedule_window: "The end date must be after the start date.",
+  not_found: "This discount no longer exists. Reload the page.",
+  unauthorized: "Your session ended. Sign in again.",
+  forbidden: "Your role cannot change discounts (owner, admin or manager only).",
+};
+
 export function DiscountCampaignForm({ initial }: { initial: DiscountCampaign[] }) {
   const router = useRouter();
   const [pending, start] = useTransition();
@@ -20,7 +31,7 @@ export function DiscountCampaignForm({ initial }: { initial: DiscountCampaign[] 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        id: campaign.id,
+        id: campaign.id || undefined,
         name: campaign.name,
         description: campaign.description || "",
         kind: campaign.kind,
@@ -36,7 +47,7 @@ export function DiscountCampaignForm({ initial }: { initial: DiscountCampaign[] 
     });
     const json = await res.json().catch(() => ({}));
     if (!res.ok) {
-      setError(json.error || "Save failed");
+      setError(DISCOUNT_ERRORS[json.error as string] ?? json.message ?? "The discount could not be saved. Try again.");
       return;
     }
     const saved = json.campaign as DiscountCampaign;

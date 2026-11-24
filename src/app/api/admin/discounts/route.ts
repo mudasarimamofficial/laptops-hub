@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { requireStaff } from "@/lib/auth/staff";
+import { requireStaff, staffErrorResponse } from "@/lib/auth/staff";
+import { assertMerchantMutationAllowedAsync } from "@/lib/security/merchant-write-guard";
 import { createServiceClient } from "@/lib/supabase/server";
 import { mapDiscountRow } from "@/lib/commerce/discounts-server";
 
@@ -9,8 +11,13 @@ export const dynamic = "force-dynamic";
 
 const DISCOUNT_ROLES = ["owner", "admin", "manager"] as const;
 
+/** "" (a new campaign in the form) means "create". */
+const optionalId = z.preprocess((v) => (v === "" || v === null ? undefined : v), z.string().uuid().optional());
+/** ISO date-time with "Z" or an offset: Postgres returns stored values as "…+00:00". */
+const isoDateTime = z.string().datetime({ offset: true });
+
 const upsertSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: optionalId,
   name: z.string().trim().min(2).max(120),
   description: z.string().trim().max(2000).optional().default(""),
   kind: z.enum(["percent", "fixed_paisa"]),
@@ -20,8 +27,8 @@ const upsertSchema = z.object({
   // campaigns that silently apply (or fail to apply) incorrectly.
   scope: z.literal("storewide").default("storewide"),
   status: z.enum(["draft", "active", "scheduled", "expired", "disabled"]),
-  startsAt: z.string().datetime().nullable().optional(),
-  endsAt: z.string().datetime().nullable().optional(),
+  startsAt: isoDateTime.nullable().optional(),
+  endsAt: isoDateTime.nullable().optional(),
   announcement: z.string().trim().max(280).optional().default(""),
   showAnnouncement: z.boolean().optional().default(true),
   codeRequired: z.boolean().optional().default(false),
@@ -52,8 +59,10 @@ export async function POST(request: Request) {
   let staff;
   try {
     staff = await requireStaff([...DISCOUNT_ROLES]);
-  } catch {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    // Same Preview→Production write guard as every other merchant write route.
+    await assertMerchantMutationAllowedAsync("admin_write");
+  } catch (e) {
+    return staffErrorResponse(e);
   }
   const body = await request.json().catch(() => null);
   const parsed = upsertSchema.safeParse(body);
@@ -98,6 +107,7 @@ export async function POST(request: Request) {
       entity_id: d.id,
       after: { name: d.name, status: d.status, value: d.value },
     }).then(() => null, () => null);
+    refreshStorefrontPrices();
     return NextResponse.json({ campaign: mapDiscountRow(data as Parameters<typeof mapDiscountRow>[0]) });
   }
 
@@ -114,5 +124,18 @@ export async function POST(request: Request) {
     entity_id: data?.id ?? null,
     after: { name: d.name, status: d.status, value: d.value },
   }).then(() => null, () => null);
+  refreshStorefrontPrices();
   return NextResponse.json({ campaign: mapDiscountRow(data as Parameters<typeof mapDiscountRow>[0]) }, { status: 201 });
+}
+
+/**
+ * Product and collection pages are regenerated at most every 60 s, while checkout prices from the live campaign.
+ * Refresh the storefront now so shown prices and the COD total agree right after a discount change.
+ */
+function refreshStorefrontPrices() {
+  try {
+    revalidatePath("/", "layout");
+  } catch {
+    // Outside a request scope (tests): pages still refresh within 60 s.
+  }
 }

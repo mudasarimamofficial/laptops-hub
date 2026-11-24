@@ -30,6 +30,21 @@ For the store owner and staff. No code, no developer needed.
 Use the arrows next to a section to move it. To hide it, select it and untick **Show on the homepage**. The hero always stays first and the map always
 stays last (they are built that way). Save draft → Preview → Publish.
 
+## Change the header, menu, footer or promotion-bar text (all pages)
+1. Online Store → click **Header & footer** (marked "All pages") above the section list.
+2. Edit any field. The grey text in an empty box is what customers see now; **Reset to default** brings it back.
+   - Header & menu: the "Laptops" menu button, the search box text, the menu's "View all products" and second link.
+   - Footer: the short description under the logo, the "Visit & contact" heading, the WhatsApp button text.
+   - Promotion bar: the button text and where it goes (the promotion text itself is set in Discounts).
+3. **Save draft**, then **Publish to live site**. Customers see the change on every page within about a minute.
+   Restoring an earlier version under *Published history* restores this text as well.
+4. The full preview shows homepage sections only; its header and footer still show the live text until you publish.
+5. Links must be a page on this site (for example `/collections/gaming-laptops`) or a full `https://` link.
+
+## Page title ending (SEO)
+Settings → **SEO title suffix**: what follows every page title in Google and browser tabs, e.g. `| Laptops HUB`.
+Leave it empty to keep the standard "· Laptops HUB".
+
 ## If someone else edited at the same time
 If you see "Someone else saved this homepage draft after you opened the editor": choose **Cancel** and reload the page
 to see their changes (recommended), or **OK** to replace their draft with yours.
@@ -45,5 +60,4 @@ to see their changes (recommended), or **OK** to replace their draft with yours.
 | Catalog counts and section numbers on/off | Settings → Storefront labels |
 
 ## Not editable yet without a developer
-Product-page, collection-page, cart/checkout and 404 wording; the mega-menu groups; site colours and fonts; the
-footer tagline. These are listed as Phase 2 in `05_THEME_EDITOR_SPEC_AND_ACCEPTANCE.md`.
+Product-page, collection-page, cart/checkout and 404 wording; the mega-menu groups; site colours and fonts. These are listed as Phase 2 in `05_THEME_EDITOR_SPEC_AND_ACCEPTANCE.md`.

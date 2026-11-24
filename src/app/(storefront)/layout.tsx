@@ -21,19 +21,26 @@ import { PromoAnnouncement } from "@/components/storefront/promo-announcement";
 import { getActiveAutomaticDiscount } from "@/lib/commerce/discounts-server";
 import { priceWithCampaign } from "@/lib/commerce/pricing";
 import { JsonLdSite } from "@/components/storefront/json-ld-site";
+import { getPublishedThemeGlobals } from "@/lib/content/published-homepage";
+import { getSeoTitleSuffix } from "@/lib/content/seo-defaults-server";
+import { titleTemplate } from "@/lib/content/seo-defaults";
 import "../globals.css";
 
-export const metadata: Metadata = {
-  title: {
-    default: "Laptops HUB",
-    template: "%s · Laptops HUB",
-  },
-  description:
-    // V5 approved hero copy.
-    "Laptops from Dell, HP, Lenovo and more, with the processor, memory, storage and display listed on every page. Filter by spec, then compare up to four side by side.",
-  // Pre-launch: noindex but followable, matching the X-Robots-Tag header (next.config.ts).
-  robots: isPrelaunch() ? { index: false, follow: true } : { index: true, follow: true },
-};
+/** Page title template follows Admin → Settings → "SEO title suffix" (V5 "%s · Laptops HUB" when unset). */
+export async function generateMetadata(): Promise<Metadata> {
+  const suffix = await getSeoTitleSuffix();
+  return {
+    title: {
+      default: "Laptops HUB",
+      template: titleTemplate(suffix),
+    },
+    description:
+      // V5 approved hero copy.
+      "Laptops from Dell, HP, Lenovo and more, with the processor, memory, storage and display listed on every page. Filter by spec, then compare up to four side by side.",
+    // Pre-launch: noindex but followable, matching the X-Robots-Tag header (next.config.ts).
+    robots: isPrelaunch() ? { index: false, follow: true } : { index: true, follow: true },
+  };
+}
 
 import {
   getPublishedNavigation,
@@ -102,7 +109,7 @@ export default async function StorefrontLayout({
     /* storefront still renders without badges */
   }
 
-  const [vis, navConfig, pres, social, badges, campaign, contact] = await Promise.all([
+  const [vis, navConfig, pres, social, badges, campaign, contact, globals] = await Promise.all([
     contentVisibility(),
     getPublishedNavigation(),
     getStorefrontPresentation(),
@@ -110,8 +117,9 @@ export default async function StorefrontLayout({
     getMerchBadges(),
     getActiveAutomaticDiscount().catch(() => null),
     getContactSocial(),
+    getPublishedThemeGlobals(),
   ]);
-  const chrome = { ...(await loadChrome(vis, navConfig)), showCounts: pres.showCatalogCounts };
+  const chrome = { ...(await loadChrome(vis, navConfig)), showCounts: pres.showCatalogCounts, globals };
   const publicFooterCols = sanitizePublicFooterColumns(navConfig.footerColumns, vis);
   const showPromo = Boolean(campaign?.showAnnouncement && campaign.announcement?.trim());
   return (
@@ -125,12 +133,12 @@ export default async function StorefrontLayout({
           Skip to content
         </a>
         {mode === "prelaunch" ? <PrelaunchNotice /> : null}
-        {showPromo && campaign ? <PromoAnnouncement text={campaign.announcement} /> : null}
+        {showPromo && campaign ? <PromoAnnouncement text={campaign.announcement} href={globals.announcementHref} ctaLabel={globals.announcementCtaLabel} /> : null}
         <SiteHeader chrome={chrome} />
         <main id="main" className="flex-1">
           {children}
         </main>
-        <SiteFooter totalCount={chrome.totalCount} showCounts={pres.showCatalogCounts} vis={vis} footerCols={publicFooterCols} contact={contact} />
+        <SiteFooter totalCount={chrome.totalCount} showCounts={pres.showCatalogCounts} vis={vis} footerCols={publicFooterCols} contact={contact} globals={globals} />
         {after}
         <CompareTray />
         <CartDrawer />

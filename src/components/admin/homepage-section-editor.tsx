@@ -24,6 +24,10 @@ import {
   defaultStorySectionSettings,
 } from "@/lib/content/homepage-image-presets";
 import { isSafeCopyHref } from "@/lib/content/home-copy";
+import { GLOBAL_COPY, GLOBAL_COPY_GROUPS, cleanGlobalsForSave } from "@/lib/content/theme-globals";
+
+/** Pseudo-selection id for the site-wide "Header & footer" panel (not a homepage section). */
+const GLOBALS_ID = "__globals__";
 
 const STORY_ANGLES = ["front", "left", "right", "rear"] as const;
 
@@ -40,6 +44,9 @@ export function HomepageSectionEditor() {
   const router = useRouter();
   const [sections, setSections] = useState<SectionInstance[]>([]);
   const [savedSnapshot, setSavedSnapshot] = useState("[]");
+  /** Site-wide copy overrides (theme_settings.globals); empty values mean "approved default". */
+  const [globals, setGlobals] = useState<Record<string, string>>({});
+  const [savedGlobals, setSavedGlobals] = useState("{}");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [source, setSource] = useState<string>("");
   const [versionId, setVersionId] = useState<string | null>(null);
@@ -59,7 +66,11 @@ export function HomepageSectionEditor() {
   const moveRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const pendingFocus = useRef<string | null>(null);
 
-  const dirty = useMemo(() => JSON.stringify(sections) !== savedSnapshot, [sections, savedSnapshot]);
+  const globalsKey = useMemo(() => JSON.stringify(cleanGlobalsForSave(globals)), [globals]);
+  const dirty = useMemo(
+    () => JSON.stringify(sections) !== savedSnapshot || globalsKey !== savedGlobals,
+    [sections, savedSnapshot, globalsKey, savedGlobals],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -75,6 +86,9 @@ export function HomepageSectionEditor() {
         const next = normalizeHomepageLayout((data.sections || []) as SectionInstance[]);
         setSections(next);
         setSavedSnapshot(JSON.stringify(next));
+        const g = cleanGlobalsForSave((data.globals as Record<string, unknown>) || {});
+        setGlobals(g);
+        setSavedGlobals(JSON.stringify(g));
         setSource(data.source || "");
         setVersionId(data.versionId || null);
         baseFingerprint.current = data.draftFingerprint || null;
@@ -83,7 +97,8 @@ export function HomepageSectionEditor() {
         setMigrationRequired(!!data.migrationRequired);
         setThemesLive(!!data.publishedThemesEnabled);
         setNotice(data.notice || null);
-        setSelectedId(next[0]?.id ?? null);
+        // Keep a choice the merchant already made while the draft was loading.
+        setSelectedId((cur) => cur ?? next[0]?.id ?? null);
         setLoaded(true);
       } catch {
         if (!cancelled) setErr("Network error loading theme draft");
@@ -211,7 +226,7 @@ export function HomepageSectionEditor() {
       fetch("/api/admin/theme/homepage", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sections, baseFingerprint: baseFingerprint.current || undefined, overwrite }),
+        body: JSON.stringify({ sections, globals, baseFingerprint: baseFingerprint.current || undefined, overwrite }),
       });
     let res = await send(false);
     let data = await res.json().catch(() => ({}));
@@ -239,6 +254,7 @@ export function HomepageSectionEditor() {
       }
       setVersionId((data.versionId as string) || versionId);
       setSavedSnapshot(JSON.stringify(sections));
+      setSavedGlobals(globalsKey);
       setFrameKey((k) => k + 1);
       setNotice(String(data.notice || "Draft saved. Public storefront unchanged until publish."));
       return true;
@@ -276,6 +292,7 @@ export function HomepageSectionEditor() {
       }
       setVersionId((saveData.versionId as string) || versionId);
       setSavedSnapshot(JSON.stringify(sections));
+      setSavedGlobals(globalsKey);
 
       const res = await fetch("/api/admin/theme/homepage/publish", {
         method: "POST",
@@ -359,47 +376,21 @@ export function HomepageSectionEditor() {
 
     if (f.copy) {
       // Merchant copy: empty = approved default (shown as the placeholder). Links are checked again on save.
-      const current = typeof val === "string" ? val : "";
-      const customised = current.trim() !== "" && current.trim() !== f.defaultText;
-      const linkBad = f.kind === "link" && current.trim() !== "" && !isSafeCopyHref(current);
-      const inputId = `theme-copy-${selected.id}-${f.key}`;
-      const common = {
-        id: inputId,
-        className: `mt-1 w-full rounded-lg border px-2 py-1.5 text-sm ${linkBad ? "border-[var(--adm-danger)]" : "border-[var(--adm-border)]"}`,
-        "data-testid": `theme-field-${f.key}`,
-        value: current,
-        placeholder: f.defaultText,
-        maxLength: f.max,
-        "aria-invalid": linkBad || undefined,
-        "aria-describedby": `${inputId}-help`,
-        onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => updateSetting(f.key, e.target.value),
-      };
       return (
-        <div key={f.key} className="block text-sm">
-          <div className="flex items-center justify-between gap-2">
-            <label htmlFor={inputId} className="font-medium">
-              {f.label}
-            </label>
-            {current !== "" ? (
-              <button
-                type="button"
-                className="text-xs text-[var(--adm-action)] underline"
-                data-testid={`theme-reset-${f.key}`}
-                onClick={() => clearSetting(f.key)}
-              >
-                Reset to default
-              </button>
-            ) : null}
-          </div>
-          {f.kind === "textarea" ? <textarea rows={3} {...common} /> : <input type="text" inputMode={f.kind === "link" ? "url" : undefined} {...common} />}
-          <p id={`${inputId}-help`} className={`mt-1 text-xs ${linkBad ? "text-[var(--adm-danger)]" : "text-[var(--adm-ink-2)]"}`}>
-            {linkBad
-              ? "Use a site path such as /collections/all, a #section, or a full https:// link."
-              : customised
-                ? "Custom text. Reset to go back to the default."
-                : f.help || "Leave empty to use the default shown."}
-          </p>
-        </div>
+        <CopyInput
+          key={f.key}
+          id={`theme-copy-${selected.id}-${f.key}`}
+          testId={`theme-field-${f.key}`}
+          resetTestId={`theme-reset-${f.key}`}
+          label={f.label}
+          kind={f.kind === "textarea" ? "textarea" : f.kind === "link" ? "link" : "text"}
+          value={typeof val === "string" ? val : ""}
+          defaultText={f.defaultText ?? ""}
+          max={f.max ?? 500}
+          help={f.help}
+          onChange={(v) => updateSetting(f.key, v)}
+          onReset={() => clearSetting(f.key)}
+        />
       );
     }
 
@@ -598,6 +589,19 @@ export function HomepageSectionEditor() {
         <p className="sr-only" role="status" aria-live="polite">
           {announce}
         </p>
+        <button
+          type="button"
+          data-testid="theme-globals"
+          disabled={!loaded}
+          onClick={() => setSelectedId(GLOBALS_ID)}
+          aria-current={selectedId === GLOBALS_ID ? "true" : undefined}
+          className={`mt-2 flex w-full items-center gap-2 rounded-lg border border-[var(--adm-border)] px-2 py-2 text-left text-sm ${
+            selectedId === GLOBALS_ID ? "bg-[var(--adm-info-bg)] font-semibold" : "hover:bg-[var(--adm-surface-2)]"
+          } disabled:opacity-50`}
+        >
+          <span className="min-w-0 flex-1 truncate">Header &amp; footer</span>
+          <span className="text-[10px] font-semibold uppercase text-[var(--adm-ink-2)]">All pages</span>
+        </button>
         <ol className="mt-2 space-y-1" data-testid="theme-section-list">
           {sections.map((s, i) => {
             const fixed = FIXED_REASON[s.type];
@@ -783,7 +787,46 @@ export function HomepageSectionEditor() {
       </section>
 
       <aside className="min-w-0 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-4 shadow-[var(--adm-shadow)]">
-        {selected && registry ? (
+        {selectedId === GLOBALS_ID ? (
+          <>
+            <h2 className="font-[family-name:var(--font-display)] text-base font-bold">Header &amp; footer</h2>
+            <p className="mt-1 text-xs text-[var(--adm-ink-2)]" data-testid="theme-globals-note">
+              Text shown on every page. Like homepage changes, it reaches customers only when you publish, and
+              restoring an earlier version restores this text too. The full preview shows homepage sections only; the
+              header and footer there still show the live text until you publish. Menu links themselves are edited
+              under Navigation.
+            </p>
+            <div className="mt-4 max-h-[50vh] space-y-4 overflow-y-auto pr-1">
+              {GLOBAL_COPY_GROUPS.map((grp) => (
+                <fieldset key={grp.id} className="space-y-3" data-testid={`theme-globals-group-${grp.id}`}>
+                  <legend className="text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">{grp.title}</legend>
+                  {GLOBAL_COPY.filter((f) => f.group === grp.id).map((f) => (
+                    <CopyInput
+                      key={f.key}
+                      id={`theme-global-${f.key}`}
+                      testId={`theme-global-${f.key}`}
+                      resetTestId={`theme-global-reset-${f.key}`}
+                      label={f.label}
+                      kind={f.kind}
+                      value={globals[f.key] ?? ""}
+                      defaultText={f.default}
+                      max={f.max}
+                      help={f.help}
+                      onChange={(v) => setGlobals((g) => ({ ...g, [f.key]: v }))}
+                      onReset={() =>
+                        setGlobals((g) => {
+                          const next = { ...g };
+                          delete next[f.key];
+                          return next;
+                        })
+                      }
+                    />
+                  ))}
+                </fieldset>
+              ))}
+            </div>
+          </>
+        ) : selected && registry ? (
           <>
             <h2 className="font-[family-name:var(--font-display)] text-base font-bold">{selected.label}</h2>
             <p className="mt-1 text-xs text-[var(--adm-ink-2)]">{registry.description}</p>
@@ -873,6 +916,58 @@ export function HomepageSectionEditor() {
           </p>
         ) : null}
       </aside>
+    </div>
+  );
+}
+
+/** Merchant text/link input: empty = approved default (shown as the placeholder), with "Reset to default". */
+function CopyInput(props: {
+  id: string;
+  testId: string;
+  resetTestId: string;
+  label: string;
+  kind: "text" | "textarea" | "link";
+  value: string;
+  defaultText: string;
+  max: number;
+  help?: string;
+  onChange: (v: string) => void;
+  onReset: () => void;
+}) {
+  const { id, testId, resetTestId, label, kind, value, defaultText, max, help, onChange, onReset } = props;
+  const customised = value.trim() !== "" && value.trim() !== defaultText;
+  const linkBad = kind === "link" && value.trim() !== "" && !isSafeCopyHref(value);
+  const common = {
+    id,
+    className: `mt-1 w-full rounded-lg border px-2 py-1.5 text-sm ${linkBad ? "border-[var(--adm-danger)]" : "border-[var(--adm-border)]"}`,
+    "data-testid": testId,
+    value,
+    placeholder: defaultText,
+    maxLength: max,
+    "aria-invalid": linkBad || undefined,
+    "aria-describedby": `${id}-help`,
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value),
+  };
+  return (
+    <div className="block text-sm">
+      <div className="flex items-center justify-between gap-2">
+        <label htmlFor={id} className="font-medium">
+          {label}
+        </label>
+        {value !== "" ? (
+          <button type="button" className="text-xs text-[var(--adm-action)] underline" data-testid={resetTestId} onClick={onReset}>
+            Reset to default
+          </button>
+        ) : null}
+      </div>
+      {kind === "textarea" ? <textarea rows={3} {...common} /> : <input type="text" inputMode={kind === "link" ? "url" : undefined} {...common} />}
+      <p id={`${id}-help`} className={`mt-1 text-xs ${linkBad ? "text-[var(--adm-danger)]" : "text-[var(--adm-ink-2)]"}`}>
+        {linkBad
+          ? "Use a site path such as /collections/all, a #section, or a full https:// link."
+          : customised
+            ? "Custom text. Reset to go back to the default."
+            : help || "Leave empty to use the default shown."}
+      </p>
     </div>
   );
 }

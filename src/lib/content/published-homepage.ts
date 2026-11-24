@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
-import { createPublicClient } from "@/lib/supabase/server";
+import { createPublicClient, createServiceClient } from "@/lib/supabase/server";
+import { globalsFromThemeSettings, themeGlobals, type ThemeGlobals } from "./theme-globals";
 import { V5_HOMEPAGE_SECTIONS, type SectionInstance } from "./site-builder-schema";
 
 /** Cache tag expired by theme publish and rollback (api/admin/theme/homepage/publish|rollback). */
@@ -55,4 +56,40 @@ export async function getPublishedHomepageSections(): Promise<SectionInstance[] 
 /** Safe defaults if published payload is corrupt. */
 export function homepageSectionsOrV5(sections: SectionInstance[] | null): SectionInstance[] {
   return sections && sections.length ? sections : V5_HOMEPAGE_SECTIONS;
+}
+
+/**
+ * Published site-wide copy (header, menu, footer, promotion bar) from the live snapshot's `theme_settings.globals`.
+ * theme_* tables are not anon-readable, so this reads with the service role on the server only (never sent to the
+ * browser except as the resolved text). Same cache tag as the homepage: publish and restore expire both together.
+ */
+const readPublishedGlobals = unstable_cache(
+  async (): Promise<Record<string, unknown>> => {
+    try {
+      const db = createServiceClient();
+      const { data: pub } = await db
+        .from("theme_publications")
+        .select("published_version_id")
+        .eq("template_key", "homepage")
+        .maybeSingle();
+      if (!pub?.published_version_id) return {};
+      const { data: v } = await db
+        .from("theme_versions")
+        .select("theme_settings")
+        .eq("id", pub.published_version_id)
+        .eq("status", "published")
+        .maybeSingle();
+      return globalsFromThemeSettings(v?.theme_settings);
+    } catch {
+      return {};
+    }
+  },
+  ["published-theme-globals"],
+  { revalidate: 60, tags: [HOMEPAGE_THEME_TAG] },
+);
+
+/** Effective site-wide copy for the storefront chrome; V5 defaults when nothing is published or on any error. */
+export async function getPublishedThemeGlobals(): Promise<ThemeGlobals> {
+  if (!publishedThemesLive()) return themeGlobals();
+  return themeGlobals(await readPublishedGlobals());
 }

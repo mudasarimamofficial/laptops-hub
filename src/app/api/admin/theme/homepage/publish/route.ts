@@ -131,7 +131,7 @@ export async function POST(request: Request) {
     });
 
     revalidateTag(HOMEPAGE_THEME_TAG, { expire: 0 });
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     revalidatePath("/admin/online-store");
 
     return NextResponse.json(

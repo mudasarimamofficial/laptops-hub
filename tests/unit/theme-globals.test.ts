@@ -52,7 +52,7 @@ assert.ok(!isDefaultGlobal(g, "menuSecondHref"));
 
 // Save-time validation.
 assert.deepEqual(themeGlobalsProblems(undefined), []);
-assert.deepEqual(themeGlobalsProblems({ footerTagline: "", menuAllLabel: "All" }), []);
+assert.deepEqual(themeGlobalsProblems({ footerTagline: "", menuAllLabel: "All", announcementHref: "   " }), []);
 const probs = themeGlobalsProblems({ announcementHref: "http://x.com", footerContactHeading: 3, footerWhatsappLabel: "w".repeat(41) });
 assert.equal(probs.length, 3, probs.join(" | "));
 assert.ok(probs.every((p) => p.startsWith("Header & footer → ")));

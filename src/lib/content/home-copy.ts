@@ -154,7 +154,8 @@ export function copyValueProblems(fields: CopyField[], settings: Record<string, 
   const out: string[] = [];
   for (const f of fields) {
     const v = settings?.[f.key];
-    if (v === undefined || v === null || v === "") continue;
+    // Empty or whitespace-only = "use the default" (the resolver treats it the same way).
+    if (v === undefined || v === null || (typeof v === "string" && v.trim() === "")) continue;
     const at = `${where} → ${f.label}`;
     if (typeof v !== "string") {
       out.push(`${at}: must be text.`);

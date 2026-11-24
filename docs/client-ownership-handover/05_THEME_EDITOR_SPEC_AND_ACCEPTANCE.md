@@ -85,13 +85,34 @@ restores the V5 template. Screenshots: `docs/evidence/theme-globals/`.
   no-matches, page 404 (status 404) and product 404 show the edits with `{brand}` substituted → restore → V5 text.
   Screenshots `docs/evidence/theme-templates/`.
 
+## Phase 2c — product page layout + representative product preview (`feat/theme-phase2c-product-layout`)
+- **Model** `src/lib/content/theme-layout.ts`, stored in `theme_versions.theme_settings.layout` (same draft → preview →
+  publish → restore → version history as the homepage; no migration). Every value is normalised on read: unknown ids
+  dropped, duplicates ignored, missing sections appended, unsupported counts → default, so a corrupt value can never
+  break a product page. The API validates (`themeLayoutProblems`, 400) and stores only non-default layouts.
+- **Controls** (Online Store → Page layout → *Product page layout*): order and visibility of *Specifications & about*,
+  *Customer reviews*, *Related products*; key-spec tiles on/off; policy links on/off (only approved public policies ever
+  show); related products 4 or 8. **Locked:** gallery, title, price, variants, quantity, Add to cart / WhatsApp /
+  compare — business logic untouched. Hiding reviews also removes `aggregateRating` from the product JSON-LD.
+- **Preview** `/preview/product?v=draft|published|default` (staff only, 404 for everyone else, never cached) picks a
+  representative in-stock listing; `/preview/product/<handle>` previews any listing. The editor's preview frame and
+  "Open full preview" follow the selected panel (product copy or product layout → product page).
+- **Concurrency:** the draft fingerprint covers all theme settings, so a second editor gets the existing 409 conflict.
+- **Refactor:** the product template is `ProductPageView`, shared by the live page and the preview.
+
+### Phase 2c acceptance (isolated, `p2c-theme-product-layout.spec.ts`, 2 tests + unit `theme-layout.test.ts`)
+Owner reorders/hides in the UI → saves → public page unchanged → staff preview shows the draft (`preview-draft.png`)
+→ anonymous preview 404 → publish → public page follows (buy box present) → restore → V5 layout back. Tampered layout
+→ 400; anonymous write → 401/403. Evidence: `docs/evidence/theme-product-layout/`.
+
 ## Phase 2c+ — not built yet (honest gap list)
 1. (done above: header/footer 2a, product/collection/404 labels 2b)
 2. **Content page template**: editable kicker/intro per page (today only title/body are editable).
-3. **Product page template — layout**: section order/visibility (labels done in 2b), reviews block wording, buy-box
-   microcopy — never price/stock/cart logic.
+3. **Product page template**: layout done in 2c; still to do: reviews block wording and buy-box microcopy — never
+   price/stock/cart logic.
 4. **Cart/compare/search-overlay templates**: headings and microcopy (collection and 404 done in 2b).
 5. **Theme settings**: validated colour tokens and typography presets with contrast checks (V5 tokens as defaults).
-6. **Template selector + representative product/collection picker** in the editor, using the same draft/publish/
+6. **Collection page layout** (filters/sort defaults, grid density) and a **template selector** for content/blog pages;
+   representative *product* preview is done (2c), collection preview not yet. Same draft/publish/
    rollback tables (new `theme_templates` keys — requires a small additive migration and owner approval to apply).
 Each needs its own isolated acceptance run like the one above before it is called complete.

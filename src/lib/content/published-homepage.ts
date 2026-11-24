@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { createPublicClient, createServiceClient } from "@/lib/supabase/server";
 import { globalsFromThemeSettings, themeGlobals, type ThemeGlobals } from "./theme-globals";
+import { layoutFromThemeSettings, themeLayout, type ThemeLayout } from "./theme-layout";
 import { V5_HOMEPAGE_SECTIONS, type SectionInstance } from "./site-builder-schema";
 
 /** Cache tag expired by theme publish and rollback (api/admin/theme/homepage/publish|rollback). */
@@ -59,11 +60,11 @@ export function homepageSectionsOrV5(sections: SectionInstance[] | null): Sectio
 }
 
 /**
- * Published site-wide copy (header, menu, footer, promotion bar) from the live snapshot's `theme_settings.globals`.
+ * Published theme settings (site-wide copy in `globals`, template layout in `layout`) from the live snapshot.
  * theme_* tables are not anon-readable, so this reads with the service role on the server only (never sent to the
  * browser except as the resolved text). Same cache tag as the homepage: publish and restore expire both together.
  */
-const readPublishedGlobals = unstable_cache(
+const readPublishedThemeSettings = unstable_cache(
   async (): Promise<Record<string, unknown>> => {
     try {
       const db = createServiceClient();
@@ -79,17 +80,24 @@ const readPublishedGlobals = unstable_cache(
         .eq("id", pub.published_version_id)
         .eq("status", "published")
         .maybeSingle();
-      return globalsFromThemeSettings(v?.theme_settings);
+      const ts = v?.theme_settings;
+      return ts && typeof ts === "object" && !Array.isArray(ts) ? (ts as Record<string, unknown>) : {};
     } catch {
       return {};
     }
   },
-  ["published-theme-globals"],
+  ["published-theme-settings"],
   { revalidate: 60, tags: [HOMEPAGE_THEME_TAG] },
 );
 
 /** Effective site-wide copy for the storefront chrome; V5 defaults when nothing is published or on any error. */
 export async function getPublishedThemeGlobals(): Promise<ThemeGlobals> {
   if (!publishedThemesLive()) return themeGlobals();
-  return themeGlobals(await readPublishedGlobals());
+  return themeGlobals(globalsFromThemeSettings(await readPublishedThemeSettings()));
+}
+
+/** Effective product/collection layout controls; the V5 layout when nothing is published or on any error. */
+export async function getPublishedThemeLayout(): Promise<ThemeLayout> {
+  if (!publishedThemesLive()) return themeLayout();
+  return themeLayout(layoutFromThemeSettings(await readPublishedThemeSettings()));
 }

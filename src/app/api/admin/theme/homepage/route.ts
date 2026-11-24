@@ -11,6 +11,7 @@ import { homepageLayoutProblems, normalizeHomepageLayout } from "@/lib/content/h
 import { publishedThemesLive } from "@/lib/content/published-homepage";
 import { draftStateFingerprint } from "@/lib/content/theme-draft-fingerprint";
 import { cleanGlobalsForSave, globalsFromThemeSettings, themeGlobalsProblems } from "@/lib/content/theme-globals";
+import { cleanLayoutForSave, layoutFromThemeSettings, themeLayoutProblems } from "@/lib/content/theme-layout";
 
 /** What customers see right now, for the editor's explanation. */
 const liveState = () => ({ publishedThemesEnabled: publishedThemesLive() });
@@ -38,6 +39,8 @@ const saveSchema = z.object({
    * stored value is then kept unchanged.
    */
   globals: z.record(z.string(), z.unknown()).optional(),
+  /** Template layout controls (product page sections, …) → theme_settings.layout. Omitted by older clients. */
+  layout: z.record(z.string(), z.unknown()).optional(),
 });
 
 /**
@@ -103,6 +106,7 @@ export async function GET() {
         sections,
         themeSettings: version?.theme_settings ?? {},
         globals: globalsFromThemeSettings(version?.theme_settings),
+        layout: layoutFromThemeSettings(version?.theme_settings),
         livePublishedVersionId: publication?.published_version_id ?? null,
         ...liveState(),
         publishedVersions: publishedList || [],
@@ -127,6 +131,7 @@ export async function PUT(request: Request) {
       ...homepageLayoutProblems(parsed.data.sections),
       ...homeSectionSettingProblems(parsed.data.sections),
       ...themeGlobalsProblems(parsed.data.globals),
+      ...themeLayoutProblems(parsed.data.layout),
     ];
     if (problems.length) {
       return NextResponse.json({ error: "validation_failed", message: problems.join(" ") }, { status: 400 });
@@ -180,6 +185,11 @@ export async function PUT(request: Request) {
       const g = cleanGlobalsForSave(parsed.data.globals);
       if (Object.keys(g).length) themeSettings.globals = g;
       else delete themeSettings.globals;
+    }
+    if (parsed.data.layout !== undefined) {
+      const l = cleanLayoutForSave(parsed.data.layout);
+      if (Object.keys(l).length) themeSettings.layout = l;
+      else delete themeSettings.layout;
     }
 
     const { data: saved, error: saveErr } = await supabase.rpc("save_homepage_draft", {

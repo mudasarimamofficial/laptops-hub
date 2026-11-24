@@ -50,6 +50,15 @@ Online Store → under **Site-wide text** choose **Product pages**, **Collection
 - Collection pages: what shoppers see when filters match nothing, the "Load more" button and the empty-Chromebooks box.
 - Page not found: the headings and messages for a missing page or product, and the button (label and link).
 
+## Change the layout of product pages
+Online Store → under **Page layout** choose **Product page layout**. You can:
+- move *Specifications & about*, *Customer reviews* and *Related products* up or down, or untick one to hide it;
+- turn the key-spec tiles and the delivery / returns / warranty links on or off;
+- show 4 or 8 related products.
+Photos, title, price, options and the Add to cart / WhatsApp buttons always stay. The preview on the right (and
+**Open full preview**) shows your saved draft on a real product. **Publish to live site** applies it to every product
+page; restoring an earlier version restores the layout too. **Reset product page to the V5 layout** undoes your changes.
+
 ## Page title ending (SEO)
 Settings → **SEO title suffix**: what follows every page title in Google and browser tabs, e.g. `| Laptops HUB`.
 Leave it empty to keep the standard "· Laptops HUB".

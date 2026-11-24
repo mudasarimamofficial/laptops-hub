@@ -13,6 +13,10 @@ import {
 import { FIXED_REASON, canMove, moveSection, normalizeHomepageLayout } from "@/lib/content/homepage-layout";
 
 const PREVIEW_URL = "/preview/homepage?v=draft";
+/** Product template preview on a representative in-stock listing (the route picks it). */
+const PRODUCT_PREVIEW_URL = "/preview/product?v=draft";
+/** Pseudo-selection id of the "Product page layout" panel. */
+const LAYOUT_PRODUCT_ID = "__layout__:product";
 
 /** Default settings of a section type (used to show the effective value of a field the draft has not set yet). */
 const registryDefaults = (type: SectionType): Record<string, unknown> =>
@@ -31,6 +35,13 @@ import {
   cleanGlobalsForSave,
   type GlobalCopyPanel,
 } from "@/lib/content/theme-globals";
+import {
+  PRODUCT_SECTION_LABELS,
+  RELATED_COUNTS,
+  cleanLayoutForSave,
+  productLayout,
+  type ProductLayout,
+} from "@/lib/content/theme-layout";
 
 /** Pseudo-selection ids for the site-wide panels (Header & footer, page templates); never a homepage section id. */
 const PANEL_PREFIX = "__panel__:";
@@ -57,6 +68,9 @@ export function HomepageSectionEditor() {
   /** Site-wide copy overrides (theme_settings.globals); empty values mean "approved default". */
   const [globals, setGlobals] = useState<Record<string, string>>({});
   const [savedGlobals, setSavedGlobals] = useState("{}");
+  /** Template layout controls (theme_settings.layout); {} = approved V5 layout. */
+  const [layout, setLayout] = useState<Record<string, unknown>>({});
+  const [savedLayout, setSavedLayout] = useState("{}");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [source, setSource] = useState<string>("");
   const [versionId, setVersionId] = useState<string | null>(null);
@@ -77,9 +91,11 @@ export function HomepageSectionEditor() {
   const pendingFocus = useRef<string | null>(null);
 
   const globalsKey = useMemo(() => JSON.stringify(cleanGlobalsForSave(globals)), [globals]);
+  const layoutKey = useMemo(() => JSON.stringify(cleanLayoutForSave(layout)), [layout]);
+  const productLay = useMemo(() => productLayout(layout.product), [layout]);
   const dirty = useMemo(
-    () => JSON.stringify(sections) !== savedSnapshot || globalsKey !== savedGlobals,
-    [sections, savedSnapshot, globalsKey, savedGlobals],
+    () => JSON.stringify(sections) !== savedSnapshot || globalsKey !== savedGlobals || layoutKey !== savedLayout,
+    [sections, savedSnapshot, globalsKey, savedGlobals, layoutKey, savedLayout],
   );
 
   useEffect(() => {
@@ -99,6 +115,9 @@ export function HomepageSectionEditor() {
         const g = cleanGlobalsForSave((data.globals as Record<string, unknown>) || {});
         setGlobals(g);
         setSavedGlobals(JSON.stringify(g));
+        const l = cleanLayoutForSave((data.layout as Record<string, unknown>) || {});
+        setLayout(l);
+        setSavedLayout(JSON.stringify(l));
         setSource(data.source || "");
         setVersionId(data.versionId || null);
         baseFingerprint.current = data.draftFingerprint || null;
@@ -131,6 +150,22 @@ export function HomepageSectionEditor() {
 
   const selected = sections.find((s) => s.id === selectedId) || null;
   const activePanel = GLOBAL_COPY_PANELS.find((p) => p.id === panelOf(selectedId)) ?? null;
+  const layoutPanel = selectedId === LAYOUT_PRODUCT_ID;
+  /** Product copy and product layout are previewed on a real product page; everything else on the homepage. */
+  const previewUrl = layoutPanel || activePanel?.id === "product" ? PRODUCT_PREVIEW_URL : PREVIEW_URL;
+
+  function setProductLayout(next: ProductLayout) {
+    setLayout((l) => ({ ...l, product: next }));
+  }
+
+  function moveProductSection(i: number, dir: -1 | 1) {
+    const j = i + dir;
+    if (j < 0 || j >= productLay.sections.length) return;
+    const list = [...productLay.sections];
+    [list[i], list[j]] = [list[j], list[i]];
+    setProductLayout({ ...productLay, sections: list });
+    setAnnounce(`${PRODUCT_SECTION_LABELS[list[j].id].title} moved to position ${j + 1} of ${list.length}.`);
+  }
   const registry = selected ? SECTION_REGISTRY[selected.type] : null;
 
   function updateSetting(key: string, value: unknown) {
@@ -237,7 +272,13 @@ export function HomepageSectionEditor() {
       fetch("/api/admin/theme/homepage", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sections, globals, baseFingerprint: baseFingerprint.current || undefined, overwrite }),
+        body: JSON.stringify({
+          sections,
+          globals,
+          layout: cleanLayoutForSave(layout),
+          baseFingerprint: baseFingerprint.current || undefined,
+          overwrite,
+        }),
       });
     let res = await send(false);
     let data = await res.json().catch(() => ({}));
@@ -266,6 +307,7 @@ export function HomepageSectionEditor() {
       setVersionId((data.versionId as string) || versionId);
       setSavedSnapshot(JSON.stringify(sections));
       setSavedGlobals(globalsKey);
+      setSavedLayout(layoutKey);
       setFrameKey((k) => k + 1);
       setNotice(String(data.notice || "Draft saved. Public storefront unchanged until publish."));
       return true;
@@ -304,6 +346,7 @@ export function HomepageSectionEditor() {
       setVersionId((saveData.versionId as string) || versionId);
       setSavedSnapshot(JSON.stringify(sections));
       setSavedGlobals(globalsKey);
+      setSavedLayout(layoutKey);
 
       const res = await fetch("/api/admin/theme/homepage/publish", {
         method: "POST",
@@ -377,8 +420,8 @@ export function HomepageSectionEditor() {
       tab?.close();
       return;
     }
-    if (tab) tab.location.href = PREVIEW_URL;
-    else router.push(PREVIEW_URL);
+    if (tab) tab.location.href = previewUrl;
+    else router.push(previewUrl);
   }
 
   function renderField(f: SectionField) {
@@ -619,6 +662,24 @@ export function HomepageSectionEditor() {
             );
           })}
         </ul>
+        <p className="mt-3 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">Page layout</p>
+        <ul className="mt-1 space-y-1">
+          <li>
+            <button
+              type="button"
+              data-testid="theme-panel-layout-product"
+              disabled={!loaded}
+              onClick={() => setSelectedId(LAYOUT_PRODUCT_ID)}
+              aria-current={layoutPanel ? "true" : undefined}
+              className={`flex w-full items-center gap-2 rounded-lg border border-[var(--adm-border)] px-2 py-2 text-left text-sm ${
+                layoutPanel ? "bg-[var(--adm-info-bg)] font-semibold" : "hover:bg-[var(--adm-surface-2)]"
+              } disabled:opacity-50`}
+            >
+              <span className="min-w-0 flex-1 truncate">Product page layout</span>
+              <span className="text-[10px] font-semibold uppercase text-[var(--adm-ink-2)]">Template</span>
+            </button>
+          </li>
+        </ul>
         <p className="mt-3 px-2 text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">Homepage sections</p>
         <p className="mt-1 px-2 text-xs text-[var(--adm-ink-2)]">
           Top to bottom. Use the arrows to move a section; the hero stays first and the map stays
@@ -799,8 +860,8 @@ export function HomepageSectionEditor() {
           {loaded && !migrationRequired ? (
             <iframe
               key={frameKey}
-              src={`${PREVIEW_URL}&embed=1`}
-              title={`Homepage draft preview, ${viewport} width`}
+              src={`${previewUrl}&embed=1`}
+              title={`${previewUrl === PREVIEW_URL ? "Homepage" : "Product page"} draft preview, ${viewport} width`}
               data-testid="theme-preview-frame"
               className="mt-2 h-[70vh] w-full rounded border border-[var(--adm-border)] bg-white"
             />
@@ -814,8 +875,10 @@ export function HomepageSectionEditor() {
             <h2 className="font-[family-name:var(--font-display)] text-base font-bold">{activePanel.title}</h2>
             <p className="mt-1 text-xs text-[var(--adm-ink-2)]" data-testid="theme-globals-note">
               {activePanel.note} Like homepage changes, it reaches customers only when you publish, and restoring an
-              earlier version restores this text too. The full preview shows homepage sections only; other pages show
-              the live text until you publish.
+              earlier version restores this text too.{" "}
+              {activePanel.id === "product"
+                ? "The preview shows this draft on a real product page."
+                : "The full preview shows homepage sections only; other pages show the live text until you publish."}
               {activePanel.id === "chrome" ? " Menu links themselves are edited under Navigation." : ""}
             </p>
             <div className="mt-4 max-h-[50vh] space-y-4 overflow-y-auto pr-1">
@@ -847,6 +910,110 @@ export function HomepageSectionEditor() {
                 </fieldset>
               ))}
             </div>
+          </>
+        ) : layoutPanel ? (
+          <>
+            <h2 className="font-[family-name:var(--font-display)] text-base font-bold">Product page layout</h2>
+            <p className="mt-1 text-xs text-[var(--adm-ink-2)]" data-testid="theme-layout-note">
+              Applies to every product page. Photos, title, price, options and the Add to cart / order buttons always
+              show. Reaches customers only when you publish; restoring an earlier version restores this layout too.
+            </p>
+            <fieldset className="mt-4 space-y-2" data-testid="theme-layout-product-sections">
+              <legend className="text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">
+                Sections below the buy box (top to bottom)
+              </legend>
+              {productLay.sections.map((sec, i) => (
+                <div key={sec.id} className="rounded-lg border border-[var(--adm-border)] bg-white p-2" data-testid={`theme-layout-row-${sec.id}`}>
+                  <div className="flex items-center gap-2">
+                    <label className="flex min-w-0 flex-1 items-center gap-2 text-sm font-semibold">
+                      <input
+                        type="checkbox"
+                        data-testid={`theme-layout-visible-${sec.id}`}
+                        checked={sec.visible}
+                        onChange={() =>
+                          setProductLayout({
+                            ...productLay,
+                            sections: productLay.sections.map((x) => (x.id === sec.id ? { ...x, visible: !x.visible } : x)),
+                          })
+                        }
+                      />
+                      <span className="truncate">{PRODUCT_SECTION_LABELS[sec.id].title}</span>
+                    </label>
+                    <button
+                      type="button"
+                      data-testid={`theme-layout-up-${sec.id}`}
+                      aria-label={`Move ${PRODUCT_SECTION_LABELS[sec.id].title} up`}
+                      disabled={busy || i === 0}
+                      onClick={() => moveProductSection(i, -1)}
+                      className="rounded border border-[var(--adm-border)] px-2 py-1 text-xs disabled:opacity-40"
+                    >
+                      ↑
+                    </button>
+                    <button
+                      type="button"
+                      data-testid={`theme-layout-down-${sec.id}`}
+                      aria-label={`Move ${PRODUCT_SECTION_LABELS[sec.id].title} down`}
+                      disabled={busy || i === productLay.sections.length - 1}
+                      onClick={() => moveProductSection(i, 1)}
+                      className="rounded border border-[var(--adm-border)] px-2 py-1 text-xs disabled:opacity-40"
+                    >
+                      ↓
+                    </button>
+                  </div>
+                  <p className="mt-1 text-xs text-[var(--adm-ink-2)]">{PRODUCT_SECTION_LABELS[sec.id].note}</p>
+                </div>
+              ))}
+            </fieldset>
+            <fieldset className="mt-4 space-y-2">
+              <legend className="text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">Next to the buy box</legend>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  data-testid="theme-layout-keyspecs"
+                  checked={productLay.showKeySpecs}
+                  onChange={() => setProductLayout({ ...productLay, showKeySpecs: !productLay.showKeySpecs })}
+                />
+                Key spec tiles (processor, memory, storage, display)
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  data-testid="theme-layout-policies"
+                  checked={productLay.showPolicies}
+                  onChange={() => setProductLayout({ ...productLay, showPolicies: !productLay.showPolicies })}
+                />
+                Delivery / returns / warranty links (only approved, published policy pages ever show)
+              </label>
+            </fieldset>
+            <label className="mt-4 block text-sm">
+              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--adm-ink-2)]">Related products shown</span>
+              <select
+                data-testid="theme-layout-related-count"
+                value={productLay.relatedCount}
+                onChange={(e) => setProductLayout({ ...productLay, relatedCount: Number(e.target.value) as ProductLayout["relatedCount"] })}
+                className="mt-1 block w-full rounded-lg border border-[var(--adm-border)] bg-white px-2 py-2"
+              >
+                {RELATED_COUNTS.map((n) => (
+                  <option key={n} value={n}>
+                    {n} ({n / 4} row{n > 4 ? "s" : ""})
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button
+              type="button"
+              data-testid="theme-layout-reset"
+              className="mt-3 text-xs font-semibold text-[var(--adm-action)]"
+              onClick={() =>
+                setLayout((l) => {
+                  const next = { ...l };
+                  delete next.product;
+                  return next;
+                })
+              }
+            >
+              Reset product page to the V5 layout
+            </button>
           </>
         ) : selected && registry ? (
           <>
@@ -902,7 +1069,7 @@ export function HomepageSectionEditor() {
           </span>
         ) : (
           <a
-            href={PREVIEW_URL}
+            href={previewUrl}
             target="_blank"
             rel="noopener"
             data-testid="theme-open-preview"

@@ -343,10 +343,10 @@ export function v5KeySpecs(p: V5Product) {
 }
 
 /** V5 related products: same category, same brand first, then nearest price. */
-export function v5Related(P: V5Product[], p: V5Product) {
+export function v5Related(P: V5Product[], p: V5Product, count = 4) {
   return P.filter((x) => x.cat === p.cat && x.h !== p.h)
     .sort((a, b) => Number(b.brand === p.brand) - Number(a.brand === p.brand) || Math.abs(a.pricePaisa - p.pricePaisa) - Math.abs(b.pricePaisa - p.pricePaisa))
-    .slice(0, 4);
+    .slice(0, count);
 }
 
 /** V5 compare column (`cmpHeads`) plus the row values the compare table needs. */

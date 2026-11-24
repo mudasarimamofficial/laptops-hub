@@ -13,12 +13,18 @@
 | `home-inquiry` | 7/7 PASS when run alone; one test flaked once in a combined run (order-dependent) | |
 | `p1-store-testimonials-map` "editor can draft a Google review" | FAIL — **pre-existing**, code not touched by this release (Google-review draft validation vs test expectation) | logged as LH-019 |
 
-## Production (to be completed after the release deploys)
+## Production (verified 2026-11-24, read-only)
 | Check | Result |
 |---|---|
-| PR / merge commit | pending |
-| Deployment id / READY | pending |
-| Homepage 200, V5 default unchanged (no publication) | pending |
-| Security headers present, `X-Powered-By` absent | pending |
-| `/admin/online-store` loads for owner (read-only check) | owner session required |
-| `app.laptopshub.pk` CRM still 200 | pending |
+| PR | https://github.com/mudasarimamofficial/laptops-hub/pull/69 — CI `quality` pass (2m10s), Vercel preview pass; merged as `539f37041665c9ffcf513494d50f5a6d20a22c3b` |
+| Deployment | `dpl_4tWeJ3nKFXGhKgTqPTEqLjRavuUe` READY, target production, aliases `www.laptopshub.pk`, `laptopshub.pk` (git sha `539f370`) |
+| Previous deployment (rollback candidate) | `dpl_m8iVeF98uAGhsyL8SGJbK2R8hzKc` @ `fc24550` |
+| `https://www.laptopshub.pk/` | 200; H1 "The future of smarter laptop shopping." (V5 default, unchanged); no horizontal overflow; 0 console errors |
+| Homepage copy | V5 defaults present ("Shop by brand", "Featured laptops", "Compare before you buy.", "Tell us what you're looking for.") |
+| Inquiry phones | "Or call Laptops HUB" + 0309 3372974 / 0313 6565663 / 0339 9100199 now shown (from Settings) |
+| Security headers | `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` present; `X-Powered-By` absent; HSTS unchanged |
+| Apex / CRM | `laptopshub.pk` 308 → www; `app.laptopshub.pk` 200 (untouched) |
+| `/admin/login`, Dell 7420 PDP | 200, 200 |
+| `/api/admin/theme/homepage` anonymous | 401 (staff only) |
+| Production data | `theme_publications` 0, `orders` 1 — unchanged by the release; no migrations, no env changes |
+| Owner-session admin check of `/admin/online-store` on production | NOT TESTED (needs the owner's sign-in; engineering does not use the owner password) |

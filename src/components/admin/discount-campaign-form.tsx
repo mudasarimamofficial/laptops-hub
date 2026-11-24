@@ -76,7 +76,7 @@ export function DiscountCampaignForm({ initial }: { initial: DiscountCampaign[] 
   return (
     <div style={{ display: "grid", gap: 20 }}>
       {error ? (
-        <p role="alert" style={{ margin: 0, padding: "10px 12px", borderRadius: 10, background: "#FEE2E2", color: "#991B1B", fontSize: 14 }}>
+        <p role="alert" data-testid="discount-error" style={{ margin: 0, padding: "10px 12px", borderRadius: 10, background: "#FEE2E2", color: "#991B1B", fontSize: 14 }}>
           {error}
         </p>
       ) : null}

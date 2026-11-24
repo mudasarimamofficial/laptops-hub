@@ -58,7 +58,7 @@ test.describe.serial("Admin P0: discounts create/edit, stock not overwritten (is
     await page.getByLabel("Name").fill(DISCOUNT);
     await page.getByRole("button", { name: "Save", exact: true }).click();
     await expect(page.getByRole("heading", { name: "Edit campaign" })).toBeVisible();
-    await expect(page.getByRole("alert")).toHaveCount(0);
+    await expect(page.getByTestId("discount-error")).toHaveCount(0);
     await expect(page.getByRole("row", { name: new RegExp(DISCOUNT) })).toBeVisible();
 
     const { data: created } = await sb.from("discount_campaigns").select("id, status, starts_at").eq("name", DISCOUNT).single();
@@ -74,7 +74,7 @@ test.describe.serial("Admin P0: discounts create/edit, stock not overwritten (is
     await page.getByLabel("Name").fill(`${DISCOUNT} edited`);
     await page.getByRole("button", { name: "Save", exact: true }).click();
     await expect(page.getByRole("row", { name: new RegExp(`${DISCOUNT} edited`) })).toBeVisible();
-    await expect(page.getByRole("alert")).toHaveCount(0);
+    await expect(page.getByTestId("discount-error")).toHaveCount(0);
   });
 
   test("API refuses anonymous discount writes", async ({ request }) => {

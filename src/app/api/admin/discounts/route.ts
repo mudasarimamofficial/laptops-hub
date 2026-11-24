@@ -73,6 +73,10 @@ export async function POST(request: Request) {
   if (d.kind === "percent" && (d.value < 1 || d.value > 90)) {
     return NextResponse.json({ error: "invalid_percent" }, { status: 400 });
   }
+  // Fixed amounts are paisa: Rs 1 – Rs 1,000,000 (also keeps the value far inside the integer column).
+  if (d.kind === "fixed_paisa" && (d.value < 100 || d.value > 100_000_000)) {
+    return NextResponse.json({ error: "invalid_fixed_amount" }, { status: 400 });
+  }
   if (d.status === "scheduled" && !d.startsAt) {
     return NextResponse.json({ error: "scheduled_requires_starts_at" }, { status: 400 });
   }

@@ -4,6 +4,7 @@ import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staf
 import { pkrMajorToPaisa } from "@/lib/money";
 import { withCatalogRefresh } from "@/lib/catalog/refresh";
 import { INVENTORY_ADJUST_ROLES, inventoryProblemMessage } from "@/lib/commerce/inventory-adjust";
+import { makeSellableOnActivate, purchasableAfterPrice } from "@/lib/catalog/sellable";
 
 const patchSchema = z
   .object({
@@ -159,7 +160,7 @@ async function handlePATCH(request: Request, ctx: Ctx) {
     if (parsed.data.variantId) {
       const { data: variant, error: vErr } = await supabase
         .from("product_variants")
-        .select("id, product_id, price_paisa, inventory_mode, quantity_on_hand")
+        .select("id, product_id, price_paisa, purchasable, inventory_mode, quantity_on_hand")
         .eq("id", parsed.data.variantId)
         .maybeSingle();
       if (vErr || !variant || variant.product_id !== existing.id) {
@@ -172,9 +173,9 @@ async function handlePATCH(request: Request, ctx: Ctx) {
       const variantPatch: Record<string, unknown> = {};
       if (parsed.data.pricePkr !== undefined) {
         const price = pkrMajorToPaisa(parsed.data.pricePkr);
-        const status = (parsed.data.status ?? existing.status) as string;
         variantPatch.price_paisa = price;
-        variantPatch.purchasable = price > 0 && status === "active";
+        // Keep the variant's Sell switch (set in the variant matrix) unless the price makes it unsellable/sellable.
+        variantPatch.purchasable = purchasableAfterPrice(Number(variant.price_paisa), price, !!variant.purchasable);
       }
       if (parsed.data.compareAtPkr !== undefined) {
         variantPatch.compare_at_paisa =
@@ -220,6 +221,8 @@ async function handlePATCH(request: Request, ctx: Ctx) {
         }
       }
     }
+
+    if (parsed.data.status === "active" && existing.status !== "active") await makeSellableOnActivate(supabase, existing.id);
 
     await supabase.from("audit_logs").insert({
       actor_user_id: staff.userId,

@@ -6,10 +6,14 @@ import type { DiscountCampaign } from "@/lib/commerce/pricing";
 import { formatPkr } from "@/lib/money";
 import { applyPercentOff, applyFixedOff } from "@/lib/commerce/pricing";
 
+/** Largest fixed discount the form and API accept (Rs). */
+const MAX_FIXED_RUPEES = 1_000_000;
+
 /** Plain-language messages for the discounts API error codes. */
 const DISCOUNT_ERRORS: Record<string, string> = {
   validation_failed: "Check the fields: name (2–120 characters), a whole-number value and valid dates.",
   invalid_percent: "A percentage discount must be between 1 and 90.",
+  invalid_fixed_amount: "A fixed discount must be between Rs 1 and Rs 1,000,000.",
   scheduled_requires_starts_at: "A scheduled discount needs a start date.",
   invalid_schedule_window: "The end date must be after the start date.",
   not_found: "This discount no longer exists. Reload the page.",
@@ -162,21 +166,27 @@ export function DiscountCampaignForm({ initial }: { initial: DiscountCampaign[] 
               <select
                 className="adm-input"
                 value={editing.kind}
-                onChange={(e) => setEditing({ ...editing, kind: e.target.value as DiscountCampaign["kind"] })}
+                // A value means something different per type (5 % vs Rs 5): start from empty when the type changes.
+                onChange={(e) => setEditing({ ...editing, kind: e.target.value as DiscountCampaign["kind"], value: 0 })}
               >
                 <option value="percent">Percentage</option>
-                <option value="fixed_paisa">Fixed amount (paisa)</option>
+                <option value="fixed_paisa">Fixed amount (Rs)</option>
               </select>
             </label>
             <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
-              Value {editing.kind === "percent" ? "(%)" : "(paisa)"}
+              Value {editing.kind === "percent" ? "(%)" : "(Rs off each item)"}
+              {/* Fixed amounts are typed in rupees and stored in paisa, like every other price in the admin. */}
               <input
                 className="adm-input"
                 type="number"
                 min={1}
-                max={editing.kind === "percent" ? 90 : undefined}
-                value={editing.value}
-                onChange={(e) => setEditing({ ...editing, value: Number(e.target.value) || 0 })}
+                max={editing.kind === "percent" ? 90 : MAX_FIXED_RUPEES}
+                step={editing.kind === "percent" ? 1 : "any"}
+                value={editing.value ? (editing.kind === "percent" ? editing.value : editing.value / 100) : ""}
+                onChange={(e) => {
+                  const n = Number(e.target.value) || 0;
+                  setEditing({ ...editing, value: editing.kind === "percent" ? Math.round(n) : Math.round(n * 100) });
+                }}
               />
             </label>
           </div>

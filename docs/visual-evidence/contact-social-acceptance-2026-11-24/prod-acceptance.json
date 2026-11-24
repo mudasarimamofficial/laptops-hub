@@ -1,0 +1,49 @@
+{
+  "pass": true,
+  "footer": {
+    "address": "Laptops HUB, 1st Floor, Al Raheem Center Plaza, University Chowk, Bahawalpur, Pakistan",
+    "email": "mailto:infolaptopshub@gmail.com",
+    "phones": [
+      {
+        "id": "footer-phone-p1",
+        "href": "tel:03093372974",
+        "text": "0309 3372974"
+      },
+      {
+        "id": "footer-phone-p2",
+        "href": "tel:03136565663",
+        "text": "0313 6565663"
+      },
+      {
+        "id": "footer-phone-p3",
+        "href": "tel:03399100199",
+        "text": "0339 9100199"
+      }
+    ],
+    "social": [
+      null,
+      "https://www.facebook.com/LaptopshubII.pk",
+      "https://www.instagram.com/laptopshub.pk",
+      "https://www.tiktok.com/@laptopshub.pk",
+      "https://www.youtube.com/@Laptopshub"
+    ],
+    "wa": "https://api.whatsapp.com/message/NT5WBBX234POA1",
+    "float": "https://api.whatsapp.com/message/NT5WBBX234POA1"
+  },
+  "pdp": {
+    "primaryBelow": true,
+    "primaryLabel": "Buy now · Rs 46,550",
+    "priceText": "",
+    "waPrefilled": "0",
+    "fallback": true,
+    "msgSnippet": "Hello Laptops HUB! 👋\n\nI would like to order this product through WhatsApp.\n\nProduct: Dell 5400 - Core i5, 8th Gen, 8GB RAM, 256GB Storage\nVariant: —\nConfiguration: Core i5, 8th Ge"
+  },
+  "heroMainBoxShadow": "none",
+  "at": "2026-11-24T08:42:01.376Z",
+  "socialFiltered": [
+    "https://www.facebook.com/LaptopshubII.pk",
+    "https://www.instagram.com/laptopshub.pk",
+    "https://www.tiktok.com/@laptopshub.pk",
+    "https://www.youtube.com/@Laptopshub"
+  ]
+}

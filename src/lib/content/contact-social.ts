@@ -157,8 +157,9 @@ function mergePhone(raw: unknown, fallback: ContactPhone): ContactPhone {
   const o = asObj(raw);
   return {
     id: typeof o.id === "string" && o.id.trim() ? o.id.trim() : fallback.id,
-    display: typeof o.display === "string" && o.display.trim() ? o.display.trim() : fallback.display,
-    tel: typeof o.tel === "string" && o.tel.trim() ? o.tel.replace(/\s+/g, "") : fallback.tel,
+    // Preserve intentional empty strings — do not resurrect default numbers into custom rows.
+    display: typeof o.display === "string" ? o.display.trim() : fallback.display,
+    tel: typeof o.tel === "string" ? o.tel.replace(/\s+/g, "") : fallback.tel,
     enabled: typeof o.enabled === "boolean" ? o.enabled : fallback.enabled,
   };
 }
@@ -179,13 +180,15 @@ function mergeSocial(raw: unknown, fallback: SocialLink): SocialLink {
 export function parseContactSocial(value: unknown): ContactSocialSettings {
   const v = asObj(value);
   const wa = asObj(v.whatsapp);
+  // Missing/non-array → merchant defaults. Empty array is intentional (hide all phones).
   const phonesRaw = Array.isArray(v.phones) ? v.phones : null;
   const socialRaw = Array.isArray(v.social) ? v.social : null;
 
+  const emptyPhone = (i: number): ContactPhone => ({ id: `p${i + 1}`, display: "", tel: "", enabled: true });
   const phones =
-    phonesRaw && phonesRaw.length > 0
-      ? phonesRaw.slice(0, 8).map((p, i) => mergePhone(p, DEFAULT_CONTACT_SOCIAL.phones[i] ?? DEFAULT_CONTACT_SOCIAL.phones[0]))
-      : DEFAULT_CONTACT_SOCIAL.phones.map((p) => ({ ...p }));
+    phonesRaw === null
+      ? DEFAULT_CONTACT_SOCIAL.phones.map((p) => ({ ...p }))
+      : phonesRaw.slice(0, 8).map((p, i) => mergePhone(p, DEFAULT_CONTACT_SOCIAL.phones[i] ?? emptyPhone(i)));
 
   const social =
     socialRaw && socialRaw.length > 0

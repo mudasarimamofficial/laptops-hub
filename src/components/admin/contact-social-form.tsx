@@ -33,6 +33,33 @@ export function ContactSocialForm({ initial }: Props) {
     }));
   }
 
+  function addPhone() {
+    setS((prev) => {
+      if (prev.phones.length >= 8) return prev;
+      const id = `p${Date.now().toString(36)}`;
+      return {
+        ...prev,
+        phones: [...prev.phones, { id, display: "", tel: "", enabled: true }],
+      };
+    });
+  }
+
+  function removePhone(i: number) {
+    setS((prev) => ({ ...prev, phones: prev.phones.filter((_, idx) => idx !== i) }));
+  }
+
+  function movePhone(i: number, dir: -1 | 1) {
+    setS((prev) => {
+      const j = i + dir;
+      if (j < 0 || j >= prev.phones.length) return prev;
+      const phones = prev.phones.slice();
+      const tmp = phones[i];
+      phones[i] = phones[j];
+      phones[j] = tmp;
+      return { ...prev, phones };
+    });
+  }
+
   function updateSocial(i: number, patch: Partial<SocialLink>) {
     setS((prev) => ({
       ...prev,
@@ -106,22 +133,82 @@ export function ContactSocialForm({ initial }: Props) {
           Contact email
           <input type="email" className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2" value={s.email} onChange={(e) => setS({ ...s, email: e.target.value })} />
         </label>
-        <div className="space-y-3">
-          <p className="text-sm font-medium">Telephone numbers</p>
+        <div className="space-y-3" data-testid="contact-phones-editor">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-sm font-medium">Telephone numbers</p>
+            <button
+              type="button"
+              data-testid="contact-phone-add"
+              onClick={addPhone}
+              disabled={s.phones.length >= 8}
+              className="rounded-md border border-[var(--adm-border)] px-3 py-1.5 text-sm font-semibold text-[var(--adm-action)] disabled:opacity-40"
+            >
+              Add phone
+            </button>
+          </div>
+          {s.phones.length === 0 ? (
+            <p className="text-sm text-[var(--adm-ink-2)]" data-testid="contact-phones-empty">
+              No telephone numbers. Public footer will hide the phone list until you add one (defaults are not restored
+              automatically).
+            </p>
+          ) : null}
           {s.phones.map((p, i) => (
-            <div key={p.id} className="grid gap-2 rounded-lg border border-[var(--adm-border)] p-3 md:grid-cols-[1fr_1fr_auto]">
+            <div
+              key={p.id}
+              data-testid={`contact-phone-row-${p.id}`}
+              className="grid gap-2 rounded-lg border border-[var(--adm-border)] p-3 md:grid-cols-[1fr_1fr_auto]"
+            >
               <label className="text-xs">
                 Display
-                <input className="mt-1 w-full rounded-md border border-[var(--adm-border)] px-2 py-1.5 text-sm" value={p.display} onChange={(e) => updatePhone(i, { display: e.target.value })} />
+                <input
+                  className="mt-1 w-full rounded-md border border-[var(--adm-border)] px-2 py-1.5 text-sm"
+                  value={p.display}
+                  onChange={(e) => updatePhone(i, { display: e.target.value })}
+                />
               </label>
               <label className="text-xs">
                 tel: digits
-                <input className="mt-1 w-full rounded-md border border-[var(--adm-border)] px-2 py-1.5 text-sm" value={p.tel} onChange={(e) => updatePhone(i, { tel: e.target.value.replace(/\s+/g, "") })} />
+                <input
+                  className="mt-1 w-full rounded-md border border-[var(--adm-border)] px-2 py-1.5 text-sm"
+                  value={p.tel}
+                  onChange={(e) => updatePhone(i, { tel: e.target.value.replace(/\s+/g, "") })}
+                />
               </label>
-              <label className="flex items-center gap-2 text-sm md:mt-5">
-                <input type="checkbox" checked={p.enabled} onChange={(e) => updatePhone(i, { enabled: e.target.checked })} />
-                Show
-              </label>
+              <div className="flex flex-wrap items-center gap-2 md:mt-5">
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={p.enabled} onChange={(e) => updatePhone(i, { enabled: e.target.checked })} />
+                  Show
+                </label>
+                <button
+                  type="button"
+                  data-testid={`contact-phone-up-${p.id}`}
+                  aria-label={`Move phone ${i + 1} up`}
+                  disabled={i === 0}
+                  onClick={() => movePhone(i, -1)}
+                  className="rounded border border-[var(--adm-border)] px-2 py-1 text-xs disabled:opacity-40"
+                >
+                  Up
+                </button>
+                <button
+                  type="button"
+                  data-testid={`contact-phone-down-${p.id}`}
+                  aria-label={`Move phone ${i + 1} down`}
+                  disabled={i === s.phones.length - 1}
+                  onClick={() => movePhone(i, 1)}
+                  className="rounded border border-[var(--adm-border)] px-2 py-1 text-xs disabled:opacity-40"
+                >
+                  Down
+                </button>
+                <button
+                  type="button"
+                  data-testid={`contact-phone-remove-${p.id}`}
+                  aria-label={`Remove phone ${i + 1}`}
+                  onClick={() => removePhone(i)}
+                  className="rounded border border-[var(--adm-danger)] px-2 py-1 text-xs font-semibold text-[var(--adm-danger)]"
+                >
+                  Remove
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -219,7 +306,14 @@ export function ContactSocialForm({ initial }: Props) {
         <button
           type="button"
           className="text-sm font-semibold text-[var(--adm-action)]"
-          onClick={() => setS(DEFAULT_CONTACT_SOCIAL)}
+          onClick={() =>
+            setS({
+              ...DEFAULT_CONTACT_SOCIAL,
+              phones: DEFAULT_CONTACT_SOCIAL.phones.map((p) => ({ ...p })),
+              social: DEFAULT_CONTACT_SOCIAL.social.map((s) => ({ ...s })),
+              whatsapp: { ...DEFAULT_CONTACT_SOCIAL.whatsapp },
+            })
+          }
         >
           Reset form to merchant defaults
         </button>

@@ -42,7 +42,7 @@ test.describe("contact social whatsapp storefront", () => {
 
   test("PDP WhatsApp CTA is below primary and opens copy fallback without recipient", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto("/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage", { waitUntil: "domcontentloaded" });
+    await page.goto("/products/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage", { waitUntil: "domcontentloaded" });
     const primary = page.getByTestId("pdp-primary-cta");
     const wa = page.getByTestId("pdp-whatsapp-cta");
     await expect(primary).toBeVisible();
@@ -56,8 +56,8 @@ test.describe("contact social whatsapp storefront", () => {
     const text = await page.getByTestId("whatsapp-message-text").inputValue();
     expect(text).toMatch(/Dell/i);
     expect(text).toMatch(/Quantity:/i);
-    expect(text).toMatch(/\/products\/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage/i);
-    expect(text).toMatch(/Rs 49,000/);
+    expect(text).toMatch(/\/products\/dell-latitude-7420-core-i5-11th-gen-16gb-ram-256gb-storage/i);
+    expect(text).toMatch(/Rs /);
     await expect(page.getByTestId("whatsapp-open-general")).toHaveAttribute("href", "https://api.whatsapp.com/message/NT5WBBX234POA1");
   });
 

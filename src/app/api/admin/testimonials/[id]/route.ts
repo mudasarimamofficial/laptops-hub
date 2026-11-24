@@ -4,6 +4,7 @@ import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { isCrossSite } from "@/lib/validation/contact";
 import {
+  testimonialSaveErrorMessage,
   TESTIMONIAL_APPROVE_ROLES,
   TESTIMONIAL_EDIT_ROLES,
   canTransition,
@@ -62,7 +63,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const { error } = await supabase.from("store_testimonials").update(row).eq("id", id);
     if (error) {
       console.error("testimonial update failed", error.code);
-      return NextResponse.json({ error: "save_failed", message: "Could not save. Check the fields and try again." }, { status: 400 });
+      return NextResponse.json({ error: "save_failed", message: testimonialSaveErrorMessage(error) }, { status: 400 });
     }
     await supabase.from("audit_logs").insert({
       actor_user_id: staff.userId,

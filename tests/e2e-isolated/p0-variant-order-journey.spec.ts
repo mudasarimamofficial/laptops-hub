@@ -12,6 +12,7 @@ import fs from "fs";
 import { formatPkr } from "../../src/lib/money";
 import { fmtPkr } from "../../src/lib/catalog/v5-model";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
+import { productJsonLd } from "./helpers/json-ld";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("isolated journeys need a local Supabase");
@@ -49,9 +50,14 @@ const apiOrder = (page: Page, lines: { variantId: string; quantity: number }[], 
 
 test.describe.serial("P0: exact variant from PDP to COD order (isolated)", () => {
   let prevTracking: unknown = null;
+  /** Automatic campaigns paused for this run (exact list prices are asserted); re-activated in afterAll. */
+  let pausedCampaigns: string[] = [];
 
   test.beforeAll(async () => {
     await assertLocalOnly("variant order journey");
+    const { data: active } = await sb.from("discount_campaigns").select("id").eq("status", "active");
+    pausedCampaigns = (active || []).map((c) => c.id);
+    if (pausedCampaigns.length) await sb.from("discount_campaigns").update({ status: "disabled" }).in("id", pausedCampaigns);
     prevTracking = (await sb.from("store_settings").select("value").eq("key", "inventory_tracking").maybeSingle()).data?.value ?? null;
     await sb.from("store_settings").upsert({
       key: "inventory_tracking",
@@ -60,6 +66,7 @@ test.describe.serial("P0: exact variant from PDP to COD order (isolated)", () =>
   });
 
   test.afterAll(async () => {
+    if (pausedCampaigns.length) await sb.from("discount_campaigns").update({ status: "active" }).in("id", pausedCampaigns);
     if (prevTracking) await sb.from("store_settings").upsert({ key: "inventory_tracking", value: prevTracking });
     for (const handle of [A.handle, B.handle]) {
       const { data: p } = await sb.from("products").select("id").eq("handle", handle).maybeSingle();
@@ -132,8 +139,8 @@ test.describe.serial("P0: exact variant from PDP to COD order (isolated)", () =>
     await expect(page.getByTestId("pdp-sold-out")).toHaveText("This option is sold out.");
     await expect(page.getByRole("button", { name: /^Add to cart · / })).toHaveCount(0);
     // Structured data is a price range, not the default variant's price.
-    const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').first().textContent())!);
-    expect(ld.offers).toMatchObject({ "@type": "AggregateOffer", lowPrice: "85000.00", highPrice: "95000.00", offerCount: 4 });
+    const ld = await productJsonLd(page);
+    expect(ld?.offers).toMatchObject({ "@type": "AggregateOffer", lowPrice: "85000.00", highPrice: "95000.00", offerCount: 4 });
   });
 
   // Shopper path on the PDP: 8GB/256GB (default) → RAM 16GB → Storage 512GB → Storage 256GB → add to cart.

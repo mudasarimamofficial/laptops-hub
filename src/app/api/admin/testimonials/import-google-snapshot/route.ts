@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { isCrossSite } from "@/lib/validation/contact";
-import { TESTIMONIAL_APPROVE_ROLES, testimonialImportItemSchema } from "@/lib/content/testimonials";
+import { TESTIMONIAL_APPROVE_ROLES, testimonialImportItemSchema, testimonialSaveErrorMessage } from "@/lib/content/testimonials";
 import snapshot from "@/data/google-reviews-import-candidates.json";
 
 const crossSite = (r: Request) =>
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
 
       const { data, error } = await supabase.from("store_testimonials").insert(row).select("id").single();
       if (error || !data) {
-        errors.push(`${parsed.data.authorName}: save failed`);
+        errors.push(`${parsed.data.authorName}: ${error ? testimonialSaveErrorMessage(error) : "save failed"}`);
         continue;
       }
       await supabase.from("audit_logs").insert({

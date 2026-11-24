@@ -224,3 +224,14 @@ export function splitRows<T>(items: T[], minForTwoRows = 6): T[][] {
   const half = Math.ceil(items.length / 2);
   return [items.slice(0, half), items.slice(half)];
 }
+
+/**
+ * Merchant-readable message for a failed testimonial write. Databases without migration 20261124120000 still require a
+ * Maps link on every Google entry (drafts included); say so instead of a generic "Could not save".
+ */
+export function testimonialSaveErrorMessage(error: { message?: string | null } | null | undefined): string {
+  if (error?.message && /store_testimonials_google_needs_link/.test(error.message)) {
+    return "Google reviews need the Google Maps link to the review before they can be saved. Paste the link, or choose another source.";
+  }
+  return "Could not save. Check the fields and try again.";
+}

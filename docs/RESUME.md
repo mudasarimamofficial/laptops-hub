@@ -1,5 +1,10 @@
 # Resume here
 
+> **2026-11-24 theme Phase 2b (Claude Opus 5.5):** PR #72 merged (`336a5ae`), deployed (`dpl_H9V3oYjg8fgJS4iukeFfJ8gvdrQ4`).
+> Online Store → Site-wide text now also has Product pages / Collection pages / Page not found (25 fields, same
+> `theme_settings.globals` storage and publish workflow). Next: Phase 2c (cart/compare/search wording, PDP section
+> order), fix stale tests LH-023/LH-024, owner decisions in `00_EXECUTIVE_STATUS.md`.
+
 > **2026-11-24 theme Phase 2a (Claude Opus 5.5):** PR #71 merged (`0f9e29d`) and deployed (`dpl_9kgUXMDyyRHpbMDsbpReSSuk66ng`).
 > Online Store → "Header & footer" edits 11 site-wide texts stored in `theme_settings.globals` (draft/publish/restore);
 > draft PUT no longer wipes `theme_settings` (LH-020); nav Guides/Support keyed by id (LH-009); Settings SEO title suffix

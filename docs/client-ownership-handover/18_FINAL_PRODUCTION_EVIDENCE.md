@@ -45,3 +45,19 @@
 | Production data | `theme_publications` 0, `orders` 1, `seo_defaults.title_suffix` "" , theme_versions created in last 3 h: 0 — no writes, no migrations, no env changes |
 | Owner editing header/footer on production | NOT TESTED (owner sign-in required; first publish is the merchant's own action) |
 
+## Phase 2b release — product / collection / 404 copy (verified 2026-11-24, read-only)
+| Check | Result |
+|---|---|
+| PR | https://github.com/mudasarimamofficial/laptops-hub/pull/72 — CI `quality` (2m36s), Vercel, preview comments pass; merged as `336a5ae243f2cdebdea773a9db9a6c4a238baaf4` |
+| Deployment | `dpl_H9V3oYjg8fgJS4iukeFfJ8gvdrQ4` READY, target production, aliases `www.laptopshub.pk`, `laptopshub.pk` |
+| Previous deployment (rollback candidate) | `dpl_9kgUXMDyyRHpbMDsbpReSSuk66ng` @ `0f9e29d` |
+| `/`, `/collections/all`, product page, `/admin/login` | 200 each |
+| Product page (`/products/dell-5400-…`) | headings "Specifications", "About this listing", "Customer reviews", "More from Dell"; "SPEC SHEET", policy links "Delivery/Returns/Warranty · READ POLICY", "View all →" — identical V5 text; 0 console errors; 0 px overflow |
+| Unmatched URL | 404, "This page doesn’t exist", title "Page not found · Laptops HUB" |
+| Missing product | 404, "This product isn’t in the catalog", button "Browse all products" → `/collections/all` |
+| Collection "no matches" state | NOT TESTED on production (depends on live inventory per price band); covered by the isolated test |
+| Security headers / `X-Powered-By` | 4 headers present / absent |
+| Apex / CRM | 308 / 200 (untouched) |
+| `/api/admin/theme/homepage` anonymous | 401 |
+| Production data | `theme_publications` 0, `orders` 1, theme_versions in last 6 h: 0 — no writes, migrations or env changes |
+

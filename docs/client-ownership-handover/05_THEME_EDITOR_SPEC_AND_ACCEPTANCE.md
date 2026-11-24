@@ -68,12 +68,29 @@ draft survives reload → public `/collections/all` unchanged → publish → fo
 label and mega-menu link change on a non-home page → restore → original text back · SEO suffix changes `<title>`, empty
 restores the V5 template. Screenshots: `docs/evidence/theme-globals/`.
 
-## Phase 2b+ — not built yet (honest gap list)
-1. (done above)
+## Phase 2b — page-template copy (`feat/theme-phase2b-page-copy-2026-11-24`)
+- Same storage and workflow as 2a (`theme_settings.globals`, draft → publish → restore), 25 more fields in three new
+  editor entries under **Site-wide text**: **Product pages** (spec and description headings/kickers, the "being prepared"
+  note, three policy-link labels and their small text, related heading with a `{brand}` token, "View all"),
+  **Collection pages** (no-matches heading/message/buttons, Load more, empty-Chromebooks heading/message/ask button),
+  **Page not found** (page and product 404 headings/messages, button label and link).
+- Deliberately **not** editable: prices, stock, variant options, buy/cart/WhatsApp buttons, specification rows, product
+  descriptions, policy page destinations (labels only), the "What each listing shows" list (it describes listing
+  content), filter/sort controls.
+- All three 404 entry points read the published text (root `app/not-found.tsx` for unmatched URLs, the storefront
+  404 and the product 404). Root 404 title now follows the SEO title suffix too.
+- Render modes unchanged (`/`, `/_not-found` static; product/collection already dynamic with ISR data).
+- Acceptance: `p2b-theme-templates-publish.spec.ts` (isolated) — owner edits 6 fields across the three panels, unsafe
+  button link refused with "Page not found → Button goes to", Reset, draft private, publish → product page, collection
+  no-matches, page 404 (status 404) and product 404 show the edits with `{brand}` substituted → restore → V5 text.
+  Screenshots `docs/evidence/theme-templates/`.
+
+## Phase 2c+ — not built yet (honest gap list)
+1. (done above: header/footer 2a, product/collection/404 labels 2b)
 2. **Content page template**: editable kicker/intro per page (today only title/body are editable).
-3. **Product page template**: section labels (Specifications, About this listing, More from brand), policy link labels,
-   section order/visibility — never price/stock/cart logic.
-4. **Collection/search/cart/compare/404 templates**: headings and microcopy.
+3. **Product page template — layout**: section order/visibility (labels done in 2b), reviews block wording, buy-box
+   microcopy — never price/stock/cart logic.
+4. **Cart/compare/search-overlay templates**: headings and microcopy (collection and 404 done in 2b).
 5. **Theme settings**: validated colour tokens and typography presets with contrast checks (V5 tokens as defaults).
 6. **Template selector + representative product/collection picker** in the editor, using the same draft/publish/
    rollback tables (new `theme_templates` keys — requires a small additive migration and owner approval to apply).

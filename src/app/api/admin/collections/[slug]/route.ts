@@ -6,6 +6,7 @@ import {
   createAuthorizedStaffWriter,
   staffErrorResponse,
 } from "@/lib/auth/staff";
+import { V5_COLS } from "@/lib/catalog/v5-model";
 
 /** Storefront collection pages and the sitemap read published collections through the "collections" cache tag. */
 function refreshStorefront(slug: string) {
@@ -67,7 +68,14 @@ export async function PATCH(request: Request, ctx: Ctx) {
       .maybeSingle();
     if (findErr || !existing) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
+    // Built-in storefront collections (V5_COLS) choose their products in code: rule, membership, title and visibility
+    // edits would be stored but never shown, so they are refused instead of silently ignored. SEO text does apply.
+    const builtIn = Object.hasOwn(V5_COLS, existing.slug);
+    const BUILT_IN_MESSAGE =
+      "This is a built-in storefront collection. Its products, title and visibility come from the storefront itself; only its search title and description can be changed here.";
+
     if (body?.addProductIds || body?.removeProductIds || body?.orderedProductIds || body?.productIds) {
+      if (builtIn) return NextResponse.json({ error: "built_in", message: BUILT_IN_MESSAGE }, { status: 409 });
       const mem = membershipSchema.safeParse(body);
       if (!mem.success) {
         return NextResponse.json({ error: "validation_failed", message: "Invalid membership payload." }, { status: 400 });
@@ -136,7 +144,16 @@ export async function PATCH(request: Request, ctx: Ctx) {
 
     const parsed = patchSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: "validation_failed" }, { status: 400 });
+      return NextResponse.json(
+        { error: "validation_failed", message: "Check the fields: title 2–160 characters, search title up to 200, search description up to 500." },
+        { status: 400 },
+      );
+    }
+    if (
+      builtIn &&
+      (["title", "published", "featured", "sortOrder", "rule", "imageUrl"] as const).some((k) => parsed.data[k] !== undefined)
+    ) {
+      return NextResponse.json({ error: "built_in", message: BUILT_IN_MESSAGE }, { status: 409 });
     }
 
     const patch: Record<string, unknown> = {};

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { EmptyState } from "@/components/admin/ui/empty-state";
 import { StatusBadge } from "@/components/admin/ui/status-badge";
+import { V5_COLS } from "@/lib/catalog/v5-model";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 
@@ -82,7 +83,7 @@ export default async function AdminCollectionsPage() {
                 <div className="adm-mobile-card__row">
                   <StatusBadge status={c.published ? "published" : "draft"} />
                   <span className="text-xs text-[var(--adm-ink-2)]">
-                    {automated ? "Automated" : `${count} products`}
+                    {Object.hasOwn(V5_COLS, c.slug) ? "Built-in" : automated ? "Automated" : `${count} products`}
                   </span>
                 </div>
                 <Link href={`/admin/collections/${c.slug}`} className="adm-mobile-card__action">
@@ -119,8 +120,8 @@ export default async function AdminCollectionsPage() {
                     <td className="px-4 py-3 font-[family-name:var(--font-mono)] text-xs text-[var(--adm-ink-2)]">
                       {c.slug}
                     </td>
-                    <td className="px-4 py-3">{automated ? "Automated" : "Manual"}</td>
-                    <td className="px-4 py-3">{automated ? "—" : count}</td>
+                    <td className="px-4 py-3">{Object.hasOwn(V5_COLS, c.slug) ? "Built-in" : automated ? "Automated" : "Manual"}</td>
+                    <td className="px-4 py-3">{automated || Object.hasOwn(V5_COLS, c.slug) ? "—" : count}</td>
                     <td className="px-4 py-3">
                       <StatusBadge status={c.published ? "published" : "draft"} />
                     </td>

@@ -5,6 +5,7 @@ import { pkrMajorToPaisa } from "@/lib/money";
 import { withCatalogRefresh } from "@/lib/catalog/refresh";
 import { INVENTORY_ADJUST_ROLES, inventoryProblemMessage } from "@/lib/commerce/inventory-adjust";
 import { makeSellableOnActivate, purchasableAfterPrice } from "@/lib/catalog/sellable";
+import { applySpecEdit, specEditSchema } from "@/lib/catalog/spec-edit";
 
 const patchSchema = z
   .object({
@@ -33,6 +34,8 @@ const patchSchema = z
     expectedQuantityOnHand: z.number().int().nullable().optional(),
     sku: z.string().trim().max(120).nullable().optional(),
     restore: z.boolean().optional(),
+    /** Laptop specs and condition (filters, chips, compare, spec table). Unknown stored keys are kept. */
+    specs: specEditSchema.optional(),
   })
   .superRefine((val, ctx) => {
     if (val.pricePkr !== undefined && !val.variantId) {
@@ -66,14 +69,20 @@ async function handlePATCH(request: Request, ctx: Ctx) {
     const parsed = patchSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "validation_failed", message: "Check required fields. Price updates need a specific variant." },
+        {
+          error: "validation_failed",
+          message:
+            parsed.error.issues[0]?.path[0] === "specs"
+              ? `Specifications: ${parsed.error.issues[0].path.slice(1).join(" ")} ${parsed.error.issues[0].message}`.replace(/\s+/g, " ")
+              : "Check required fields. Price updates need a specific variant.",
+        },
         { status: 400 },
       );
     }
 
     const { data: existing, error: findErr } = await supabase
       .from("products")
-      .select("id, handle, title, status, featured, deleted_at")
+      .select("id, handle, title, status, featured, deleted_at, specs")
       .eq("handle", handle)
       .maybeSingle();
     if (findErr || !existing) {
@@ -114,6 +123,7 @@ async function handlePATCH(request: Request, ctx: Ctx) {
     if (parsed.data.tags !== undefined) productPatch.tags = parsed.data.tags;
     if (parsed.data.seoTitle !== undefined) productPatch.seo_title = parsed.data.seoTitle;
     if (parsed.data.seoDescription !== undefined) productPatch.seo_description = parsed.data.seoDescription;
+    if (parsed.data.specs !== undefined) productPatch.specs = applySpecEdit(existing.specs as Record<string, unknown> | null, parsed.data.specs);
 
     // Stock change on a variant that already tracks stock: validate before writing anything, so a stale count never
     // leaves a half-saved product. adjust_inventory re-checks atomically below.

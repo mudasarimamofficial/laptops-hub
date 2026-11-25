@@ -3,6 +3,8 @@ import {
   HERO_IMAGE_PRESETS,
   HOMEPAGE_DEFAULT_HANDLES,
   STORY_ANGLE_PRESETS,
+  defaultHeroSectionSettings,
+  defaultStorySectionSettings,
   resolveHeroPresentationImage,
   resolveStoryAngleImage,
 } from "../../src/lib/content/homepage-image-presets";
@@ -60,3 +62,31 @@ assert.ok(STORY_ANGLE_PRESETS.right.imageUrl.includes("right"));
 assert.ok(STORY_ANGLE_PRESETS.rear.imageUrl.includes("rear"));
 
 console.log("homepage-image-presets.test.ts: ok");
+
+// LH-018: publishing the default layout stores each slot's preset photo. That stored value is the default, so the
+// result must equal the built-in default (no settings) for every slot, whether or not the preset listing exists.
+const published = defaultHeroSectionSettings();
+for (const slot of ["main", "side1", "side2"] as const) {
+  for (const productHandle of [HERO_IMAGE_PRESETS[slot].handle, "another-laptop"]) {
+    const opts = { slot, productHandle, catalogImageUrl: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/own.jpg" };
+    assert.deepEqual(resolveHeroPresentationImage({ ...opts, settings: published }), resolveHeroPresentationImage(opts), `${slot}/${productHandle}`);
+  }
+}
+// The preset listing is gone: its slot shows the replacement product's own photo, never the preset photo.
+const swapped = resolveHeroPresentationImage({ slot: "side1", productHandle: "lenovo-x", settings: published, catalogImageUrl: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/lenovo.jpg" });
+assert.equal(swapped.source, "catalog");
+assert.ok(swapped.src?.endsWith("lenovo.jpg"));
+assert.equal(swapped.alt, "", "the caller names the actual product, not the preset brand");
+// A merchant's own photo still wins, including on a slot whose preset listing exists.
+assert.equal(resolveHeroPresentationImage({ slot: "side1", productHandle: HOMEPAGE_DEFAULT_HANDLES.hp, settings: { ...published, side1ImageUrl: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/mine.webp" } }).source, "override");
+// Choosing another slot's preset photo is a real choice and stays an override.
+assert.equal(resolveHeroPresentationImage({ slot: "side1", productHandle: "x", settings: { side1ImageUrl: HERO_IMAGE_PRESETS.main.imageUrl } }).source, "override");
+
+const storyPublished = defaultStorySectionSettings();
+for (const angle of ["front", "left", "right", "rear"] as const) {
+  for (const productHandle of [STORY_ANGLE_PRESETS.handle, "another-laptop"]) {
+    const opts = { angle, productHandle, catalogImageUrl: "https://cdn.shopify.com/s/files/1/0981/4720/5393/files/own.jpg" };
+    assert.deepEqual(resolveStoryAngleImage({ ...opts, settings: storyPublished }), resolveStoryAngleImage(opts), `${angle}/${productHandle}`);
+  }
+}
+console.log("homepage-image-presets (LH-018 default publish): ok");

@@ -106,8 +106,11 @@ export function resolveHeroPresentationImage(opts: {
   const altKey =
     opts.slot === "main" ? "mainImageAlt" : opts.slot === "side1" ? "side1ImageAlt" : "side2ImageAlt";
 
+  // The default layout stores the slot's own preset photo (see defaultHeroSectionSettings). That value is the default,
+  // not a merchant choice: it follows the default rules below, so publishing an unchanged layout renders exactly the
+  // built-in page, and a preset photo is never shown on a link to a different product (LH-018).
   const override = httpsUrl(opts.settings?.[key]);
-  if (override) {
+  if (override && override !== preset.imageUrl) {
     const alt = typeof opts.settings?.[altKey] === "string" ? String(opts.settings[altKey]) : preset.alt;
     return { src: override, alt, source: "override", cutout: true };
   }
@@ -116,11 +119,12 @@ export function resolveHeroPresentationImage(opts: {
     return { src: preset.imageUrl, alt: preset.alt, source: "preset", cutout: true };
   }
 
+  // Another product's own photo: no preset alt (it describes a different laptop); the caller uses the product's name.
   if (opts.catalogImageUrl) {
-    return { src: opts.catalogImageUrl, alt: preset.brand, source: "catalog", cutout: false };
+    return { src: opts.catalogImageUrl, alt: "", source: "catalog", cutout: false };
   }
 
-  return { src: null, alt: preset.alt, source: "none", cutout: false };
+  return { src: null, alt: "", source: "none", cutout: false };
 }
 
 export function resolveStoryAngleImage(opts: {
@@ -139,7 +143,8 @@ export function resolveStoryAngleImage(opts: {
         ? String(opts.settings[`angle_${opts.angle}_alt`])
         : preset.alt;
 
-  if (override) {
+  // As for the hero: the stored preset photo is the default, not an override (LH-018).
+  if (override && override !== preset.imageUrl) {
     return { src: override, alt: altOverride, source: "override", cutout: true };
   }
 

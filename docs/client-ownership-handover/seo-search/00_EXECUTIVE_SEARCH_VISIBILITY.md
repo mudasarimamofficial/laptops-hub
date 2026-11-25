@@ -11,7 +11,7 @@
 - `/compare` removed from the index and sitemap. Readable homepage heading.
 - Admin → SEO: edit the homepage search text, see the business identity, see products that share a title (9 groups / 19 products found), and Search Console steps.
 
-**Search Console (done 2026-11-25):** a Domain property owned only by the business account, verified with one DNS TXT record (nothing else changed). Sitemap read successfully (279 pages). Homepage live test passes. Indexing requested for the homepage, all products, laptops, guides and contact (14).
+**Search Console (done 2026-11-25):** a Domain property owned only by the business account, verified with one DNS TXT record (nothing else changed). Sitemap read successfully (279 pages). Homepage live test passes. **Five** priority indexing requests, once each: `/`, `/collections/all`, `/collections/laptops`, `/guides`, `/pages/contact` (evidence: 14_SEARCH_CONSOLE_SUBMISSION_EVIDENCE.md). Do not re-request without a real page change (see 17).
 
 **Still needed (owner):**
 1. Confirm the Business Profile links to the website and that the address wording matches (08).
@@ -20,4 +20,4 @@
 
 **Expectations:** Google re-crawls on its own schedule. Improvements typically show over days to weeks after the sitemap is submitted. Rankings cannot be guaranteed. Other shops use similar names, so consistent business details and real content matter more than any tag.
 
-Status: **READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED** (unchanged for commerce). SEO engineering under our control: done and deployed. Google submission done; indexing and ranking are now up to Google (awaiting).
+Status: **READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED** (unchanged for commerce). SEO engineering under our control: done and deployed. **SEO engineering: implemented. Google indexing: pending.** The homepage is not confirmed indexed or ranking until Search Console says so (track in 17).

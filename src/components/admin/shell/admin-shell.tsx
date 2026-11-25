@@ -158,6 +158,13 @@ export function AdminShell({ staff, children }: Props) {
           <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wider text-[var(--adm-sidebar-muted)]">
             {staff?.role ?? "—"}
           </p>
+          <Link
+            href="/admin/account"
+            className="mt-2 inline-flex min-h-[44px] items-center text-sm text-[var(--adm-sidebar-muted)] hover:text-white hover:underline"
+            data-testid="admin-account-link"
+          >
+            Your account
+          </Link>
           <form action="/api/admin/account/sign-out" method="post" className="mt-2">
             <button
               type="submit"

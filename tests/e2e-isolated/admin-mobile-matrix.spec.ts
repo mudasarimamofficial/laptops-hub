@@ -53,6 +53,7 @@ const STAFF_ROUTES: { route: string; heading: RegExp; control: string }[] = [
   { route: "/admin/staff", heading: /Staff/i, control: "form,button,table,a" },
   { route: "/admin/activity", heading: /Activity/i, control: "table,a,article" },
   { route: "/admin/help", heading: /Help/i, control: "a,button" },
+  { route: "/admin/account", heading: /Your account/i, control: "form,button,input" },
 ];
 
 const GUEST_ROUTES: { route: string; heading: RegExp; control: string }[] = [
@@ -166,15 +167,17 @@ test.describe("admin mobile full route matrix", () => {
     }
   });
 
-  test("owner: every staff route at every required viewport", async ({ page }) => {
-    test.setTimeout(600_000);
-    await signInOwner(page);
-    for (const vp of VIEWPORTS) {
+  // One test per viewport (same routes and checks): a single 9-viewport test ran ~10 minutes and timed out as routes
+  // were added, which said nothing about the pages themselves.
+  for (const vp of VIEWPORTS) {
+    test(`owner: every staff route at ${vp.name}`, async ({ page }) => {
+      test.setTimeout(240_000);
+      await signInOwner(page);
       for (const r of STAFF_ROUTES) {
         await exerciseRoute(page, r.route, r.heading, r.control, vp, "owner");
       }
-    }
-  });
+    });
+  }
 
   test("320px: products/orders mobile cards visible when list has rows", async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 568 });

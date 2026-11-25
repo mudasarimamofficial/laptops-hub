@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { CATEGORY_OPTIONS, COLLECTION_BRANDS, canonicalCategory, isKnownCategory } from "@/lib/catalog/taxonomy-options";
 import { useRouter } from "next/navigation";
 import { formatPkr, paisaToMajor } from "@/lib/money";
 import { useHydrated } from "@/lib/ui/use-hydrated";
@@ -42,7 +43,7 @@ export function ProductEditForm(props: Props) {
   const [featured, setFeatured] = useState(props.featured);
   const [manufacturer, setManufacturer] = useState(props.manufacturer || "");
   const [productType, setProductType] = useState(props.productType || "");
-  const [category, setCategory] = useState(props.category || "");
+  const [category, setCategory] = useState(canonicalCategory(props.category) ?? "");
   const [seoTitle, setSeoTitle] = useState(props.seoTitle || "");
   const [seoDescription, setSeoDescription] = useState(props.seoDescription || "");
   const [variantId, setVariantId] = useState(props.variants[0]?.id || "");
@@ -292,14 +293,35 @@ export function ProductEditForm(props: Props) {
 
       <AdminCard title="Organization" description="Laptop retail grouping for filters and lists.">
         <div className="space-y-3">
-          <AdminField label="Brand / manufacturer" optional>
-            <input className={admInputClass} value={manufacturer} onChange={(e) => setManufacturer(e.target.value)} placeholder="Dell / HP / Lenovo…" />
+          <AdminField label="Brand / manufacturer" optional hint="Dell, HP, Lenovo, Apple, Microsoft, ASUS, Acer and Toshiba have their own collection; spelling is matched for you.">
+            <input
+              className={admInputClass}
+              value={manufacturer}
+              onChange={(e) => setManufacturer(e.target.value)}
+              list="admin-brand-options"
+              placeholder="Dell / HP / Lenovo…"
+            />
+            <datalist id="admin-brand-options">
+              {COLLECTION_BRANDS.map((b) => (
+                <option key={b} value={b} />
+              ))}
+            </datalist>
           </AdminField>
           <AdminField label="Type" optional>
             <input className={admInputClass} value={productType} onChange={(e) => setProductType(e.target.value)} placeholder="Notebook" />
           </AdminField>
-          <AdminField label="Category" optional>
-            <input className={admInputClass} value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Business" />
+          <AdminField label="Category" optional hint="Decides the menu and collections the product appears in.">
+            <select className={admInputClass} value={category} onChange={(e) => setCategory(e.target.value)} data-testid="product-category">
+              <option value="">Not set (shown as Laptop)</option>
+              {CATEGORY_OPTIONS.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+              {category && !isKnownCategory(category) ? (
+                <option value={category}>{`${category} (not recognised — shown as Laptop)`}</option>
+              ) : null}
+            </select>
           </AdminField>
         </div>
       </AdminCard>

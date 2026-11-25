@@ -109,6 +109,7 @@ test.describe.serial("P0: admin isolation and checkout gates (isolated)", () => 
       await page.goto(`/products/${P.handle}`);
       await page.getByRole("button", { name: /Add to cart/ }).first().click();
       await page.goto("/checkout");
+      await expect(page.getByTestId("checkout-form")).toHaveAttribute("data-ready", "true"); // typing before hydration is lost
       await page.getByLabel("City").fill(fx.zone.city);
       await page.getByLabel("Province").selectOption(fx.zone.province);
       await expect(page.getByText(/Free delivery · No COD fee/)).toBeVisible();
@@ -130,6 +131,7 @@ test.describe.serial("P0: admin isolation and checkout gates (isolated)", () => 
     await page.goto(`/products/${P.handle}`);
     await page.getByRole("button", { name: /Add to cart/ }).first().click();
     await page.goto("/checkout");
+    await expect(page.getByTestId("checkout-form")).toHaveAttribute("data-ready", "true");
     await page.getByLabel("City").fill(fx.zone.city);
     await page.getByLabel("Province").selectOption(fx.zone.province);
     await expect(page.getByText(`Delivery ${formatPkr(fx.zone.flatFeePaisa)} · COD fee ${formatPkr(fx.zone.codFeePaisa)}`)).toBeVisible();
@@ -151,6 +153,7 @@ test.describe.serial("P0: admin isolation and checkout gates (isolated)", () => 
       await page.getByRole("button", { name: /Add to cart/ }).first().click();
       await page.goto("/checkout");
       await expect(page.getByText("Online ordering opens soon")).toBeVisible();
+      await expect(page.getByTestId("checkout-form")).toHaveAttribute("data-ready", "true");
       await page.getByLabel("City").fill(fx.zone.city);
       await page.getByLabel("Province").selectOption(fx.zone.province);
       await expect(page.getByText(/Cash due: Rs/)).toBeVisible();

@@ -33,8 +33,24 @@ export function inventoryProblemMessage(code: string): string | null {
   return MESSAGES[code] ?? null;
 }
 
-/** Low-stock line for the desk: at or below this many units (and above 0). */
+/** Built-in low-stock line for the desk: at or below this many units (and above 0). */
 export const LOW_STOCK_AT = 2;
+
+/**
+ * G16: Settings → Products & inventory → "Default low-stock threshold". A whole number 1–1000 replaces the built-in 2;
+ * 0, empty or anything else keeps the built-in value (production stores 0 today, so the desk is unchanged until the
+ * merchant sets a number).
+ */
+export function lowStockAtFrom(inventoryDefaults: unknown): number {
+  const v = (inventoryDefaults as { low_stock_threshold?: unknown } | null | undefined)?.low_stock_threshold;
+  const n = typeof v === "string" && v.trim() !== "" ? Number(v) : v;
+  return typeof n === "number" && Number.isInteger(n) && n >= 1 && n <= 1000 ? n : LOW_STOCK_AT;
+}
+
+/** G16: Settings → "New products default to tracked inventory". */
+export function newProductTrackedFrom(inventoryDefaults: unknown): boolean {
+  return (inventoryDefaults as { tracked?: unknown } | null | undefined)?.tracked === true;
+}
 
 export type StockState = "out" | "low" | "ok" | "oversold";
 export function stockState(qty: number, lowAt = LOW_STOCK_AT): StockState {

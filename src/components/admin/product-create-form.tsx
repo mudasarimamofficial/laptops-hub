@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import { COLLECTION_BRANDS } from "@/lib/catalog/taxonomy-options";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import { AdminCard } from "@/components/admin/ui/admin-card";
@@ -18,7 +19,7 @@ function slugify(title: string): string {
     .replace(/^-|-$/g, "");
 }
 
-export function ProductCreateForm() {
+export function ProductCreateForm({ defaultTracked = false }: { defaultTracked?: boolean }) {
   const router = useRouter();
   const hydrated = useHydrated();
   const [title, setTitle] = useState("");
@@ -28,7 +29,7 @@ export function ProductCreateForm() {
   const [pricePkr, setPricePkr] = useState("");
   const [manufacturer, setManufacturer] = useState("");
   const [status, setStatus] = useState<"draft" | "active">("draft");
-  const [inventoryMode, setInventoryMode] = useState<"untracked" | "tracked">("untracked");
+  const [inventoryMode, setInventoryMode] = useState<"untracked" | "tracked">(defaultTracked ? "tracked" : "untracked");
   const [quantityOnHand, setQuantityOnHand] = useState("0");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -111,7 +112,18 @@ export function ProductCreateForm() {
           />
         </AdminField>
         <AdminField label="Brand / manufacturer" optional>
-          <input className={admInputClass} value={manufacturer} onChange={(e) => setManufacturer(e.target.value)} placeholder="Dell / HP / Lenovo…" />
+          <input
+            className={admInputClass}
+            value={manufacturer}
+            onChange={(e) => setManufacturer(e.target.value)}
+            list="admin-brand-options-new"
+            placeholder="Dell / HP / Lenovo…"
+          />
+          <datalist id="admin-brand-options-new">
+            {COLLECTION_BRANDS.map((b) => (
+              <option key={b} value={b} />
+            ))}
+          </datalist>
         </AdminField>
       </div>
     </AdminCard>

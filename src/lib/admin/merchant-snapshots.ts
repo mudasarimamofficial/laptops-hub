@@ -22,6 +22,27 @@ export const SNAPSHOT_SCOPE_LABEL =
   "Store settings, blog posts, reels, customer reviews, and shipping zones. Does not include products, orders, customers, or staff accounts.";
 
 const KEEP_VALID = 4;
+
+/**
+ * G17: settings a CMS restore must never change. `cod_checkout` is the customer-ordering go-live gate (LH-017): an old
+ * snapshot must not switch live COD ordering on or off. It keeps its current value; change it deliberately instead.
+ */
+export const RESTORE_PROTECTED_SETTING_KEYS = ["cod_checkout"] as const;
+
+/** The payload actually sent to the restore RPC: protected settings removed, everything else unchanged. */
+export function restorablePayload<T extends { store_settings: unknown[] }>(payload: T): { payload: T; keptLive: string[] } {
+  const protectedKeys = new Set<string>(RESTORE_PROTECTED_SETTING_KEYS);
+  const keptLive: string[] = [];
+  const store_settings = payload.store_settings.filter((row) => {
+    const key = (row as { key?: unknown } | null)?.key;
+    if (typeof key === "string" && protectedKeys.has(key)) {
+      keptLive.push(key);
+      return false;
+    }
+    return true;
+  });
+  return { payload: { ...payload, store_settings }, keptLive };
+}
 const COALESCE_MS = 10 * 60 * 1000;
 const SCHEMA_VERSION = 2;
 
@@ -104,8 +125,35 @@ export function validateSnapshotPayload(payload: unknown): {
   return { ok: true, checks };
 }
 
-export function checksumPayload(payload: MerchantCmsPayload): string {
-  return createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+/**
+ * JSON with object keys sorted at every level. Snapshots are stored as `jsonb`, which reorders keys, so a checksum over
+ * plain `JSON.stringify` could never match after storage and every restore was refused ("checksum mismatch").
+ */
+export function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map((v) => canonicalJson(v)).join(",")}]`;
+  if (value && typeof value === "object") {
+    const o = value as Record<string, unknown>;
+    return `{${Object.keys(o)
+      .filter((k) => o[k] !== undefined)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${canonicalJson(o[k])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value) ?? "null";
+}
+
+/** Checksums written from 2026-11-25 carry this prefix (canonical JSON). Older ones hashed key-order-dependent JSON. */
+const CANONICAL_CHECKSUM_PREFIX = "c1:";
+
+export function checksumPayload(payload: unknown): string {
+  return CANONICAL_CHECKSUM_PREFIX + createHash("sha256").update(canonicalJson(payload)).digest("hex");
+}
+
+/** "legacy": made before canonical checksums; its integrity cannot be re-verified after jsonb storage. */
+export function checksumVerdict(stored: string | null | undefined, payload: unknown): "ok" | "mismatch" | "legacy" {
+  if (!stored) return "ok";
+  if (!stored.startsWith(CANONICAL_CHECKSUM_PREFIX)) return "legacy";
+  return stored === checksumPayload(payload) ? "ok" : "mismatch";
 }
 
 /** Skip a new auto-snapshot when a valid one was created within the coalesce window. */
@@ -201,10 +249,13 @@ export async function restoreMerchantSnapshot(
   const validation = validateSnapshotPayload(payload);
   if (!validation.ok) throw new Error(`Backup failed integrity checks (${validation.reason})`);
 
-  const recomputed = createHash("sha256").update(JSON.stringify(payload)).digest("hex");
-  if (snap.checksum && snap.checksum !== recomputed) {
-    throw new Error("Backup checksum mismatch — refusing restore");
+  const verdict = checksumVerdict(snap.checksum, payload);
+  if (verdict === "legacy") {
+    throw new Error(
+      "This backup was made before 25 Nov 2026 and its integrity cannot be checked (legacy format). Create a new backup, then restore that one.",
+    );
   }
+  if (verdict === "mismatch") throw new Error("Backup checksum mismatch — refusing restore");
 
   // Pre-restore checkpoint must succeed before mutating live CMS rows.
   const checkpoint = await createMerchantSnapshot(supabase, {
@@ -217,8 +268,10 @@ export async function restoreMerchantSnapshot(
     throw new Error("Pre-restore checkpoint failed validation — restore aborted");
   }
 
+  const { payload: toRestore, keptLive } = restorablePayload(payload as MerchantCmsPayload);
+  if (toRestore.store_settings.length < 1) throw new Error("Backup failed integrity checks (no restorable settings)");
   const { data: rpcResult, error: rpcError } = await supabase.rpc("restore_merchant_cms_snapshot", {
-    payload,
+    payload: toRestore,
     actor: staffUserId,
   });
 
@@ -231,8 +284,8 @@ export async function restoreMerchantSnapshot(
     action: "merchant_snapshot.restore",
     entity_type: "merchant_snapshots",
     entity_id: snapshotId,
-    after: { restored: true, checks: validation.checks, rpc: rpcResult, checkpointId: checkpoint.id },
+    after: { restored: true, checks: validation.checks, rpc: rpcResult, checkpointId: checkpoint.id, keptLive },
   });
 
-  return { ok: true as const, snapshotId, checkpointId: checkpoint.id as string, rpc: rpcResult };
+  return { ok: true as const, snapshotId, checkpointId: checkpoint.id as string, rpc: rpcResult, keptLive };
 }

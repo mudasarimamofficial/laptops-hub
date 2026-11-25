@@ -23,9 +23,6 @@ type Props = {
 export function StoreSettingsForm({ initial }: Props) {
   const router = useRouter();
   const hydrated = useHydrated();
-  const [businessName, setBusinessName] = useState(initial.businessName);
-  const [supportEmail, setSupportEmail] = useState(initial.supportEmail);
-  const [supportPhone, setSupportPhone] = useState(initial.supportPhone);
   const [trackProductInventory, setTrackProductInventory] = useState(initial.trackProductInventory);
   const [inventoryDefaultTracked, setInventoryDefaultTracked] = useState(initial.inventoryDefaultTracked);
   const [lowStockDefault, setLowStockDefault] = useState(String(initial.lowStockDefault));
@@ -48,9 +45,6 @@ export function StoreSettingsForm({ initial }: Props) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          businessName,
-          supportEmail,
-          supportPhone,
           trackProductInventory,
           inventoryDefaultTracked,
           lowStockDefault: Number(lowStockDefault) || 0,
@@ -81,32 +75,23 @@ export function StoreSettingsForm({ initial }: Props) {
       <p className="text-sm text-[var(--adm-ink-2)]">
         Ordinary merchant settings. Production COD release switches and infrastructure secrets stay outside this form.
       </p>
-      <label className="block text-sm">
-        Business name
-        <input
-          className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2"
-          value={businessName}
-          onChange={(e) => setBusinessName(e.target.value)}
-        />
-      </label>
-      <div className="grid gap-3 md:grid-cols-2">
-        <label className="block text-sm">
-          Support email
-          <input
-            type="email"
-            className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2"
-            value={supportEmail}
-            onChange={(e) => setSupportEmail(e.target.value)}
-          />
-        </label>
-        <label className="block text-sm">
-          Support phone
-          <input
-            className="mt-1 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2"
-            value={supportPhone}
-            onChange={(e) => setSupportPhone(e.target.value)}
-          />
-        </label>
+      {/* G15: the business name, email and phones the site shows are edited in Contact & Social only (one source). */}
+      <div className="rounded-lg border border-[var(--adm-divider)] p-3 text-sm" data-testid="store-identity-summary">
+        <dl className="grid gap-x-4 gap-y-1 sm:grid-cols-[auto_1fr]">
+          <dt className="text-[var(--adm-ink-2)]">Business name</dt>
+          <dd className="font-medium text-[var(--adm-ink)]">{initial.businessName || "—"}</dd>
+          <dt className="text-[var(--adm-ink-2)]">Support email</dt>
+          <dd className="font-medium text-[var(--adm-ink)]">{initial.supportEmail || "—"}</dd>
+          <dt className="text-[var(--adm-ink-2)]">Primary phone</dt>
+          <dd className="font-medium text-[var(--adm-ink)]">{initial.supportPhone || "—"}</dd>
+        </dl>
+        <p className="mt-2 text-xs text-[var(--adm-ink-2)]">
+          These come from{" "}
+          <a href="#contact-social" className="font-semibold text-[var(--adm-action)] underline">
+            Contact &amp; Social
+          </a>
+          , which is what the storefront, footer and search markup use. Change them there.
+        </p>
       </div>
       <fieldset id="products-inventory" className="space-y-3 border-t border-[var(--adm-divider)] pt-4">
         <legend className="font-semibold">Products &amp; Inventory</legend>
@@ -153,6 +138,9 @@ export function StoreSettingsForm({ initial }: Props) {
         </label>
         <label className="block text-sm">
           Default low-stock threshold
+          <span className="block text-xs text-[var(--adm-ink-2)]">
+            Inventory → Low lists tracked variants at or below this many units. 0 keeps the built-in 2.
+          </span>
           <input
             type="number"
             min={0}

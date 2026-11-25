@@ -71,7 +71,7 @@ export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
   async function restore(id: string, label: string) {
     if (!canRestore) return;
     const ok = window.confirm(
-      `Restore “${label}”? This overwrites store settings, blog posts, reels, customer reviews and shipping zones from the backup. Products, orders, customers and staff are NOT restored. A pre-restore checkpoint is created first.`,
+      `Restore “${label}”? This overwrites store settings, blog posts, reels, customer reviews and shipping zones from the backup. Products, orders, customers and staff are NOT restored, and the COD ordering go-live switch keeps its current setting. A pre-restore checkpoint is created first.`,
     );
     if (!ok) return;
     setBusy(id);
@@ -84,7 +84,7 @@ export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
         setErr(data.message || "Restore failed");
         return;
       }
-      setMsg("CMS restore completed. Review Settings, Blog, Reels, Reviews and Shipping. Product catalog was not changed.");
+      setMsg("CMS restore completed. Review Settings, Blog, Reels, Reviews and Shipping. Product catalog and the COD go-live switch were not changed.");
       await load();
     } catch {
       setErr("Network error");

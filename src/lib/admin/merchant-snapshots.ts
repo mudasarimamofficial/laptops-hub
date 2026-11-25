@@ -22,6 +22,27 @@ export const SNAPSHOT_SCOPE_LABEL =
   "Store settings, blog posts, reels, customer reviews, and shipping zones. Does not include products, orders, customers, or staff accounts.";
 
 const KEEP_VALID = 4;
+
+/**
+ * G17: settings a CMS restore must never change. `cod_checkout` is the customer-ordering go-live gate (LH-017): an old
+ * snapshot must not switch live COD ordering on or off. It keeps its current value; change it deliberately instead.
+ */
+export const RESTORE_PROTECTED_SETTING_KEYS = ["cod_checkout"] as const;
+
+/** The payload actually sent to the restore RPC: protected settings removed, everything else unchanged. */
+export function restorablePayload<T extends { store_settings: unknown[] }>(payload: T): { payload: T; keptLive: string[] } {
+  const protectedKeys = new Set<string>(RESTORE_PROTECTED_SETTING_KEYS);
+  const keptLive: string[] = [];
+  const store_settings = payload.store_settings.filter((row) => {
+    const key = (row as { key?: unknown } | null)?.key;
+    if (typeof key === "string" && protectedKeys.has(key)) {
+      keptLive.push(key);
+      return false;
+    }
+    return true;
+  });
+  return { payload: { ...payload, store_settings }, keptLive };
+}
 const COALESCE_MS = 10 * 60 * 1000;
 const SCHEMA_VERSION = 2;
 
@@ -217,8 +238,10 @@ export async function restoreMerchantSnapshot(
     throw new Error("Pre-restore checkpoint failed validation — restore aborted");
   }
 
+  const { payload: toRestore, keptLive } = restorablePayload(payload as MerchantCmsPayload);
+  if (toRestore.store_settings.length < 1) throw new Error("Backup failed integrity checks (no restorable settings)");
   const { data: rpcResult, error: rpcError } = await supabase.rpc("restore_merchant_cms_snapshot", {
-    payload,
+    payload: toRestore,
     actor: staffUserId,
   });
 
@@ -231,8 +254,8 @@ export async function restoreMerchantSnapshot(
     action: "merchant_snapshot.restore",
     entity_type: "merchant_snapshots",
     entity_id: snapshotId,
-    after: { restored: true, checks: validation.checks, rpc: rpcResult, checkpointId: checkpoint.id },
+    after: { restored: true, checks: validation.checks, rpc: rpcResult, checkpointId: checkpoint.id, keptLive },
   });
 
-  return { ok: true as const, snapshotId, checkpointId: checkpoint.id as string, rpc: rpcResult };
+  return { ok: true as const, snapshotId, checkpointId: checkpoint.id as string, rpc: rpcResult, keptLive };
 }

@@ -30,7 +30,7 @@ export async function POST(_request: Request, { params }: Params) {
     revalidatePath("/guides");
 
     return NextResponse.json(
-      { ok: result.ok, snapshotId: result.snapshotId, checkpointId: result.checkpointId },
+      { ok: result.ok, snapshotId: result.snapshotId, checkpointId: result.checkpointId, keptLive: result.keptLive },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (e) {

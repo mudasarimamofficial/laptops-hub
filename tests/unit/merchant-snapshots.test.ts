@@ -4,6 +4,7 @@ import {
   SNAPSHOT_SCOPE,
   validateSnapshotPayload,
   checksumPayload,
+  canonicalJson,
   type MerchantCmsPayload,
 } from "../../src/lib/admin/merchant-snapshots";
 
@@ -42,7 +43,9 @@ assert.equal(validateSnapshotPayload(emptyZones).ok, false);
 
 const p = base();
 const sum = checksumPayload(p);
-assert.equal(sum, createHash("sha256").update(JSON.stringify(p)).digest("hex"));
+// LH-036: canonical (key-sorted) JSON, so the checksum still matches after jsonb storage reorders keys.
+assert.equal(sum, `c1:${createHash("sha256").update(canonicalJson(p)).digest("hex")}`);
+assert.equal(checksumPayload(Object.fromEntries(Object.entries(p).reverse())), sum);
 assert.notEqual(checksumPayload({ ...p, articles: [] }), sum);
 
 console.log("merchant-snapshots.test.ts: ok");

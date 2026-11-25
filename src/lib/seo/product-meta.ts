@@ -77,3 +77,21 @@ export function productSeoFromV5(p: V5Product & { seoTitle?: string | null; seoD
     seoDescription: p.seoDescription,
   });
 }
+
+/**
+ * Products whose search titles are identical (case-insensitive). Google treats them as competing copies of one page,
+ * so Admin → SEO lists them for the merchant to tell apart (a distinct SEO title) or archive a true duplicate.
+ * Largest groups first; nothing is changed automatically.
+ */
+export function sharedSearchTitles<T>(items: T[], titleOf: (item: T) => string): { title: string; items: T[] }[] {
+  const groups = new Map<string, { title: string; items: T[] }>();
+  for (const item of items) {
+    const title = titleOf(item).trim();
+    if (!title) continue;
+    const key = title.toLowerCase();
+    const g = groups.get(key);
+    if (g) g.items.push(item);
+    else groups.set(key, { title, items: [item] });
+  }
+  return [...groups.values()].filter((g) => g.items.length > 1).sort((a, b) => b.items.length - a.items.length || a.title.localeCompare(b.title));
+}

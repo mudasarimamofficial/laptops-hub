@@ -9,6 +9,7 @@ import {
 } from "../../src/lib/content/seo-defaults";
 import { jsonLdScript, pkPhoneE164, postalAddress, siteAlternateNames, siteJsonLd } from "../../src/lib/seo/site-jsonld";
 import { articleJsonLd, breadcrumbJsonLd } from "../../src/lib/seo/content-jsonld";
+import { sharedSearchTitles } from "../../src/lib/seo/product-meta";
 
 const ORIGIN = "https://www.laptopshub.pk";
 
@@ -94,5 +95,24 @@ assert.deepEqual(art.author, { "@id": `${ORIGIN}/#organization` });
 assert.equal(art.image, `${ORIGIN}/brand/laptops-hub-share-1200x630.png`);
 const crumbs = breadcrumbJsonLd(ORIGIN, [{ name: "Home", path: "/" }, { name: "Guides", path: "/guides" }]);
 assert.equal(crumbs.itemListElement[1].item, `${ORIGIN}/guides`);
+
+// Shared search titles: case-insensitive groups of 2+, largest first; blanks ignored.
+const shared = sharedSearchTitles(
+  [
+    { h: "a", t: "Dell 5320 · i5" },
+    { h: "b", t: "dell 5320 · I5" },
+    { h: "c", t: "HP 840" },
+    { h: "d", t: "Lenovo L13" },
+    { h: "e", t: "Lenovo L13" },
+    { h: "f", t: "Lenovo L13" },
+    { h: "g", t: "  " },
+    { h: "h", t: "" },
+  ],
+  (x) => x.t,
+);
+assert.deepEqual(shared.map((g) => [g.title, g.items.map((i) => i.h)]), [
+  ["Lenovo L13", ["d", "e", "f"]],
+  ["Dell 5320 · i5", ["a", "b"]],
+]);
 
 console.log("seo-site.test.ts: ok");

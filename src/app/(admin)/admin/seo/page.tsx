@@ -8,6 +8,8 @@ import { SEO_DEFAULTS_KEY, parseSeoDefaults } from "@/lib/content/seo-defaults";
 import { getContactSocial } from "@/lib/content/contact-social-server";
 import { siteUrl } from "@/lib/site-url";
 import { postalAddress } from "@/lib/seo/site-jsonld";
+import { getV5Catalog } from "@/lib/catalog/v5";
+import { productSeoFromV5, sharedSearchTitles } from "@/lib/seo/product-meta";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "SEO", robots: { index: false, follow: false } };
@@ -27,6 +29,9 @@ export default async function AdminSeoPage() {
     sb.from("store_settings").select("value").eq("key", SEO_DEFAULTS_KEY).maybeSingle(),
     getContactSocial(),
   ]);
+  // The same title builder the storefront uses, so this lists exactly what Google sees.
+  const catalog = await getV5Catalog().catch(() => []);
+  const sharedTitles = sharedSearchTitles(catalog, (p) => productSeoFromV5(p).title);
   const seo = parseSeoDefaults(seoRow?.value);
   const origin = siteUrl();
   const canEdit = ["owner", "admin", "manager"].includes(staff.role);
@@ -157,6 +162,37 @@ export default async function AdminSeoPage() {
           .
         </p>
       </AdminCard>
+
+      <section className="mt-8" data-testid="seo-shared-titles">
+        <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--adm-ink)]">Products sharing one search title</h2>
+        <p className="mt-1 max-w-3xl text-sm text-[var(--adm-ink-2)]">
+          Google treats pages with the same title as copies and usually shows only one. If these are different units, give each a
+          distinct SEO title (for example its condition or colour, only if true). If one is a true duplicate listing, archive it.
+          Nothing here is changed automatically. Updates within a minute of a product save.
+        </p>
+        {sharedTitles.length === 0 ? (
+          <p className="mt-2 text-sm text-[var(--adm-ink-2)]">Every live product has its own search title.</p>
+        ) : (
+          <ul className="mt-3 divide-y divide-[var(--adm-border)] rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] text-sm shadow-[var(--adm-shadow)]">
+            {sharedTitles.slice(0, 50).map((g) => (
+              <li key={g.title} className="px-4 py-3" data-testid="seo-shared-title-group">
+                <p className="font-medium text-[var(--adm-ink)]">
+                  {g.title} <span className="text-xs font-normal text-[var(--adm-ink-2)]">({g.items.length} products)</span>
+                </p>
+                <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                  {g.items.map((p) => (
+                    <li key={p.h}>
+                      <Link href={`/admin/products/${p.h}`} className="text-xs text-[var(--adm-action)] hover:underline">
+                        /products/{p.h}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <GapSection
         title="Products missing search metadata"

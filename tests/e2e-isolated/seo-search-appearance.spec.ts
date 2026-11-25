@@ -122,6 +122,7 @@ test.describe.serial("SEO search appearance (isolated)", () => {
   test("owner edits homepage search appearance; public homepage follows; reset restores the default", async ({ page, request }) => {
     await signIn(page, "owner");
     await page.goto("/admin/seo");
+    await expect(page.getByTestId("seo-shared-titles")).toBeVisible();
     const form = page.getByTestId("seo-home-form");
     const title = `QA Home ${RUN} <script>alert(1)</script> & Co`;
     await form.getByLabel("Homepage search title").fill(title);

@@ -11,6 +11,8 @@ function assertLocalBase() {
 async function openMega(page: Page) {
   const trigger = page.getByTestId("desktop-mega-trigger");
   await expect(trigger).toBeVisible();
+  // Pages load with "domcontentloaded": wait for React's handlers, or the click is a silent no-op.
+  await expect(trigger).toHaveAttribute("data-ready", "true", { timeout: 15_000 });
   await trigger.click();
   await expect(page.getByTestId("desktop-mega-menu")).toBeVisible();
 }
@@ -105,6 +107,7 @@ test.describe("mega-menu responsive layout", () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/", { waitUntil: "domcontentloaded" });
     const trigger = page.getByTestId("desktop-mega-trigger");
+    await expect(trigger).toHaveAttribute("data-ready", "true", { timeout: 15_000 });
     await trigger.hover();
     await expect(page.getByTestId("desktop-mega-menu")).toBeVisible();
     await trigger.click();

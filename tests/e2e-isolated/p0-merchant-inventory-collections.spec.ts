@@ -9,6 +9,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 import fs from "fs";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
+import { ORIGIN } from "./helpers/origin";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("merchant journeys need a local Supabase");
@@ -149,7 +150,7 @@ test.describe.serial("P0: collections, inventory desk and analytics (isolated)",
     await ed.goto("/admin/inventory");
     await expect(ed).toHaveURL(/\/admin\/forbidden/);
     const r = await ed.request.post("/api/admin/inventory/adjust", {
-      headers: { origin: "http://127.0.0.1:3001" },
+      headers: { origin: ORIGIN },
       data: { variantId: v.data!.id, mode: "delta", amount: 10, reason: "other" },
     });
     expect(r.status()).toBe(403);

@@ -120,7 +120,11 @@ export function inferOptionsFromVariants(
       ),
     ];
     return { name, values };
-  });
+  })
+    // An option no variant has a value for cannot be saved (each option needs at least one value). A simple product
+    // saved once from the matrix stores option_names {Title} with empty option values; keeping that option made every
+    // later matrix save fail with "Provide optionNames…". Dropping it lets the editor fall back to Title: Default.
+    .filter((o) => o.values.length > 0);
 }
 
 export const VARIANT_MATRIX_LIMITS = {

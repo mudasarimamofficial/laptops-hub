@@ -5,10 +5,12 @@
  */
 import { expect, test, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
+import { pauseActiveCampaigns, resumeCampaigns } from "./helpers/campaigns";
 import { randomUUID } from "crypto";
 import fs from "fs";
 import { formatPkr } from "../../src/lib/money";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
+import { ORIGIN } from "./helpers/origin";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("isolated journeys need a local Supabase");
@@ -57,9 +59,16 @@ let orderNumber = "";
 let orderUrl = "";
 
 test.describe.serial("launch journeys (isolated)", () => {
+  let paused: string[] = [];
   test.beforeAll(async () => {
     await assertLocalOnly("launch journeys");
     await fetch(`${FAKE}/_reset`, { method: "POST" });
+    // Exact cash totals below are list prices: pause automatic campaigns for this run (resumed in afterAll).
+    paused = await pauseActiveCampaigns(sb);
+  });
+
+  test.afterAll(async () => {
+    await resumeCampaigns(sb, paused);
   });
 
   test("customer: product → cart → checkout → confirmation", async ({ page }) => {
@@ -119,12 +128,12 @@ test.describe.serial("launch journeys (isolated)", () => {
     await page.getByLabel("Province").selectOption("Balochistan");
     await expect(page.getByText("We do not currently deliver COD to this city/province.")).toBeVisible({ timeout: 15_000 });
     const r = await page.request.post("/api/checkout/cod", {
-      headers: { origin: "http://127.0.0.1:3001" },
+      headers: { origin: ORIGIN },
       data: { idempotencyKey: `iso-${randomUUID()}`, customerName: "Bad Phone", customerPhone: "12345", shippingZoneId: fx.zone.id, confirmCod: true, address: { line1: "x street", city: "Lahore", province: "Punjab" }, lines: [{ variantId: P.variantId, quantity: 1 }] },
     });
     expect(r.status()).toBe(400);
     const over = await page.request.post("/api/checkout/cod", {
-      headers: { origin: "http://127.0.0.1:3001" },
+      headers: { origin: ORIGIN },
       data: { idempotencyKey: `iso-${randomUUID()}`, customerName: "Too Many", customerPhone: PHONE, shippingZoneId: fx.zone.id, confirmCod: true, address: { line1: "x street", city: "Lahore", province: "Punjab" }, lines: [{ variantId: P.variantId, quantity: P.max + 1 }] },
     });
     expect([400, 409]).toContain(over.status());

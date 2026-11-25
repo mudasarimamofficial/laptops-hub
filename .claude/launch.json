@@ -115,6 +115,20 @@
       ],
       "port": 3003,
       "url": "http://127.0.0.1:3003"
+    },
+    {
+      "name": "isolated-safe-3001",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/dev/isolated-next.mjs",
+        "start",
+        "--",
+        "-p",
+        "3001",
+        "-H",
+        "127.0.0.1"
+      ],
+      "port": 3001
     }
   ]
 }

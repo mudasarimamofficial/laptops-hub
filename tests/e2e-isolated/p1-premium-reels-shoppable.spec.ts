@@ -197,6 +197,17 @@ test.describe.serial("P1: premium reels shoppable + carousel + compare/reviews",
       )
       .toBeGreaterThan(0);
 
+    // Add to cart closes the reel (it sits above the cart drawer) and opens the cart (since #48).
+    await expect(modal).toHaveCount(0);
+    const cart = page.getByRole("dialog", { name: "Cart" });
+    await expect(cart).toBeVisible();
+    await expect(cart).toContainText(P1.title);
+    await page.keyboard.press("Escape");
+    await expect(cart).toHaveCount(0);
+
+    // The modal's own Close button still works.
+    await section.getByTestId("reel").filter({ hasText: TITLE }).getByTestId("reel-open").click();
+    await expect(modal).toBeVisible();
     await modal.getByTestId("reel-modal-close").click();
     await expect(modal).toHaveCount(0);
 

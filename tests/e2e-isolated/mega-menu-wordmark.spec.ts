@@ -19,6 +19,7 @@ test.describe("compact mega menu + uppercase wordmark", () => {
     await expect(home).toContainText(/HUB/);
 
     const trigger = page.getByTestId("desktop-mega-trigger");
+    await expect(trigger).toHaveAttribute("data-ready", "true", { timeout: 15_000 }); // handlers attached
     await trigger.hover();
     const panel = page.getByTestId("desktop-mega-menu");
     await expect(panel).toBeVisible();
@@ -38,6 +39,7 @@ test.describe("compact mega menu + uppercase wordmark", () => {
   test("Escape closes mega menu", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/");
+    await expect(page.getByTestId("desktop-mega-trigger")).toHaveAttribute("data-ready", "true", { timeout: 15_000 });
     await page.getByTestId("desktop-mega-trigger").click();
     await expect(page.getByTestId("desktop-mega-menu")).toBeVisible();
     await page.keyboard.press("Escape");

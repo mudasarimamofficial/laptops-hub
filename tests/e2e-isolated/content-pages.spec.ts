@@ -51,6 +51,7 @@ test.describe.serial("prepared content pages (isolated)", () => {
     await page.goto("/pages/contact");
     await expect(page.getByRole("heading", { name: "Call us" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Send message" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "0313 6565663" })).toHaveAttribute("href", "tel:+923136565663");
+    // The footer lists the same number too; check the contact page's own link.
+    await expect(page.locator("#main").getByRole("link", { name: "0313 6565663" })).toHaveAttribute("href", "tel:+923136565663");
   });
 });

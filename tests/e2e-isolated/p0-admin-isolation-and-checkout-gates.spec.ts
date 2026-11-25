@@ -10,6 +10,7 @@
  */
 import { expect, test, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
+import { pauseActiveCampaigns, resumeCampaigns } from "./helpers/campaigns";
 import fs from "fs";
 import { formatPkr } from "../../src/lib/money";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
@@ -40,9 +41,16 @@ async function storefrontChrome(page: Page) {
 }
 
 test.describe.serial("P0: admin isolation and checkout gates (isolated)", () => {
+  let paused: string[] = [];
   test.beforeAll(async () => {
     await assertLocalOnly("p0 isolation journeys");
     fs.mkdirSync(OUT, { recursive: true });
+    // Exact cash totals below are list prices: pause automatic campaigns for this run (resumed in afterAll).
+    paused = await pauseActiveCampaigns(sb);
+  });
+
+  test.afterAll(async () => {
+    await resumeCampaigns(sb, paused);
   });
 
   for (const width of [360, 390, 768, 1280, 1440]) {

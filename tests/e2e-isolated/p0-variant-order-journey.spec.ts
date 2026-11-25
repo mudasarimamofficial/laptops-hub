@@ -13,13 +13,13 @@ import { formatPkr } from "../../src/lib/money";
 import { fmtPkr } from "../../src/lib/catalog/v5-model";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
 import { productJsonLd } from "./helpers/json-ld";
+import { ORIGIN } from "./helpers/origin";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("isolated journeys need a local Supabase");
 const fx = JSON.parse(fs.readFileSync(".isolated/fixture.json", "utf8"));
 const sb = createClient(SB_URL, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
 const RUN = randomUUID().slice(0, 6);
-const ORIGIN = "http://127.0.0.1:3001";
 const PHONE = "03001234567";
 const FEES = fx.zone.flatFeePaisa + fx.zone.codFeePaisa;
 const A = { handle: `qa-variant-laptop-${RUN}`, title: `QA Variant Laptop ${RUN}` };

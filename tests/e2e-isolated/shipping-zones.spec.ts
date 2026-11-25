@@ -6,6 +6,8 @@ import { expect, test, type Page } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 import fs from "fs";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
+import { ORIGIN } from "./helpers/origin";
+import { pauseActiveCampaigns, resumeCampaigns } from "./helpers/campaigns";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const fx = JSON.parse(fs.readFileSync(".isolated/fixture.json", "utf8"));
@@ -21,12 +23,16 @@ async function signIn(page: Page, role: "manager" | "editor") {
 
 test.describe.serial("admin shipping zones (isolated)", () => {
   const name = `Zone test ${Date.now()}`;
+  let paused: string[] = [];
   test.beforeAll(async () => {
     await assertLocalOnly("shipping zone journeys");
+    // Totals below are list prices: pause automatic campaigns (the seeded "Storewide 5% Off") for this run.
+    paused = await pauseActiveCampaigns(sb);
   });
   // Even when a step fails, never leave this test zone serving addresses other suites rely on.
   test.afterAll(async () => {
     await sb.from("shipping_zones").update({ is_active: false }).like("name", "Zone test %");
+    await resumeCampaigns(sb, paused);
   });
 
   test("before hydration the form cannot submit (no silent page reload, nothing lost)", async ({ browser }) => {
@@ -75,7 +81,7 @@ test.describe.serial("admin shipping zones (isolated)", () => {
     const { data: z } = await sb.from("shipping_zones").select("id").eq("name", name).single();
     const quote = (city: string, province: string) =>
       request.post("/api/checkout/quote", {
-        headers: { origin: "http://127.0.0.1:3001" },
+        headers: { origin: ORIGIN },
         data: { address: { city, province }, lines: [{ variantId: fx.products[0].variantId, quantity: 1 }] },
       });
     const served = await (await quote("Karachi", "Sindh")).json();
@@ -103,7 +109,7 @@ test.describe.serial("admin shipping zones (isolated)", () => {
 
     const quote = (city: string, quantity = 1) =>
       page.request.post("/api/checkout/quote", {
-        headers: { origin: "http://127.0.0.1:3001" },
+        headers: { origin: ORIGIN },
         data: { address: { city, province: "Sindh" }, shippingZoneId: z!.id, lines: [{ variantId: fx.products[0].variantId, quantity }] },
       });
     const free = await (await quote("Karachi")).json();

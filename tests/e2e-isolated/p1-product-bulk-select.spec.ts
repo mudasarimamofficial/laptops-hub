@@ -34,7 +34,8 @@ test.describe.serial("Products: bulk selection (isolated)", () => {
     await page.goto("/admin/products");
 
     await expect(page.getByTestId("bulk-bar")).toHaveCount(0);
-    const boxes = page.getByTestId("product-select");
+    // Each product renders a mobile card and a desktop table row; only one of the two checkboxes is visible.
+    const boxes = page.getByTestId("product-select").filter({ visible: true });
     const total = await boxes.count();
     expect(total).toBeGreaterThanOrEqual(2);
     await boxes.first().check();
@@ -48,7 +49,7 @@ test.describe.serial("Products: bulk selection (isolated)", () => {
     await expect(page.getByTestId("bulk-bar")).toHaveCount(0);
 
     // Feature exactly the two fixture products.
-    for (const h of HANDLES) await page.locator(`[data-testid="product-select"][data-handle="${h}"]`).check();
+    for (const h of HANDLES) await boxes.and(page.locator(`[data-handle="${h}"]`)).check();
     await page.getByTestId("bulk-feature").click();
     await expect(page.getByTestId("bulk-msg")).toHaveText(`Feature: ${HANDLES.length} updated.`);
     const { data: after } = await sb.from("products").select("featured").in("handle", HANDLES);
@@ -57,14 +58,14 @@ test.describe.serial("Products: bulk selection (isolated)", () => {
     await expect(page.getByTestId("bulk-count")).toHaveCount(0);
 
     // Archive asks first; dismissing changes nothing.
-    await page.locator(`[data-testid="product-select"][data-handle="${HANDLES[0]}"]`).check();
+    await boxes.and(page.locator(`[data-handle="${HANDLES[0]}"]`)).check();
     page.once("dialog", (d) => d.dismiss());
     await page.getByTestId("bulk-archive").click();
     const { data: still } = await sb.from("products").select("status").eq("handle", HANDLES[0]).single();
     expect(still?.status).not.toBe("archived");
 
     // Open the ticked products in the bulk editor.
-    await page.locator(`[data-testid="product-select"][data-handle="${HANDLES[1]}"]`).check();
+    await boxes.and(page.locator(`[data-handle="${HANDLES[1]}"]`)).check();
     await page.getByTestId("bulk-open-editor").click();
     await page.waitForURL(/\/admin\/products\/bulk\?handles=/);
     for (const h of HANDLES) await expect(page.getByText(h, { exact: true }).or(page.locator(`input[value="${h}"]`)).first()).toBeVisible();

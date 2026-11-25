@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import { AdminCard } from "@/components/admin/ui/admin-card";
@@ -23,6 +23,7 @@ export function ProductCreateForm() {
   const hydrated = useHydrated();
   const [title, setTitle] = useState("");
   const [handle, setHandle] = useState("");
+  const handleId = useId(); // the input sits in a prefix wrapper, so AdminField cannot wire the label itself
   const [handleTouched, setHandleTouched] = useState(false);
   const [pricePkr, setPricePkr] = useState("");
   const [manufacturer, setManufacturer] = useState("");
@@ -83,10 +84,11 @@ export function ProductCreateForm() {
             placeholder="e.g. Dell Latitude 7490"
           />
         </AdminField>
-        <AdminField label="Web address" hint="Shown on the storefront under /products/">
+        <AdminField label="Web address" htmlFor={handleId} hint="Shown on the storefront under /products/">
           <span className="mt-1 flex min-w-0 items-center gap-1">
             <span className="shrink-0 text-sm text-[var(--adm-ink-2)]">/products/</span>
             <input
+              id={handleId}
               className={admInputClass.replace("mt-1 ", "")}
               value={handle}
               onChange={(e) => {

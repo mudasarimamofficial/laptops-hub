@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { pkrMajorToPaisa } from "@/lib/money";
 import { withCatalogRefresh } from "@/lib/catalog/refresh";
+import { canonicalBrand, canonicalCategory } from "@/lib/catalog/taxonomy-options";
 
 const createSchema = z.object({
   title: z.string().trim().min(2).max(200),
@@ -86,9 +87,9 @@ async function handlePOST(request: Request) {
       title: data.title,
       description_safe: data.descriptionSafe ?? "",
       status: data.status,
-      manufacturer: data.manufacturer ?? null,
+      manufacturer: canonicalBrand(data.manufacturer),
       product_type: data.productType ?? null,
-      category: data.category ?? null,
+      category: canonicalCategory(data.category),
       merchant_vendor: data.vendor?.trim() || "Laptops HUB",
       tags: data.tags ?? [],
       import_source: "admin",

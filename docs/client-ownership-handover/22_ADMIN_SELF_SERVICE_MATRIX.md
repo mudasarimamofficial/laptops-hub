@@ -31,6 +31,36 @@ item, the item ID is given.
 
 ---
 
+## 0. Status of the P0/P1 gaps (updated 2026-11-25)
+
+The audit text below is kept as written on 2026-11-24. This table records what has happened since. "Live" means
+merged to `main` and deployed to production by Vercel; every fix was first proven on the isolated stack.
+
+| Gap | Status | Where |
+|---|---|---|
+| G01 Discount create · G02 write guard · G03 stock overwrite | **FIXED, live** | PR #77 (LH-027, LH-028) |
+| G04 Laptop specs and condition | **FIXED, live** | PR #82 (LH-033): Admin → product → *Specifications* |
+| G05 Collection management | **FIXED, live** | PR #83 (LH-034): title, description, visibility and search text for merchant collections; built-in collections say what applies and take search text only. There is still no delete (hide instead). |
+| G06 Draft activation · G07 Sell switch | **FIXED, live** | PR #77 (LH-029) |
+| G08 Discount cache · G09 dated re-save · G10 fixed-amount units | **FIXED, live** | PR #77 (LH-027) |
+| G18 Blog SEO fields | **PARTLY FIXED, live** | PR #80: each guide's search title, search description, share image and dates now drive its metadata and Article JSON-LD. Category, tags and template are still saved but not read. |
+| G20 Site-wide SEO | **FIXED, live** | PR #80: homepage search appearance control and branded Organization / WebSite markup (see `seo-search/`). |
+| G21 Order variant and saving | **FIXED, live** | PR #79 (LH-031) |
+| G11 Brand/category free text | **FIXED, live (PR #84)** | Category is a select of the six storefront categories (an unrecognised stored value is kept and labelled); brand suggestions; saves fix the case of known names. Sub-type is still a code map (needs a data-model change). |
+| G12 Collection rule vs pins | OPEN | Size M. |
+| G13 Product media alt / primary / rights | OPEN | Size M. |
+| G14 Compare-at price | OPEN — **needs design approval** | Showing a struck-through price changes the frozen V5 look. |
+| G15 Store details form unused | **FIXED, live (PR #84)** | Store details shows the Contact & Social identity read-only; Contact & Social is the single source. |
+| G16 Inventory defaults unused | **FIXED (store-wide), live (PR #84)** | Inventory → Low uses the saved threshold (0 keeps the built-in 2, which production stores); Add product follows "tracked by default". Per-variant `low_stock_threshold` is still not read. |
+| G17 Backup restore overwrites `cod_checkout` | **PARTLY FIXED, live (PR #84)** | A restore now keeps the live COD go-live switch, and restores work at all again (LH-036). Still open: content pages, theme versions and `reel_products` are not in the snapshot (**needs a migration**). |
+| G19 Content page history / create / SEO | OPEN — **needs a migration** | Owner approval before production. |
+| G22 COD collection corrections | OPEN — **needs a migration** | Owner approval before production. |
+| G23 Password change for editor / fulfillment | **FIXED, live (PR #84)** | Admin → *Your account* (every role), linked from the sidebar. |
+| G24 Notifications env-only | OPEN | Size M. |
+| G25 GET-time DB writes outside the write guard | **FIXED, live (PR #84)** | The one-time preset install returns without writing when the Preview→Production guard refuses. Production already has it installed. |
+
+**Counts now:** P0: 5 of 5 fixed. P1: 12 fixed, 2 partly fixed (G17, G18), 6 open (G12, G13, G14, G19, G22, G24). P2: 24 open.
+
 ## 1. Route-by-route matrix
 
 The Gap column gives the issue IDs from §3 and their priority.

@@ -8,6 +8,9 @@
 
 - Date: 2026-11-24 · Project: production Supabase (linked CLI) · Supabase CLI 2.108.0
 - Defect: LH-025 in `02_DEFECT_REGISTER_AND_GAPS.md`
+- **Re-checked 2026-11-25 (read-only `npx supabase migration list --linked`): unchanged.** The same four remote-only and
+  four repo-only versions; no repair, push or migration has been run. Still awaiting the owner's approval of §7 and the
+  pair-4 choice in §6.
 - Working files (not committed): `C:\Users\mudas\AppData\Local\Temp\claude\b59e4081e08a287a\d065e837-daed-4cd2-a547-65e7f57c5037\scratchpad\lh025\`
 
 ## 1. Summary

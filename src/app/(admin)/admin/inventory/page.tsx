@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { InventoryAdjustForm } from "@/components/admin/inventory-adjust-form";
 import { requireStaffPage } from "@/lib/auth/staff";
-import { INVENTORY_ADJUST_ROLES, INVENTORY_REASON_LABEL, LOW_STOCK_AT, stockState, type StockState } from "@/lib/commerce/inventory-adjust";
+import { INVENTORY_ADJUST_ROLES, INVENTORY_REASON_LABEL, lowStockAtFrom, stockState, type StockState } from "@/lib/commerce/inventory-adjust";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export const metadata = { title: "Inventory", robots: { index: false, follow: fa
 
 const FILTERS = [
   ["all", "All tracked"],
-  ["low", `Low (≤ ${LOW_STOCK_AT})`],
+  ["low", "Low"],
   ["out", "Out of stock"],
   ["oversell", "Selling when out of stock"],
 ] as const;
@@ -45,6 +45,8 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
   const filter: Filter = FILTERS.some(([k]) => k === sp.filter) ? (sp.filter as Filter) : "all";
   const q = (sp.q || "").trim().slice(0, 80);
   const sb = createServiceClient();
+  const { data: invDefaults } = await sb.from("store_settings").select("value").eq("key", "inventory_defaults").maybeSingle();
+  const lowAt = lowStockAtFrom(invDefaults?.value);
 
   // Counts must use the same soft-delete filter as the list. Soft-deleted QA/archived products
   // still have tracked variants in the DB; including them made the header say "2 track stock"
@@ -69,7 +71,7 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
     .is("products.deleted_at", null)
     .order("quantity_on_hand", { ascending: true })
     .limit(200);
-  if (filter === "low") query = query.gt("quantity_on_hand", 0).lte("quantity_on_hand", LOW_STOCK_AT);
+  if (filter === "low") query = query.gt("quantity_on_hand", 0).lte("quantity_on_hand", lowAt);
   if (filter === "out") query = query.lte("quantity_on_hand", 0);
   if (filter === "oversell") query = query.eq("allow_oversell", true);
   if (q) query = query.ilike("sku", `%${q.replace(/[%_\\]/g, "")}%`);
@@ -78,7 +80,7 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
     query,
     liveTracked(),
     liveUntracked(),
-    liveTracked().gt("quantity_on_hand", 0).lte("quantity_on_hand", LOW_STOCK_AT),
+    liveTracked().gt("quantity_on_hand", 0).lte("quantity_on_hand", lowAt),
     liveTracked().lte("quantity_on_hand", 0),
     sb
       .from("inventory_ledger")
@@ -110,7 +112,7 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
             aria-current={filter === k ? "page" : undefined}
             className={`rounded-full border px-3 py-1 ${filter === k ? "border-[var(--adm-action)] bg-[var(--adm-info-bg)] font-semibold" : "border-[var(--adm-border)] bg-white"}`}
           >
-            {l}
+            {k === "low" ? `${l} (≤ ${lowAt})` : l}
           </Link>
         ))}
         <form method="get" className="ml-auto flex gap-2">
@@ -127,7 +129,7 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
       ) : (
         <ul className="space-y-3">
           {rows.map((v) => {
-            const state = stockState(v.quantity_on_hand);
+            const state = stockState(v.quantity_on_hand, lowAt);
             return (
               <li key={v.id} data-testid="inventory-row" data-sku={v.sku ?? ""} className="rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-white p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">

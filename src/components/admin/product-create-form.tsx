@@ -18,7 +18,7 @@ function slugify(title: string): string {
     .replace(/^-|-$/g, "");
 }
 
-export function ProductCreateForm() {
+export function ProductCreateForm({ defaultTracked = false }: { defaultTracked?: boolean }) {
   const router = useRouter();
   const hydrated = useHydrated();
   const [title, setTitle] = useState("");
@@ -28,7 +28,7 @@ export function ProductCreateForm() {
   const [pricePkr, setPricePkr] = useState("");
   const [manufacturer, setManufacturer] = useState("");
   const [status, setStatus] = useState<"draft" | "active">("draft");
-  const [inventoryMode, setInventoryMode] = useState<"untracked" | "tracked">("untracked");
+  const [inventoryMode, setInventoryMode] = useState<"untracked" | "tracked">(defaultTracked ? "tracked" : "untracked");
   const [quantityOnHand, setQuantityOnHand] = useState("0");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);

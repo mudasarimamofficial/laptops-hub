@@ -138,6 +138,9 @@ export function StoreSettingsForm({ initial }: Props) {
         </label>
         <label className="block text-sm">
           Default low-stock threshold
+          <span className="block text-xs text-[var(--adm-ink-2)]">
+            Inventory → Low lists tracked variants at or below this many units. 0 keeps the built-in 2.
+          </span>
           <input
             type="number"
             min={0}

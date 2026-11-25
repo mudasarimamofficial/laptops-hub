@@ -53,6 +53,7 @@ const STAFF_ROUTES: { route: string; heading: RegExp; control: string }[] = [
   { route: "/admin/staff", heading: /Staff/i, control: "form,button,table,a" },
   { route: "/admin/activity", heading: /Activity/i, control: "table,a,article" },
   { route: "/admin/help", heading: /Help/i, control: "a,button" },
+  { route: "/admin/account", heading: /Your account/i, control: "form,button,input" },
 ];
 
 const GUEST_ROUTES: { route: string; heading: RegExp; control: string }[] = [

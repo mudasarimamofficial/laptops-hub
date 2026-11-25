@@ -18,7 +18,7 @@ const GENERIC = {
 const THROTTLED = {
   error: "rate_limited" as const,
   message:
-    "Too many reset emails were requested recently. Wait about an hour and try again, or sign in and change your password under Settings → Security.",
+    "Too many reset emails were requested recently. Wait about an hour and try again, or sign in and change your password under Your account (at the bottom of the admin menu).",
 };
 
 /** Staff: request a password-recovery email. */

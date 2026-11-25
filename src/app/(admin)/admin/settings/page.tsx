@@ -30,7 +30,7 @@ function readJson(settings: { key: string; value: unknown }[] | null, key: strin
 }
 
 const HUB = [
-  { href: "#general", title: "Store details", blurb: "Business name and support contacts" },
+  { href: "#general", title: "Store details", blurb: "Inventory, buy button and SEO defaults" },
   { href: "#contact-social", title: "Contact & Social", blurb: "Phones, social links, WhatsApp" },
   { href: "#security", title: "Security", blurb: "Change your admin password" },
   { href: "#inventory", title: "Products & inventory", blurb: "Tracking defaults and stock alerts" },
@@ -53,7 +53,8 @@ export default async function AdminSettingsPage() {
     .order("name");
   const readiness = await loadCheckoutReadiness();
 
-  const identity = readJson(settings, "business_identity");
+  // G15: Contact & Social is the single source for the public business name, email and phones.
+  const contact = parseContactSocial((settings || []).find((r) => r.key === CONTACT_SOCIAL_KEY)?.value);
   const inventory = readJson(settings, "inventory_defaults");
   const seo = readJson(settings, "seo_defaults");
   const tracking = parseInventoryTracking((settings || []).find((r) => r.key === INVENTORY_TRACKING_KEY)?.value);
@@ -87,9 +88,9 @@ export default async function AdminSettingsPage() {
       <div id="general" className="scroll-mt-24">
         <StoreSettingsForm
           initial={{
-            businessName: String(identity.name || "Laptops HUB"),
-            supportEmail: String(identity.support_email || ""),
-            supportPhone: String(identity.support_phone || ""),
+            businessName: contact.businessName,
+            supportEmail: contact.email,
+            supportPhone: contact.phones.find((p) => p.enabled)?.display ?? "",
             trackProductInventory: tracking.enabled,
             inventoryDefaultTracked: Boolean(inventory.tracked),
             lowStockDefault: Number(inventory.low_stock_threshold || 0),
@@ -100,9 +101,7 @@ export default async function AdminSettingsPage() {
         />
       </div>
 
-      <ContactSocialForm
-        initial={parseContactSocial((settings || []).find((r) => r.key === CONTACT_SOCIAL_KEY)?.value)}
-      />
+      <ContactSocialForm initial={contact} />
 
       <div id="security" className="mt-8 scroll-mt-24">
         <AdminCard

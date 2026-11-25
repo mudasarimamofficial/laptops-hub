@@ -1,3 +1,4 @@
+import { canPersistMerchantSideEffects } from "@/lib/security/merchant-write-guard";
 import { createServiceClient } from "@/lib/supabase/server";
 import {
   DEFAULT_FEATURED_FLAME_PRESET,
@@ -80,6 +81,11 @@ export async function ensureFeaturedFlamePreset(opts?: {
 
   if (preset.installedAt && !force) {
     return { preset, addedHandles: [], skipped: "already_installed" };
+  }
+  // G25: the storefront layout and the merchandising page call this during a GET render. Never write from a
+  // deployment the Preview→Production guard blocks (e.g. a Preview build pointed at production data).
+  if (!canPersistMerchantSideEffects()) {
+    return { preset, addedHandles: [], skipped: "writes_blocked" };
   }
 
   if (clearSuppressed) preset = { ...preset, suppressedProductIds: [] };

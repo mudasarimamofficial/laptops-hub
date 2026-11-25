@@ -54,3 +54,24 @@ export const getStorefrontCollection = unstable_cache(
   ["storefront-collection"],
   { revalidate: 60, tags: ["catalog", "collections"] },
 );
+
+/**
+ * Search fields an admin saved on a collection row, without loading its products. Lets the built-in V5 collections
+ * (which keep their code definitions) use a search title/description edited in Admin → Collections.
+ */
+export const getCollectionSeo = unstable_cache(
+  async (slug: string): Promise<{ seoTitle: string | null; seoDescription: string | null; description: string | null } | null> => {
+    const { data } = await createPublicClient()
+      .from("collections")
+      .select("seo_title, seo_description, description")
+      .eq("slug", slug)
+      .eq("published", true)
+      .is("deleted_at", null)
+      .maybeSingle();
+    if (!data) return null;
+    const t = (s: unknown) => (typeof s === "string" && s.trim() ? s.trim() : null);
+    return { seoTitle: t(data.seo_title), seoDescription: t(data.seo_description), description: t(data.description) };
+  },
+  ["collection-seo"],
+  { revalidate: 60, tags: ["collections"] },
+);

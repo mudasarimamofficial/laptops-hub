@@ -1,21 +1,22 @@
 import { unstable_cache } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/server";
-import { SEO_DEFAULTS_KEY, parseTitleSuffix } from "./seo-defaults";
+import { SEO_DEFAULTS_KEY, parseSeoDefaults, type SeoDefaults } from "./seo-defaults";
 
-/** Server-only: the merchant's SEO title suffix ("" when unset). Expired by Settings saves (tag `settings`). */
-export const getSeoTitleSuffix = unstable_cache(
-  async (): Promise<string> => {
+/** Server-only: Admin SEO settings (`seo_defaults`). Expired by Settings/SEO saves (tag `settings`). */
+export const getSeoDefaults = unstable_cache(
+  async (): Promise<SeoDefaults> => {
     try {
-      const { data } = await createServiceClient()
-        .from("store_settings")
-        .select("value")
-        .eq("key", SEO_DEFAULTS_KEY)
-        .maybeSingle();
-      return parseTitleSuffix(data?.value);
+      const { data } = await createServiceClient().from("store_settings").select("value").eq("key", SEO_DEFAULTS_KEY).maybeSingle();
+      return parseSeoDefaults(data?.value);
     } catch {
-      return "";
+      return parseSeoDefaults(null);
     }
   },
-  ["seo-title-suffix"],
+  ["seo-defaults"],
   { revalidate: 60, tags: ["settings"] },
 );
+
+/** The merchant's SEO title suffix ("" when unset). */
+export async function getSeoTitleSuffix(): Promise<string> {
+  return (await getSeoDefaults()).titleSuffix;
+}

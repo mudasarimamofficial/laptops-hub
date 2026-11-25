@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { ogDefaults } from "@/lib/seo/og";
 import { getV5Catalog } from "@/lib/catalog/v5";
 import { canonicalFor, siteUrl } from "@/lib/site-url";
 import { productSeoFromV5 } from "@/lib/seo/product-meta";
@@ -28,9 +29,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: seo.description,
     alternates: canonicalFor(`/products/${p.h}`),
     openGraph: {
+      ...(await ogDefaults()),
       title: seo.title,
       description: seo.description,
-      images: p.imgs[0] ? [{ url: p.imgs[0].u }] : undefined,
+      // The product photo when there is one; otherwise the brand share image from ogDefaults.
+      ...(p.imgs[0] ? { images: [{ url: p.imgs[0].u, alt: seo.title }] } : {}),
       type: "website",
       url: `${siteUrl()}/products/${p.h}`,
     },

@@ -24,11 +24,13 @@ import { JsonLdSite } from "@/components/storefront/json-ld-site";
 import { getPublishedThemeGlobals } from "@/lib/content/published-homepage";
 import { getSeoTitleSuffix } from "@/lib/content/seo-defaults-server";
 import { titleTemplate } from "@/lib/content/seo-defaults";
+import { SHARE_IMAGE_PATH } from "@/lib/seo/site-jsonld";
 import "../globals.css";
 
 /** Page title template follows Admin → Settings → "SEO title suffix" (V5 "%s · Laptops HUB" when unset). */
 export async function generateMetadata(): Promise<Metadata> {
-  const suffix = await getSeoTitleSuffix();
+  const [suffix, contact] = await Promise.all([getSeoTitleSuffix(), getContactSocial()]);
+  const siteName = contact.businessName.trim() || "Laptops HUB";
   return {
     title: {
       default: "Laptops HUB",
@@ -39,6 +41,15 @@ export async function generateMetadata(): Promise<Metadata> {
       "Laptops from Dell, HP, Lenovo and more, with the processor, memory, storage and display listed on every page. Filter by spec, then compare up to four side by side.",
     // Pre-launch: noindex but followable, matching the X-Robots-Tag header (next.config.ts).
     robots: isPrelaunch() ? { index: false, follow: true } : { index: true, follow: true },
+    // Social/share defaults for every storefront page; pages with their own openGraph (product, homepage) replace it.
+    // og:site_name is one of the signals Google's site-name system reads.
+    openGraph: {
+      type: "website",
+      siteName,
+      locale: "en_PK",
+      images: [{ url: SHARE_IMAGE_PATH, width: 1200, height: 630, alt: siteName }],
+    },
+    twitter: { card: "summary_large_image", images: [SHARE_IMAGE_PATH] },
   };
 }
 

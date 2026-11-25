@@ -26,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .map(([id]) => ({ url: `${base}/collections/${id}`, changeFrequency: "daily" as const, priority: 0.7 })),
     ...custom.map((slug) => ({ url: `${base}/collections/${slug}`, changeFrequency: "daily" as const, priority: 0.6 })),
     ...P.map((p) => ({ url: `${base}/products/${p.h}`, changeFrequency: "weekly" as const, priority: 0.6 })),
-    { url: `${base}/compare`, changeFrequency: "monthly", priority: 0.3 },
+    // /compare is not listed: it shows the visitor's own tray and is noindex (compare/layout.tsx).
     ...pages.map((k) => ({ url: `${base}/pages/${k}`, changeFrequency: "monthly" as const, priority: 0.3 })),
     ...(articles.length ? [{ url: `${base}/guides`, changeFrequency: "monthly" as const, priority: 0.3 }] : []),
     ...articles.map((k) => ({ url: `${base}/guides/${k}`, changeFrequency: "monthly" as const, priority: 0.3 })),

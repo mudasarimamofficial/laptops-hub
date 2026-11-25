@@ -8,6 +8,7 @@ import {
 import { CONTACT_SOCIAL_KEY, contactSocialSchema } from "@/lib/content/contact-social";
 import { z } from "zod";
 import { createAuthorizedStaffClient, createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
+import { cleanSeoText, HOME_DESCRIPTION_MAX, HOME_TITLE_MAX } from "@/lib/content/seo-defaults";
 import { maybeCreateCoalescedSnapshot } from "@/lib/admin/merchant-snapshots";
 
 export const dynamic = "force-dynamic";
@@ -21,6 +22,9 @@ const settingsSchema = z.object({
   lowStockDefault: z.number().int().min(0).max(1_000_000).optional(),
   pdpCta: z.enum(["add_to_cart", "buy_now"]).optional(),
   seoTitleSuffix: z.string().trim().max(80).optional(),
+  /** Admin → SEO homepage search appearance; "" = use the default (see seo-defaults.ts). Plain text only. */
+  seoHomeTitle: z.string().max(HOME_TITLE_MAX * 2).optional(),
+  seoHomeDescription: z.string().max(HOME_DESCRIPTION_MAX * 2).optional(),
   showCatalogCounts: z.boolean().optional(),
   showStoryAngleLabels: z.boolean().optional(),
   showSectionNumbers: z.boolean().optional(),
@@ -88,7 +92,7 @@ export async function PUT(request: Request) {
     if (d.pdpCta !== undefined) {
       keysToTouch.push(STOREFRONT_CHECKOUT_KEY);
     }
-    if (d.seoTitleSuffix !== undefined) {
+    if (d.seoTitleSuffix !== undefined || d.seoHomeTitle !== undefined || d.seoHomeDescription !== undefined) {
       keysToTouch.push("seo_defaults");
     }
     if (d.showCatalogCounts !== undefined || d.showStoryAngleLabels !== undefined || d.showSectionNumbers !== undefined) {
@@ -184,9 +188,13 @@ export async function PUT(request: Request) {
     // SEO defaults
     if (keysToTouch.includes("seo_defaults")) {
       const existing = currentMap.get("seo_defaults") || {};
+      // Keep every stored SEO key; change only the fields this request sent.
       const merged: Record<string, unknown> = {
+        ...existing,
         title_suffix: d.seoTitleSuffix !== undefined ? d.seoTitleSuffix : (existing.title_suffix ?? ""),
       };
+      if (d.seoHomeTitle !== undefined) merged.home_title = cleanSeoText(d.seoHomeTitle, HOME_TITLE_MAX);
+      if (d.seoHomeDescription !== undefined) merged.home_description = cleanSeoText(d.seoHomeDescription, HOME_DESCRIPTION_MAX);
       upsertPayloads.push({
         key: "seo_defaults",
         value: merged,
@@ -307,7 +315,8 @@ export async function PUT(request: Request) {
       keysToTouch.includes(INVENTORY_TRACKING_KEY) ||
       keysToTouch.includes(STOREFRONT_CHECKOUT_KEY) ||
       keysToTouch.includes(CONTACT_SOCIAL_KEY) ||
-      keysToTouch.includes("business_identity")
+      keysToTouch.includes("business_identity") ||
+      keysToTouch.includes("seo_defaults")
     ) {
       revalidateTag("settings", { expire: 0 });
       revalidateTag("contact-social", { expire: 0 });
@@ -315,6 +324,7 @@ export async function PUT(request: Request) {
       revalidatePath("/products", "layout");
       revalidatePath("/collections", "layout");
       revalidatePath("/admin/settings");
+      revalidatePath("/admin/seo");
     }
 
     // 5. Audit successful changes

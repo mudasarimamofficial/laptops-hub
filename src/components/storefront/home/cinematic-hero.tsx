@@ -183,8 +183,9 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
           </span>
           {/* H1 rests at final transform from first paint so it remains an eligible LCP text candidate. */}
           <h1 className="v5-hero-h1" style={{ margin: 0, fontFamily: "var(--font-display)", fontWeight: 700, lineHeight: 0.98, letterSpacing: "-.05em", color: "var(--lh-ink)", opacity: 1, transform: "none" }}>
-            <span style={{ display: "block" }}>{t.headingLine1}</span>
-            <span style={{ display: "block", color: "var(--lh-action)" }}>{t.headingAccent}</span>
+            {/* Spaces between the block lines: invisible, but the heading text reads as words to crawlers and screen readers. */}
+            <span style={{ display: "block" }}>{t.headingLine1}</span>{" "}
+            <span style={{ display: "block", color: "var(--lh-action)" }}>{t.headingAccent}</span>{" "}
             <span style={{ display: "block" }}>{t.headingLine3}</span>
           </h1>
           <p style={{ margin: 0, maxWidth: "42ch", fontSize: "clamp(16px,1.2vw,19px)", lineHeight: 1.55, color: "var(--lh-ink-2)", textWrap: "pretty", opacity: 1, transform: inT, transition: tr([["transform", 0.8, 0.28, true]]) }}>

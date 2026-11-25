@@ -3,6 +3,11 @@ import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { AdminCard } from "@/components/admin/ui/admin-card";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
+import { SeoHomeForm } from "@/components/admin/seo-home-form";
+import { SEO_DEFAULTS_KEY, parseSeoDefaults } from "@/lib/content/seo-defaults";
+import { getContactSocial } from "@/lib/content/contact-social-server";
+import { siteUrl } from "@/lib/site-url";
+import { postalAddress } from "@/lib/seo/site-jsonld";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "SEO", robots: { index: false, follow: false } };
@@ -14,12 +19,20 @@ const missing = (v: string | null | undefined) => !v || !v.trim();
  * Does not claim Google has indexed anything — only that metadata is filled for crawlers.
  */
 export default async function AdminSeoPage() {
-  await requireStaffPage(["owner", "admin", "manager", "editor"]);
+  const staff = await requireStaffPage(["owner", "admin", "manager", "editor"]);
   const sb = createServiceClient();
-  const [{ data: products }, { data: collections }] = await Promise.all([
+  const [{ data: products }, { data: collections }, { data: seoRow }, contact] = await Promise.all([
     sb.from("products").select("handle, title, seo_title, seo_description").eq("status", "active").is("deleted_at", null).order("title").limit(2000),
     sb.from("collections").select("slug, title, seo_title, seo_description").eq("published", true).is("deleted_at", null).order("title"),
+    sb.from("store_settings").select("value").eq("key", SEO_DEFAULTS_KEY).maybeSingle(),
+    getContactSocial(),
   ]);
+  const seo = parseSeoDefaults(seoRow?.value);
+  const origin = siteUrl();
+  const canEdit = ["owner", "admin", "manager"].includes(staff.role);
+  const address = postalAddress(contact.address, contact.businessName);
+  const phones = contact.phones.filter((p) => p.enabled).map((p) => p.display);
+  const socials = contact.social.filter((x) => x.enabled && x.url);
   const pGaps = (products || []).filter((p) => missing(p.seo_title) || missing(p.seo_description));
   const cGaps = (collections || []).filter((c) => missing(c.seo_title) || missing(c.seo_description));
   const productTotal = products?.length ?? 0;
@@ -56,6 +69,73 @@ export default async function AdminSeoPage() {
           </ul>
         </AdminCard>
       </div>
+
+      <div className="mb-6 grid gap-4 lg:grid-cols-2">
+        <AdminCard
+          title="Homepage search appearance"
+          description="The title and description Google may show for your homepage. Your brand and city help people find the official site."
+        >
+          <SeoHomeForm initial={{ homeTitle: seo.homeTitle, homeDescription: seo.homeDescription }} origin={origin} canEdit={canEdit} />
+        </AdminCard>
+        <AdminCard
+          title="Business identity for search"
+          description="Search engines read these from Contact & Social (one place to edit). Structured data uses only these facts: no ratings, opening hours or map pins are added."
+        >
+          <dl className="space-y-2 text-sm" data-testid="seo-identity">
+            <div>
+              <dt className="text-xs text-[var(--adm-ink-2)]">Name</dt>
+              <dd>{contact.businessName}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-[var(--adm-ink-2)]">Address</dt>
+              <dd>
+                {contact.address || "—"}
+                {address && typeof address === "string" ? (
+                  <span className="block text-xs text-[var(--adm-ink-2)]">
+                    Shown as plain text: end the address with “, City, Pakistan” to publish a structured postal address.
+                  </span>
+                ) : null}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs text-[var(--adm-ink-2)]">Phones</dt>
+              <dd>{phones.length ? phones.join(" · ") : "—"}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-[var(--adm-ink-2)]">Email</dt>
+              <dd>{contact.email || "—"}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-[var(--adm-ink-2)]">Social profiles (linked as the same business)</dt>
+              <dd>{socials.length ? socials.map((x) => x.label).join(" · ") : "—"}</dd>
+            </div>
+          </dl>
+          <Link href="/admin/settings#contact-social" className="mt-3 inline-block text-sm font-semibold text-[var(--adm-action)] underline">
+            Edit in Contact &amp; Social
+          </Link>
+        </AdminCard>
+      </div>
+
+      <AdminCard
+        title="Google Search Console"
+        description="Search Console is Google's own report of which pages are indexed and why others are not. This admin cannot see that data."
+      >
+        <ol className="list-decimal space-y-1 pl-5 text-sm text-[var(--adm-ink-2)]">
+          <li>
+            Sign in to{" "}
+            <a href="https://search.google.com/search-console" className="font-semibold text-[var(--adm-action)] underline" target="_blank" rel="noreferrer">
+              Google Search Console
+            </a>{" "}
+            with the business Google account and open the <strong>laptopshub.pk</strong> property.
+          </li>
+          <li>
+            Under Sitemaps, submit <code className="rounded bg-[var(--adm-surface-2)] px-1">{origin}/sitemap.xml</code> (once; Google rereads it).
+          </li>
+          <li>Use URL Inspection on a page you changed to ask Google to recrawl it. Indexing and ranking are decided by Google.</li>
+        </ol>
+      </AdminCard>
+
+      <div className="mt-6" />
 
       <AdminCard
         title="Where to edit"

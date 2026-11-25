@@ -18,6 +18,18 @@ export type ResolvedContent = {
   isLegal: boolean;
   /** Template shown only because V5_CONTENT_PREVIEW is on (not published): V5 header tags are reproduced. */
   preview: boolean;
+  /** Guides only: search/social fields and dates from Admin → Blog (empty strings = not set). */
+  article?: ArticleSeo;
+};
+
+export type ArticleSeo = {
+  seoTitle: string;
+  seoDescription: string;
+  /** https share image: og_image_url, else the cover image; "" when neither is a safe https URL. */
+  image: string;
+  author: string;
+  publishedAt: string | null;
+  modifiedAt: string | null;
 };
 
 export type ContentRow = {
@@ -28,7 +40,37 @@ export type ContentRow = {
   legal_approved?: boolean | null;
   excerpt?: string | null;
   published_at?: string | null;
+  updated_at?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
+  og_image_url?: string | null;
+  cover_image_url?: string | null;
+  author_name?: string | null;
 };
+
+const httpsUrl = (u: string | null | undefined) => {
+  const s = (u || "").trim();
+  try {
+    return s && new URL(s).protocol === "https:" ? s : "";
+  } catch {
+    return "";
+  }
+};
+const plain = (s: string | null | undefined, max: number) =>
+  (s || "").replace(/[\u0000-\u001F\u007F]/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
+
+/** Search fields of a published article row (plain text, https images only). */
+export function articleSeoFromRow(row: ContentRow | undefined): ArticleSeo | undefined {
+  if (!row) return undefined;
+  return {
+    seoTitle: plain(row.seo_title, 120),
+    seoDescription: plain(row.seo_description, 320),
+    image: httpsUrl(row.og_image_url) || httpsUrl(row.cover_image_url),
+    author: plain(row.author_name, 80),
+    publishedAt: row.published_at || null,
+    modifiedAt: row.updated_at || null,
+  };
+}
 
 export function previewAllContent() {
   return process.env.V5_CONTENT_PREVIEW === "1" && process.env.VERCEL_ENV !== "production";

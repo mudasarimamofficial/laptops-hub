@@ -6,6 +6,7 @@ import {
   createAuthorizedStaffWriter,
   staffErrorResponse,
 } from "@/lib/auth/staff";
+import { V5_COLS } from "@/lib/catalog/v5-model";
 
 /** Storefront collection pages and the sitemap read published collections through the "collections" cache tag. */
 function refreshStorefront(slug: string) {
@@ -70,15 +71,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "validation_failed", message: "Could not derive slug." }, { status: 400 });
     }
 
+    // Built-in storefront collections own their slugs: a new collection there would never be shown (G05).
+    if (parsed.data.slug && Object.hasOwn(V5_COLS, parsed.data.slug)) {
+      return NextResponse.json(
+        { error: "slug_reserved", message: `"${parsed.data.slug}" is a built-in storefront collection. Choose another web address.` },
+        { status: 409 },
+      );
+    }
+
     for (let i = 0; i < 8; i++) {
       const candidate = i === 0 ? slug : `${slug}-${i + 1}`;
+      if (Object.hasOwn(V5_COLS, candidate)) continue;
       const { data: existing } = await supabase.from("collections").select("id").eq("slug", candidate).maybeSingle();
       if (!existing) {
         slug = candidate;
         break;
       }
       if (i === 7) {
-        return NextResponse.json({ error: "slug_conflict" }, { status: 409 });
+        return NextResponse.json({ error: "slug_conflict", message: "That web address is taken. Choose another." }, { status: 409 });
       }
     }
 

@@ -310,7 +310,8 @@ export function v5SearchHit(p: V5Product): V5SearchHit {
 }
 
 /** V5 PDP spec sheet order and labels (`order` in the product branch), over public spec keys. */
-const SPEC_ORDER: [string, string][] = [
+/** Spec table rows on the product page, in order: [stored key, label]. Admin → product → Specifications edits these. */
+export const SPEC_ORDER: [string, string][] = [
   ["Processor", "Processor"],
   ["Memory", "Memory"],
   ["Storage", "Storage"],

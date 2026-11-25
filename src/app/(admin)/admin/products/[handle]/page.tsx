@@ -4,6 +4,8 @@ import { ProductDangerZone } from "@/components/admin/product-danger-zone";
 import { ProductEditForm } from "@/components/admin/product-edit-form";
 import { ProductMediaManager } from "@/components/admin/product-media-manager";
 import { ProductVariantMatrix } from "@/components/admin/product-variant-matrix";
+import { ProductSpecsForm } from "@/components/admin/product-specs-form";
+import { specEditFromStored } from "@/lib/catalog/spec-edit";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { StatusBadge } from "@/components/admin/ui/status-badge";
 import { requireStaffPage } from "@/lib/auth/staff";
@@ -22,7 +24,7 @@ export default async function AdminProductEditPage({ params }: Props) {
   const full = await supabase
     .from("products")
     .select(
-      "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, seo_title, seo_description, option_names, product_variants(id, title, sku, barcode, price_paisa, compare_at_paisa, inventory_mode, quantity_on_hand, purchasable, option_values, position, allow_oversell), product_media(id, url, alt, position, approval)",
+      "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, seo_title, seo_description, specs, option_names, product_variants(id, title, sku, barcode, price_paisa, compare_at_paisa, inventory_mode, quantity_on_hand, purchasable, option_values, position, allow_oversell), product_media(id, url, alt, position, approval)",
     )
     .eq("handle", handle)
     .maybeSingle();
@@ -33,7 +35,7 @@ export default async function AdminProductEditPage({ params }: Props) {
     const fallback = await supabase
       .from("products")
       .select(
-        "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, seo_title, seo_description, product_variants(id, title, sku, price_paisa, inventory_mode, quantity_on_hand, purchasable, option_values), product_media(id, url, alt, position, approval)",
+        "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, seo_title, seo_description, specs, product_variants(id, title, sku, price_paisa, inventory_mode, quantity_on_hand, purchasable, option_values), product_media(id, url, alt, position, approval)",
       )
       .eq("handle", handle)
       .maybeSingle();
@@ -124,6 +126,8 @@ export default async function AdminProductEditPage({ params }: Props) {
         seoDescription={data.seo_description}
         variants={variants}
       />
+
+      <ProductSpecsForm handle={data.handle} initial={specEditFromStored(data.specs as Record<string, unknown> | null)} />
 
       <ProductVariantMatrix
         handle={data.handle}

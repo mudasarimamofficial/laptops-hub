@@ -32,10 +32,11 @@ From `seo-baseline-before.json`: a gentle crawl of 10 pages, 700 ms apart, GET o
 | 404 page | 404 status with `noindex` |
 
 ## Root causes (in order of impact)
-1. **Google barely knows the site.** No Search Console property existed, so no sitemap had ever been submitted. Only about 2 URLs were indexed.
-2. **Stale Google data.** The wrong site name, the old favicon and the old snippets all come from crawls of an earlier site, before this storefront.
-3. **Weak brand signals on the homepage.** There was a bare title, no canonical, no social card, a thin business node and garbled H1 text.
-4. **Name competition.** "Laptops Hub" is a generic phrase used by other shops. The fix is clear brand + city signals and consistent business details, not tricks.
-5. **Duplicate product titles.** 9 groups (19 live products) share identical page titles (see 06).
+1. **Google's last homepage crawl was blocked (HTTP 403, 22 Oct 2026)**, found later via Search Console URL Inspection, so the homepage was never indexed. It is now fetchable (live test passes).
+2. **Google barely knows the site.** No Search Console property existed, so no sitemap had ever been submitted. Only about 2 URLs were indexed.
+3. **Stale Google data.** The wrong site name, the old favicon and the old snippets all come from crawls of an earlier site, before this storefront.
+4. **Weak brand signals on the homepage.** There was a bare title, no canonical, no social card, a thin business node and garbled H1 text.
+5. **Name competition.** "Laptops Hub" is a generic phrase used by other shops. The fix is clear brand + city signals and consistent business details, not tricks.
+6. **Duplicate product titles.** 9 groups (19 live products) share identical page titles (see 06).
 
 Crawlability itself was **not** the problem: status codes, robots, sitemap and redirects were all correct.

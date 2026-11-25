@@ -201,7 +201,7 @@ export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
         </div>
       ) : null}
 
-      <form method="post" onSubmit={onSubmit} className="mt-8 grid gap-4 md:grid-cols-2">
+      <form method="post" onSubmit={onSubmit} className="mt-8 grid gap-4 md:grid-cols-2" data-testid="checkout-form" data-ready={hydrated ? "true" : "false"}>
         <label className="block text-sm">
           Full name
           <input name="name" required className="mt-1 w-full rounded-xl border border-[var(--lh-border)] px-3 py-2" />

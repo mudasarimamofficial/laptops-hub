@@ -1,3 +1,4 @@
+import { createHash } from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 import { emailConfigured, sendEmail } from "@/lib/notify/send-email";
 import { RECOVERY_CONFIRM_PATH } from "@/lib/auth/recovery";
@@ -47,7 +48,10 @@ export async function dispatchStaffRecoveryEmail(
           "",
           "Your role and access stay the same. After saving a new password, every device is signed out.",
         ].join("\n"),
-        idempotencyKey: `auth-recovery-${email}-${Math.floor(Date.now() / (15 * 60 * 1000))}`,
+        // LH-035: one key per reset link. The old key (email + 15-minute window) was reused by a second request with
+        // a new link, which Resend rejects as a different payload (409), so that staff member silently got no email.
+        // A retry of the same link still de-duplicates. The key no longer contains the email address.
+        idempotencyKey: `auth-recovery-${createHash("sha256").update(tokenHash).digest("hex").slice(0, 32)}`,
       });
       if (!sent.ok) {
         const throttled = /429|rate/i.test(sent.error);

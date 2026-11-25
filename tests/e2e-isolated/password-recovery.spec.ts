@@ -11,12 +11,34 @@ import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("recovery journeys need a local Supabase");
 const MAILPIT = process.env.MAILPIT_URL || "http://127.0.0.1:54324";
+// The app sends recovery mail through Resend when RESEND_API_KEY is set (as production does), otherwise through
+// Supabase Auth's own mailer (Mailpit locally). Read it from whichever one this stack is configured to use.
+const VIA_RESEND = !!process.env.RESEND_API_KEY;
+const FAKE_RESEND = process.env.FAKE_RESEND_URL || "http://127.0.0.1:4599";
+if (VIA_RESEND && !/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(process.env.RESEND_API_URL || "")) {
+  throw new Error("recovery journeys with RESEND_API_KEY set need the local fake Resend (RESEND_API_URL)");
+}
+type Delivered = { id: string; to: string | string[]; text: string };
+const resendLog = async () => ((await (await fetch(`${FAKE_RESEND}/_log`)).json()).delivered || []) as Delivered[];
+const sentTo = (d: Delivered, address: string) => ([] as string[]).concat(d.to).includes(address);
+const seenResend = new Set<string>();
 const fx = JSON.parse(fs.readFileSync(".isolated/fixture.json", "utf8"));
 const sb = createClient(SB_URL, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
 
 const NEW_PASSWORD = `Fresh-${randomUUID().slice(0, 8)}-Pass!`;
 
 async function mailFor(address: string, after: number) {
+  if (VIA_RESEND) {
+    for (let i = 0; i < 40; i++) {
+      const d = (await resendLog()).find((m) => sentTo(m, address) && !seenResend.has(m.id));
+      if (d) {
+        seenResend.add(d.id);
+        return { Text: d.text, HTML: "" };
+      }
+      await new Promise((res) => setTimeout(res, 500));
+    }
+    return null;
+  }
   for (let i = 0; i < 40; i++) {
     const r = await (await fetch(`${MAILPIT}/api/v1/search?query=${encodeURIComponent(`to:"${address}"`)}`)).json();
     const msg = (r.messages || []).find((m: { Created: string }) => Date.parse(m.Created) >= after);
@@ -26,7 +48,9 @@ async function mailFor(address: string, after: number) {
   return null;
 }
 const countMail = async (address: string) =>
-  ((await (await fetch(`${MAILPIT}/api/v1/search?query=${encodeURIComponent(`to:"${address}"`)}`)).json()).messages || []).length as number;
+  VIA_RESEND
+    ? (await resendLog()).filter((m) => sentTo(m, address)).length
+    : ((await (await fetch(`${MAILPIT}/api/v1/search?query=${encodeURIComponent(`to:"${address}"`)}`)).json()).messages || []).length as number;
 const linkIn = (m: { Text: string; HTML: string }) =>
   (m.HTML.match(/href="([^"]+)"/)?.[1] || m.Text.match(/https?:\/\/\S+/)?.[0] || "").replace(/&amp;/g, "&");
 
@@ -56,6 +80,8 @@ test.describe.serial("staff password recovery (isolated)", () => {
     // window would trip the (correct) limits here. Start each run with clean counters on the LOCAL database only.
     const { error } = await sb.from("rate_limit_buckets").delete().or("bucket_key.like.password:*,bucket_key.like.recover:*");
     expect(error, "clear local recovery rate-limit counters").toBeNull();
+    // Only mail sent from here on counts (the fake Resend keeps everything since it started).
+    if (VIA_RESEND) for (const m of await resendLog()) seenResend.add(m.id);
   });
   // Later suites sign in with the fixture passwords: put back the ones these journeys change.
   test.afterAll(async () => {
@@ -207,5 +233,24 @@ test.describe.serial("staff password recovery (isolated)", () => {
     await expect(page).toHaveURL(/127\.0\.0\.1:3001\/admin\/forgot-password\?link=invalid$/);
     await page.goto("/admin/auth/confirm?token_hash=forged&type=signup");
     await expect(page).toHaveURL(/\/admin\/forgot-password\?link=invalid$/);
+  });
+
+  test("LH-035: a second reset request soon after the first still delivers a new, working link", async ({ page }) => {
+    test.skip(!VIA_RESEND, "LH-035 is about Resend delivery; Supabase's own mailer applies its own per-user frequency limit");
+    const owner = fx.staff.owner as { email: string };
+    await page.goto("/admin/forgot-password");
+    const t0 = Date.now() - 1000;
+    expect((await api(page, "/api/admin/account/recover", { email: owner.email })).status()).toBe(200);
+    const first = await mailFor(owner.email, t0);
+    expect(first, "first reset email delivered").toBeTruthy();
+    expect((await api(page, "/api/admin/account/recover", { email: owner.email })).status()).toBe(200);
+    const second = await mailFor(owner.email, t0);
+    expect(second, "second reset email delivered (not dropped as a duplicate)").toBeTruthy();
+    expect(linkIn(second!)).not.toBe(linkIn(first!));
+    // The newest link opens the reset form (nothing is changed: the form is not submitted).
+    await page.context().clearCookies();
+    await page.goto(linkIn(second!));
+    await expect(page).toHaveURL(/\/admin\/reset-password$/);
+    await expect(page.getByText(owner.email)).toBeVisible();
   });
 });

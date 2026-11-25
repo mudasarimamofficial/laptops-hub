@@ -12,6 +12,7 @@ import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "crypto";
 import fs from "fs";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
+import { ORIGIN } from "./helpers/origin";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 if (!/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/.test(SB_URL)) throw new Error("staff journeys need a local Supabase");
@@ -42,7 +43,7 @@ async function signIn(page: Page, email: string, password: string) {
   await page.getByRole("button", { name: "Sign in" }).click();
 }
 const api = (page: Page, method: "post" | "patch" | "get", path: string, data?: unknown) =>
-  page.request[method](path, { headers: { origin: "http://127.0.0.1:3001" }, data });
+  page.request[method](path, { headers: { origin: ORIGIN }, data });
 
 async function acceptInvite(page: Page, email: string) {
   await page.goto(await inviteLink(email));
@@ -196,7 +197,7 @@ test.describe.serial("P0: staff invitations, roles and deactivation (isolated)",
 
   test("anonymous: refused", async ({ request }) => {
     expect((await request.get("/api/admin/staff")).status()).toBe(401);
-    expect((await request.post("/api/admin/staff", { headers: { origin: "http://127.0.0.1:3001" }, data: { email: "a@b.pk", role: "editor" } })).status()).toBe(401);
+    expect((await request.post("/api/admin/staff", { headers: { origin: ORIGIN }, data: { email: "a@b.pk", role: "editor" } })).status()).toBe(401);
   });
 
   test("deactivation ends access at once; reactivation restores it", async ({ page, browser }) => {

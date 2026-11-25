@@ -16,6 +16,8 @@ import { fmtPkr } from "../../src/lib/catalog/v5-model";
 import { DEFAULT_SOCIAL_PROOF, type SocialProofSettings } from "../../src/lib/content/social-proof";
 import { assertLocalOnly } from "../../scripts/lib/local-only.mjs";
 import { beginGuardedRun, endGuardedRun } from "./helpers/run-guard";
+import { ORIGIN } from "./helpers/origin";
+import { pauseActiveCampaigns, resumeCampaigns } from "./helpers/campaigns";
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const LOOPBACK = /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(\/|$)/;
@@ -128,6 +130,7 @@ async function restoreBaseline(b: Baseline) {
 }
 
 test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => {
+  let paused: string[] = [];
   test.beforeAll(async () => {
     await assertLocalOnly("36-step acceptance scenario");
     fs.mkdirSync(OUT, { recursive: true });
@@ -138,6 +141,8 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     await sweepSyntheticRecords();
     state.savedSocial = g.baseline.social;
     state.baselinePublication = g.baseline.publication;
+    // Cash totals below are list prices: pause automatic campaigns (the seeded "Storewide 5% Off") for this run.
+    paused = await pauseActiveCampaigns(sb);
     // Explicit baseline: nothing synthetic from an earlier run is still public.
     const { count } = await sb.from("products").select("id", { count: "exact", head: true }).like("handle", "qa-acceptance-laptop-%").neq("status", "archived");
     expect(count).toBe(0);
@@ -148,6 +153,7 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     // Restores settings + the theme publication and removes every synthetic record (orders of the test product
     // included, so no later suite counts them). The guard file is removed only after that succeeded.
     await restoreBaseline({ social: state.savedSocial ?? null, publication: state.baselinePublication ?? null });
+    await resumeCampaigns(sb, paused);
     endGuardedRun(GUARD);
   });
 
@@ -158,7 +164,7 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
 
     await page.goto("/admin/products/new"); // 2
     await page.getByLabel("Title").fill(TITLE);
-    await expect(page.getByLabel("URL handle")).toHaveValue(HANDLE);
+    await expect(page.getByLabel("Web address")).toHaveValue(HANDLE); // field renamed from "URL handle" in #26
     await page.getByLabel("Price (PKR)").fill(String(PRICES["8GB"]));
     await page.getByLabel("Brand / manufacturer").fill("QA Brand");
     await page.getByRole("button", { name: "Create product" }).click();
@@ -219,9 +225,9 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     step(7, { collection: state.collectionSlug });
 
     await page.goto(`/admin/products/${HANDLE}`); // 8
-    await page.getByLabel("Status").first().selectOption("active");
+    await page.getByLabel("Visibility").selectOption("active"); // product status field is labelled "Visibility" since #26
     await page.getByRole("button", { name: "Save product" }).click();
-    await expect(page.getByText(/^Saved\./).first()).toBeVisible();
+    await expect(page.getByText("Product saved.")).toBeVisible(); // confirmation text since #26
     const { data: p } = await sb.from("products").select("status").eq("id", state.productId!).single();
     expect(p!.status).toBe("active");
     step(8, { status: p!.status });
@@ -311,7 +317,8 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
         await page.getByLabel(/^Tracking number/).fill(`ACC-${RUN}`);
       }
       await page.getByRole("button", { name: "Update status" }).click();
-      await expect(page.getByText(new RegExp(`Current:\\s*${to}`, "i"))).toBeVisible();
+      // The card shows labels ("Out for delivery"); the Totals card shows the stored status code.
+      await expect(page.getByTestId("order-fulfillment-status")).toHaveText(to);
     }
     await shot(page, "20-delivered", true);
     const { data: before } = await sb.from("orders").select("status, payment_status, amount_collected_paisa").eq("id", state.orderId!).single();
@@ -390,10 +397,14 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     await page.goto("/admin/reels");
     const form = page.getByTestId("reel-new-form");
     await form.getByLabel("Title").fill(REEL);
-    await form.getByLabel("Video file link").fill(VIDEO);
+    await form.getByLabel(/Video URL/).fill(VIDEO);
     await form.getByLabel("Video rights").selectOption("owned");
     await form.getByLabel("Status").selectOption("published");
-    await form.getByLabel("Linked product handle (optional)").fill(HANDLE);
+    // Linked product: the free-text handle field became a product picker (search, then choose).
+    const picker = form.getByTestId("reel-product-picker");
+    await picker.getByLabel("Search products to feature").fill(HANDLE.slice(0, 16));
+    await expect(picker.getByRole("button", { name: new RegExp(HANDLE) })).toBeVisible({ timeout: 10_000 });
+    await picker.getByRole("button", { name: new RegExp(HANDLE) }).click();
     await form.getByRole("button", { name: "Add reel" }).click();
     await expect(form.getByText("Reel saved.")).toBeVisible();
     await page.goto("/");
@@ -428,7 +439,7 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     expect(kinds).toContain("staff_pick");
 
     const second = await page.request.post("/api/checkout/cod", {
-      headers: { origin: "http://127.0.0.1:3001" },
+      headers: { origin: ORIGIN },
       data: {
         idempotencyKey: `acc-second-${RUN}`, customerName: "Second Buyer", customerPhone: "03007654321", shippingZoneId: fx.zone.id, confirmCod: true,
         address: { line1: "House 3, Street 9, Johar Town", city: "Lahore", province: "Punjab" },
@@ -438,7 +449,7 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
     expect(second.status()).toBe(200);
     const { orderNumber: n2 } = await second.json();
     for (const to of ["confirmed", "packing", "shipped", "out_for_delivery", "delivered"]) {
-      const r = await page.request.post(`/api/admin/orders/${n2}/status`, { headers: { origin: "http://127.0.0.1:3001" }, data: { toStatus: to } });
+      const r = await page.request.post(`/api/admin/orders/${n2}/status`, { headers: { origin: ORIGIN }, data: { toStatus: to } });
       expect(r.status(), to).toBe(200);
     }
     expect((await page.request.put("/api/admin/social-proof", { data: { ...on, activity: { ...on.activity, intervalSeconds: 11 } } })).status()).toBe(200); // expires caches
@@ -541,7 +552,7 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
       ["POST", "/api/admin/inventory/adjust", { variantId: state.variants["8GB"], mode: "delta", amount: 5, reason: "other" }],
     ];
     for (const [method, url, data] of api) {
-      const r = await page.request.fetch(url, { method, data, headers: { origin: "http://127.0.0.1:3001" } });
+      const r = await page.request.fetch(url, { method, data, headers: { origin: ORIGIN } });
       expect(r.status(), `${method} ${url}`).toBe(403);
       refused[`${method} ${url}`] = r.status();
     }

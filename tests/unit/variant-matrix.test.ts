@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {
   generateVariantMatrix,
+  inferOptionsFromVariants,
   optionValuesEqual,
   parseOptionValuesCsv,
 } from "../../src/lib/catalog/variant-matrix";
@@ -28,5 +29,12 @@ const capped = generateVariantMatrix([
 ]);
 assert.ok(capped.errors.some((e) => /max 250/i.test(e)));
 assert.equal(capped.rows.length, 250);
+
+// A simple product saved once from the matrix stores option_names {Title} with empty option values: the option is
+// dropped (it has no values and could never be saved), so the matrix falls back to Title: Default and saves again.
+assert.deepEqual(inferOptionsFromVariants(["Title"], [{ optionValues: {} }]), []);
+assert.deepEqual(inferOptionsFromVariants(["RAM", "Colour"], [{ optionValues: { RAM: "8GB" } }, { optionValues: { RAM: "16GB" } }]), [
+  { name: "RAM", values: ["8GB", "16GB"] },
+]);
 
 console.log("variant-matrix.test.ts: ok");

@@ -26,7 +26,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
        customer_name, customer_phone_e164, customer_email, customer_note,
        subtotal_paisa, shipping_paisa, cod_fee_paisa, tax_paisa, discount_paisa, created_at,
        order_addresses ( line1, line2, city, province, postcode, landmark ),
-       order_items ( handle, title_snapshot, variant_title_snapshot, quantity, unit_price_paisa, line_total_paisa ),
+       order_items ( handle, title_snapshot, variant_title_snapshot, quantity, unit_price_paisa, line_total_paisa, unit_list_price_paisa, line_discount_paisa ),
        order_events ( event_type, from_status, to_status, note, created_at ),
        cod_collections ( amount_paisa, collector_ref, collected_at, note ),
        fulfillments ( carrier, tracking_number, dispatched_at, delivered_at )`,
@@ -50,6 +50,8 @@ export default async function AdminOrderDetailPage({ params }: Props) {
     quantity: number;
     unit_price_paisa: number;
     line_total_paisa: number;
+    unit_list_price_paisa: number | null;
+    line_discount_paisa: number | null;
   }[];
   const events = ((order.order_events || []) as { event_type: string; from_status: string | null; to_status: string | null; note: string; created_at: string }[])
     .slice()
@@ -181,10 +183,24 @@ export default async function AdminOrderDetailPage({ params }: Props) {
               <tr key={`${it.handle}-${i}`} className="border-t border-[var(--adm-divider)]">
                 <td className="px-4 py-3">
                   <div className="font-medium">{it.title_snapshot}</div>
+                  {/* The configuration to pack (single-variant products are stored as "Default"). */}
+                  {it.variant_title_snapshot && it.variant_title_snapshot !== "Default" ? (
+                    <div className="text-xs" data-testid="order-item-variant">
+                      {it.variant_title_snapshot}
+                    </div>
+                  ) : null}
                   <div className="font-[family-name:var(--font-mono)] text-xs text-[var(--adm-ink-2)]">{it.handle}</div>
                 </td>
                 <td className="px-4 py-3">{it.quantity}</td>
-                <td className="px-4 py-3">{formatPkr(it.unit_price_paisa)}</td>
+                <td className="px-4 py-3">
+                  {formatPkr(it.unit_price_paisa)}
+                  {/* Discounted lines: unit is the price charged; the list price and saving are snapshots from order time. */}
+                  {Number(it.line_discount_paisa) > 0 && it.unit_list_price_paisa ? (
+                    <div className="text-xs text-[var(--adm-ink-2)]" data-testid="order-item-discount">
+                      List {formatPkr(it.unit_list_price_paisa)} · saved {formatPkr(Number(it.line_discount_paisa))}
+                    </div>
+                  ) : null}
+                </td>
                 <td className="px-4 py-3">{formatPkr(it.line_total_paisa)}</td>
               </tr>
             ))}

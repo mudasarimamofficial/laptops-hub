@@ -224,6 +224,8 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
               type="button"
               className="v5-hov-ice"
               data-testid="desktop-mega-trigger"
+              // Hydration flag for tests (same as the mobile menu button): hover/click handlers are attached once "true".
+              data-ready={hydrated ? "true" : "false"}
               onClick={() => {
                 if (suppressClickCloseRef.current) {
                   suppressClickCloseRef.current = false;

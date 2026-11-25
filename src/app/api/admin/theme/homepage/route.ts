@@ -12,6 +12,7 @@ import { publishedThemesLive } from "@/lib/content/published-homepage";
 import { draftStateFingerprint } from "@/lib/content/theme-draft-fingerprint";
 import { cleanGlobalsForSave, globalsFromThemeSettings, themeGlobalsProblems } from "@/lib/content/theme-globals";
 import { cleanLayoutForSave, layoutFromThemeSettings, themeLayoutProblems } from "@/lib/content/theme-layout";
+import { publicationEventFromAudit, publishedHistoryOrder } from "@/lib/content/theme-history";
 
 /** What customers see right now, for the editor's explanation. */
 const liveState = () => ({ publishedThemesEnabled: publishedThemesLive() });
@@ -93,6 +94,32 @@ export async function GET() {
       .eq("template_key", "homepage")
       .maybeSingle();
 
+    // History: versions in the order they were last live (a rollback does not change published_at), see theme-history.ts.
+    type HistoryRow = { id: string; label: string; status: string; published_at: string | null; created_at: string };
+    const { data: events } = await supabase
+      .from("audit_logs")
+      .select("after")
+      .in("action", ["theme.homepage.publish", "theme.homepage.rollback"])
+      .order("created_at", { ascending: false })
+      .limit(40);
+    const byId = new Map(((publishedList as HistoryRow[] | null) || []).map((v) => [v.id, v]));
+    const historyIds = publishedHistoryOrder(
+      publication?.published_version_id ?? null,
+      (events || []).map((e) => publicationEventFromAudit(e.after)),
+      [...byId.keys()],
+    );
+    const missing = historyIds.filter((id) => !byId.has(id));
+    if (missing.length) {
+      const { data: older } = await supabase
+        .from("theme_versions")
+        .select("id, label, status, published_at, created_at")
+        .eq("template_id", template.id)
+        .eq("status", "published")
+        .in("id", missing);
+      for (const v of (older as HistoryRow[] | null) || []) byId.set(v.id, v);
+    }
+    const publishedVersions = historyIds.map((id) => byId.get(id)).filter((v): v is HistoryRow => !!v);
+
     // Ordered layout: older drafts are read in the V5 order and gain any newer section at its V5 position.
     const sections = normalizeHomepageLayout((version?.sections as SectionInstance[] | undefined) ?? null);
 
@@ -109,7 +136,7 @@ export async function GET() {
         layout: layoutFromThemeSettings(version?.theme_settings),
         livePublishedVersionId: publication?.published_version_id ?? null,
         ...liveState(),
-        publishedVersions: publishedList || [],
+        publishedVersions,
       },
       { headers: { "Cache-Control": "no-store" } },
     );

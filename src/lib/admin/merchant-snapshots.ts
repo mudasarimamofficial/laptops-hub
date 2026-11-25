@@ -125,8 +125,35 @@ export function validateSnapshotPayload(payload: unknown): {
   return { ok: true, checks };
 }
 
-export function checksumPayload(payload: MerchantCmsPayload): string {
-  return createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+/**
+ * JSON with object keys sorted at every level. Snapshots are stored as `jsonb`, which reorders keys, so a checksum over
+ * plain `JSON.stringify` could never match after storage and every restore was refused ("checksum mismatch").
+ */
+export function canonicalJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map((v) => canonicalJson(v)).join(",")}]`;
+  if (value && typeof value === "object") {
+    const o = value as Record<string, unknown>;
+    return `{${Object.keys(o)
+      .filter((k) => o[k] !== undefined)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${canonicalJson(o[k])}`)
+      .join(",")}}`;
+  }
+  return JSON.stringify(value) ?? "null";
+}
+
+/** Checksums written from 2026-11-25 carry this prefix (canonical JSON). Older ones hashed key-order-dependent JSON. */
+const CANONICAL_CHECKSUM_PREFIX = "c1:";
+
+export function checksumPayload(payload: unknown): string {
+  return CANONICAL_CHECKSUM_PREFIX + createHash("sha256").update(canonicalJson(payload)).digest("hex");
+}
+
+/** "legacy": made before canonical checksums; its integrity cannot be re-verified after jsonb storage. */
+export function checksumVerdict(stored: string | null | undefined, payload: unknown): "ok" | "mismatch" | "legacy" {
+  if (!stored) return "ok";
+  if (!stored.startsWith(CANONICAL_CHECKSUM_PREFIX)) return "legacy";
+  return stored === checksumPayload(payload) ? "ok" : "mismatch";
 }
 
 /** Skip a new auto-snapshot when a valid one was created within the coalesce window. */
@@ -222,10 +249,13 @@ export async function restoreMerchantSnapshot(
   const validation = validateSnapshotPayload(payload);
   if (!validation.ok) throw new Error(`Backup failed integrity checks (${validation.reason})`);
 
-  const recomputed = createHash("sha256").update(JSON.stringify(payload)).digest("hex");
-  if (snap.checksum && snap.checksum !== recomputed) {
-    throw new Error("Backup checksum mismatch — refusing restore");
+  const verdict = checksumVerdict(snap.checksum, payload);
+  if (verdict === "legacy") {
+    throw new Error(
+      "This backup was made before 25 Nov 2026 and its integrity cannot be checked (legacy format). Create a new backup, then restore that one.",
+    );
   }
+  if (verdict === "mismatch") throw new Error("Backup checksum mismatch — refusing restore");
 
   // Pre-restore checkpoint must succeed before mutating live CMS rows.
   const checkpoint = await createMerchantSnapshot(supabase, {

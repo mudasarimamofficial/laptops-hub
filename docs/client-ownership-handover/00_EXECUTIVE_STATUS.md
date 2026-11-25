@@ -1,5 +1,22 @@
 # 00 — Executive status: client-ownership readiness (2026-11-24)
 
+## 2026-11-25 — post-SEO closure status (read this first)
+
+The rest of this file is the 2026-11-24 audit, kept as written. This section replaces its verdict.
+
+**Label: READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED. This is not a complete handover certificate.**
+
+| Area | Status | Evidence |
+|---|---|---|
+| **SEO engineering** | **Implemented** | PR #80 live. Canonicals, titles, Organization/WebSite/Product/Article JSON-LD, sitemap (279 URLs) and robots were re-checked on production with a gentle read-only crawl on 2026-11-25. Schema prices equal the displayed sale prices. Merchant SEO overrides win and the admin preserves them. Each key page has exactly one H1, and theme edits cannot empty it. Details: `seo-search/`. |
+| **Google indexing** | **Pending (Google's decision)** | Search Console Domain property owned by the business account; sitemap submitted; **five** priority indexing requests (not 14). The last homepage crawl before the fix (22 Oct 2026) was refused with 403; the live test now passes. No indexing or ranking is claimed. Dated checks: `seo-search/17_MONITORING_CHECKLIST.md`. |
+| **Admin and theme defects** | **P0: all 5 fixed and live.** **P1: 12 of 20 fixed, 2 partly, 6 open.** | `22_ADMIN_SELF_SERVICE_MATRIX.md` §0, `02_DEFECT_REGISTER_AND_GAPS.md`. LH-018 (default hero publish) fixed in PR #81. Found and fixed while testing (PR #84): LH-036, CMS backups could never be restored; LH-035, a second password-reset email within 15 minutes was silently dropped. Open P1s: G12, G13, G14 (needs design approval), G19 and G22 (need migrations), G24; G17 and G18 partly fixed. Theme editor gaps: `05` "Phase 2c+". |
+| **Tests** | Isolated suite on the final build (PR #84, 197 tests): every test has a passing result, but not from one uninterrupted run. The full run was cut by the computer sleeping (`ERR_NETWORK_IO_SUSPENDED`): 140 tests outside the affected files passed there; the 57 tests in the 10 affected files passed on re-run (the last 3 files after restarting the local Supabase API containers, which were degraded after the sleep). The earlier full run on the G05 build: 182 passed, 2 failed, 6 did not run (190): both failures diagnosed and fixed in #84 (stale recovery spec that hid LH-035; a typing-before-hydration flake). Unit: 56 files pass. tsc 0 errors, eslint 0. No assertion was weakened; one unit assertion that pinned the old LH-036 checksum formula was replaced by the new contract. | `docs/LAPTOPS_HUB_E2E_TEST_REPORT.md` is older; the totals here are from the isolated run on 2026-11-25. |
+| **Commerce readiness** | **Ordering is open; not certified** | Verified read-only 2026-11-25: production `cod_checkout` is **enabled**, with the stored reason "Owner mandate 2026-11-18" (all-Pakistan delivery Rs 360 + COD Rs 50 launch tariffs). Production has 1 order (18 Nov 2026). This pass did not place or verify a real end-to-end order, so live commerce is not certified here. |
+| **Infrastructure transfer readiness** | **Not ready** | Vercel Hobby is non-commercial (D1). Supabase Free has no included backups (D2); the in-app CMS restore was broken until LH-036 (PR #84); a local database backup/restore rehearsal is in `23`. Repository is public. GitHub, Vercel and Supabase are still on the developer's accounts (D9). The migration ledger repair (LH-025, D11) awaits approval. Nothing was transferred, upgraded or paid for. |
+| **Owner decisions remaining** | D1–D14, O1–O5 | `23_OWNER_DECISIONS_AND_RISK_REGISTER.md`: plan, backups, Shopify-hosted images, COD go-live, WhatsApp, email, monitoring, transfer, DNS/CRM, ledger repair; plus duplicate titles (9 groups, 19 products), the Business Profile website link, the "Shop no 3" address wording, Search Console reviews. |
+
+
 **Verdict: NOT YET READY for formal ownership transfer.** The store runs in production and the core is sound, but
 merchant self-sufficiency is only complete for the homepage, and three owner decisions block a compliant transfer.
 

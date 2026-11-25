@@ -19,3 +19,7 @@ written is listed as **TODO** rather than covered by an older document that was 
 | 14 | Environment and integration inventory | `11_OWNERSHIP_TRANSFER_PLAN.md` (env names), `09` | partial |
 | 15 | Merchant admin manual | `15_MERCHANT_GUIDE_HOMEPAGE_EDITING.md` + existing `docs/LAPTOPS_HUB_ADMIN_MERCHANT_HANDBOOK.md` | homepage section new |
 | 16–20 | Operations guide, acceptance checklist, production evidence, open decisions, signed checklist | `18_FINAL_PRODUCTION_EVIDENCE.md`; decisions in `00` | partial |
+| 21 | Migration ledger reconciliation (LH-025) | `21_MIGRATION_LEDGER_RECONCILIATION.md` | written — **awaiting owner approval, not executed** |
+| 22 | Admin self-service matrix (G01–G49) | `22_ADMIN_SELF_SERVICE_MATRIX.md` | written; §0 tracks fixes (updated 2026-11-25) |
+| 23 | Owner decisions, risks and owner tasks | `23_OWNER_DECISIONS_AND_RISK_REGISTER.md` | written 2026-11-25 |
+| SEO | Search, AEO and Search Console | `seo-search/` (start at `00`; dated checks in `17`) | engineering implemented; Google indexing pending |

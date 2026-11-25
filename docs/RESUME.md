@@ -1,5 +1,13 @@
 # Resume here
 
+> **2026-11-25 post-SEO closure (Claude Opus 5.5) — read first:** status table at the top of
+> `docs/client-ownership-handover/00_EXECUTIVE_STATUS.md`. Live since the SEO launch: LH-018 default hero publish fix
+> (#81), laptop specs editor G04 (#82). Then G05 collections (#83) and PR #84: P1 gaps G11/G15/G16/G17(part)/G23/G25 plus two defects found by the full suite, LH-036 (CMS backups could never be restored) and LH-035 (second reset email dropped). Search: engineering implemented, Google indexing pending: five
+> indexing requests only, dated checks in `seo-search/17_MONITORING_CHECKLIST.md`. Do not re-request indexing without a
+> page change. LH-025 ledger repair: re-checked read-only, unchanged, **awaiting owner approval** (`21` §6–§7); never
+> `db push` before it. Owner tasks and decisions: `23_OWNER_DECISIONS_AND_RISK_REGISTER.md`. Full isolated suite:
+> 197 tests, all with a passing result (full run interrupted by the computer sleeping; affected files re-run green). Details in `00_EXECUTIVE_STATUS.md`. Status: **READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED.**
+
 > **2026-11-24 theme Phase 2b (Claude Opus 5.5):** PR #72 merged (`336a5ae`), deployed (`dpl_H9V3oYjg8fgJS4iukeFfJ8gvdrQ4`).
 > Online Store → Site-wide text now also has Product pages / Collection pages / Page not found (25 fields, same
 > `theme_settings.globals` storage and publish workflow). Next: Phase 2c (cart/compare/search wording, PDP section

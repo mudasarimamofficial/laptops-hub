@@ -3,6 +3,13 @@ import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { AdminCard } from "@/components/admin/ui/admin-card";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
+import { SeoHomeForm } from "@/components/admin/seo-home-form";
+import { SEO_DEFAULTS_KEY, parseSeoDefaults } from "@/lib/content/seo-defaults";
+import { getContactSocial } from "@/lib/content/contact-social-server";
+import { siteUrl } from "@/lib/site-url";
+import { postalAddress } from "@/lib/seo/site-jsonld";
+import { getV5Catalog } from "@/lib/catalog/v5";
+import { productSeoFromV5, sharedSearchTitles } from "@/lib/seo/product-meta";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "SEO", robots: { index: false, follow: false } };
@@ -14,12 +21,23 @@ const missing = (v: string | null | undefined) => !v || !v.trim();
  * Does not claim Google has indexed anything — only that metadata is filled for crawlers.
  */
 export default async function AdminSeoPage() {
-  await requireStaffPage(["owner", "admin", "manager", "editor"]);
+  const staff = await requireStaffPage(["owner", "admin", "manager", "editor"]);
   const sb = createServiceClient();
-  const [{ data: products }, { data: collections }] = await Promise.all([
+  const [{ data: products }, { data: collections }, { data: seoRow }, contact] = await Promise.all([
     sb.from("products").select("handle, title, seo_title, seo_description").eq("status", "active").is("deleted_at", null).order("title").limit(2000),
     sb.from("collections").select("slug, title, seo_title, seo_description").eq("published", true).is("deleted_at", null).order("title"),
+    sb.from("store_settings").select("value").eq("key", SEO_DEFAULTS_KEY).maybeSingle(),
+    getContactSocial(),
   ]);
+  // The same title builder the storefront uses, so this lists exactly what Google sees.
+  const catalog = await getV5Catalog().catch(() => []);
+  const sharedTitles = sharedSearchTitles(catalog, (p) => productSeoFromV5(p).title);
+  const seo = parseSeoDefaults(seoRow?.value);
+  const origin = siteUrl();
+  const canEdit = ["owner", "admin", "manager"].includes(staff.role);
+  const address = postalAddress(contact.address, contact.businessName);
+  const phones = contact.phones.filter((p) => p.enabled).map((p) => p.display);
+  const socials = contact.social.filter((x) => x.enabled && x.url);
   const pGaps = (products || []).filter((p) => missing(p.seo_title) || missing(p.seo_description));
   const cGaps = (collections || []).filter((c) => missing(c.seo_title) || missing(c.seo_description));
   const productTotal = products?.length ?? 0;
@@ -57,6 +75,73 @@ export default async function AdminSeoPage() {
         </AdminCard>
       </div>
 
+      <div className="mb-6 grid gap-4 lg:grid-cols-2">
+        <AdminCard
+          title="Homepage search appearance"
+          description="The title and description Google may show for your homepage. Your brand and city help people find the official site."
+        >
+          <SeoHomeForm initial={{ homeTitle: seo.homeTitle, homeDescription: seo.homeDescription }} origin={origin} canEdit={canEdit} />
+        </AdminCard>
+        <AdminCard
+          title="Business identity for search"
+          description="Search engines read these from Contact & Social (one place to edit). Structured data uses only these facts: no ratings, opening hours or map pins are added."
+        >
+          <dl className="space-y-2 text-sm" data-testid="seo-identity">
+            <div>
+              <dt className="text-xs text-[var(--adm-ink-2)]">Name</dt>
+              <dd>{contact.businessName}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-[var(--adm-ink-2)]">Address</dt>
+              <dd>
+                {contact.address || "—"}
+                {address && typeof address === "string" ? (
+                  <span className="block text-xs text-[var(--adm-ink-2)]">
+                    Shown as plain text: end the address with “, City, Pakistan” to publish a structured postal address.
+                  </span>
+                ) : null}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-xs text-[var(--adm-ink-2)]">Phones</dt>
+              <dd>{phones.length ? phones.join(" · ") : "—"}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-[var(--adm-ink-2)]">Email</dt>
+              <dd>{contact.email || "—"}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-[var(--adm-ink-2)]">Social profiles (linked as the same business)</dt>
+              <dd>{socials.length ? socials.map((x) => x.label).join(" · ") : "—"}</dd>
+            </div>
+          </dl>
+          <Link href="/admin/settings#contact-social" className="mt-3 inline-block text-sm font-semibold text-[var(--adm-action)] underline">
+            Edit in Contact &amp; Social
+          </Link>
+        </AdminCard>
+      </div>
+
+      <AdminCard
+        title="Google Search Console"
+        description="Search Console is Google's own report of which pages are indexed and why others are not. This admin cannot see that data."
+      >
+        <ol className="list-decimal space-y-1 pl-5 text-sm text-[var(--adm-ink-2)]">
+          <li>
+            Sign in to{" "}
+            <a href="https://search.google.com/search-console" className="font-semibold text-[var(--adm-action)] underline" target="_blank" rel="noreferrer">
+              Google Search Console
+            </a>{" "}
+            with the business Google account and open the <strong>laptopshub.pk</strong> property.
+          </li>
+          <li>
+            Under Sitemaps, submit <code className="rounded bg-[var(--adm-surface-2)] px-1">{origin}/sitemap.xml</code> (once; Google rereads it).
+          </li>
+          <li>Use URL Inspection on a page you changed to ask Google to recrawl it. Indexing and ranking are decided by Google.</li>
+        </ol>
+      </AdminCard>
+
+      <div className="mt-6" />
+
       <AdminCard
         title="Where to edit"
         description="Policy and information page titles live under Content. Product and collection search fields open from the lists below."
@@ -77,6 +162,37 @@ export default async function AdminSeoPage() {
           .
         </p>
       </AdminCard>
+
+      <section className="mt-8" data-testid="seo-shared-titles">
+        <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[var(--adm-ink)]">Products sharing one search title</h2>
+        <p className="mt-1 max-w-3xl text-sm text-[var(--adm-ink-2)]">
+          Google treats pages with the same title as copies and usually shows only one. If these are different units, give each a
+          distinct SEO title (for example its condition or colour, only if true). If one is a true duplicate listing, archive it.
+          Nothing here is changed automatically. Updates within a minute of a product save.
+        </p>
+        {sharedTitles.length === 0 ? (
+          <p className="mt-2 text-sm text-[var(--adm-ink-2)]">Every live product has its own search title.</p>
+        ) : (
+          <ul className="mt-3 divide-y divide-[var(--adm-border)] rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] text-sm shadow-[var(--adm-shadow)]">
+            {sharedTitles.slice(0, 50).map((g) => (
+              <li key={g.title} className="px-4 py-3" data-testid="seo-shared-title-group">
+                <p className="font-medium text-[var(--adm-ink)]">
+                  {g.title} <span className="text-xs font-normal text-[var(--adm-ink-2)]">({g.items.length} products)</span>
+                </p>
+                <ul className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+                  {g.items.map((p) => (
+                    <li key={p.h}>
+                      <Link href={`/admin/products/${p.h}`} className="text-xs text-[var(--adm-action)] hover:underline">
+                        /products/{p.h}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <GapSection
         title="Products missing search metadata"

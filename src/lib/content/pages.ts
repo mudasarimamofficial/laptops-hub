@@ -3,7 +3,14 @@ import { createPublicClient } from "@/lib/supabase/server";
 import { LEGAL_CONTENT_SLUGS } from "@/lib/security/sanitize-html";
 import { V5_CONTENT } from "@/lib/content/v5-content";
 import type { V5Page } from "@/lib/content/types";
-import { isContentPublic, previewAllContent, resolveContent as resolve, type ContentRow as Row, type ResolvedContent } from "@/lib/content/resolve";
+import {
+  articleSeoFromRow,
+  isContentPublic,
+  previewAllContent,
+  resolveContent as resolve,
+  type ContentRow as Row,
+  type ResolvedContent,
+} from "@/lib/content/resolve";
 import { isArticlePubliclyVisible, readMinutes } from "@/lib/content/blog";
 import { sanitizeCmsHtml } from "@/lib/security/sanitize-html";
 
@@ -42,7 +49,9 @@ async function readVisibleRows(): Promise<Rows> {
     sb.from("content_pages").select("slug, title, body_html, status, legal_approved").eq("status", "published"),
     sb
       .from("articles")
-      .select("slug, title, excerpt, body_html, status, published_at, scheduled_for")
+      .select(
+        "slug, title, excerpt, body_html, status, published_at, updated_at, scheduled_for, seo_title, seo_description, og_image_url, cover_image_url, author_name",
+      )
       .eq("status", "published"),
   ]);
   if (p.error || a.error) throw new Error("content read failed");
@@ -91,7 +100,10 @@ export async function getArticle(slug: string, fresh = false): Promise<ResolvedC
   const tpl = V5_CONTENT.articles.find((a) => a.slug === slug);
   const rows = await rowsFor(fresh);
   const row = rows.articles.find((r) => r.slug === slug);
-  if (tpl) return resolve(slug, tpl, row, false);
+  if (tpl) {
+    const r = resolve(slug, tpl, row, false);
+    return r ? { ...r, article: articleSeoFromRow(row) } : r;
+  }
   // A post with its own slug: public only when published with a body (RLS already hides unpublished rows).
   if (!row || !isCmsPostPublic(row)) return null;
   const html = sanitizeCmsHtml(row.body_html || "");
@@ -107,6 +119,7 @@ export async function getArticle(slug: string, fresh = false): Promise<ResolvedC
     html,
     isLegal: false,
     preview: false,
+    article: articleSeoFromRow(row),
   };
 }
 

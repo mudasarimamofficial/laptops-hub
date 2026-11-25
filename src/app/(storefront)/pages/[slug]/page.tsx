@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { ogDefaults } from "@/lib/seo/og";
 import { ContentPage } from "@/components/content/content-page";
 import { getContentPage } from "@/lib/content/pages";
 import { canonicalFor, robotsFor } from "@/lib/site-url";
@@ -19,7 +20,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const page = await load(slug);
   if (!page) return { title: "Not found", robots: { index: false } }; // overrides the layout default (Next adds its own noindex too)
-  return { title: page.title, description: page.intro, alternates: canonicalFor(`/pages/${slug}`), robots: robotsFor(page.preview) };
+  return {
+    title: page.title,
+    description: page.intro,
+    alternates: canonicalFor(`/pages/${slug}`),
+    robots: robotsFor(page.preview),
+    openGraph: { ...(await ogDefaults()), type: "website", url: `/pages/${slug}`, title: page.title, description: page.intro },
+  };
 }
 
 export default async function Page({ params }: Props) {

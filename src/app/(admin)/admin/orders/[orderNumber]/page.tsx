@@ -4,6 +4,7 @@ import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 import { formatPkr } from "@/lib/money";
 import { OrderActions } from "@/components/admin/order-actions";
+import { CodLedger, type LedgerEntry } from "@/components/admin/cod-ledger";
 import { NotificationRetry } from "@/components/admin/notification-retry";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { AdminCard } from "@/components/admin/ui/admin-card";
@@ -15,7 +16,8 @@ export const metadata = { robots: { index: false, follow: false } };
 type Props = { params: Promise<{ orderNumber: string }> };
 
 export default async function AdminOrderDetailPage({ params }: Props) {
-  await requireStaffPage(["owner", "admin", "manager", "fulfillment"]);
+  const staff = await requireStaffPage(["owner", "admin", "manager", "fulfillment"]);
+  const canAdjust = ["owner", "admin", "manager"].includes(staff.role);
   const { orderNumber } = await params;
   const supabase = createServiceClient();
 
@@ -28,7 +30,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
        order_addresses ( line1, line2, city, province, postcode, landmark ),
        order_items ( handle, title_snapshot, variant_title_snapshot, quantity, unit_price_paisa, line_total_paisa, unit_list_price_paisa, line_discount_paisa ),
        order_events ( event_type, from_status, to_status, note, created_at ),
-       cod_collections ( amount_paisa, collector_ref, collected_at, note ),
+       cod_collections ( id, amount_paisa, collector_ref, collected_at, note, recorded_by ),
        fulfillments ( carrier, tracking_number, dispatched_at, delivered_at )`,
     )
     .eq("order_number", orderNumber)
@@ -57,11 +59,55 @@ export default async function AdminOrderDetailPage({ params }: Props) {
     .slice()
     .sort((a, b) => b.created_at.localeCompare(a.created_at));
   const collections = (order.cod_collections || []) as {
+    id: string;
     amount_paisa: number;
     collector_ref: string;
     collected_at: string;
     note: string;
+    recorded_by: string | null;
   }[];
+
+  // G22 ledger. Before its database update is applied the table does not exist: show history, hide corrections.
+  const { data: adjRows, error: adjErr } = await supabase
+    .from("cod_collection_adjustments")
+    .select("id, collection_id, kind, delta_paisa, reason, recorded_by, created_at")
+    .eq("order_id", order.id);
+  const ledgerAvailable = !adjErr;
+  const adjustments = (adjRows || []) as {
+    id: string;
+    collection_id: string | null;
+    kind: "reversal" | "correction";
+    delta_paisa: number;
+    reason: string;
+    recorded_by: string;
+    created_at: string;
+  }[];
+  const staffLabel = await labelStaff(
+    supabase,
+    [...collections.map((c) => c.recorded_by), ...adjustments.map((a) => a.recorded_by)],
+    canAdjust,
+  );
+  const ledger: LedgerEntry[] = [
+    ...collections.map((c) => ({
+      type: "collection" as const,
+      id: c.id,
+      amountPaisa: c.amount_paisa,
+      reversedPaisa: -adjustments.filter((a) => a.kind === "reversal" && a.collection_id === c.id).reduce((n, a) => n + a.delta_paisa, 0),
+      at: c.collected_at,
+      by: staffLabel(c.recorded_by),
+      collectorRef: c.collector_ref,
+      note: c.note,
+    })),
+    ...adjustments.map((a) => ({
+      type: a.kind,
+      id: a.id,
+      deltaPaisa: a.delta_paisa,
+      at: a.created_at,
+      by: staffLabel(a.recorded_by),
+      reason: a.reason,
+      collectionId: a.collection_id,
+    })),
+  ];
   const fulfillments = (order.fulfillments || []) as {
     carrier: string;
     tracking_number: string;
@@ -232,24 +278,25 @@ export default async function AdminOrderDetailPage({ params }: Props) {
           </ul>
         </AdminCard>
 
-        <AdminCard title="Collections & shipping">
+        <AdminCard title="Shipping">
           <ul className="space-y-2 text-sm">
-            {collections.map((c, i) => (
-              <li key={i} className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] bg-[var(--adm-surface-2)] px-3 py-2">
-                {formatPkr(c.amount_paisa)} · {c.collector_ref || "—"} · {new Date(c.collected_at).toLocaleString()}
-                {c.note ? <div className="text-[var(--adm-ink-2)]">{c.note}</div> : null}
-              </li>
-            ))}
             {fulfillments.map((f, i) => (
               <li key={`f-${i}`} className="rounded-[var(--adm-radius)] border border-[var(--adm-border)] bg-[var(--adm-surface-2)] px-3 py-2">
                 {f.carrier || "Carrier"} · {f.tracking_number || "no tracking"}
               </li>
             ))}
-            {collections.length === 0 && fulfillments.length === 0 ? (
-              <li className="text-[var(--adm-ink-2)]">None yet.</li>
-            ) : null}
+            {fulfillments.length === 0 ? <li className="text-[var(--adm-ink-2)]">None yet.</li> : null}
           </ul>
         </AdminCard>
+
+        <CodLedger
+          orderNumber={order.order_number}
+          entries={ledger}
+          canAdjust={canAdjust}
+          available={ledgerAvailable}
+          totalDuePaisa={order.total_due_paisa}
+          collectedPaisa={order.amount_collected_paisa}
+        />
 
         <AdminCard title="Notifications" className="lg:col-span-2">
           <ul className="space-y-2 text-sm">
@@ -280,4 +327,27 @@ export default async function AdminOrderDetailPage({ params }: Props) {
       </div>
     </div>
   );
+}
+
+const ROLE_LABEL: Record<string, string> = { owner: "Owner", admin: "Admin", manager: "Manager", fulfillment: "Fulfillment", editor: "Editor" };
+
+/**
+ * Who recorded each cash entry. Owners, admins and managers see the staff email; fulfillment staff see the role only
+ * (no colleague emails). Unknown or removed accounts show as "former staff".
+ */
+async function labelStaff(supabase: ReturnType<typeof createServiceClient>, ids: (string | null)[], showEmail: boolean) {
+  const unique = [...new Set(ids.filter((x): x is string => Boolean(x)))];
+  const labels = new Map<string, string>();
+  if (unique.length) {
+    const { data: rows } = await supabase.from("admin_memberships").select("user_id, role").in("user_id", unique);
+    const roles = new Map((rows || []).map((r) => [r.user_id as string, ROLE_LABEL[r.role as string] || String(r.role)]));
+    const emails = showEmail
+      ? await Promise.all(unique.map((id) => supabase.auth.admin.getUserById(id).then(({ data }) => data?.user?.email ?? null)))
+      : unique.map(() => null);
+    unique.forEach((id, i) => {
+      const role = roles.get(id);
+      labels.set(id, role ? (emails[i] ? `${role} (${emails[i]})` : role) : "former staff");
+    });
+  }
+  return (id: string | null) => (id ? labels.get(id) || "former staff" : "not recorded");
 }

@@ -19,6 +19,10 @@ CREATE TEMP TABLE results (name text, ok boolean, detail text) ON COMMIT DROP;
 INSERT INTO store_settings(key, value) VALUES ('cod_checkout', '{"enabled": true}')
   ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
 
+-- Shipping/COD-fee maths only: campaigns (e.g. the storewide 5% added 2026-11-23) are paused inside this rolled-back
+-- transaction so totals stay exact. Discount maths is covered by p0-admin-discounts-stock and the checkout specs.
+UPDATE discount_campaigns SET status = 'disabled' WHERE status IN ('active', 'scheduled');
+
 -- Only this test's zone is active inside the transaction (fixture zones would otherwise also match; rolled back).
 UPDATE shipping_zones SET is_active = false;
 INSERT INTO shipping_zones (id, name, country, provinces, cities, flat_fee_paisa, cod_fee_paisa, is_active)

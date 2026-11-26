@@ -203,13 +203,17 @@ test.describe.serial("Owner acceptance scenario — 36 steps (isolated)", () => 
   test("6–9: media, collection, publish, storefront appearance", async ({ page, browser }) => {
     await signIn(page, "owner");
     await page.goto(`/admin/products/${HANDLE}`);
-    await page.getByLabel("Image URL (HTTPS)").fill(IMG); // 6 — an approved preset image
-    await page.getByLabel("Alt text").fill(`${TITLE} front view`);
-    await page.getByRole("button", { name: "Add URL" }).click();
-    await expect(page.getByText(/rights (stay|remain) pending until/i)).toBeVisible();
+    // 6 — an approved preset image, added by address (G13 media form, PR #89).
+    const mediaBox = page.getByTestId("product-media");
+    await mediaBox.getByLabel("Description", { exact: true }).fill(`${TITLE} front view`);
+    await mediaBox.getByLabel("Image address", { exact: true }).fill(IMG);
+    await mediaBox.getByRole("button", { name: "Add image" }).click();
+    await expect(mediaBox.getByTestId("product-media-msg")).toContainText(/rights are marked as not confirmed/i);
     const { data: media } = await sb.from("product_media").select("url, alt, position, approval").eq("product_id", state.productId!);
     expect(media).toHaveLength(1);
     expect(media![0].url).toBe(IMG);
+    expect(media![0].alt).toBe(`${TITLE} front view`);
+    expect(media![0].approval).toBe("pending");
     step(6, { media: media![0], note: "Rights flag stays 'pending' until the owner approves it (never auto-approved)." });
 
     await page.goto("/admin/collections/new"); // 7

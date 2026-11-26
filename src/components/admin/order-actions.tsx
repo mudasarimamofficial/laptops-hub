@@ -58,6 +58,9 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
   const [trackingNumber, setTrackingNumber] = useState("");
   const [collectPkr, setCollectPkr] = useState(String(paisaToMajor(outstanding) || ""));
   const [collectorRef, setCollectorRef] = useState("");
+  const [collectNote, setCollectNote] = useState("");
+  // G22: cancelled and returned orders take no new cash (the server refuses it too).
+  const closed = current === "cancelled" || current === "returned";
   const [busy, setBusy] = useState(false);
   const collectKey = useRef<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
@@ -114,7 +117,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
           orderNumber,
           amountPkr: Number(collectPkr),
           collectorRef,
-          note,
+          note: collectNote,
           idempotencyKey,
         }),
       });
@@ -124,6 +127,7 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
         return;
       }
       collectKey.current = null;
+      setCollectNote("");
       if (typeof data.amountCollectedPaisa === "number") {
         setCollectedDone({ from: amountCollectedPaisa, value: data.amountCollectedPaisa });
         setCollectPkr(String(paisaToMajor(Math.max(0, totalDuePaisa - data.amountCollectedPaisa)) || ""));
@@ -189,7 +193,12 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
         description={`Due ${formatPkr(totalDuePaisa)} · Collected ${formatPkr(collected)} · Outstanding ${formatPkr(outstanding)}. Delivery alone is not payment.`}
       >
         <form method="post" onSubmit={collectCod} className="space-y-3">
-          {outstanding > 0 ? (
+          {closed ? (
+            <p className="text-sm text-[var(--adm-ink-2)]" data-testid="cod-closed">
+              This order is {STATUS_LABEL[current]?.toLowerCase() || current}, so no new cash can be recorded. Fix an amount with a
+              correction in Cash history.
+            </p>
+          ) : outstanding > 0 ? (
             <>
               <AdminField label="Amount collected (PKR)">
                 <input
@@ -204,6 +213,9 @@ export function OrderActions({ orderNumber, status, totalDuePaisa, amountCollect
               </AdminField>
               <AdminField label="Collector reference" optional hint="Courier or staff name">
                 <input className={admInputClass} value={collectorRef} onChange={(e) => setCollectorRef(e.target.value)} placeholder="Courier / staff name" />
+              </AdminField>
+              <AdminField label="Collection note" optional>
+                <input className={admInputClass} value={collectNote} onChange={(e) => setCollectNote(e.target.value)} maxLength={500} />
               </AdminField>
               <button
                 type="submit"

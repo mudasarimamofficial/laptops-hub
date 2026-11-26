@@ -1,4 +1,4 @@
-# 23 — Owner decisions and remaining ownership risks (2026-11-24, updated 2026-11-25)
+# 23 — Owner decisions and remaining ownership risks (2026-11-24, updated 2026-11-26)
 
 These items cannot be closed by engineering. Each needs the owner's decision, account access or written policy.
 No ownership transfer, paid upgrade, DNS change, production data change or theme publish was made to prepare this list.
@@ -21,6 +21,11 @@ documents or not inspectable from this workstation.
 | D12 | **Database-level stock check in `sync_product_variants`** (optional hardening) | The app now refuses stale stock edits (PR #77). The RPC itself still writes absolute counts without an "expected quantity" check. | Defence in depth only. | Approve a small migration that adds an expected-quantity guard to the RPC. | `22_ADMIN_SELF_SERVICE_MATRIX.md` |
 | D13 | **Production keys on this workstation** (LH-013) | `.env.production.local` holds production Supabase keys. The isolated scripts refuse non-local Supabase. | Accidental production writes from a local build. | Delete the file; pull env from Vercel only when needed. | `02` |
 | D14 | **Supabase leaked-password protection** (LH-016) | Not re-checked in the dashboard. | Staff account security. | Turn it on in Supabase Auth settings (free). | `02` |
+| D15 | **G22-DB: COD collection ledger migration** `20261126140000` | Code is live (PR #90). Production database **not** changed. Collections are already refused on cancelled or returned orders. Reversal and correction wait for the migration (the API answers 503 until then). | Correcting a mistaken COD collection without engineering help. | Approve applying the migration exactly as in `26` §G22-5 (read-only checks before and after; rollback §G22-6). Merging the code and running the SQL are separate steps; the code step is done. | `26` |
+| D16 | **G19-DB: content-page history migration** `20261126160000` | Code in **draft PR #91** (unmerged). Production database **not** changed. Order: **migration first, then merge #91.** Existing legal text is never replaced: the migration only adds a baseline revision of each page as it is today. | Undoing a policy-page edit, new CMS pages, page SEO fields, page address change. | Approve the migration (`26` §G19 on the PR #91 branch: md5 checks of all 13 pages before and after), then approve merging #91. | `26` (PR #91 branch) |
+| D17 | **G13-M1: product images on Shopify's CDN** (see D3) | 964 of 964 product images are hot-linked from Shopify. Per-image alt text, primary image, rights and upload are live (PR #89). Nothing was downloaded, copied or re-pointed. | Closing the Shopify store. | A: keep hot-linking. B: back up only. C (recommended): copy and switch in approved phases, reversible per batch. Measure storage and egress first. | `25` |
+| D18 | **G14-D: compare-at price on the storefront** | Proposal and mock ready (`27`). Not built, not deployed. 0 of 235 variants have a compare-at value. | Showing a genuine regular price next to the current price. | Approve rules 1–7 (one struck reference price, campaign applied once, no invented percentage, JSON-LD price stays the selling price), choose Option B, or keep compare-at admin-only. Only enter true former prices. | `27` |
+| D19 | **Public Git history and LH-025 evidence** | Personal data of the engineering test order was redacted from current files. Old text stays reachable in Git history and cached GitHub views. No keys or passwords were found in history. The LH-025 private evidence is only on the engineering workstation. | Privacy and client custody of evidence. | Decide repository visibility (see D9; private is the strongest containment). Copy the two LH-025 evidence folders to client-controlled encrypted storage and confirm. | `28` |
 
 ## Owner tasks from the search launch (2026-11-25)
 
@@ -51,4 +56,4 @@ needs D2 decided first, then a client-owned, encrypted destination.
 ## Handover readiness
 
 **READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED. Not a complete handover certificate.** D1, D2, D9 and D11 must be decided before the client
-can run the store on their own accounts; D3, D4 (one verified real order), D6, D7 and D8 before relying on it for daily trade.
+can run the store on their own accounts; D3, D4 (one verified real order), D6, D7 and D8 before relying on it for daily trade. D15–D19 are merchant-feature and custody decisions; none blocks the current store from running as it does today.

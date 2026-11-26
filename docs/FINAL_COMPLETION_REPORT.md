@@ -1,5 +1,7 @@
 # Final completion report — V5 frontend
 
+> **Historical (V5 frontend).** The current final report is `docs/client-ownership-handover/31_FINAL_MERCHANT_AUTONOMY_CLOSURE_REPORT.md` (2026-11-26).
+
 Status (2026-10-20, 232-product catalog): **engineering handoff ready; production launch blocked.** Gates in RELEASE_GATE.md, evidence in FINAL_QA_REPORT.md.
 
 ## Evidence summary

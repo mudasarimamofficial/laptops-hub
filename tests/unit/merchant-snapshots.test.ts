@@ -24,6 +24,9 @@ assert.deepEqual([...SNAPSHOT_SCOPE], [
   "reels",
   "store_testimonials",
   "shipping_zones",
+  "content_pages",
+  "reel_products",
+  "theme",
 ]);
 
 assert.equal(validateSnapshotPayload(null).ok, false);
@@ -37,6 +40,15 @@ const legacy = {
 };
 assert.equal(validateSnapshotPayload(legacy).ok, false);
 assert.equal(validateSnapshotPayload(legacy).reason, "legacy_catalog_payload_unsupported");
+
+// G17 v3: the extra sections are required once the payload says version 3; version 2 backups stay valid without them.
+const v3 = { ...base(), schemaVersion: 3, content_pages: [{ slug: "about" }], reel_products: [], theme: { publications: [], versions: [] } };
+assert.equal(validateSnapshotPayload(v3).ok, true);
+assert.equal(validateSnapshotPayload(v3).checks.content_pages, 1);
+const v3Missing = { ...v3, reel_products: undefined };
+assert.equal(validateSnapshotPayload(v3Missing).ok, false);
+assert.equal(validateSnapshotPayload(v3Missing).reason, "missing_v3_sections");
+assert.equal(validateSnapshotPayload({ ...v3, theme: { publications: [] } }).reason, "missing_v3_sections");
 
 const emptyZones = { ...base(), shipping_zones: [] };
 assert.equal(validateSnapshotPayload(emptyZones).ok, false);

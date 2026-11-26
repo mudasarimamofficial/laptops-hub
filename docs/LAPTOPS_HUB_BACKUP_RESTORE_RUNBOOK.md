@@ -69,3 +69,22 @@ back the code only to a deployment that is compatible with the migrations alread
 | Take a backup, read counts | Owner or an engineer with the owner's go-ahead |
 | Apply a migration, restore, promote a deployment | Owner's explicit written approval for that specific action |
 | Delete a Supabase project or backup | Owner only |
+
+## 6. Admin CMS backups (Settings › Backups & recovery) — payload v3 (G17, 2026-11-26)
+
+These are **application/CMS snapshots, not a disaster-recovery backup**: no products, variants, orders, customers,
+staff accounts, media files or database schema. Disaster recovery relies on Supabase backups and section 1.
+
+| Section | In backup | Restore behaviour |
+|---|---|---|
+| `store_settings` | yes | restored atomically (RPC), **except** `cod_checkout` (COD go-live) and `notifications` (customer-email mode, staff recipients), which keep their live values |
+| `articles`, `reels`, `store_testimonials`, `shipping_zones` | yes | restored atomically (RPC, unchanged) |
+| `content_pages` | yes (v3) | non-legal pages restored through `save_content_page` (G19 page history) when it exists, else a direct update; **legal pages (shipping, returns, warranty, privacy, terms) keep their live text and approval** — restore one from its own page history; pages missing live are not recreated |
+| `reel_products` | yes (v3) | each restored reel's product links set back to the backup; links to deleted products are skipped and counted |
+| Theme (`theme_publications`, `theme_versions`) | yes (v3) | versions are immutable history already; restore re-points the published homepage version through `rollback_homepage_theme` (owner/admin rules, `THEME_PUBLISH_DISABLED` respected). If the backup had no published homepage theme, the live one stays |
+
+- `schemaVersion` 3; version 2 backups remain restorable (core sections only). v3 validation requires all v3 sections.
+- A restore creates a pre-restore checkpoint first; the response and audit log carry a per-section report
+  (`extras`). A failing v3 section never undoes the atomic core restore — use the checkpoint to go back.
+- Evidence: `tests/unit/merchant-snapshots.test.ts`, `tests/unit/restore-protected.test.ts`,
+  `tests/e2e-isolated/p1-backup-v3-blog-taxonomy-g17-g18.spec.ts` (G17 test), `p1-backup-restore-cod-gate.spec.ts`.

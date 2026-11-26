@@ -3,6 +3,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createAuthorizedStaffWriter, staffErrorResponse } from "@/lib/auth/staff";
 import { restoreMerchantSnapshot } from "@/lib/admin/merchant-snapshots";
+import { HOMEPAGE_THEME_TAG } from "@/lib/content/published-homepage";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -23,6 +24,8 @@ export async function POST(_request: Request, { params }: Params) {
     revalidateTag("settings", { expire: 0 });
     revalidateTag("content", { expire: 0 });
     revalidateTag("reels", { expire: 0 });
+    revalidateTag(HOMEPAGE_THEME_TAG, { expire: 0 });
+    revalidatePath("/pages/[slug]", "page");
     revalidatePath("/", "layout");
     revalidatePath("/admin/settings");
     revalidatePath("/admin/blog");
@@ -30,7 +33,7 @@ export async function POST(_request: Request, { params }: Params) {
     revalidatePath("/guides");
 
     return NextResponse.json(
-      { ok: result.ok, snapshotId: result.snapshotId, checkpointId: result.checkpointId, keptLive: result.keptLive },
+      { ok: result.ok, snapshotId: result.snapshotId, checkpointId: result.checkpointId, keptLive: result.keptLive, extras: result.extras },
       { headers: { "Cache-Control": "no-store" } },
     );
   } catch (e) {

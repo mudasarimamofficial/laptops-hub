@@ -21,6 +21,29 @@ function fmtBytes(n: number) {
 }
 
 /** Admin → Settings → Backups & Recovery. Owner/admin create; owner restores. */
+type Extras = {
+  content_pages?: { restored: number; keptLiveLegal: string[]; notRecreated: string[]; failed: string[] } | null;
+  reel_products?: { reels: number; links: number; skippedMissingProduct: number; failed: string[] } | null;
+  theme?: { action: string; detail?: string } | null;
+} | null;
+
+/** One sentence per v3 section; empty for a version 2 backup. */
+function extrasSummary(x: Extras): string {
+  if (!x) return "";
+  const parts: string[] = [];
+  if (x.content_pages) {
+    parts.push(`Pages restored: ${x.content_pages.restored}${x.content_pages.failed.length ? `, failed: ${x.content_pages.failed.length}` : ""}.`);
+  }
+  if (x.reel_products) {
+    parts.push(`Reel product links: ${x.reel_products.links}${x.reel_products.skippedMissingProduct ? ` (${x.reel_products.skippedMissingProduct} skipped — product no longer exists)` : ""}.`);
+  }
+  if (x.theme) {
+    const t = { repointed: "Homepage theme set back to the backup's published version.", unchanged: "Homepage theme already matched.", kept_live: "Homepage theme kept live.", none_in_backup: "", failed: "Homepage theme could not be set back — use Theme › Rollback." } as Record<string, string>;
+    if (t[x.theme.action]) parts.push(t[x.theme.action]);
+  }
+  return parts.length ? " " + parts.join(" ") : "";
+}
+
 export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
   const hydrated = useHydrated();
   const [rows, setRows] = useState<BackupRow[]>([]);
@@ -71,7 +94,7 @@ export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
   async function restore(id: string, label: string) {
     if (!canRestore) return;
     const ok = window.confirm(
-      `Restore “${label}”? This overwrites store settings, blog posts, reels, customer reviews and shipping zones from the backup. Products, orders, customers and staff are NOT restored, the COD ordering go-live switch and notification settings keep their current values. A pre-restore checkpoint is created first.`,
+      `Restore “${label}”? This overwrites store settings, blog posts, reels and their product links, customer reviews, shipping zones, CMS pages and the published homepage theme from the backup. Products, orders, customers and staff are NOT restored. Legal policy pages, the COD ordering go-live switch and notification settings keep their current values. A pre-restore checkpoint is created first.`,
     );
     if (!ok) return;
     setBusy(id);
@@ -84,7 +107,9 @@ export function BackupsPanel({ canRestore }: { canRestore: boolean }) {
         setErr(data.message || "Restore failed");
         return;
       }
-      setMsg("CMS restore completed. Review Settings, Blog, Reels, Reviews and Shipping. Product catalog, the COD go-live switch and notification settings were not changed.");
+      setMsg(
+        `CMS restore completed. Review Settings, Blog, Reels, Reviews, Pages and Shipping. Product catalog, legal policy pages, the COD go-live switch and notification settings were not changed.${extrasSummary(data.extras)}`,
+      );
       await load();
     } catch {
       setErr("Network error");

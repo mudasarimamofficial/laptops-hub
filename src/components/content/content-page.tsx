@@ -6,13 +6,14 @@ import { V5_CONTENT } from "@/lib/content/v5-content";
 import { supportHref, unlinkUnpublished } from "@/lib/content/links";
 import { contentVisibility, publicPostCards, type ResolvedContent } from "@/lib/content/pages";
 import type { V5Block } from "@/lib/content/types";
+import { guideFilterHref, hasGuideFilter, type GuideFilter } from "@/lib/content/blog";
 
 /** Port of the V5 `isPage` view (content pages, guides index and articles). */
 
 const mono = { fontFamily: "var(--font-mono)" } as const;
 const PEND_TAG = "BEING FINALISED";
 
-type Ctx = { P: V5Product[]; tok: Record<string, number>; current: string; isArticle: boolean };
+type Ctx = { P: V5Product[]; tok: Record<string, number>; current: string; isArticle: boolean; filter: GuideFilter | null };
 
 function fill(s: string, tok: Record<string, number>) {
   return String(s || "").replace(/\{(\w+)\}/g, (m, k) => (tok[k] != null ? String(tok[k]) : m));
@@ -126,15 +127,21 @@ function Block({ b, i, ctx, pageSlug }: { b: V5Block; i: number; ctx: Ctx; pageS
       );
     }
     case "articles":
-      return <ArticleCards exclude={ctx.isArticle ? ctx.current : null} />;
+      return <ArticleCards exclude={ctx.isArticle ? ctx.current : null} filter={ctx.isArticle ? null : ctx.filter} />;
     case "form":
       return <ContactForm />;
   }
 }
 
-async function ArticleCards({ exclude }: { exclude: string | null }) {
-  const list = (await publicPostCards()).filter((a) => a.slug !== exclude);
-  if (!list.length) return null;
+async function ArticleCards({ exclude, filter }: { exclude: string | null; filter: GuideFilter | null }) {
+  const list = (await publicPostCards(false, filter)).filter((a) => a.slug !== exclude);
+  if (!list.length) {
+    return hasGuideFilter(filter) ? (
+      <p data-testid="guides-filter-empty" style={{ margin: 0, fontSize: 16, lineHeight: 1.6, color: "var(--lh-ink-2)" }}>
+        No guides match this filter yet. <Link href="/guides" style={{ color: "var(--lh-action)", fontWeight: 700 }}>See all guides</Link>
+      </p>
+    ) : null;
+  }
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(min(100%,280px),1fr))", gap: 16, marginTop: 10 }}>
       {list.map((ar) => (
@@ -164,7 +171,27 @@ function cmsWithToc(html: string) {
   return { html: out, toc };
 }
 
-export async function ContentPage({ page, kind }: { page: ResolvedContent; kind: "page" | "guides" | "article" }) {
+/** G18: category and tag links (article header) — plain links to the filtered /guides index. */
+function TaxonomyLinks({ category, tags }: { category: string; tags: string[] }) {
+  if (!category && !tags.length) return null;
+  const chip = { display: "inline-flex", alignItems: "center", minHeight: 32, padding: "5px 12px", borderRadius: 999, background: "#FFFFFF", border: "1px solid var(--lh-border)", color: "var(--lh-ink-2)", fontSize: 13, lineHeight: 1.3 } as const;
+  return (
+    <nav aria-label="Guide topics" data-testid="guide-taxonomy" style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      {category ? (
+        <Link href={guideFilterHref({ category })} style={{ ...chip, color: "var(--lh-action)", fontWeight: 700 }}>
+          {category}
+        </Link>
+      ) : null}
+      {tags.map((t) => (
+        <Link key={t} href={guideFilterHref({ tag: t })} style={chip}>
+          #{t}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
+export async function ContentPage({ page, kind, filter = null }: { page: ResolvedContent; kind: "page" | "guides" | "article"; filter?: GuideFilter | null }) {
   const P = await getV5Catalog().catch(() => [] as V5Product[]);
   const lapCount = P.filter(V5_COLS.laptops.f).length;
   const tok = {
@@ -177,7 +204,7 @@ export async function ContentPage({ page, kind }: { page: ResolvedContent; kind:
     used: P.filter((p) => p.cond === "Used").length,
     nocond: P.filter((p) => !p.cond).length,
   };
-  const ctx: Ctx = { P, tok, current: page.slug, isArticle: kind === "article" };
+  const ctx: Ctx = { P, tok, current: page.slug, isArticle: kind === "article", filter: kind === "guides" && hasGuideFilter(filter) ? filter : null };
   const vis = await contentVisibility(true);
 
   const crumbs = [{ label: "Home", href: "/" }];
@@ -230,6 +257,17 @@ export async function ContentPage({ page, kind }: { page: ResolvedContent; kind:
           </span>
           <h1 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(34px,4.4vw,60px)", lineHeight: 1.02, letterSpacing: "-.045em", fontWeight: 700, textWrap: "balance", maxWidth: "20ch" }}>{page.title}</h1>
           <p style={{ margin: 0, maxWidth: "60ch", fontSize: "clamp(16px,1.2vw,19px)", lineHeight: 1.55, color: "var(--lh-ink-2)", textWrap: "pretty" }}>{fill(page.intro, tok)}</p>
+          {kind === "article" && page.article ? <TaxonomyLinks category={page.article.category || ""} tags={page.article.tags || []} /> : null}
+          {ctx.filter ? (
+            <p data-testid="guides-filter" style={{ margin: 0, fontSize: 15, color: "var(--lh-ink)" }}>
+              Showing guides {ctx.filter.category ? <>in <strong>{ctx.filter.category}</strong></> : null}
+              {ctx.filter.category && ctx.filter.tag ? " " : null}
+              {ctx.filter.tag ? <>tagged <strong>#{ctx.filter.tag}</strong></> : null} ·{" "}
+              <Link href="/guides" style={{ color: "var(--lh-action)", fontWeight: 700 }}>
+                All guides
+              </Link>
+            </p>
+          ) : null}
           {tag ? (
             <span style={{ display: "block", width: "fit-content", maxWidth: "100%", padding: "7px 12px", borderRadius: 999, background: tag.warn ? "var(--lh-warning-bg)" : "#FFFFFF", border: tag.warn ? "1px solid #F1D9AE" : "1px solid var(--lh-border)", color: tag.warn ? "var(--lh-warning)" : "var(--lh-ink-2)", ...mono, fontSize: 11, lineHeight: 1.4, letterSpacing: ".08em", whiteSpace: "nowrap" }}>
               {tag.text}

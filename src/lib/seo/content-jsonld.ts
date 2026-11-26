@@ -22,6 +22,10 @@ export function articleJsonLd(origin: string, path: string, title: string, descr
   if (a?.publishedAt) data.datePublished = a.publishedAt;
   if (a?.modifiedAt) data.dateModified = a.modifiedAt;
   data.author = a?.author ? { "@type": "Person", name: a.author } : { "@id": `${origin}/#organization` };
+  // G18: blog taxonomy from Admin › Blog (only when set). News posts are NewsArticle.
+  if (a?.category) data.articleSection = a.category;
+  if (a?.tags?.length) data.keywords = a.tags.join(", ");
+  if (a?.template === "news") data["@type"] = "NewsArticle";
   return data;
 }
 

@@ -77,3 +77,65 @@ export function isArticlePubliclyVisible(row: {
   if (!row.scheduled_for) return true;
   return Date.parse(row.scheduled_for) <= Date.now();
 }
+
+/**
+ * G18 — public blog taxonomy. Admin › Blog stores `category`, `tags` and `template_key` (the starter used); the public
+ * site uses them for the card/article label, tag and category links, a filtered /guides index and Article markup.
+ */
+export const TEMPLATE_KICKERS: Record<string, string> = {
+  standard: "Guide",
+  "buying-guide": "Buying guide",
+  "product-review": "Review",
+  comparison: "Comparison",
+  howto: "How-to",
+  news: "News",
+};
+
+const oneLine = (v: unknown, max: number) =>
+  typeof v === "string" ? v.replace(/[\u0000-\u001f\u007f<>]+/g, " ").replace(/\s+/g, " ").trim().slice(0, max) : "";
+
+/** Public label: the category, else the template's label, else "Guide". */
+export function postKicker(r: { category?: string | null; template_key?: string | null }) {
+  return oneLine(r.category, 80) || TEMPLATE_KICKERS[r.template_key || ""] || "Guide";
+}
+
+/** Trimmed, de-duplicated (case-insensitive), at most 20. */
+export function cleanTags(tags: unknown): string[] {
+  if (!Array.isArray(tags)) return [];
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const t of tags) {
+    const s = oneLine(t, 40);
+    if (s && !seen.has(s.toLowerCase())) {
+      seen.add(s.toLowerCase());
+      out.push(s);
+    }
+  }
+  return out.slice(0, 20);
+}
+
+export type GuideFilter = { category: string; tag: string };
+
+/** `?category=` / `?tag=` from the URL (first value, plain text). */
+export function parseGuideFilter(sp: Record<string, string | string[] | undefined> | undefined): GuideFilter {
+  const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
+  return { category: oneLine(first(sp?.category), 80), tag: oneLine(first(sp?.tag), 40) };
+}
+
+export const hasGuideFilter = (f: GuideFilter | null | undefined) => !!f && !!(f.category || f.tag);
+
+/** Case-insensitive match; an empty filter matches everything. */
+export function matchesGuideFilter(post: { category?: string | null; tags?: string[] }, f: GuideFilter | null | undefined) {
+  if (!hasGuideFilter(f)) return true;
+  if (f!.category && oneLine(post.category, 80).toLowerCase() !== f!.category.toLowerCase()) return false;
+  if (f!.tag && !(post.tags || []).some((t) => t.toLowerCase() === f!.tag.toLowerCase())) return false;
+  return true;
+}
+
+export const guideFilterHref = (f: Partial<GuideFilter>) => {
+  const q = new URLSearchParams();
+  if (f.category) q.set("category", f.category);
+  if (f.tag) q.set("tag", f.tag);
+  const s = q.toString();
+  return s ? `/guides?${s}` : "/guides";
+};

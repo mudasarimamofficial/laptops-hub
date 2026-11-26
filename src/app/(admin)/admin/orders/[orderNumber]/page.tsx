@@ -322,7 +322,8 @@ export default async function AdminOrderDetailPage({ params }: Props) {
               </li>
             ))}
           </ul>
-          {(outbox || []).some((n) => n.status !== "accepted") ? <NotificationRetry orderNumber={order.order_number} /> : null}
+          {/* Always mounted, so the result line stays visible after a successful retry refreshes the list. */}
+          <NotificationRetry orderNumber={order.order_number} pending={(outbox || []).some((n) => n.status !== "accepted")} />
         </AdminCard>
       </div>
     </div>

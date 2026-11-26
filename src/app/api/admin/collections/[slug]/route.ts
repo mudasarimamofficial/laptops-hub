@@ -7,6 +7,7 @@ import {
   staffErrorResponse,
 } from "@/lib/auth/staff";
 import { V5_COLS } from "@/lib/catalog/v5-model";
+import { validateRule } from "@/lib/collections/rule-eval";
 
 /** Storefront collection pages and the sitemap read published collections through the "collections" cache tag. */
 function refreshStorefront(slug: string) {
@@ -81,12 +82,16 @@ export async function PATCH(request: Request, ctx: Ctx) {
         return NextResponse.json({ error: "validation_failed", message: "Invalid membership payload." }, { status: 400 });
       }
 
+      const fail = (message: string, status = 500, error = "save_failed") =>
+        NextResponse.json({ error, message }, { status, headers: { "Cache-Control": "no-store" } });
+
       if (mem.data.removeProductIds?.length) {
-        await supabase
+        const { error } = await supabase
           .from("collection_products")
           .delete()
           .eq("collection_id", existing.id)
           .in("product_id", mem.data.removeProductIds);
+        if (error) return fail("Could not remove the product. Nothing was changed; try again.");
       }
 
       if (mem.data.addProductIds?.length) {
@@ -105,21 +110,37 @@ export async function PATCH(request: Request, ctx: Ctx) {
           onConflict: "collection_id,product_id",
           ignoreDuplicates: true,
         });
-        if (error) return NextResponse.json({ error: "save_failed", message: "Could not update the collection's products." }, { status: 500 });
-      }
-
-      if (mem.data.orderedProductIds?.length) {
-        for (let i = 0; i < mem.data.orderedProductIds.length; i++) {
-          await supabase
-            .from("collection_products")
-            .update({ position: i + 1 })
-            .eq("collection_id", existing.id)
-            .eq("product_id", mem.data.orderedProductIds[i]);
+        if (error) {
+          return fail(
+            error.code === "23503" ? "That product no longer exists. Search for it again." : "Could not add the product. Nothing was changed; try again.",
+            error.code === "23503" ? 400 : 500,
+          );
         }
       }
 
+      if (mem.data.orderedProductIds?.length) {
+        // The new order must be exactly the current members, so a stale page (another tab added or removed a product)
+        // cannot drop or resurrect one. One upsert statement: every position changes, or none does.
+        const ordered = mem.data.orderedProductIds;
+        const { data: current, error: readErr } = await supabase
+          .from("collection_products")
+          .select("product_id")
+          .eq("collection_id", existing.id);
+        if (readErr) return fail("Could not read the collection's products. Nothing was changed; try again.");
+        const now = new Set((current || []).map((r) => r.product_id as string));
+        if (new Set(ordered).size !== ordered.length || ordered.length !== now.size || ordered.some((id) => !now.has(id))) {
+          return fail("The product list changed in another window. Reload the page and reorder again.", 409, "stale_order");
+        }
+        const { error } = await supabase.from("collection_products").upsert(
+          ordered.map((product_id, i) => ({ collection_id: existing.id, product_id, position: i + 1 })),
+          { onConflict: "collection_id,product_id" },
+        );
+        if (error) return fail("Could not save the new order. Nothing was changed; try again.");
+      }
+
       if (mem.data.productIds) {
-        await supabase.from("collection_products").delete().eq("collection_id", existing.id);
+        const { error: clearErr } = await supabase.from("collection_products").delete().eq("collection_id", existing.id);
+        if (clearErr) return fail("Could not replace the collection's products. Nothing was changed; try again.");
         const rows = mem.data.productIds.map((product_id, i) => ({
           collection_id: existing.id,
           product_id,
@@ -162,7 +183,16 @@ export async function PATCH(request: Request, ctx: Ctx) {
     if (parsed.data.published !== undefined) patch.published = parsed.data.published;
     if (parsed.data.featured !== undefined) patch.featured = parsed.data.featured;
     if (parsed.data.sortOrder !== undefined) patch.sort_order = parsed.data.sortOrder;
-    if (parsed.data.rule !== undefined) patch.rule = parsed.data.rule;
+    if (parsed.data.rule !== undefined) {
+      // Saving rules makes the collection automated; clearing them ({}) makes it hand-picked again. The type is kept in
+      // step here so the admin page and the storefront always agree (collectionMode). Hand-picked products are kept
+      // while rules are on, and come back if the rules are cleared.
+      const cleared = Object.keys(parsed.data.rule).length === 0;
+      const problem = cleared ? null : validateRule(parsed.data.rule);
+      if (problem) return NextResponse.json({ error: "invalid_rule", message: problem }, { status: 400 });
+      patch.rule = cleared ? {} : parsed.data.rule;
+      patch.collection_type = cleared ? "manual" : "automated";
+    }
     if (parsed.data.seoTitle !== undefined) patch.seo_title = parsed.data.seoTitle;
     if (parsed.data.seoDescription !== undefined) patch.seo_description = parsed.data.seoDescription;
     if (parsed.data.imageUrl !== undefined) patch.image_url = parsed.data.imageUrl;

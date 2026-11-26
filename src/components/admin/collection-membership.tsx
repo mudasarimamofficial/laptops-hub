@@ -19,6 +19,13 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
   const router = useRouter();
   const hydrated = useHydrated();
   const [members, setMembers] = useState(initial);
+  // After a save, the server page re-renders with the new list: adopt it (React's "reset state on prop change" pattern).
+  const initialSig = initial.map((m) => m.product_id).join(",");
+  const [seenSig, setSeenSig] = useState(initialSig);
+  if (initialSig !== seenSig) {
+    setSeenSig(initialSig);
+    setMembers(initial);
+  }
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<{ id: string; handle: string; title: string }[]>([]);
   const [busy, setBusy] = useState(false);
@@ -72,6 +79,7 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
   async function remove(productId: string) {
     setBusy(true);
     setErr(null);
+    setMsg(null);
     try {
       const res = await fetch(`/api/admin/collections/${encodeURIComponent(slug)}`, {
         method: "PATCH",
@@ -80,11 +88,11 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        setErr(data.message || "Remove failed");
+        setErr(data.message || `Could not remove the product (${res.status}). Nothing was changed.`);
         return;
       }
       setMembers((m) => m.filter((x) => x.product_id !== productId));
-      setMsg("Removed.");
+      setMsg("Product removed from the collection.");
       router.refresh();
     } catch {
       setErr("Network error");
@@ -101,6 +109,8 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
     [next[idx], next[swap]] = [next[swap], next[idx]];
     setMembers(next);
     setBusy(true);
+    setErr(null);
+    setMsg(null);
     try {
       const res = await fetch(`/api/admin/collections/${encodeURIComponent(slug)}`, {
         method: "PATCH",
@@ -108,11 +118,16 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
         body: JSON.stringify({ orderedProductIds: next.map((m) => m.product_id) }),
       });
       if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
         setMembers(members);
-        setErr("Reorder failed");
+        setErr(data.message || `Could not save the new order (${res.status}). The previous order is kept.`);
         return;
       }
+      setMsg("Order saved.");
       router.refresh();
+    } catch {
+      setMembers(members);
+      setErr("Network error: the new order was not saved.");
     } finally {
       setBusy(false);
     }
@@ -121,16 +136,23 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
   const [pasteId, setPasteId] = useState("");
 
   return (
-    <section className="rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]">
+    <section data-testid="collection-membership" className="rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]">
       <h2 className="font-[family-name:var(--font-display)] text-lg font-bold">Products in collection</h2>
-      <p className="mt-1 text-sm text-[var(--adm-ink-2)]">{orderedIds.length} products · drag alternatives via Up/Down</p>
+      <p className="mt-1 text-sm text-[var(--adm-ink-2)]">{orderedIds.length} {orderedIds.length === 1 ? "product" : "products"} · customers see them in this order. Use Up and Down to change it.</p>
 
       <ul className="mt-4 divide-y divide-[var(--adm-divider)]">
         {members.map((m, i) => (
-          <li key={m.product_id} className="flex flex-wrap items-center gap-2 py-3 text-sm">
+          <li key={m.product_id} data-testid="collection-member" className="flex flex-wrap items-center gap-2 py-3 text-sm">
             <span className="w-8 text-[var(--adm-ink-2)]">{i + 1}</span>
             <div className="min-w-0 flex-1">
-              <p className="font-medium">{m.products?.title || m.product_id}</p>
+              <p className="font-medium">
+                {m.products?.title || m.product_id}
+                {m.products?.status !== "active" ? (
+                  <span className="ml-2 rounded bg-[var(--adm-surface-2)] px-1.5 py-0.5 text-xs font-semibold text-[var(--adm-ink-2)]">
+                    {m.products ? `${m.products.status} — not shown` : "deleted — not shown"}
+                  </span>
+                ) : null}
+              </p>
               <p className="font-[family-name:var(--font-mono)] text-xs text-[var(--adm-ink-2)]">
                 {m.products?.handle}
               </p>
@@ -139,6 +161,7 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
               type="button"
               disabled={!hydrated || busy || i === 0}
               onClick={() => move(m.product_id, -1)}
+              aria-label={`Move ${m.products?.title || "product"} up`}
               className="rounded border border-[var(--adm-border)] px-2 py-1 text-xs font-semibold disabled:opacity-40"
             >
               Up
@@ -147,6 +170,7 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
               type="button"
               disabled={!hydrated || busy || i === members.length - 1}
               onClick={() => move(m.product_id, 1)}
+              aria-label={`Move ${m.products?.title || "product"} down`}
               className="rounded border border-[var(--adm-border)] px-2 py-1 text-xs font-semibold disabled:opacity-40"
             >
               Down
@@ -155,6 +179,7 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
               type="button"
               disabled={!hydrated || busy}
               onClick={() => remove(m.product_id)}
+              aria-label={`Remove ${m.products?.title || "product"} from the collection`}
               className="rounded border border-[var(--adm-danger)] px-2 py-1 text-xs font-semibold text-[var(--adm-danger)] disabled:opacity-40"
             >
               Remove
@@ -210,7 +235,13 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
                 {r.title}{" "}
                 <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--adm-ink-2)]">{r.handle}</span>
               </span>
-              <button type="button" className="font-semibold text-[var(--adm-action)]" onClick={() => addById(r.id)}>
+              <button
+                type="button"
+                disabled={!hydrated || busy || orderedIds.includes(r.id)}
+                aria-label={`Add ${r.title} to the collection`}
+                className="font-semibold text-[var(--adm-action)] disabled:opacity-40"
+                onClick={() => addById(r.id)}
+              >
                 Add
               </button>
             </li>
@@ -218,7 +249,11 @@ export function CollectionMembershipEditor({ slug, members: initial }: Props) {
         </ul>
       ) : null}
 
-      {msg ? <p className="mt-3 text-sm text-[var(--adm-success)]">{msg}</p> : null}
+      {msg ? (
+        <p className="mt-3 text-sm text-[var(--adm-success)]" role="status" data-testid="collection-membership-msg">
+          {msg}
+        </p>
+      ) : null}
       {err ? (
         <p className="mt-3 text-sm text-[var(--adm-danger)]" role="alert">
           {err}

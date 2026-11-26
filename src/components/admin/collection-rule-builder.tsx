@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useHydrated } from "@/lib/ui/use-hydrated";
-import type { CollectionRule, RuleCondition } from "@/lib/collections/rule-eval";
+import { validateRule, type CollectionRule, type RuleCondition } from "@/lib/collections/rule-eval";
 
 const FIELDS: { value: string; label: string }[] = [
   { value: "manufacturer", label: "Brand / manufacturer" },
@@ -32,6 +32,8 @@ const OPS: { value: RuleCondition["op"]; label: string }[] = [
 
 type Props = {
   slug: string;
+  /** Whether the collection currently chooses products by these rules (collectionMode). */
+  automated: boolean;
   initialRule: CollectionRule | null;
 };
 
@@ -39,7 +41,7 @@ function emptyCondition(): RuleCondition {
   return { field: "manufacturer", op: "eq", value: "" };
 }
 
-export function CollectionRuleBuilder({ slug, initialRule }: Props) {
+export function CollectionRuleBuilder({ slug, automated, initialRule }: Props) {
   const router = useRouter();
   const hydrated = useHydrated();
   const [match, setMatch] = useState<"all" | "any">(initialRule?.match === "any" ? "any" : "all");
@@ -61,14 +63,17 @@ export function CollectionRuleBuilder({ slug, initialRule }: Props) {
     try {
       const rule: CollectionRule = {
         match,
-        conditions: conditions
-          .filter((c) => c.field && c.op)
-          .map((c) => ({
-            field: c.field,
-            op: c.op,
-            ...(c.op === "exists" ? {} : { value: c.value }),
-          })),
+        conditions: conditions.map((c) => ({
+          field: c.field,
+          op: c.op,
+          ...(c.op === "exists" ? {} : { value: typeof c.value === "string" ? c.value.trim() : c.value }),
+        })),
       };
+      const problem = validateRule(rule);
+      if (problem) {
+        setErr(problem);
+        return;
+      }
       const res = await fetch(`/api/admin/collections/${encodeURIComponent(slug)}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -79,7 +84,7 @@ export function CollectionRuleBuilder({ slug, initialRule }: Props) {
         setErr(data.message || data.error || `Save failed (${res.status})`);
         return;
       }
-      setMsg("Rules saved. Storefront membership updates on next catalog resolve.");
+      setMsg("Rules saved. This collection now shows every active product that matches them (the storefront updates within a minute).");
       router.refresh();
     } catch {
       setErr("Network error");
@@ -89,8 +94,10 @@ export function CollectionRuleBuilder({ slug, initialRule }: Props) {
   }
 
   async function clearRules() {
-    if (!window.confirm("Clear automated rules? Collection will become manual membership.")) return;
+    if (!window.confirm("Clear the rules? The collection will show only the products you pick by hand.")) return;
     setBusy(true);
+    setErr(null);
+    setMsg(null);
     try {
       const res = await fetch(`/api/admin/collections/${encodeURIComponent(slug)}`, {
         method: "PATCH",
@@ -103,7 +110,7 @@ export function CollectionRuleBuilder({ slug, initialRule }: Props) {
         return;
       }
       setConditions([emptyCondition()]);
-      setMsg("Rules cleared.");
+      setMsg("Rules cleared. The collection now shows only hand-picked products.");
       router.refresh();
     } catch {
       setErr("Network error");
@@ -113,10 +120,12 @@ export function CollectionRuleBuilder({ slug, initialRule }: Props) {
   }
 
   return (
-    <section className="rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]">
+    <section data-testid="collection-rules" className="rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-5 shadow-[var(--adm-shadow)]">
       <h2 className="font-[family-name:var(--font-display)] text-lg font-bold">Automated rules</h2>
       <p className="mt-1 text-sm text-[var(--adm-ink-2)]">
-        Products matching these conditions appear in this collection on the storefront. No JSON editing required.
+        {automated
+          ? "Active products matching these conditions appear in this collection."
+          : "Not in use. Saving rules switches this collection from hand-picked products to every product that matches."}
       </p>
 
       <label className="mt-4 block text-sm font-medium">
@@ -137,6 +146,7 @@ export function CollectionRuleBuilder({ slug, initialRule }: Props) {
             <select
               className="rounded-lg border border-[var(--adm-border)] px-2 py-1.5 text-sm"
               value={c.field}
+              aria-label={`Condition ${i + 1}: field`}
               onChange={(e) => patch(i, { field: e.target.value })}
             >
               {FIELDS.map((f) => (
@@ -148,6 +158,7 @@ export function CollectionRuleBuilder({ slug, initialRule }: Props) {
             <select
               className="rounded-lg border border-[var(--adm-border)] px-2 py-1.5 text-sm"
               value={c.op}
+              aria-label={`Condition ${i + 1}: comparison`}
               onChange={(e) => patch(i, { op: e.target.value as RuleCondition["op"] })}
             >
               {OPS.map((o) => (
@@ -164,11 +175,13 @@ export function CollectionRuleBuilder({ slug, initialRule }: Props) {
                 value={String(c.value ?? "")}
                 onChange={(e) => patch(i, { value: e.target.value })}
                 placeholder="Value"
+                aria-label={`Condition ${i + 1}: value`}
               />
             )}
             <button
               type="button"
               className="rounded border border-[var(--adm-border)] px-2 py-1 text-xs font-semibold text-[var(--adm-danger)]"
+              aria-label={`Remove condition ${i + 1}`}
               onClick={() => setConditions((list) => list.filter((_, idx) => idx !== i))}
             >
               Remove
@@ -195,14 +208,18 @@ export function CollectionRuleBuilder({ slug, initialRule }: Props) {
         </button>
         <button
           type="button"
-          disabled={!hydrated || busy}
+          disabled={!hydrated || busy || !automated}
           onClick={clearRules}
           className="rounded-lg border border-[var(--adm-border)] px-3 py-1.5 text-sm font-semibold disabled:opacity-50"
         >
           Clear rules
         </button>
       </div>
-      {msg ? <p className="mt-2 text-sm text-[var(--adm-success)]">{msg}</p> : null}
+      {msg ? (
+        <p className="mt-2 text-sm text-[var(--adm-success)]" data-testid="collection-rules-saved" role="status">
+          {msg}
+        </p>
+      ) : null}
       {err ? (
         <p className="mt-2 text-sm text-[var(--adm-danger)]" role="alert">
           {err}

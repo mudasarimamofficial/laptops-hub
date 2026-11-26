@@ -38,7 +38,11 @@ export async function CollectionPage({
     base = custom.handles.map((h) => byHandle.get(h)).filter((p): p is (typeof P)[number] => Boolean(p));
   }
   const copy = await getPublishedThemeGlobals();
-  const view = buildCollectionView(base, searchParams, { isChromebooks: id === "chromebooks", extra: isSearch ? { q } : {} });
+  const view = buildCollectionView(base, searchParams, {
+    isChromebooks: id === "chromebooks",
+    extra: isSearch ? { q } : {},
+    keepOrder: custom?.mode === "manual",
+  });
   const title = isSearch ? `Results for “${q}”` : custom ? custom.title : col!.t;
   return <CollectionView title={title} view={view} copy={copy} />;
 }

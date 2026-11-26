@@ -1,7 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { listAllPublicProducts } from "@/lib/catalog/queries";
 import { createPublicClient } from "@/lib/supabase/server";
-import { isAutomatedRule, productMatchesRule, type CollectionRule } from "./rule-eval";
+import { collectionMode, productMatchesRule, type CollectionMode, type CollectionRule } from "./rule-eval";
 
 export type StorefrontCollection = {
   slug: string;
@@ -11,6 +11,8 @@ export type StorefrontCollection = {
   seoDescription: string | null;
   /** Public product handles in display order: manual pins by position, or every product matching the automated rule. */
   handles: string[];
+  /** "manual": `handles` is the merchant's chosen order, and the default sort keeps it. */
+  mode: CollectionMode;
 };
 
 /**
@@ -33,10 +35,10 @@ export const getStorefrontCollection = unstable_cache(
     const all = await listAllPublicProducts(db);
     const pins = ((row.collection_products || []) as { product_id: string; position: number }[]).slice().sort((a, b) => a.position - b.position);
     const rule = row.rule as CollectionRule | null;
-    const automated = row.collection_type === "automated" || (isAutomatedRule(rule) && pins.length === 0);
+    const mode = collectionMode({ collection_type: row.collection_type, rule, pinCount: pins.length });
 
     let handles: string[];
-    if (automated && isAutomatedRule(rule)) {
+    if (mode === "automated") {
       handles = all.filter((p) => productMatchesRule(p, rule)).map((p) => p.handle);
     } else {
       const byId = new Map(all.map((p) => [p.id, p.handle]));
@@ -49,6 +51,7 @@ export const getStorefrontCollection = unstable_cache(
       seoTitle: row.seo_title || null,
       seoDescription: row.seo_description || null,
       handles,
+      mode,
     };
   },
   ["storefront-collection"],

@@ -9,6 +9,7 @@ import { closeCartDrawer, useCartUi } from "@/lib/commerce/cart-ui";
 import { fmtPkr } from "@/lib/catalog/v5-model";
 import { checkoutEnabled, lineView } from "@/components/storefront/cart-lines";
 import { useActiveDiscount } from "@/components/storefront/discount-provider";
+import { useThemeGlobals } from "@/components/storefront/theme-globals-provider";
 import { priceWithCampaign } from "@/lib/commerce/pricing";
 
 /** V5 slide-out cart (`drawer`). */
@@ -20,6 +21,7 @@ export function CartDrawer() {
 
 function Drawer() {
   const ref = useRef<HTMLElement>(null);
+  const g = useThemeGlobals();
   const lines = useCart((s) => s.lines);
   const update = useCart((s) => s.update);
   const remove = useCart((s) => s.remove);
@@ -47,9 +49,9 @@ function Drawer() {
         </div>
         {!lines.length ? (
           <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, padding: 24, textAlign: "center" }}>
-            <span style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 600 }}>Your cart is empty</span>
-            <Link href="/collections/all" onClick={closeCartDrawer} style={{ height: 46, padding: "0 22px", borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontWeight: 700, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
-              Browse the catalog
+            <span style={{ fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 600 }}>{g.cartEmptyTitle}</span>
+            <Link href={g.cartEmptyHref} onClick={closeCartDrawer} style={{ height: 46, padding: "0 22px", borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontWeight: 700, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
+              {g.cartEmptyButton}
             </Link>
           </div>
         ) : (
@@ -101,9 +103,9 @@ function Drawer() {
                 </div>
               ) : null}
               <Link href="/cart" onClick={closeCartDrawer} className="v5-hov-bright-10" style={{ height: 52, borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontSize: 15, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 12px 28px -12px rgba(var(--lh-action-rgb),.9)" }}>
-                View cart
+                {g.cartViewButton}
               </Link>
-              <span style={{ fontSize: 12, color: "var(--lh-ink-2)", textAlign: "center" }}>{checkoutEnabled ? "Prices are confirmed at checkout" : "Online checkout is not open yet"}</span>
+              <span style={{ fontSize: 12, color: "var(--lh-ink-2)", textAlign: "center" }}>{checkoutEnabled ? g.drawerOpenNote : g.drawerClosedNote}</span>
             </div>
           </>
         )}

@@ -17,6 +17,7 @@ import { ensureFeaturedFlamePreset, getFeaturedFlamePreset } from "@/lib/content
 import { MerchBadgeProvider } from "@/components/storefront/merch-badges";
 import { PurchaseActivity } from "@/components/storefront/purchase-activity";
 import { DiscountProvider } from "@/components/storefront/discount-provider";
+import { ThemeGlobalsProvider } from "@/components/storefront/theme-globals-provider";
 import { PromoAnnouncement } from "@/components/storefront/promo-announcement";
 import { getActiveAutomaticDiscount } from "@/lib/commerce/discounts-server";
 import { priceWithCampaign } from "@/lib/commerce/pricing";
@@ -135,6 +136,7 @@ export default async function StorefrontLayout({
   const showPromo = Boolean(campaign?.showAnnouncement && campaign.announcement?.trim());
   return (
     <DiscountProvider campaign={campaign}>
+    <ThemeGlobalsProvider globals={globals}>
       <MerchBadgeProvider badges={badges}>
         <JsonLdSite />
         <a
@@ -157,6 +159,7 @@ export default async function StorefrontLayout({
         <WhatsAppFloat settings={contact.whatsapp} />
         {social?.activity?.enabled ? <PurchaseActivity config={social.activity} /> : null}
       </MerchBadgeProvider>
+    </ThemeGlobalsProvider>
     </DiscountProvider>
   );
 }

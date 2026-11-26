@@ -5,9 +5,11 @@ import { LHImg } from "@/components/storefront/v5/lh-img";
 import { useCart, cartSubtotalPaisa } from "@/lib/commerce/cart-store";
 import { fmtPkr } from "@/lib/catalog/v5-model";
 import { checkoutEnabled, lineView } from "@/components/storefront/cart-lines";
+import { useThemeGlobals } from "@/components/storefront/theme-globals-provider";
 
 /** Port of the V5 cart page (`isCart`). Totals are a browser estimate; the server reprices at checkout. */
 export default function CartPage() {
+  const g = useThemeGlobals();
   const lines = useCart((s) => s.lines);
   const update = useCart((s) => s.update);
   const remove = useCart((s) => s.remove);
@@ -17,12 +19,12 @@ export default function CartPage() {
 
   return (
     <section data-screen-label="Cart" style={{ maxWidth: 1360, margin: "0 auto", padding: "36px clamp(16px,3vw,32px) 80px" }}>
-      <h1 style={{ margin: "0 0 28px", fontFamily: "var(--font-display)", fontSize: "clamp(34px,4vw,56px)", lineHeight: 1.04, letterSpacing: "-.04em", fontWeight: 700 }}>Cart</h1>
+      <h1 style={{ margin: "0 0 28px", fontFamily: "var(--font-display)", fontSize: "clamp(34px,4vw,56px)", lineHeight: 1.04, letterSpacing: "-.04em", fontWeight: 700 }}>{g.cartTitle}</h1>
       {!lines.length ? (
         <div style={{ padding: "72px 24px", textAlign: "center", background: "#FFFFFF", border: "1px solid var(--lh-border)", borderRadius: 24, display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-          <span style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700 }}>Your cart is empty</span>
-          <Link href="/collections/all" style={{ height: 48, padding: "0 24px", borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontWeight: 700, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
-            Browse the catalog
+          <span style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700 }}>{g.cartEmptyTitle}</span>
+          <Link href={g.cartEmptyHref} style={{ height: 48, padding: "0 24px", borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontWeight: 700, display: "flex", alignItems: "center", whiteSpace: "nowrap" }}>
+            {g.cartEmptyButton}
           </Link>
         </div>
       ) : (
@@ -67,7 +69,7 @@ export default function CartPage() {
             })}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 14, padding: 24, borderRadius: 24, backgroundColor: "var(--lh-navy)", backgroundImage: "radial-gradient(80% 60% at 100% 0%,rgba(var(--lh-iris-rgb),.3),transparent 70%)", color: "#FFFFFF", position: "sticky", top: 96 }}>
-            <span style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 700 }}>Summary</span>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: 20, fontWeight: 700 }}>{g.cartSummaryTitle}</span>
             <div style={row}>
               <span style={{ color: "var(--lh-on-dark-2)" }}>Items</span>
               <span>{count}</span>
@@ -90,7 +92,7 @@ export default function CartPage() {
               </button>
             )}
             <span style={{ fontSize: 12, lineHeight: 1.5, color: "var(--lh-on-dark-2)" }}>
-              {checkoutEnabled ? "Prices, delivery and the order total are confirmed at checkout." : "Online checkout is not open yet. Your cart is saved on this device."}
+              {checkoutEnabled ? g.cartOpenNote : g.cartClosedNote}
             </span>
           </div>
         </div>

@@ -24,7 +24,7 @@ export function retryableStatus(status: number, name?: string) {
   return status === 429 || status >= 500;
 }
 
-export async function sendEmail(msg: { to: string; subject: string; text: string; idempotencyKey: string }): Promise<SendResult> {
+export async function sendEmail(msg: { to: string | string[]; subject: string; text: string; idempotencyKey: string }): Promise<SendResult> {
   if (!emailConfigured()) return { ok: false, error: "not_configured", retryable: true };
   const base = (process.env.RESEND_API_URL || "https://api.resend.com").replace(/\/+$/, "");
   try {
@@ -36,7 +36,7 @@ export async function sendEmail(msg: { to: string; subject: string; text: string
         // Provider-side de-duplication: a retry of the same message is not delivered twice.
         "Idempotency-Key": msg.idempotencyKey,
       },
-      body: JSON.stringify({ from: process.env.STORE_FROM_EMAIL, to: [msg.to], subject: msg.subject, text: msg.text }),
+      body: JSON.stringify({ from: process.env.STORE_FROM_EMAIL, to: Array.isArray(msg.to) ? msg.to : [msg.to], subject: msg.subject, text: msg.text }),
       signal: AbortSignal.timeout(Number(process.env.NOTIFY_TIMEOUT_MS) || 15_000),
     });
     const body = (await res.json().catch(() => ({}))) as { id?: string; message?: string; name?: string };

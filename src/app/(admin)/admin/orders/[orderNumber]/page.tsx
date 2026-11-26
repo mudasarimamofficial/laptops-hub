@@ -40,7 +40,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
 
   const { data: outbox } = await supabase
     .from("notification_outbox")
-    .select("channel, template, status, attempts, last_error, created_at, sent_at, business_status, customer_status, next_attempt_at")
+    .select("channel, template, status, attempts, last_error, created_at, sent_at, business_status, customer_status, customer_message_id, next_attempt_at")
     .eq("order_id", order.id)
     .order("created_at");
 
@@ -308,7 +308,7 @@ export default async function AdminOrderDetailPage({ params }: Props) {
                 </div>
                 <div className="text-xs text-[var(--adm-ink-2)]">
                   Store alert: <span data-testid="notification-business">{n.business_status}</span> · Customer email:{" "}
-                  <span data-testid="notification-customer">{n.customer_status}</span>
+                  <span data-testid="notification-customer">{n.customer_status === "skipped" && n.customer_message_id ? "test copy sent to staff" : n.customer_status}</span>
                 </div>
                 {n.sent_at ? (
                   <div className="text-xs text-[var(--adm-ink-2)]">

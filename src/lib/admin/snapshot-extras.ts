@@ -26,6 +26,8 @@ export async function loadSnapshotExtras(load: (table: string, columns?: string)
 }
 
 type Row = Record<string, unknown>;
+/** Reel columns added after the core restore RPC (20261118081618); restored from the backup when present. */
+const NEWER_REEL_COLUMNS = ["hls_url", "avatar_url", "media_source", "preset_key", "link_path", "source_attribution"] as const;
 const rows = (v: unknown): Row[] => (Array.isArray(v) ? v.filter((r): r is Row => !!r && typeof r === "object") : []);
 const missingFunction = (e: { code?: string; message?: string } | null) =>
   !!e && (e.code === "PGRST202" || e.code === "42883" || /could not find the function/i.test(e.message || ""));
@@ -119,6 +121,16 @@ export async function restoreSnapshotExtras(
       ]);
       const reelSet = new Set(rows(liveReels).map((x) => String(x.id)));
       const productSet = new Set(rows(products).map((x) => String(x.id)));
+      // The core RPC predates these reel columns and would leave a re-created reel without them; set them back here.
+      for (const snapReel of rows(payload.reels)) {
+        const id = String(snapReel.id || "");
+        if (!reelSet.has(id)) continue;
+        const patch: Row = {};
+        for (const k of NEWER_REEL_COLUMNS) if (k in snapReel) patch[k] = snapReel[k];
+        if (!Object.keys(patch).length) continue;
+        const { error: cErr } = await supabase.from("reels").update(patch).eq("id", id);
+        if (cErr) r.failed.push(`${id} columns: ${cErr.message}`);
+      }
       for (const reelId of reelIds) {
         if (!reelSet.has(reelId)) continue;
         const wanted = snapLinks.filter((l) => String(l.reel_id) === reelId);

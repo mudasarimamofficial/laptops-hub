@@ -45,7 +45,7 @@ test("G17: v3 backup restores pages, reel links and the homepage theme; legal pa
   );
   const { data: reel } = await sb
     .from("reels")
-    .insert({ title: `QA G17 reel ${RUN}`, video_url: "https://example.invalid/qa.mp4", status: "draft" })
+    .insert({ title: `QA G17 reel ${RUN}`, video_url: "https://example.invalid/qa.mp4", status: "draft", link_path: "/collections/dell", source_attribution: `QA source ${RUN}` })
     .select("id")
     .single();
   const reelId = reel!.id as string;
@@ -72,6 +72,7 @@ test("G17: v3 backup restores pages, reel links and the homepage theme; legal pa
     await sb.from("content_pages").update({ title: `QA changed about ${RUN}` }).eq("slug", "about");
     await sb.from("content_pages").update({ body_html: `<p>QA live privacy ${RUN}</p>` }).eq("slug", "privacy");
     await sb.from("reel_products").delete().eq("reel_id", reelId).eq("product_id", prodIds[1]);
+    await sb.from("reels").update({ link_path: "/collections/hp", source_attribution: "changed" }).eq("id", reelId);
     await sb.from("reel_products").update({ sort_order: 7 }).eq("reel_id", reelId).eq("product_id", prodIds[0]);
     if (otherVersion && pub0) {
       const { error } = await sb.rpc("rollback_homepage_theme", { payload: { actor_user_id: fx.staff.owner.id, target_version_id: otherVersion } });
@@ -91,6 +92,8 @@ test("G17: v3 backup restores pages, reel links and the homepage theme; legal pa
     expect((await page_("privacy")).body_html).toBe(`<p>QA live privacy ${RUN}</p>`); // legal text stays live
     expect(await links(reelId)).toEqual([`${prodIds[0]}:0`, `${prodIds[1]}:1`]);
     expect(body.extras.reel_products.failed).toEqual([]);
+    const reelAfter = (await sb.from("reels").select("link_path, source_attribution").eq("id", reelId).single()).data!;
+    expect(reelAfter).toEqual({ link_path: "/collections/dell", source_attribution: `QA source ${RUN}` }); // newer reel columns restored
     if (otherVersion && pub0) {
       expect(body.extras.theme.action).toBe("repointed");
       expect(await livePub()).toBe(pub0);

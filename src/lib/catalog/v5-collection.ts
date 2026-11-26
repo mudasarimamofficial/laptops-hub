@@ -70,9 +70,10 @@ function match(p: V5Product, f: Filters, ex?: string) {
   return true;
 }
 
-function sorted(list: V5Product[], sort: string) {
+function sorted(list: V5Product[], sort: string, keepOrder = false) {
   const by: Record<string, (x: V5Product, y: V5Product) => number> = {
-    featured: (x, y) => x.i - y.i,
+    // A hand-picked collection keeps the merchant's order under the default sort (Array.prototype.sort is stable).
+    featured: keepOrder ? () => 0 : (x, y) => x.i - y.i,
     "price-asc": (x, y) => x.pricePaisa - y.pricePaisa,
     "price-desc": (x, y) => y.pricePaisa - x.pricePaisa,
     gen: (x, y) => (y.gen || 0) - (x.gen || 0) || x.pricePaisa - y.pricePaisa,
@@ -101,11 +102,15 @@ export type CollectionView = {
   cbPending: boolean;
 };
 
-export function buildCollectionView(base: V5Product[], sp: RawParams, opts: { isChromebooks?: boolean; extra?: Record<string, string> } = {}): CollectionView {
+export function buildCollectionView(
+  base: V5Product[],
+  sp: RawParams,
+  opts: { isChromebooks?: boolean; extra?: Record<string, string>; keepOrder?: boolean } = {},
+): CollectionView {
   const { f, sort, page } = parseFilters(sp);
   const extra = opts.extra || {};
   const href = (nf: Filters, s = sort) => toQuery(nf, s, 1, extra) || "?";
-  const list = sorted(base.filter((p) => match(p, f)), sort);
+  const list = sorted(base.filter((p) => match(p, f)), sort, !!opts.keepOrder);
   const shown = list.slice(0, page * PAGE);
 
   const facets = DIMS.map((d) => {

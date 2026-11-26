@@ -127,3 +127,41 @@ export function isAutomatedRule(rule: unknown): rule is CollectionRule {
   const r = rule as CollectionRule;
   return Array.isArray(r.conditions) && r.conditions.length > 0;
 }
+
+export type CollectionMode = "manual" | "automated";
+
+/**
+ * How a merchant collection chooses its products. One rule for the admin page and the storefront, so they can never
+ * disagree: rules win when the row is marked automated, or when it has rules and no hand-picked products (rows saved
+ * before the type was kept in step). Everything else uses the hand-picked list in its saved order.
+ */
+export function collectionMode(row: { collection_type?: string | null; rule?: unknown; pinCount: number }): CollectionMode {
+  if (!isAutomatedRule(row.rule)) return "manual";
+  return row.collection_type === "automated" || row.pinCount === 0 ? "automated" : "manual";
+}
+
+const NUMERIC_OPS = new Set<RuleCondition["op"]>(["gte", "lte", "gt", "lt"]);
+const ALL_OPS = new Set<RuleCondition["op"]>(["eq", "neq", "contains", "gte", "lte", "gt", "lt", "in", "exists"]);
+
+/**
+ * Checks a rule before it is saved. Returns a merchant-readable problem, or null. A rule with no conditions is not an
+ * automated rule; use "Clear rules" to switch the collection to hand-picked products instead.
+ */
+export function validateRule(rule: unknown): string | null {
+  if (!rule || typeof rule !== "object" || Array.isArray(rule)) return "The rules could not be read.";
+  const r = rule as CollectionRule;
+  if (r.match !== undefined && r.match !== "all" && r.match !== "any") return "Choose whether products must match all or any condition.";
+  if (!Array.isArray(r.conditions) || r.conditions.length === 0) return "Add at least one condition, or use Clear rules to pick products by hand.";
+  if (r.conditions.length > 20) return "Use 20 conditions or fewer.";
+  for (const [i, c] of r.conditions.entries()) {
+    const n = i + 1;
+    if (!c || typeof c.field !== "string" || !c.field.trim() || c.field.length > 80) return `Condition ${n}: choose a field.`;
+    if (!ALL_OPS.has(c.op)) return `Condition ${n}: choose how to compare.`;
+    if (c.op === "exists") continue;
+    const v = typeof c.value === "string" ? c.value.trim() : c.value;
+    if (v === undefined || v === null || v === "") return `Condition ${n}: enter a value.`;
+    if (typeof v === "string" && v.length > 200) return `Condition ${n}: the value is too long (200 characters at most).`;
+    if (NUMERIC_OPS.has(c.op) && (typeof v === "boolean" || Number.isNaN(Number(v)))) return `Condition ${n}: enter a number.`;
+  }
+  return null;
+}

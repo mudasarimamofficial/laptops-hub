@@ -11,6 +11,16 @@ const schema = z.object({
   idempotencyKey: z.string().trim().min(8).max(120),
 });
 
+function closedResponse() {
+  return NextResponse.json(
+    {
+      error: "order_closed",
+      message: "This order is cancelled or returned, so no new cash can be recorded. To fix an amount, use a correction.",
+    },
+    { status: 409 },
+  );
+}
+
 export async function POST(request: Request) {
   try {
     const { staff, supabase } = await createAuthorizedStaffWriter([
@@ -27,6 +37,12 @@ export async function POST(request: Request) {
       );
     }
 
+    // G22: no new cash on a cancelled or returned order. Checked here too so the rule holds before the database
+    // update (20261126140000) is applied; the database function enforces it under the order lock afterwards.
+    const { data: ord } = await supabase.from("orders").select("status").eq("order_number", parsed.data.orderNumber).maybeSingle();
+    if (!ord) return NextResponse.json({ error: "not_found", message: "Order not found." }, { status: 404 });
+    if (ord.status === "cancelled" || ord.status === "returned") return closedResponse();
+
     const amount = pkrMajorToPaisa(parsed.data.amountPkr);
     const { data, error } = await supabase.rpc("record_cod_collection", {
       payload: {
@@ -41,6 +57,7 @@ export async function POST(request: Request) {
 
     if (error) {
       const msg = error.message || "";
+      if (msg.includes("order_closed")) return closedResponse();
       if (msg.includes("not_found")) return NextResponse.json({ error: "not_found" }, { status: 404 });
       if (msg.includes("over_collection")) {
         return NextResponse.json(

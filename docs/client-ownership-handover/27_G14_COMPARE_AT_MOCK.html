@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>G14 compare-at mock</title>
+<style>
+  /* Values copied from src/styles/tokens.css and src/components/storefront/price-display.tsx. Proposal only. */
+  :root { --ink:#102039; --ink-2:#52637b; --border:#dae5f2; }
+  body { margin:0; padding:24px 16px; background:#f5f7fb; color:var(--ink); font:15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  p.note { margin:0 0 20px; color:var(--ink-2); font-size:13px; max-width:720px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; max-width:1100px; }
+  .case { background:#fff; border:1px solid var(--border); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:12px; }
+  .case h2 { font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-2); margin:0; }
+  .price { display:inline-flex; flex-direction:column; gap:2px; align-items:flex-start; }
+  .row { display:inline-flex; flex-wrap:wrap; gap:6px 10px; align-items:baseline; }
+  .sell { font-weight:700; letter-spacing:-.02em; white-space:nowrap; }
+  .md .sell { font-size:21px; } .lg .sell { font-size:34px; }
+  .was { color:var(--ink-2); text-decoration:line-through; white-space:nowrap; font-size:12px; }
+  .lg .was { font-size:15px; }
+  .pill { font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:3px 8px; border-radius:999px; background:#EAF3FE; color:#1748B5; border:1px solid #BCD0F2; white-space:nowrap; }
+  .save { font-size:13px; color:var(--ink-2); }
+  .sr { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  .tag { font-size:12px; color:var(--ink-2); }
+</style>
+</head>
+<body>
+<h1>G14 compare-at price: proposal mock</h1>
+<p class="note">Not live. Styles are copied from the current V5 price component; only the struck reference changes. Example prices are illustrative, not real products. Hidden "Current price" / "Regular price" text is read by screen readers.</p>
+<div class="grid">
+  <section class="case"><h2>1 · No compare-at, campaign off (today)</h2>
+    <span class="price md"><span class="row"><span class="sell"><span class="sr">Current price </span>Rs 150,000</span></span></span>
+    <span class="price lg"><span class="row"><span class="sell">Rs 150,000</span></span></span>
+    <span class="tag">Product card (top) and product page (bottom)</span>
+  </section>
+  <section class="case"><h2>2 · No compare-at, 5% campaign on (today)</h2>
+    <span class="price md"><span class="row"><span class="sell"><span class="sr">Current price </span>Rs 142,500</span><span class="was"><span class="sr">Regular price </span>Rs 150,000</span><span class="pill">5% OFF</span></span></span>
+    <span class="price lg"><span class="row"><span class="sell">Rs 142,500</span><span class="was">Rs 150,000</span><span class="pill">5% OFF</span></span><span class="save">You save Rs 7,500</span></span>
+  </section>
+  <section class="case"><h2>3 · Compare-at Rs 165,000, campaign off</h2>
+    <span class="price md"><span class="row"><span class="sell"><span class="sr">Current price </span>Rs 150,000</span><span class="was"><span class="sr">Regular price </span>Rs 165,000</span></span></span>
+    <span class="price lg"><span class="row"><span class="sell">Rs 150,000</span><span class="was">Rs 165,000</span></span><span class="save">You save Rs 15,000</span></span>
+    <span class="tag">No pill: no new percentage is made up from merchant data.</span>
+  </section>
+  <section class="case"><h2>4 · Compare-at Rs 165,000, 5% campaign on</h2>
+    <span class="price md"><span class="row"><span class="sell"><span class="sr">Current price </span>Rs 142,500</span><span class="was"><span class="sr">Regular price </span>Rs 165,000</span><span class="pill">5% OFF</span></span></span>
+    <span class="price lg"><span class="row"><span class="sell">Rs 142,500</span><span class="was">Rs 165,000</span><span class="pill">5% OFF</span></span><span class="save">You save Rs 22,500</span></span>
+    <span class="tag">One struck price (the higher reference). The 5% is applied once, to Rs 150,000.</span>
+  </section>
+  <section class="case"><h2>5 · Compare-at ≤ price (bad data)</h2>
+    <span class="price md"><span class="row"><span class="sell">Rs 150,000</span></span></span>
+    <span class="tag">Ignored; shown exactly like case 1.</span>
+  </section>
+</div>
+</body>
+</html>

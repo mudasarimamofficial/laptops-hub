@@ -23,4 +23,11 @@ written is listed as **TODO** rather than covered by an older document that was 
 | 22 | Admin self-service matrix (G01–G49) | `22_ADMIN_SELF_SERVICE_MATRIX.md` | written; §0 tracks fixes (updated 2026-11-25) |
 | 23 | Owner decisions, risks and owner tasks | `23_OWNER_DECISIONS_AND_RISK_REGISTER.md` | written 2026-11-25 |
 | 24 | LH-025 Option A: proven repair plan (export, restore, rehearsal, exact sequence) | `24_LH025_OPTION_A_EXECUTION_PLAN.md` | **executed 2026-11-26 with owner approval** (§10) |
+| 25 | G13 Shopify-hosted media inventory and migration plan | `25_G13_SHOPIFY_MEDIA_INVENTORY_AND_MIGRATION_PLAN.md` | written — decision G13-M1 (D17) |
+| 26 | G22 / G19 production migration plans | `26_G19_G22_PRODUCTION_MIGRATION_PLAN.md` (G19 section on the PR #91 branch) | written — **not applied** (D15, D16) |
+| 27 | G14 compare-at price proposal + mock | `27_G14_COMPARE_AT_PRICE_PROPOSAL.md`, `27_G14_COMPARE_AT_MOCK.html` | proposal — not built (D18) |
+| 28 | Public Git history and PR evidence review | `28_GIT_HISTORY_EXPOSURE_REVIEW.md` | written 2026-11-26 (D19) |
+| 29 | Admin acceptance matrix (12 checks per screen) + fresh baseline | `29_ADMIN_ACCEPTANCE_MATRIX.md` | written 2026-11-26 |
+| 30 | Operations runbook and dependency list | `30_OPERATIONS_RUNBOOK_AND_DEPENDENCIES.md` | written 2026-11-26 |
+| 31 | **Final report — merchant autonomy, admin and theme editor closure** | `31_FINAL_MERCHANT_AUTONOMY_CLOSURE_REPORT.md` | **read first** (2026-11-26) |
 | SEO | Search, AEO and Search Console | `seo-search/` (start at `00`; dated checks in `17`) | engineering implemented; Google indexing pending |

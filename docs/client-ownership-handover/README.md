@@ -22,5 +22,5 @@ written is listed as **TODO** rather than covered by an older document that was 
 | 21 | Migration ledger reconciliation (LH-025) | `21_MIGRATION_LEDGER_RECONCILIATION.md` | written — **awaiting owner approval, not executed** |
 | 22 | Admin self-service matrix (G01–G49) | `22_ADMIN_SELF_SERVICE_MATRIX.md` | written; §0 tracks fixes (updated 2026-11-25) |
 | 23 | Owner decisions, risks and owner tasks | `23_OWNER_DECISIONS_AND_RISK_REGISTER.md` | written 2026-11-25 |
-| 24 | LH-025 Option A: proven repair plan (export, restore, rehearsal, exact sequence) | `24_LH025_OPTION_A_EXECUTION_PLAN.md` | written 2026-11-26 — **awaiting owner approval, not executed** |
+| 24 | LH-025 Option A: proven repair plan (export, restore, rehearsal, exact sequence) | `24_LH025_OPTION_A_EXECUTION_PLAN.md` | **executed 2026-11-26 with owner approval** (§10) |
 | SEO | Search, AEO and Search Console | `seo-search/` (start at `00`; dated checks in `17`) | engineering implemented; Google indexing pending |

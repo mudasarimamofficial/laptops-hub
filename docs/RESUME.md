@@ -1,11 +1,12 @@
 # Resume here
 
-> **2026-11-26 LH-025 Option A prepared, NOT executed (Claude Opus 5.5) — read first:** the owner chose Option A but has
-> not authorised any production change. Branch `chore/lh025-option-a-comment-migration-2026-11-26` adds
-> `20261126022136_order_items_discount_column_comments.sql` (2 COMMENT statements only). Do not merge it or run any
-> `--linked` write until the owner approves `docs/client-ownership-handover/24_LH025_OPTION_A_EXECUTION_PLAN.md` §7.
-> Private ledger export (not in git): `C:\Users\mudas\Documents\LaptopsHub-private\lh025-2026-11-26\`. Still open:
-> P1 G12/G13/G14/G19/G22/G24, theme editor Phase 2c+, owner decisions in `23`.
+> **2026-11-26 LH-025 FIXED (Claude Opus 5.5) — read first:** the owner approved doc 24 §7. PR #86 merged
+> (`2229004`) and the sequence was executed: 2 ledger repairs plus a push of the comment-only migration
+> `20261126022136`. Production ledger: 43/43 aligned, `db push --linked --dry-run` reports up to date, and the only
+> schema change is the 2 `order_items` comments. Record: `docs/client-ownership-handover/24_LH025_OPTION_A_EXECUTION_PLAN.md`
+> §10. Private evidence (not in git): `C:\Users\mudas\Documents\LaptopsHub-private\lh025-*-2026-11-26\`. Any future
+> migration still needs owner approval before `db push --linked`. Still open: P1 G12/G13/G14/G19/G22/G24, theme
+> editor Phase 2c+, owner decisions in `23`.
 
 > **2026-11-25 post-SEO closure (Claude Opus 5.5):** status table at the top of
 > `docs/client-ownership-handover/00_EXECUTIVE_STATUS.md`. Live since the SEO launch: LH-018 default hero publish fix

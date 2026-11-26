@@ -1,7 +1,7 @@
-# 24 — LH-025 Option A: proven repair plan, awaiting owner approval (2026-11-26)
+# 24 — LH-025 Option A: repair plan and execution record (2026-11-26)
 
-> ## NOT EXECUTED ON PRODUCTION — AWAITING EXPLICIT OWNER APPROVAL
-> Every production command used to prepare this plan was read-only: `migration list`, `SELECT` queries and
+> ## EXECUTED ON PRODUCTION 2026-11-26, WITH THE OWNER'S EXPLICIT APPROVAL OF §7 — see §10
+> §1–§9 are the plan as approved. While the plan was being prepared, every production command was read-only: `migration list`, `SELECT` queries and
 > `db dump` (schema-only, or data-only for the ledger table). No production ledger row, schema object or data row
 > was written. The repair, the new migration and the restore were run only on an isolated local rehearsal database.
 >
@@ -197,3 +197,39 @@ Conditions:
 - The private export must first be copied to client-owned encrypted storage.
 
 **Status:** READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED.
+
+## 10. Execution record (2026-11-26)
+
+The owner approved §7 as written in chat ("Approve §7 as written"). Every step ran in order and none hit a stop
+condition. Evidence (step outputs, fresh export, fingerprints and checksums) is in the private folder
+`C:\Users\mudas\Documents\LaptopsHub-private\lh025-exec-2026-11-26\` (not in git).
+
+| # | Result |
+|---|---|
+| 0 | PR #86 passed `quality` and Vercel, was marked ready and merged: `main` = `2229004`, 43 migration files, newest `20261126022136` |
+| 1 | project-ref `xvmmjkrkgznnakcobmww` |
+| 2 | 38 matched + the 4/4 pairs + `20261126022136` local-only |
+| 3 | `42` / `35d15d16484d93d67210e3a345b6fe19`, unchanged |
+| 4 | Fresh export taken; its COPY data is identical to the approved §2 export |
+| 5 | Both comments NULL. The full fingerprint had 0 differences from the morning's production fingerprint |
+| 6 | 02:56:31 UTC, **WRITE**: "Repaired … => reverted" (exit 0) |
+| 7 | 02:56:46 UTC, **WRITE**: "Repaired … => applied" (exit 0) |
+| 8 | 42 aligned, plus `20261126022136` local-only. The fingerprint showed only the ledger md5 changed; no schema object changed |
+| 9 | Dry-run: "Would push these migrations: • 20261126022136_order_items_discount_column_comments.sql" and nothing else |
+| 10 | 02:57:26 UTC, **WRITE**: "Applying migration 20261126022136…", "Finished supabase db push" (exit 0) |
+| 11 | 43 aligned, 0 unaligned; dry-run: "Remote database is up to date" |
+| 12 | Both comments now set, with exactly the repo text. Ledger rows for the 5 repo versions hold 3/9/16/27/2 statements, as rehearsed. The full fingerprint shows exactly 4 changes: 2 comments, ledger count 42→43 and the ledger md5 (now `95772b8561f47f52e4e3c5b69058fb65`). No function, policy, grant, column, constraint, index, trigger or RLS change. The targeted parity check against the repo-built local database now differs only by `cms_media_assets`, which is absent locally because Storage is off there |
+| 13 | `www.laptopshub.pk`: `/`, a product page (prices shown), `/checkout`, `/cart` and `/admin/login` return 200, and `/admin` redirects to login (307). `/collections` returns 404 because there is no index route; that is pre-existing and unrelated. `/collections/dell` returns 200 |
+
+**CLI warning during step 10:** after applying the migration, CLI 2.108 printed "failed to cache migrations
+catalog … pgdelta-target-ca.crt: ENOENT". This is the CLI's optional local catalog cache, which runs after the push.
+It does not affect the database: steps 11–12 confirm the migration and its ledger row are in place.
+
+**Restoring the old state is still possible.** `ledger_restore.sql` from §2 would return the ledger to the
+pre-repair 42 rows, but there is no reason to use it: the ledger now matches the repo exactly.
+
+**After this repair:**
+
+- Future migrations go through the normal path: `migration new`, then rehearse locally, then the owner approves, then
+  `db push --linked --dry-run` followed by `db push --linked`.
+- G19, G22 and D12 still each need their own approved migration.

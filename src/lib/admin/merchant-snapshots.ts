@@ -26,8 +26,10 @@ const KEEP_VALID = 4;
 /**
  * G17: settings a CMS restore must never change. `cod_checkout` is the customer-ordering go-live gate (LH-017): an old
  * snapshot must not switch live COD ordering on or off. It keeps its current value; change it deliberately instead.
+ * G24: `notifications` (staff recipients, customer-email mode) is kept live too, so a restore can never start emailing
+ * customers again or send alerts to a former staff member's address.
  */
-export const RESTORE_PROTECTED_SETTING_KEYS = ["cod_checkout"] as const;
+export const RESTORE_PROTECTED_SETTING_KEYS = ["cod_checkout", "notifications"] as const;
 
 /** The payload actually sent to the restore RPC: protected settings removed, everything else unchanged. */
 export function restorablePayload<T extends { store_settings: unknown[] }>(payload: T): { payload: T; keptLive: string[] } {

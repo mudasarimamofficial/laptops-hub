@@ -104,3 +104,16 @@ With the outbox lease (2026-10-23): 10/10 twice on a fresh build; one earlier ru
 waiting 5 s for "Fully collected." (collection recorded correctly once), not reproduced in the next two runs.
 Also on this build: collection 16/16 · role matrix 15/15 · checkout 31/31 · role HTTP 113/113 (incl. zone PATCH and
 notification retry). Order lookup: cross-site 403; 10 guesses per IP per 15 min, then 429.
+
+## Media library table (2026-11-26)
+
+The isolated stack runs without the Storage API, so migration `20261118160000` cannot create its bucket and
+`public.cms_media_assets` is missing locally. Before running `p1-product-media-g13`, create the table (local only,
+idempotent, same columns and grants as production):
+
+```bash
+docker exec -i supabase_db_Laptops_Hub_Vercel_Development psql -U postgres -v ON_ERROR_STOP=1 < scripts/dev/isolated-cms-media-table.sql
+```
+
+The upload test intercepts only the file-store call (`/api/admin/media/upload`); the real storage upload is not
+exercised locally.

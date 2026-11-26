@@ -4,6 +4,7 @@ import { ogDefaults } from "@/lib/seo/og";
 import { getV5Catalog } from "@/lib/catalog/v5";
 import { canonicalFor, siteUrl } from "@/lib/site-url";
 import { productSeoFromV5 } from "@/lib/seo/product-meta";
+import { merchantAlt } from "@/lib/catalog/v5-model";
 import { getPublishedThemeGlobals, getPublishedThemeLayout } from "@/lib/content/published-homepage";
 import { ProductPageView } from "@/components/storefront/product/product-page-view";
 
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: seo.title,
       description: seo.description,
       // The product photo when there is one; otherwise the brand share image from ogDefaults.
-      ...(p.imgs[0] ? { images: [{ url: p.imgs[0].u, alt: seo.title }] } : {}),
+      ...(p.imgs[0] ? { images: [{ url: p.imgs[0].u, alt: merchantAlt(p.imgs[0].a, p.t) || seo.title }] } : {}),
       type: "website",
       url: `${siteUrl()}/products/${p.h}`,
     },

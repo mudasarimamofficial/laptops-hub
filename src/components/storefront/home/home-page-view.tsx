@@ -26,6 +26,7 @@ import { getPublishedReels } from "@/lib/content/reels-server";
 import { ReelsSection } from "@/components/storefront/home/reels-section";
 import { getMerchBadges, getSocialProofSettings } from "@/lib/content/social-proof-server";
 import { cpuFmt, fmtPkr, getV5Catalog, ord, stoFmt, v5Card, v5Link, type V5Product } from "@/lib/catalog/v5";
+import { merchantAlt } from "@/lib/catalog/v5-model";
 import { formatProductDisplayName } from "@/lib/catalog/product-display-name";
 import { getActiveAutomaticDiscount } from "@/lib/commerce/discounts-server";
 import { priceWithCampaign } from "@/lib/commerce/pricing";
@@ -173,7 +174,7 @@ export async function HomePageView({ sections }: { sections: SectionInstance[] |
   const promo = {
     href: href(promoP),
     img: promoP.imgs[0]?.u ?? null,
-    alt: promoP.imgs[0]?.a ?? "",
+    alt: merchantAlt(promoP.imgs[0]?.a, promoP.t) || formatProductDisplayName(promoP.brand, promoP.model),
     brand: promoP.brand,
     model: promoP.model,
     config: promoP.config,

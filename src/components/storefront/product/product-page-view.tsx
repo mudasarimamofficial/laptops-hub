@@ -2,6 +2,7 @@ import Link from "next/link";
 import { V5ProductCard } from "@/components/commerce/product-card";
 import { ProductBuy, ProductGallery } from "@/components/commerce/product-detail";
 import { V5_COLS, v5Card, v5KeySpecs, v5Related, v5SpecRows, type V5Product } from "@/lib/catalog/v5";
+import { merchantAlt } from "@/lib/catalog/v5-model";
 import { siteUrl } from "@/lib/site-url";
 import { contentVisibility } from "@/lib/content/pages";
 import { publicLinks } from "@/lib/content/links";
@@ -171,7 +172,7 @@ export async function ProductPageView({ P, p, tc, layout }: { P: V5Product[]; p:
             minWidth: 0,
           }}
         >
-          <ProductGallery images={p.imgs.map((x) => x.u)} model={p.model} config={p.config} />
+          <ProductGallery images={p.imgs.map((x) => x.u)} alts={p.imgs.map((x) => merchantAlt(x.a, p.t))} model={p.model} config={p.config} />
         </div>
 
         <div

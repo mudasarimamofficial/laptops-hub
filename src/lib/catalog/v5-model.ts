@@ -1,4 +1,5 @@
 import { V5_SUB } from "@/lib/catalog/v5-taxonomy";
+import { isImportedAlt } from "@/lib/catalog/media-order";
 import type { PublicProduct, PublicVariant } from "@/types/catalog";
 
 /**
@@ -78,6 +79,17 @@ const num = (v: unknown) => {
   const n = typeof v === "number" ? v : Number(v);
   return Number.isFinite(n) ? n : null;
 };
+
+/**
+ * The merchant's own image description, or "" when none was written. Images without one carry the product title
+ * (catalog sortMedia fallback) or a Shopify-import placeholder (isImportedAlt); the storefront then uses its own
+ * descriptive default instead.
+ */
+export function merchantAlt(alt: string | null | undefined, productTitle: string): string {
+  const a = (alt || "").trim();
+  if (!a || a.toLowerCase() === productTitle.trim().toLowerCase() || isImportedAlt(a)) return "";
+  return a;
+}
 
 export function toV5(p: PublicProduct, i: number): V5Product {
   const s = p.specs || {};
@@ -255,7 +267,7 @@ export function v5Card(p: V5Product): V5Card {
     sku: p.sku,
     img: p.imgs[0]?.u ?? null,
     img2: p.imgs[1]?.u ?? null,
-    alt: p.model + (p.config ? ", " + p.config : "") + " (photo 1 of " + p.imgs.length + ")",
+    alt: merchantAlt(p.imgs[0]?.a, p.t) || p.model + (p.config ? ", " + p.config : "") + " (photo 1 of " + p.imgs.length + ")",
     chips: p.chips,
     priceText: p.hasOptions ? "From " + fmtPkr(p.fromPricePaisa) : fmtPkr(p.pricePaisa),
     pricePaisa: p.pricePaisa,

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getV5Catalog } from "@/lib/catalog/v5";
+import { merchantAlt } from "@/lib/catalog/v5-model";
 import { COMPARE_LIMIT, parseCompareHandles } from "@/lib/catalog/handles";
 
 export async function GET(request: Request) {
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
     const P = await getV5Catalog();
     const items = requested.flatMap((h) => {
       const p = P.find((x) => x.h === h);
-      return p ? [{ handle: p.h, title: p.t, model: p.model, imageUrl: p.imgs[0]?.u ?? null, imageAlt: p.imgs[0]?.a || p.t }] : [];
+      return p ? [{ handle: p.h, title: p.t, model: p.model, imageUrl: p.imgs[0]?.u ?? null, imageAlt: merchantAlt(p.imgs[0]?.a, p.t) || p.t }] : [];
     });
     return NextResponse.json(
       { items, requested },

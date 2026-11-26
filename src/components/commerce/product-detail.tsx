@@ -27,7 +27,7 @@ import { WhatsAppOrderCta } from "@/components/commerce/whatsapp-order-cta";
 const arrow = { position: "absolute", top: "50%", transform: "translateY(-50%)", width: 46, height: 46, borderRadius: "50%", border: "1px solid var(--lh-border)", background: "rgba(255,255,255,.92)", boxShadow: "0 8px 20px -12px rgba(var(--lh-navy-rgb),.6)", cursor: "pointer", display: "grid", placeItems: "center" } as const;
 
 /** V5 PDP gallery: framed main image, prev/next, counter, swipe, thumbnail strip. */
-export function ProductGallery({ images, model, config }: { images: string[]; model: string; config: string }) {
+export function ProductGallery({ images, alts = [], model, config }: { images: string[]; alts?: string[]; model: string; config: string }) {
   const [gi, setGi] = useState(0);
   const tx = useRef(0);
   const n = images.length;
@@ -45,7 +45,7 @@ export function ProductGallery({ images, model, config }: { images: string[]; mo
         >
           <LHImg
             src={images[i]}
-            alt={`${model}${config ? ", " + config : ""}, photo ${i + 1} of ${n}`}
+            alt={alts[i] || `${model}${config ? ", " + config : ""}, photo ${i + 1} of ${n}`}
             pad="clamp(16px,3vw,40px)"
             blend="multiply"
             eager

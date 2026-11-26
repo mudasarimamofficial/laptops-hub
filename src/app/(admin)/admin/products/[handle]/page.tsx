@@ -24,7 +24,7 @@ export default async function AdminProductEditPage({ params }: Props) {
   const full = await supabase
     .from("products")
     .select(
-      "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, seo_title, seo_description, specs, option_names, product_variants(id, title, sku, barcode, price_paisa, compare_at_paisa, inventory_mode, quantity_on_hand, purchasable, option_values, position, allow_oversell), product_media(id, url, alt, position, approval)",
+      "handle, title, description_safe, status, featured, manufacturer, product_type, category, media_approval, seo_title, seo_description, specs, option_names, product_variants(id, title, sku, barcode, price_paisa, compare_at_paisa, inventory_mode, quantity_on_hand, purchasable, option_values, position, allow_oversell, media_id), product_media(id, url, alt, position, approval, origin, rights_note)",
     )
     .eq("handle", handle)
     .maybeSingle();
@@ -84,9 +84,16 @@ export default async function AdminProductEditPage({ params }: Props) {
     ? ((data as { option_names?: string[] }).option_names as string[])
     : [];
 
+  // Which options (variants) use each image as their picture: such an image cannot be removed until changed.
+  const usedBy = new Map<string, string[]>();
+  for (const v of (data.product_variants as { title?: string | null; media_id?: string | null }[]) || []) {
+    if (v.media_id) usedBy.set(v.media_id, [...(usedBy.get(v.media_id) || []), v.title || "Default"]);
+  }
   const media = (
-    (data.product_media as { id: string; url: string; alt: string; position: number; approval?: string }[]) || []
-  ).sort((a, b) => a.position - b.position);
+    (data.product_media as { id: string; url: string; alt: string; position: number; approval?: string; origin?: string; rights_note?: string | null }[]) || []
+  )
+    .map((m) => ({ ...m, usedByVariants: usedBy.get(m.id) || [] }))
+    .sort((a, b) => a.position - b.position);
 
   return (
     <>
@@ -136,7 +143,12 @@ export default async function AdminProductEditPage({ params }: Props) {
         canSetOversell={staff.role === "owner" || staff.role === "admin"}
       />
 
-      <ProductMediaManager handle={data.handle} initialMedia={media} />
+      <ProductMediaManager
+        handle={data.handle}
+        productTitle={data.title}
+        initialMedia={media}
+        canConfirmRights={staff.role === "owner" || staff.role === "admin"}
+      />
 
       <ProductDangerZone handle={data.handle} title={data.title} status={data.status} />
     </>

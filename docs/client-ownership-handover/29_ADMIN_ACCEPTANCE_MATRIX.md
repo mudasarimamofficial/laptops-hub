@@ -41,7 +41,7 @@ form renders" is never counted as a pass. Production was not written to.
 | Collections (G05, G12) | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ◐ | ✔ | ✔ | R | `p1-collection-modes-g12` (5), `p0-collection-management` (3), `p0-merchant-inventory-collections`, `seo-search-appearance` (collection og:url). Clearing rules brings the picks back. |
 | Inventory desk | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | — | — | ◐ | ✔ | ✔ | R | `p0-merchant-inventory-collections` (receive, count, refuse below zero, history; editor refused), `p1-settings-identity-inventory`. The ledger is history, not undo. |
 | Orders + order detail | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | — | — | ✔ | ✔ | ✔ | R | `launch-journey` (10), `p0-variant-order-journey` (cancel restocks), `z-owner-acceptance` 16–22. Retry result now stays visible (PR #95). |
-| COD cash (G22) | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | — | — | ✔ | ✔ | ✔ | R | `p1-cod-ledger-g22` (3). **Production: reversal/correction wait for migration `20261126140000` (D15).** |
+| COD cash (G22) | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | — | — | ✔ | ✔ | ✔ | R | `p1-cod-ledger-g22` (3). Production: migration applied 2026-11-26 (D15 closed). |
 | Discounts | ✔ | ✔ | ✔ | ✔ | ✔ | ◐ | — | ◐ | ✗ | ◐ | ✔ | R | `p0-admin-discounts-stock` (draft + dated re-save round trip; anonymous refused). Public price effect not asserted in this spec (the live 5% campaign is verified on production pages). |
 | Shipping zones | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | — | — | ◐ | ✔ | ✔ | R | `shipping-zones` (5), `p0-admin-isolation-and-checkout-gates`. Deactivate only; zones cannot be deleted (by design). |
 | Customers | ◐ | — | — | — | — | — | — | — | — | ✗ | C | R | Read-only list: only the access matrix (`admin-mobile-matrix`). |
@@ -78,7 +78,7 @@ form renders" is never counted as a pass. Production was not written to.
 | 3 | Navigation editor has no browser test; no draft/history; stale header ≤60 s (G26, G49) | No spec; `22` §G26/G49 | P2 | Open |
 | 4 | Editors see Publish / Restore / Reset, then get 403 (G28); nav and role mismatches (G27) | `22` | P2 | Open |
 | 5 | Content-page history and restore not live (G19) | Migration pending | P1 | Owner decision D16 |
-| 6 | COD reversal/correction not live (G22) | Migration pending | P1 | Owner decision D15 |
+| 6 | COD reversal/correction not live (G22) | Migration applied 2026-11-26 | P1 | **FIXED, live** |
 | 7 | Compare-at price not shown (G14) | `27` | P1 (design) | Owner decision D18 |
 | 8 | Checkout quote "unserved city" message did not appear once in the 35-min full run | Full baseline 2026-11-26. It passed standalone 3 times. The trace was overwritten, so the cause is not determined. | P3 (test stability) | Watch |
 | 9 | Remaining P2 audit gaps G29, G40, G41, G43–G46 and microcopy outside cart/compare (G48) | `22` | P2 | Open |

@@ -1,6 +1,6 @@
 # 00 — Executive status: client-ownership readiness (2026-11-24)
 
-> **2026-11-26 — superseded by `31_FINAL_MERCHANT_AUTONOMY_CLOSURE_REPORT.md`.** P1: 17 of 20 fixed (G14 needs a design decision; G19 and G22 need owner-approved migrations, D15/D16). G47 cross-site admin writes fixed (PR #96). Admin acceptance per screen: `29`. Runbook and dependencies: `30`. Owner decisions D1–D19: `23`. Status unchanged: **READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED.**
+> **2026-11-26 — superseded by `31_FINAL_MERCHANT_AUTONOMY_CLOSURE_REPORT.md`.** P1: 18 of 20 fixed (G14 needs a design decision; G19 needs its owner-approved migration, D16). G22 migration applied 2026-11-26 with owner approval. G47 cross-site admin writes fixed (PR #96). Admin acceptance per screen: `29`. Runbook and dependencies: `30`. Owner decisions D1–D19: `23`. Status unchanged: **READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED.**
 
 ## 2026-11-25 — post-SEO closure status (read this first)
 

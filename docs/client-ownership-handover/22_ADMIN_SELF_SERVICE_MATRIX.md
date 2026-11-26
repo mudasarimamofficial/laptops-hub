@@ -54,7 +54,7 @@ merged to `main` and deployed to production by Vercel; every fix was first prove
 | G16 Inventory defaults unused | **FIXED (store-wide), live (PR #84)** | Inventory → Low uses the saved threshold (0 keeps the built-in 2, which production stores); Add product follows "tracked by default". Per-variant `low_stock_threshold` is still not read. |
 | G17 Backup restore overwrites `cod_checkout` | **FIXED, live** | PR #84 (COD switch kept; restores work again) and PR #93 (2026-11-26): backup format v3 adds content pages (legal pages keep live text), reel product links and the published homepage theme; newer reel columns restored; notification settings kept live. |
 | G19 Content page history / create / SEO | **PREPARED — code in draft PR #91; production migration `20261126160000` NOT applied** (owner decision G19-DB) | Plan: `26_G19_G22_PRODUCTION_MIGRATION_PLAN.md`. Proven on the isolated stack. |
-| G22 COD collection corrections | **CODE LIVE (PR #90), production migration `20261126140000` NOT applied** (owner decision G22-DB) | Already live: collections are refused on cancelled or returned orders (409), and the collection form has its own note. Until the migration runs, reversal and correction show "available after the pending database update" and the adjust API answers 503. Plan: `26` §G22-4. |
+| G22 COD collection corrections | **FIXED, live** | PR #90 code + migration `20261126140000` applied 2026-11-26 with owner approval (`26` §G22-8): collections refused on cancelled/returned orders, own note, reversal and correction with reason, append-only ledger. |
 | G23 Password change for editor / fulfillment | **FIXED, live (PR #84)** | Admin → *Your account* (every role), linked from the sidebar. |
 | G24 Notifications env-only | **FIXED, live** | PR #92 (2026-11-26): Settings › Notifications (up to 5 staff recipients, customer copy off / test / on — "on" is owner-only, subject and intro wording, inquiry alerts), test-send button, recent delivery list. Falls back to the env address when nothing is saved. |
 | G25 GET-time DB writes outside the write guard | **FIXED, live (PR #84)** | The one-time preset install returns without writing when the Preview→Production guard refuses. Production already has it installed. |
@@ -63,7 +63,7 @@ merged to `main` and deployed to production by Vercel; every fix was first prove
 | G48 / LH-012 Storefront microcopy | **PARTLY FIXED, live** | PR #94 (2026-11-26): theme editor › *Cart & compare* (16 texts for the cart page, cart panel and compare page; draft → publish → rollback). Search, checkout, order pages, reviews, map, inquiry form and content-page labels are still code text. |
 | G47 Cross-site origin checks | **FIXED, live (PR #96)** | One middleware check refuses cross-site POST/PUT/PATCH/DELETE on every `/api/admin/*` route (403 `forbidden_origin`); before, 31 of 42 write APIs relied on SameSite cookies only. |
 
-**Counts now (2026-11-26):** P0: 5 of 5 fixed. P1: 17 fixed; G14 proposal awaiting approval; G19 and G22 waiting on owner-approved production migrations. P2: 21 open, 1 fixed (G47), 2 partly fixed (G42, G48).
+**Counts now (2026-11-26):** P0: 5 of 5 fixed. P1: 18 fixed (G22 migration applied 2026-11-26); G14 proposal awaiting approval; G19 waiting on its owner-approved production migration. P2: 21 open, 1 fixed (G47), 2 partly fixed (G42, G48).
 
 ## 1. Route-by-route matrix
 

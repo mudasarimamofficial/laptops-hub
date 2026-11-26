@@ -15,7 +15,7 @@ PRs in this pass:
 |---|---|---|
 | #88 | G12 collection modes, merchant order, visible errors | live |
 | #89 | G13 product media: alt, primary, rights, upload | live |
-| #90 | G22 COD ledger code (safe before the migration) | live; migration **pending** (D15) |
+| #90 | G22 COD ledger code | live; migration **applied 2026-11-26** with owner approval (`26` §G22-8) |
 | #91 | G19 content-page history, restore, SEO, new pages | **draft**; merge only after migration (D16) |
 | #92 | G24 notification settings, test send, inquiry alerts | live |
 | #93 | G17 backup v3; G18 blog taxonomy | live |
@@ -32,11 +32,11 @@ PRs in this pass:
 | G12, G13, G17, G18, G24 | **fixed, live (this pass)** |
 | G14 compare-at | **proposal only** (`27` + mock), not built (D18) |
 | G19 content pages | **prepared**: draft PR #91 + migration `20261126160000` not applied (D16) |
-| G22 COD corrections | **code live, migration `20261126140000` not applied** (D15). Closed-order refusal is live now. |
+| G22 COD corrections | **fixed, live**: migration `20261126140000` applied 2026-11-26 with owner approval, verified read-only |
 | G47 cross-site admin writes (P2, security) | **fixed** in PR #96 |
 | G42 / G48 | partly fixed |
 
-Counts: P1 has 17 of 20 fixed. Of the other 3, G14 waits for a design decision; G19 and G22 wait for migrations.
+Counts: P1 has 18 of 20 fixed. G14 waits for a design decision; G19 waits for its migration (D16).
 
 ## 3. Theme editor coverage
 
@@ -82,11 +82,10 @@ Production has **0 theme publications**: the storefront shows the frozen V5 defa
 
 | | Migrations |
 |---|---|
-| Applied in production | **43**; ledger aligned since LH-025 (`migration list --linked`, read-only, 2026-11-26) |
-| Pending, on `main` | `20261126140000` (G22), awaits D15 |
+| Applied in production | **44**; ledger aligned (`migration list --linked`, 2026-11-26). `20261126140000` (G22) was applied 2026-11-26 with owner approval. |
 | Pending, on PR #91 branch | `20261126160000` (G19), awaits D16 |
 
-No production database change was made in this pass.
+The only production database change in this pass is the owner-approved G22 migration (`26` §G22-8).
 
 ## 7. Backups
 
@@ -144,7 +143,7 @@ All are in `23`:
 | Accounts and plans | D1 Vercel plan, D2 Supabase backups, D9 transfer and repository visibility, D10 DNS/CRM |
 | Commerce | D3/D17 Shopify-hosted images (G13-M1), D4 one real order, D6 WhatsApp, D7 email account, D8 monitoring |
 | Workstation security | D13 local production keys, D14 leaked-password protection |
-| Migrations | D15 G22 migration, D16 G19 migration then PR #91 |
+| Migrations | D15 G22 migration (**closed 2026-11-26**), D16 G19 migration then PR #91 |
 | Design | D18 G14 compare-at design |
 | Custody | D19 Git history and LH-025 evidence custody |
 
@@ -154,7 +153,7 @@ D19 includes a P12 task only the owner can do: copy `Documents\LaptopsHub-privat
 
 | Area | Readiness |
 |---|---|
-| Engineering for merchant self-service | Ready, except D15, D16 and D18 |
+| Engineering for merchant self-service | Ready, except D16 and D18 |
 | Operating on client-owned accounts | **Not ready** (D1, D2, D9) |
 | Live-commerce certification | **Not done** (D4) |
 

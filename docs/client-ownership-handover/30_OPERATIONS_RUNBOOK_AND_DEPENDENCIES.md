@@ -15,7 +15,7 @@ Nothing here changes production by itself.
 4. Merge. Vercel deploys `main` to production automatically. Smoke-check the public pages afterwards (read-only).
 5. **Database changes are a separate, approved step.** Never `db push` during a merge. Follow
    `docs/LAPTOPS_HUB_MIGRATION_AND_RELEASE_RUNBOOK.md` and the change's own plan (for example `26`).
-   - Run `npx supabase migration list --linked` first. On 2026-11-26 it showed 43 applied, 1 pending (`20261126140000`, D15), and none remote-only.
+   - Run `npx supabase migration list --linked` first. After the G22 migration on 2026-11-26 it shows 44 applied, none pending on `main`, none remote-only.
    - G19's `20261126160000` lives on the PR #91 branch (D16).
 
 **Rollback:**
@@ -77,7 +77,7 @@ Names only; values live in Vercel, never in git.
 | Runtime | Next.js 16.4.5, React 19.3.0 |
 | Libraries | `@supabase/ssr`, `@supabase/supabase-js`, TipTap 3 (rich text), `sanitize-html`, `zod` |
 | Tooling | Playwright, tsx, ESLint, TypeScript, Supabase CLI |
-| Database | 44 migration files on `main`: 43 applied, 1 pending (D15). Isolated stack: `.isolated/` fixtures (git-ignored). |
+| Database | 44 migration files on `main`, all applied (2026-11-26). Isolated stack: `.isolated/` fixtures (git-ignored). |
 
 ## 4. Where things are
 

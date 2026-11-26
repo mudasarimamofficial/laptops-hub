@@ -12,10 +12,10 @@
  */
 import { copyValueProblems, resolveCopy, type CopyField } from "./home-copy";
 
-export type GlobalCopyGroup = "header" | "footer" | "announcement" | "product" | "collection" | "notFound";
+export type GlobalCopyGroup = "header" | "footer" | "announcement" | "product" | "collection" | "notFound" | "cart" | "compare";
 
 /** Editor panel a group is shown in. */
-export type GlobalCopyPanel = "chrome" | "product" | "collection" | "notFound";
+export type GlobalCopyPanel = "chrome" | "product" | "collection" | "notFound" | "cartCompare";
 
 export type GlobalCopyField = CopyField & { group: GlobalCopyGroup };
 
@@ -64,6 +64,23 @@ export const GLOBAL_COPY: GlobalCopyField[] = [
   { group: "notFound", key: "nfProductText", label: "Product not found: message", kind: "text", default: "The link may point to a product that is no longer listed.", max: 200 },
   { group: "notFound", key: "nfButton", label: "Button", kind: "text", default: "Browse all products", max: 40 },
   { group: "notFound", key: "nfButtonHref", label: "Button goes to", kind: "link", default: "/collections/all", max: 500, help: LINK_HELP },
+  // P7 (LH-012/G48): cart page, cart drawer and compare page. Totals, prices and the checkout switch stay in code.
+  { group: "cart", key: "cartTitle", label: "Cart page: heading", kind: "text", default: "Cart", max: 40 },
+  { group: "cart", key: "cartEmptyTitle", label: "Empty cart: message", kind: "text", default: "Your cart is empty", max: 80, help: "Cart page and cart panel." },
+  { group: "cart", key: "cartEmptyButton", label: "Empty cart: button", kind: "text", default: "Browse the catalog", max: 40 },
+  { group: "cart", key: "cartEmptyHref", label: "Empty cart: button goes to", kind: "link", default: "/collections/all", max: 500, help: LINK_HELP },
+  { group: "cart", key: "cartSummaryTitle", label: "Cart page: summary heading", kind: "text", default: "Summary", max: 40 },
+  { group: "cart", key: "cartViewButton", label: "Cart panel: button", kind: "text", default: "View cart", max: 30 },
+  { group: "cart", key: "cartOpenNote", label: "Note while checkout is open (cart page)", kind: "textarea", default: "Prices, delivery and the order total are confirmed at checkout.", max: 160 },
+  { group: "cart", key: "cartClosedNote", label: "Note while checkout is closed (cart page)", kind: "textarea", default: "Online checkout is not open yet. Your cart is saved on this device.", max: 160 },
+  { group: "cart", key: "drawerOpenNote", label: "Note while checkout is open (cart panel)", kind: "text", default: "Prices are confirmed at checkout", max: 80 },
+  { group: "cart", key: "drawerClosedNote", label: "Note while checkout is closed (cart panel)", kind: "text", default: "Online checkout is not open yet", max: 80 },
+  { group: "compare", key: "compareTitle", label: "Compare page: heading", kind: "text", default: "Compare laptops", max: 60 },
+  { group: "compare", key: "compareSub", label: "Compare page: line under the heading", kind: "text", default: "Up to 4 at a time. Highlighted rows differ.", max: 120 },
+  { group: "compare", key: "compareEmptyTitle", label: "Nothing to compare: heading", kind: "text", default: "Nothing to compare yet", max: 80 },
+  { group: "compare", key: "compareEmptyText", label: "Nothing to compare: message", kind: "text", default: "Tap Compare on any laptop card or product page.", max: 160 },
+  { group: "compare", key: "compareEmptyButton", label: "Nothing to compare: button", kind: "text", default: "Browse laptops", max: 40 },
+  { group: "compare", key: "compareEmptyHref", label: "Nothing to compare: button goes to", kind: "link", default: "/collections/all", max: 500, help: LINK_HELP },
 ];
 
 export const GLOBAL_COPY_GROUPS: { id: GlobalCopyGroup; title: string; panel: GlobalCopyPanel }[] = [
@@ -73,6 +90,8 @@ export const GLOBAL_COPY_GROUPS: { id: GlobalCopyGroup; title: string; panel: Gl
   { id: "product", title: "Product page", panel: "product" },
   { id: "collection", title: "Collection & search pages", panel: "collection" },
   { id: "notFound", title: "Not found pages", panel: "notFound" },
+  { id: "cart", title: "Cart", panel: "cartCompare" },
+  { id: "compare", title: "Compare", panel: "cartCompare" },
 ];
 
 /** Editor entries (left list), each showing the groups of its panel. */
@@ -100,6 +119,12 @@ export const GLOBAL_COPY_PANELS: { id: GlobalCopyPanel; title: string; badge: st
     title: "Page not found",
     badge: "Template",
     note: "Shown when a link points to a page or product that does not exist.",
+  },
+  {
+    id: "cartCompare",
+    title: "Cart & compare",
+    badge: "Template",
+    note: "Headings, messages and empty states on the cart page, the cart panel and the compare page. Prices, totals and whether checkout is open are not edited here.",
   },
 ];
 

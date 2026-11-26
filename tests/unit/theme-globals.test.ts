@@ -28,6 +28,25 @@ assert.equal(DEFAULT_THEME_GLOBALS.footerWhatsappLabel, "Chat on WhatsApp");
 assert.equal(DEFAULT_THEME_GLOBALS.announcementCtaLabel, "Shop now");
 assert.equal(DEFAULT_THEME_GLOBALS.announcementHref, "/collections/all");
 assert.equal(new Set(GLOBAL_COPY.map((f) => f.key)).size, GLOBAL_COPY.length, "unique keys");
+// P7: cart page, cart panel and compare page defaults equal the V5 text they replace (byte-identical storefront).
+assert.equal(DEFAULT_THEME_GLOBALS.cartTitle, "Cart");
+assert.equal(DEFAULT_THEME_GLOBALS.cartEmptyTitle, "Your cart is empty");
+assert.equal(DEFAULT_THEME_GLOBALS.cartEmptyButton, "Browse the catalog");
+assert.equal(DEFAULT_THEME_GLOBALS.cartEmptyHref, "/collections/all");
+assert.equal(DEFAULT_THEME_GLOBALS.cartSummaryTitle, "Summary");
+assert.equal(DEFAULT_THEME_GLOBALS.cartViewButton, "View cart");
+assert.equal(DEFAULT_THEME_GLOBALS.cartOpenNote, "Prices, delivery and the order total are confirmed at checkout.");
+assert.equal(DEFAULT_THEME_GLOBALS.cartClosedNote, "Online checkout is not open yet. Your cart is saved on this device.");
+assert.equal(DEFAULT_THEME_GLOBALS.drawerOpenNote, "Prices are confirmed at checkout");
+assert.equal(DEFAULT_THEME_GLOBALS.drawerClosedNote, "Online checkout is not open yet");
+assert.equal(DEFAULT_THEME_GLOBALS.compareTitle, "Compare laptops");
+assert.equal(DEFAULT_THEME_GLOBALS.compareSub, "Up to 4 at a time. Highlighted rows differ.");
+assert.equal(DEFAULT_THEME_GLOBALS.compareEmptyTitle, "Nothing to compare yet");
+assert.equal(DEFAULT_THEME_GLOBALS.compareEmptyText, "Tap Compare on any laptop card or product page.");
+assert.equal(DEFAULT_THEME_GLOBALS.compareEmptyButton, "Browse laptops");
+assert.equal(DEFAULT_THEME_GLOBALS.compareEmptyHref, "/collections/all");
+assert.ok(GLOBAL_COPY_PANELS.some((p) => p.id === "cartCompare"));
+assert.equal(themeGlobals({ cartEmptyHref: "javascript:alert(1)" }).cartEmptyHref, "/collections/all", "unsafe link falls back");
 
 // Reading theme_settings: only a plain `globals` object counts.
 assert.deepEqual(globalsFromThemeSettings(null), {});

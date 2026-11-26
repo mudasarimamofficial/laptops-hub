@@ -1,6 +1,13 @@
 # Resume here
 
-> **2026-11-25 post-SEO closure (Claude Opus 5.5) — read first:** status table at the top of
+> **2026-11-26 LH-025 Option A prepared, NOT executed (Claude Opus 5.5) — read first:** the owner chose Option A but has
+> not authorised any production change. Branch `chore/lh025-option-a-comment-migration-2026-11-26` adds
+> `20261126022136_order_items_discount_column_comments.sql` (2 COMMENT statements only). Do not merge it or run any
+> `--linked` write until the owner approves `docs/client-ownership-handover/24_LH025_OPTION_A_EXECUTION_PLAN.md` §7.
+> Private ledger export (not in git): `C:\Users\mudas\Documents\LaptopsHub-private\lh025-2026-11-26\`. Still open:
+> P1 G12/G13/G14/G19/G22/G24, theme editor Phase 2c+, owner decisions in `23`.
+
+> **2026-11-25 post-SEO closure (Claude Opus 5.5):** status table at the top of
 > `docs/client-ownership-handover/00_EXECUTIVE_STATUS.md`. Live since the SEO launch: LH-018 default hero publish fix
 > (#81), laptop specs editor G04 (#82). Then G05 collections (#83) and PR #84: P1 gaps G11/G15/G16/G17(part)/G23/G25 plus two defects found by the full suite, LH-036 (CMS backups could never be restored) and LH-035 (second reset email dropped). Search: engineering implemented, Google indexing pending: five
 > indexing requests only, dated checks in `seo-search/17_MONITORING_CHECKLIST.md`. Do not re-request indexing without a

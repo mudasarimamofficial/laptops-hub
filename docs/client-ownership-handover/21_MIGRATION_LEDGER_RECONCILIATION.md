@@ -7,6 +7,9 @@
 > `supabase_migrations.schema_migrations` only, but they are still a production change and need explicit owner approval.
 
 - Date: 2026-11-24 · Project: production Supabase (linked CLI) · Supabase CLI 2.108.0
+- **2026-11-26: the owner chose Option A (§6).** The fresh re-check, the verified ledger export, the restore procedure, the
+  rehearsal on a copy of the real ledger and the exact production sequence are in `24_LH025_OPTION_A_EXECUTION_PLAN.md`.
+  The new migration version is `20261126022136` (not the `20261124130000` sketched in §6). Still not executed.
 - Defect: LH-025 in `02_DEFECT_REGISTER_AND_GAPS.md`
 - **Re-checked 2026-11-25 (read-only `npx supabase migration list --linked`): unchanged.** The same four remote-only and
   four repo-only versions; no repair, push or migration has been run. Still awaiting the owner's approval of §7 and the

@@ -96,6 +96,94 @@ followed by `npx supabase migration repair --linked --status reverted 2026112614
 
 ---
 
-## G19 — content-page revisions
+## G19 — content pages: history, restore, SEO, create, address change
 
-In preparation (next section of this document): migration, local rehearsal and exact production plan. Not applied.
+Migration: `supabase/migrations/20261126160000_content_page_revisions.sql` · Code: PR on branch
+`feat/g19-content-revisions-2026-11-26`.
+
+**Order matters, opposite to G22:** the migration is backward compatible with the code now in production, but the
+G19 code needs the migration (saving pages goes through the new database function). So: **apply the migration first,
+then merge the G19 PR.** Until then, keep the PR unmerged.
+
+### G19-1. What it changes
+
+| # | Change | Kind |
+|---|---|---|
+| 1 | `content_pages` + `seo_title`, `seo_description` (≤120/≤320), `version` (default 1), `created_at`, `published_at` | additive columns, defaults only; no existing value changed |
+| 2 | `GRANT SELECT (seo_title, seo_description) ON content_pages TO anon, authenticated` (the table uses column-level grants; the other new columns stay staff-only) | grant |
+| 3 | New `content_page_revisions` (append-only: UPDATE/DELETE refused; `service_role` SELECT + INSERT only; no public access) | additive |
+| 4 | **Backfill:** one `baseline` revision per existing page = its exact current title, body, status and legal approval | insert into the new table only |
+| 5 | New `content_slug_redirects` (public read, staff write) | additive |
+| 6 | New `save_content_page(jsonb)` / `create_content_page(jsonb)`: server-only, staff roles, row lock, version check, legal gate (published policy needs approval; only owner/admin/manager approve; editors never publish policies), policy addresses locked, revision + audit on every save | additive |
+
+**Not changed:** existing page text, status or approvals; the public RLS policy `pages_public_select` (legal gate);
+blog/articles; checkout. Pages that have history cannot be hard-deleted (by design).
+
+### G19-2. Production facts (read-only, 2026-11-26)
+
+13 pages; none of the new tables, columns or functions exist. Body fingerprints (md5) to verify the baseline after
+the migration:
+
+| Page | Status | Legal approved | Body length | md5(body_html) |
+|---|---|---|---|---|
+| privacy | published | yes | 1763 | `c45f8472d8b556866d57bf7cffcc3594` |
+| returns | published | yes | 1640 | `b953dab28f702b44bf514adaacd95dd8` |
+| shipping | published | yes | 1880 | `2df15dc8110ee763840beb050a8df768` |
+| terms | published | yes | 1949 | `f99c70fbef1afd6c10ff3afdb5fb852c` |
+| warranty | published | yes | 1564 | `a749207576f23ec09540d369a7e1ae77` |
+| about | published | — | 591 | `977b8723831c267e1530c2dd73da25ae` |
+| contact | published | — | 373 | `3b8ed8fe577361341a1465d50a8f52f0` |
+| faq | published | — | 708 | `a245ced92b712efe2adef66016dfb154` |
+| comparison-guide, condition-guide, how-to-choose, order-inquiries, why-laptops-hub | pending | — | 0 | (empty) |
+
+### G19-3. Evidence (local isolated stack)
+
+| Test | Result |
+|---|---|
+| `scripts/db-tests/content-revisions-matrix.sql` (rolled back) | **33/33** — first revision per page, create/slug rules, save + SEO, stale version, publish, two renames with redirect chain, taken/policy slugs refused, unpublish, restore as a new version, staff on every revision, legal gate (editor publish/approve refused, approval required, approver stamped), policy address locked, append-only, page delete blocked, grants, Data-API refusal, public policy unchanged |
+| `tests/e2e-isolated/p1-content-revisions-g19.spec.ts` | 3/3 — create (bad address refused), write, search fields, publish → page, `<title>`, description, canonical, sitemap; address change → 308 + sitemap; compare; restore; stale save 409; editor/fulfillment limits; policy addresses locked |
+| Old code against the migrated database (content pages, SEO, reels/blog, backup/restore) | 21/21 — proves "migration first" is safe |
+| New code regression (content pages, SEO, blog, prehydration, backup/COD gate, owner acceptance 36 steps, admin mobile matrix, launch journey) | 54/54 |
+| `scripts/security-role-http-isolated.mjs` | 126/126 (helper now sends the page version) |
+| `scripts/test-cms-publish-stress.mjs` (20 cycles × 3) | 120/120 consistent views |
+| Migration applied 3× locally | idempotent |
+
+### G19-4. Execution steps (only after approval)
+
+1. `npx supabase migration list --linked` → pending must be exactly `20261126160000` (G22 `20261126140000` either
+   already applied or explicitly approved in the same session). Otherwise stop.
+2. Pre-check (read-only): the md5 table above unchanged; the new objects absent.
+3. `npx supabase db push --linked`.
+4. Post-checks (read-only):
+   - 13 `baseline` revisions; for each page, the baseline md5 equals the table above;
+   - `has_table_privilege('anon', 'public.content_page_revisions', 'SELECT')` = false;
+   - anon can select `seo_title` but not `version`;
+   - the five policies are still public (`/pages/privacy` etc. answer 200 with unchanged text), and the pending pages
+     still answer 404.
+5. Merge the G19 PR (CI green), wait for the deploy, and run a read-only smoke: the admin content page shows
+   "version 1" and "Show history"; the public pages are unchanged. **No page is edited in production as a test.**
+6. Record the execution here.
+
+### G19-5. Rollback
+
+Before the code is merged: drop the new objects (data in the new tables is history only).
+
+```sql
+DROP FUNCTION IF EXISTS public.save_content_page(jsonb);
+DROP FUNCTION IF EXISTS public.create_content_page(jsonb);
+DROP TABLE IF EXISTS public.content_slug_redirects;
+DROP TABLE IF EXISTS public.content_page_revisions;   -- triggers go with it
+DROP FUNCTION IF EXISTS public.content_revisions_append_only();
+REVOKE SELECT (seo_title, seo_description) ON public.content_pages FROM anon, authenticated;
+ALTER TABLE public.content_pages DROP CONSTRAINT IF EXISTS content_pages_seo_lengths,
+  DROP COLUMN IF EXISTS seo_title, DROP COLUMN IF EXISTS seo_description, DROP COLUMN IF EXISTS version,
+  DROP COLUMN IF EXISTS created_at, DROP COLUMN IF EXISTS published_at;
+```
+
+then `npx supabase migration repair --linked --status reverted 20261126160000`. After the code is merged, revert the
+PR first (the old code works with or without the migration), then roll back if still needed. Once merchants have
+saved pages with history, prefer keeping the tables: the revisions are the only record of earlier wording.
+
+### G19-6. Decision needed
+
+`G19-DB`: approve applying `20261126160000` to production as in G19-4, then merging the G19 PR.

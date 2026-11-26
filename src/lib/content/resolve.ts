@@ -20,6 +20,8 @@ export type ResolvedContent = {
   preview: boolean;
   /** Guides only: search/social fields and dates from Admin → Blog (empty strings = not set). */
   article?: ArticleSeo;
+  /** Pages only (G19): search title/description from Admin → Content; empty = use the title and intro. */
+  seo?: { title: string; description: string };
 };
 
 export type ArticleSeo = {

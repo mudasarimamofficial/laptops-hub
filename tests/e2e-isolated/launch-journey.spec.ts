@@ -229,6 +229,10 @@ test.describe.serial("launch journeys (isolated)", () => {
     await expect(page.getByTestId("notification-status")).toHaveText("failed");
     await page.getByRole("button", { name: "Retry sending" }).click();
     await expect(page.getByText(/Accepted 1 · failed 0/)).toBeVisible({ timeout: 15_000 });
+    // After the list refreshes to "accepted" the button goes away, but the result line stays for staff to read.
+    await expect(page.getByTestId("notification-status")).toHaveText("accepted", { timeout: 15_000 });
+    await expect(page.getByRole("button", { name: "Retry sending" })).toHaveCount(0);
+    await expect(page.getByText(/Accepted 1 · failed 0/)).toBeVisible();
     const rows = await outboxFor(n);
     expect(rows[0]).toMatchObject({ status: "accepted", attempts: 2 });
     const log = await fakeLog();

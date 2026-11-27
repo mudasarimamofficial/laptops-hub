@@ -43,6 +43,9 @@ const NAV_LINKS: { id?: string; label: string; href: string; isNew?: boolean }[]
  * Special header links are recognised by their navigation id (Admin → Navigation keeps ids when a link is renamed),
  * falling back to the V5 label for links saved without an id. Renaming "Support" to "Help" keeps its behaviour.
  */
+/** Mobile drawer accordion key for the Admin → Navigation header links (cannot clash with a catalogue group title). */
+const QUICK_LINKS = "__lh-quick-links__";
+
 function navRole(l: { id?: string; label: string }): "guides" | "support" | null {
   if (l.id === "h-guides" || (!l.id && l.label === "Guides")) return "guides";
   if (l.id === "h-support" || (!l.id && l.label === "Support")) return "support";
@@ -168,6 +171,11 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
     (navRole(l) === "guides" && pathname.startsWith("/guides")) ||
     (navRole(l) === "support" && pathname.startsWith("/pages/"));
   const gc = chrome.globals ?? DEFAULT_THEME_GLOBALS;
+  // Admin → Navigation header links (already filtered to public pages). An intentionally empty saved menu stays empty;
+  // the V5 list is used only when no navigation was passed at all.
+  const headerLinks = (chrome.navLinks ?? NAV_LINKS)
+    .filter((n) => navRole(n) !== "guides" || chrome.guidesPublic)
+    .map((n) => (navRole(n) === "support" && n.href === "/pages/faq" && chrome.supportHref ? { ...n, href: chrome.supportHref } : n));
   const feat = chrome.megaFeat;
 
   return (
@@ -219,7 +227,10 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
           <Link href="/" aria-label="Laptops HUB home" style={{ display: "flex", alignItems: "center", gap: 7, color: "var(--lh-ink)", textDecoration: "none", flexShrink: 0 }}>
             <Wordmark size={21} />
           </Link>
-          <nav aria-label="Primary" className="v5-d-only" style={{ display: "flex", alignItems: "center", gap: 2, height: "100%" }}>
+          {/* A merchant menu wider than the row is cut at its end instead of pushing search, compare and cart off the screen
+              (Admin → Navigation warns before publishing such a menu). The tiny flexShrink keeps the V5 priority: the search
+              box narrows to its icon first; only then do the links give way. */}
+          <nav aria-label="Primary" className="v5-d-only" style={{ display: "flex", alignItems: "center", gap: 2, height: "100%", minWidth: 0, overflow: "hidden", flexShrink: 0.001 }}>
             <button
               type="button"
               className="v5-hov-ice"
@@ -251,19 +262,17 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
                 <path d="M6 9l6 6 6-6" />
               </svg>
             </button>
-            {((chrome.navLinks && chrome.navLinks.length > 0 ? chrome.navLinks : NAV_LINKS))
-              .filter((n) => navRole(n) !== "guides" || chrome.guidesPublic)
-              .map((n) => (navRole(n) === "support" && chrome.supportHref ? { ...n, href: chrome.supportHref } : n))
-              .map((l) => {
+            {headerLinks.map((l, i) => {
               const cur = isCur(l);
               return (
                 <Link
-                  key={l.href}
+                  key={(l.id ?? l.href) + ":" + i}
                   href={l.href}
                   aria-current={cur ? "page" : undefined}
                   onMouseEnter={closeMega}
+                  data-testid="header-nav-link"
                   className="v5-wide-only v5-hov-ice"
-                  style={{ height: 40, padding: "0 12px", borderRadius: 10, fontSize: 15, fontWeight: 500, color: "var(--lh-ink)", background: cur ? "var(--lh-ice)" : "transparent", alignItems: "center", gap: 7, transition: "background .2s ease,color .2s ease" }}
+                  style={{ height: 40, padding: "0 12px", borderRadius: 10, fontSize: 15, fontWeight: 500, color: "var(--lh-ink)", background: cur ? "var(--lh-ice)" : "transparent", alignItems: "center", gap: 7, whiteSpace: "nowrap", flexShrink: 0, transition: "background .2s ease,color .2s ease" }}
                 >
                   {l.label}
                   {l.isNew ? (
@@ -519,6 +528,31 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
                 </div>
               );
             })}
+            {headerLinks.length ? (
+              <div style={{ borderBottom: "1px solid var(--lh-border)" }} data-testid="mnav-quick-links">
+                <button
+                  type="button"
+                  onClick={() => setMgroup((m) => (m === QUICK_LINKS ? null : QUICK_LINKS))}
+                  aria-expanded={mgroup === QUICK_LINKS}
+                  style={{ width: "100%", height: 56, padding: "0 16px", border: 0, background: "transparent", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 16, fontWeight: 600, color: "var(--lh-ink)", cursor: "pointer" }}
+                >
+                  Quick links
+                  <span style={{ fontSize: 20, fontWeight: 400, color: "var(--lh-action)" }}>{mgroup === QUICK_LINKS ? "−" : "+"}</span>
+                </button>
+                {mgroup === QUICK_LINKS ? (
+                  <div style={{ display: "flex", flexDirection: "column", padding: "0 16px 12px" }}>
+                    {headerLinks.map((l, i) => (
+                      <Link key={(l.id ?? l.href) + ":" + i} href={l.href} data-testid="mnav-quick-link" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "12px 0", fontSize: 15, color: "var(--lh-ink)" }}>
+                        {l.label}
+                        {l.isNew ? (
+                          <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: ".1em", padding: "4px 8px", borderRadius: 999, background: "var(--lh-ice)", color: "var(--lh-action-hover)" }}>NEW</span>
+                        ) : null}
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
             <Link href="/compare" style={{ padding: 16, fontSize: 16, fontWeight: 600, color: "var(--lh-ink)", borderBottom: "1px solid var(--lh-border)" }}>
               <span>Compare ({compareCount})</span>
             </Link>

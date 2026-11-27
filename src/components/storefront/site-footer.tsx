@@ -94,7 +94,8 @@ export function SiteFooter({
   /** Published site-wide copy (theme editor → Header & footer). */
   globals?: ThemeGlobals;
 }) {
-  const source = footerCols && footerCols.length > 0 ? footerCols : FOOTER_COLS;
+  // An intentionally empty saved footer stays empty; the V5 columns are used only when none were passed.
+  const source = footerCols ?? FOOTER_COLS;
   const cols = source.map((c) => ({ ...c, links: publicLinks(c.links, vis) })).filter((c) => c.links.length > 0);
   const phones = enabledPhones(contact);
   const social = enabledSocial(contact);
@@ -171,11 +172,11 @@ export function SiteFooter({
           ) : null}
         </div>
 
-        {cols.slice(0, 3).map((col) => (
-          <div key={col.title} style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+        {cols.slice(0, 3).map((col, ci) => (
+          <div key={("id" in col && col.id ? col.id : col.title) + ":" + ci} data-testid="footer-nav-column" style={{ display: "flex", flexDirection: "column", gap: 11 }}>
             <span style={monoLabel}>{col.title}</span>
-            {col.links.map((l) => (
-              <Link key={l.href} href={l.href} className="v5-hov-electric-text" style={{ fontSize: 14, color: "var(--lh-on-dark-2)" }}>
+            {col.links.map((l, li) => (
+              <Link key={("id" in l && l.id ? l.id : l.href) + ":" + li} href={l.href} className="v5-hov-electric-text" style={{ fontSize: 14, color: "var(--lh-on-dark-2)" }}>
                 {l.label}
               </Link>
             ))}
@@ -258,11 +259,11 @@ export function SiteFooter({
             gap: 24,
           }}
         >
-          {cols.slice(3).map((col) => (
-            <div key={col.title} style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+          {cols.slice(3).map((col, ci) => (
+            <div key={("id" in col && col.id ? col.id : col.title) + ":" + ci} data-testid="footer-nav-column" style={{ display: "flex", flexDirection: "column", gap: 11 }}>
               <span style={monoLabel}>{col.title}</span>
-              {col.links.map((l) => (
-                <Link key={l.href} href={l.href} className="v5-hov-electric-text" style={{ fontSize: 14, color: "var(--lh-on-dark-2)" }}>
+              {col.links.map((l, li) => (
+                <Link key={("id" in l && l.id ? l.id : l.href) + ":" + li} href={l.href} className="v5-hov-electric-text" style={{ fontSize: 14, color: "var(--lh-on-dark-2)" }}>
                   {l.label}
                 </Link>
               ))}

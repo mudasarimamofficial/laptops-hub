@@ -34,7 +34,9 @@ export function WhatsAppFloat({ settings }: { settings: WhatsAppSettings }) {
       rel="noopener noreferrer"
       data-testid="whatsapp-float"
       aria-label={`${label} — opens in a new tab`}
-      className="v5-hov-bright"
+      // Size and shape live in v5.css (.lh-wa-float): a pill with its label on wide screens, a 56px circle on phones.
+      className="v5-hov-bright lh-wa-float"
+      data-labelled={settings.widgetLabel ? "true" : "false"}
       style={{
         position: "fixed",
         right: "max(1rem, env(safe-area-inset-right))",
@@ -42,10 +44,6 @@ export function WhatsAppFloat({ settings }: { settings: WhatsAppSettings }) {
         zIndex: 35,
         display: "inline-flex",
         alignItems: "center",
-        gap: 10,
-        minHeight: 52,
-        padding: settings.widgetLabel ? "0 16px 0 12px" : 0,
-        width: settings.widgetLabel ? "auto" : 52,
         justifyContent: "center",
         borderRadius: 999,
         // WhatsApp dark green: white text needs ≥4.5:1 (WCAG AA); #25D366 was 1.98:1, #075E54 is 7.67:1 (LH-026).
@@ -59,6 +57,7 @@ export function WhatsAppFloat({ settings }: { settings: WhatsAppSettings }) {
       }}
     >
       <span
+        className="lh-wa-icon"
         style={{
           width: 40,
           height: 40,

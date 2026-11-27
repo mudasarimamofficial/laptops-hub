@@ -159,9 +159,15 @@ export function CinematicHero({ totalCount, chromebookCount, laptopCount, accCou
         flexDirection: "column",
       }}
     >
-      <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: -5, background: "radial-gradient(42% 58% at 72% 60%,rgba(33,89,212,.17),rgba(33,89,212,0) 70%),radial-gradient(26% 32% at 80% 26%,rgba(28,185,232,.12),transparent 70%),linear-gradient(180deg,rgba(255,255,255,0) 72%,rgba(223,234,247,.95) 100%),linear-gradient(118deg,#F6F9FE 0%,#FFFFFF 34%,#E4EDF8 50%,#F8FBFF 58%,#EAF2FC 100%)" }} />
-      <div aria-hidden="true" style={{ position: "absolute", right: "-6%", top: "-30%", width: "60%", height: "160%", zIndex: -4, background: "linear-gradient(100deg,transparent 0%,rgba(255,255,255,.85) 46%,transparent 54%)", transform: "rotate(8deg) translate3d(calc(var(--mx) * -20px),0,0)" }} />
-      <div aria-hidden="true" style={{ position: "absolute", inset: -40, zIndex: -5, backgroundImage: "radial-gradient(rgba(var(--lh-action-rgb),.2) 1px,transparent 1.4px)", backgroundSize: "26px 26px", WebkitMaskImage: "radial-gradient(48% 55% at 72% 50%,#000,transparent 78%)", maskImage: "radial-gradient(48% 55% at 72% 50%,#000,transparent 78%)", transform: "translate3d(calc(var(--mx) * -8px),calc(var(--hp) * 70px),0)" }} />
+      {/* Decorative layers, clipped to the hero. The section stays unclipped during the intro (LCP), but these layers
+          reach above it (sweep top:-30%, dot grid inset:-40px) and, before the section isolates, paint over the promotion
+          bar: a pale streak at the top right until the intro ends or the page scrolls (VIS-002, 2026-11-27). The clip
+          equals the section's own clip after the intro, so the resting look is unchanged. Stacking order inside is kept. */}
+      <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: -5, overflow: "hidden", pointerEvents: "none" }}>
+        <div aria-hidden="true" style={{ position: "absolute", inset: 0, zIndex: -5, background: "radial-gradient(42% 58% at 72% 60%,rgba(33,89,212,.17),rgba(33,89,212,0) 70%),radial-gradient(26% 32% at 80% 26%,rgba(28,185,232,.12),transparent 70%),linear-gradient(180deg,rgba(255,255,255,0) 72%,rgba(223,234,247,.95) 100%),linear-gradient(118deg,#F6F9FE 0%,#FFFFFF 34%,#E4EDF8 50%,#F8FBFF 58%,#EAF2FC 100%)" }} />
+        <div aria-hidden="true" style={{ position: "absolute", right: "-6%", top: "-30%", width: "60%", height: "160%", zIndex: -4, background: "linear-gradient(100deg,transparent 0%,rgba(255,255,255,.85) 46%,transparent 54%)", transform: "rotate(8deg) translate3d(calc(var(--mx) * -20px),0,0)" }} />
+        <div aria-hidden="true" style={{ position: "absolute", inset: -40, zIndex: -5, backgroundImage: "radial-gradient(rgba(var(--lh-action-rgb),.2) 1px,transparent 1.4px)", backgroundSize: "26px 26px", WebkitMaskImage: "radial-gradient(48% 55% at 72% 50%,#000,transparent 78%)", maskImage: "radial-gradient(48% 55% at 72% 50%,#000,transparent 78%)", transform: "translate3d(calc(var(--mx) * -8px),calc(var(--hp) * 70px),0)" }} />
+      </div>
       <div aria-hidden="true" style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: "60%", zIndex: 4, pointerEvents: "none", background: "linear-gradient(100deg,transparent 0%,rgba(255,255,255,.55) 48%,transparent 62%)", transform: sweepT, transition: `transform calc(var(--dd) * 1.9s) ${ease} calc(var(--dd) * 0.35s)` }} />
       <div className="v5-hero-grid" style={{ flex: 1, width: "100%", maxWidth: 1440, margin: "0 auto", display: "grid", gap: "clamp(8px,2vw,32px)", alignItems: "center" }}>
         <div

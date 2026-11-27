@@ -161,3 +161,55 @@ for (const [name, url] of ROUTES) {
     expect(uniq, `${name}: responsive/overlay findings`).toEqual([]);
   });
 }
+
+/**
+ * VIS-008: scroll continuity on the homepage. Stepping through the whole page by half a screen, every position shows
+ * real content (text, images, controls) below the header: no blank screens. The pinned product story is a sticky
+ * stage inside a taller runway; it looks like empty space in a stitched full-page screenshot, but a visitor always sees
+ * the stage, which this measures.
+ */
+for (const vp of [
+  { width: 390, height: 844 },
+  { width: 1366, height: 768 },
+  { width: 1918, height: 542 },
+]) {
+  test(`scroll continuity: home ${vp.width}×${vp.height} has no blank screens`, async ({ page }) => {
+    test.setTimeout(240_000);
+    await page.setViewportSize(vp);
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await expect.poll(() => page.evaluate(() => !!document.querySelector("main")), { timeout: 20_000 }).toBe(true);
+    const blanks = await page.evaluate(async () => {
+      const out: { y: number; pct: number; painted: number }[] = [];
+      const H = document.documentElement.scrollHeight;
+      for (let y = 0; y <= H - innerHeight; y += Math.round(innerHeight / 2)) {
+        scrollTo(0, y);
+        await new Promise((r) => setTimeout(r, 220));
+        const hb = Math.max(0, document.querySelector("header.lh-site-header")?.getBoundingClientRect().bottom ?? 0);
+        let filled = 0;
+        let total = 0;
+        for (let yy = hb + 10; yy < innerHeight - 5; yy += 30)
+          for (let x = 10; x < innerWidth; x += 40) {
+            total++;
+            const el = document.elementFromPoint(x, yy);
+            if (el?.closest("h1,h2,h3,h4,p,a,button,img,picture,svg,li,figure,iframe,input,label,textarea,select")) filled++;
+          }
+        const pct = Math.round((100 * filled) / Math.max(1, total));
+        // Blank = no heading, text, image or control actually painted below the header. (Section boundaries on very
+        // short windows legitimately show only a heading and some spacing; that is not a blank screen.)
+        const painted = [...document.querySelectorAll<HTMLElement>("main h1, main h2, main h3, main p, main img, main a, main button, footer a, footer p")].filter((e) => {
+          const b = e.getBoundingClientRect();
+          if (b.height < 4 || b.width < 4 || b.bottom <= hb || b.top >= innerHeight) return false;
+          const cs = getComputedStyle(e);
+          if (cs.visibility === "hidden" || +cs.opacity < 0.05) return false;
+          const cy = Math.min(Math.max(b.top + b.height / 2, hb + 1), innerHeight - 1);
+          const hit = document.elementFromPoint(Math.min(Math.max(b.left + b.width / 2, 1), innerWidth - 1), cy);
+          return !!hit && (hit === e || e.contains(hit));
+        }).length;
+        // Both measures must agree it is empty: little content under the sample grid AND no listed element painted.
+        if (painted === 0 && pct < 12) out.push({ y, pct, painted });
+      }
+      return out;
+    });
+    expect(blanks, "scroll positions where nothing is on screen").toEqual([]);
+  });
+}

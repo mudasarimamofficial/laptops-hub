@@ -221,6 +221,27 @@ happens anyway, record it: the next save after the merge creates a revision of t
 | 6. RPC review | `save_content_page` / `create_content_page`: SECURITY DEFINER, `search_path=public`, EXECUTE revoked from public/anon/authenticated and granted to service_role only, plus an `auth.role()` service-role check; actor must be an active owner/admin/manager/editor; row lock + expected version; legal slugs cannot be renamed or taken; published policy needs legal approval; editors can never publish a policy or change approval. The G17 backup restore (merged in #93) sends exactly the payload keys this function reads (`action: "restore"`) and skips policy pages. |
 | 9. Scope | one file; no other migration; data change limited to inserting 13 baseline revision rows (new table) and new-column defaults |
 
+### G19-8. Code evidence on the isolated stack (2026-11-27)
+
+| Run | Code | Result |
+|---|---|---|
+| Old code against the migrated database (what production runs between steps 3 and 5) | `main` @ `e6cb967` | **25/25** — `content-pages`, `prehydration`, `seo-search-appearance`, `p1-backup-v3-blog-taxonomy-g17-g18`, `p1-backup-restore-cod-gate`, `mobile-nav-reels-a11y` |
+| G19 branch merged with current `main` (after #92–#98; only conflict was the `test:unit` list in package.json, both lists kept) | `ebe6f07` | typecheck clean; `npm run test:unit` green (includes `content-text-diff`) |
+| New code: G19 spec + regression | `ebe6f07` | **34/34** — `p1-content-revisions-g19` (3), `content-pages`, `seo-search-appearance`, `prehydration`, `p1-backup-v3-blog-taxonomy-g17-g18`, `p1-backup-restore-cod-gate`, `launch-journey`, `p1-admin-cross-site-g47` |
+| `scripts/security-role-http-isolated.mjs` | `ebe6f07` | **126/126** |
+
+No legal page was published or rewritten in production for any of this; the tests write only to the local database.
+
+### G19-9. Exact production commands (for owner approval — not executed)
+
+Run from a checkout of the G19 branch (it is the only one containing the migration file), linked to `xvmmjkrkgznnakcobmww`:
+
+1. `npx supabase migration list --linked` — stop unless the only local-only row is `20261126160000`.
+2. Pre-check (read-only): `npx supabase db query --linked -o json "select slug, status, legal_approved, length(body_html) len, md5(body_html) from content_pages order by slug"` — must equal G19-2.
+3. **The production write:** `npx supabase db push --linked`
+4. Post-checks (read-only), G19-4 step 4.
+5. Mark PR #91 ready, CI green, `gh pr merge 91 --merge`, wait for Vercel READY, read-only smoke (G19-4 step 5). No content edits between 3 and 5 (G19-4a).
+
 ### G19-6. Decision needed
 
 `G19-DB`: approve applying `20261126160000` to production as in G19-4, then merging the G19 PR.

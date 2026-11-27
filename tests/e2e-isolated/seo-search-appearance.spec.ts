@@ -110,7 +110,11 @@ test.describe.serial("SEO search appearance (isolated)", () => {
   test("/compare is noindex and absent from the sitemap; sitemap lists canonical public URLs", async ({ request }) => {
     const c = await html(request, "/compare");
     expect(meta(c, "name", "robots")).toBe("noindex, follow");
-    const sm = await (await request.get("/sitemap.xml")).text();
+    // The visitor's own cart is private to their browser too (was "index, follow" with no title, 2026-11-27).
+    const cart = await html(request, "/cart");
+    expect(meta(cart, "name", "robots")).toBe("noindex, follow");
+    expect(cart).toMatch(/<title>Cart · /);
+    const sm =await (await request.get("/sitemap.xml")).text();
     const locs = [...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
     expect(locs).toContain(`${ORIGIN}/`);
     expect(locs.some((u) => u.includes("/compare"))).toBe(false);

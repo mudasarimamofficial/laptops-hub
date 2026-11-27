@@ -8,6 +8,12 @@ const MAX = 4;
 
 type State = { handles: string[] };
 
+/** What the server rendered (nothing compared). Constant for hydration; see getCartServerSnapshot in cart-store. */
+const SERVER_SNAPSHOT: State = { handles: [] };
+export function getCompareServerSnapshot(): State {
+  return SERVER_SNAPSHOT;
+}
+
 let memory: State = { handles: [] };
 /** Raw localStorage value behind `memory`; getSnapshot must return a stable reference while it is unchanged. */
 let memoryRaw: string | null = null;
@@ -46,7 +52,7 @@ export function useCompare<T>(selector: (s: State & CompareActions) => T): T {
       return () => listeners.delete(cb);
     },
     read,
-    () => memory,
+    getCompareServerSnapshot,
   );
 
   const actions: CompareActions = {

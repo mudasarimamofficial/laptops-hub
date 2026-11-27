@@ -9,6 +9,17 @@ const KEY = "lh-cart-v1";
 
 type CartState = { lines: CartLine[] };
 
+/**
+ * What the server rendered (no cart: localStorage is client-only). Hydration must see exactly this, so it is a
+ * constant, never `memory`: once any component has read localStorage, `memory` holds the real cart, and a
+ * <Suspense> boundary that hydrates later (checkout) would otherwise hydrate with it → React #418 and the form is
+ * re-created, dropping what the customer typed.
+ */
+const SERVER_SNAPSHOT: CartState = { lines: [] };
+export function getCartServerSnapshot(): CartState {
+  return SERVER_SNAPSHOT;
+}
+
 let memory: CartState = { lines: [] };
 /** Raw localStorage value behind `memory`; getSnapshot must return a stable reference while it is unchanged. */
 let memoryRaw: string | null = null;
@@ -48,7 +59,7 @@ export function useCart<T>(selector: (s: CartState & CartActions) => T): T {
       return () => listeners.delete(cb);
     },
     read,
-    () => memory,
+    getCartServerSnapshot,
   );
 
   const actions: CartActions = {

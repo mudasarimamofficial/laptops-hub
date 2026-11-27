@@ -5,7 +5,7 @@ Infrastructure ownership (D1, D2, D9) and one verified real order (D4) are still
 
 > **2026-11-27 addendum — acceptance-matrix closure:** see `32_ACCEPTANCE_CLOSURE_2026-11-27.md`.
 > - **Live:** #99 navigation G26/G49, #100 import safety + import/SEO E2E, #101 role UX G27/G28, #102 checkout quote race (the "flaky" check was a real bug), #103 activity search, #104 G41/G45 accuracy. #105 adds a discount propagation E2E (test only).
-> - **Pending owner approval:** G19 migration `20261126160000` then PR #91. The preflight is complete; the command was presented and **not executed**.
+> - **G19:** the owner approved it in chat; migration `20261126160000` was applied and PR #91 merged (`365a0a1`). Record: `26` §G19-10.
 > - **Separate states:**
 >   - engineering: the priority list is done or documented;
 >   - merchant acceptance: **not done** (the owner walkthrough in `32` §5);

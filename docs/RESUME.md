@@ -2,7 +2,7 @@
 
 > **2026-11-27 acceptance-matrix closure (Claude Opus 5.5) — read first:** `docs/client-ownership-handover/32_ACCEPTANCE_CLOSURE_2026-11-27.md`.
 > - **Live:** #99 (navigation G26/G49), #100 (import safety, import/SEO E2E), #101 (role UX G27/G28), #102 (checkout quote race fix), #103 (activity search), #104 (G41/G45 admin accuracy). #105 is the discount propagation E2E (test only).
-> - **G19:** preflight complete (`26` §G19-7 to §G19-9 on the PR #91 branch). **Do not run `db push --linked` until the owner authorises it in chat.** Then follow the release order in `32` §4.
+> - **G19 LIVE 2026-11-27:** the owner authorised it in chat; migration `20261126160000` was applied and PR #91 merged (`365a0a1`), with the Vercel deploy succeeding. All 13 baseline revisions equal the live text, and the public pages are unchanged. Record: `26` §G19-10. **Production ledger: no pending migrations.** Any future migration still needs owner approval.
 > - **Still open:**
 >   - the owner walkthrough of 14 operations (`32` §5);
 >   - theme controls not built (`32` §6: no migration needed; colour and typography conflict with the frozen V5 design);

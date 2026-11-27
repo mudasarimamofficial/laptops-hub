@@ -232,7 +232,7 @@ happens anyway, record it: the next save after the merge creates a revision of t
 
 No legal page was published or rewritten in production for any of this; the tests write only to the local database.
 
-### G19-9. Exact production commands (for owner approval — not executed)
+### G19-9. Exact production commands (approved and executed 2026-11-27, record in G19-10)
 
 Run from a checkout of the G19 branch (it is the only one containing the migration file), linked to `xvmmjkrkgznnakcobmww`:
 
@@ -244,4 +244,27 @@ Run from a checkout of the G19 branch (it is the only one containing the migrati
 
 ### G19-6. Decision needed
 
-`G19-DB`: approve applying `20261126160000` to production as in G19-4, then merging the G19 PR.
+`G19-DB`: approve applying `20261126160000` to production as in G19-4, then merging the G19 PR. **Approved by the owner in chat on 2026-11-27 ("Authorise G19"); executed (G19-10).**
+
+### G19-10. Execution record (2026-11-27, owner-approved)
+
+**Before the production step:** PR #91 conflicted with main after #99–#105. Main was merged into the branch (`3e54bc4`); the only conflict was the `test:unit` list in `package.json` (both kept). On the merged code:
+- `tsc` and `eslint` clean; `npm run test:unit` passes;
+- isolated stack 31/31 (`p1-content-revisions-g19`, `content-pages`, backup v3, navigation, role UX, activity, admin accuracy, import/SEO, quote race, discount propagation);
+- role HTTP 126/126;
+- PR CI `quality` green.
+
+| Step | Time (UTC) | Result |
+|---|---|---|
+| 1. `migration list --linked` | before 10:52 | 45 rows; the only local-only row was `20261126160000` |
+| 2. Pre-check (read-only) | before 10:52 | 13 pages, **0 differences** from G19-2. New table and columns absent. Public text fingerprints of 9 pages recorded (7 × 200, 2 pending × 404). |
+| Dry run | before 10:52 | "Would push: 20261126160000_content_page_revisions.sql" only |
+| 3. `db push --linked` | 10:52:36 (first revision saved) | Applied. The CLI also printed errors from its optional pg-delta step (missing local CA file); these did not affect the push. Verified: ledger row recorded; table present; `version` and `seo_title` columns present. |
+| 4. Post-checks | 10:53–10:54 | 13 `baseline` revisions, one per page, each `v1` and identical (md5) to the live body and to G19-2. `anon`: revisions SELECT false, `version` false, `seo_title` true. `authenticated` revisions SELECT false. Public text of the 9 pages unchanged (old code still live). |
+| 5. PR #91 ready + merged | 10:55:16 | Merge commit `365a0a1` |
+| Vercel production | 10:57:57 | `AAA71VDtgNrrRneV7dybhy4VPK7X` success. Release window (step 3 → deploy) about 5 min. |
+| Live check (read-only) | 10:58–11:00 | Public text of the 9 pages identical to the pre-check. `/`, `/guides` and `/sitemap.xml` 200; pending pages 404 and absent from the sitemap; `/admin/content` 307 to sign-in. **No page changed version during the window** (13 revisions, all pages `v1`). |
+
+**Not done by engineering:** signing in to the production admin to view "version 1" and "Show history". That is the owner's UI acceptance (step 8), done without editing any policy text.
+
+**Rollback:** see G19-5. Export the revisions first. Nothing was edited, so there is nothing to roll back today.

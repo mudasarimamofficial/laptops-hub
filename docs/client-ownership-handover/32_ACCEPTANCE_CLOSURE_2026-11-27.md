@@ -27,7 +27,7 @@ in this pass.
 | #103 | Activity log search and filters | `e10889f` | `2q8pWKZm62KTNFRDLENe657twkqU` success |
 | #104 | G41/G45 admin accuracy (COD text, Help, media wording) | `7f8defb` | `BpwGdL71c38sYn1eBaZo1d64mvUo` success |
 | #105 | Test only: discount propagation E2E | `ed327db` | test-only (no app change) |
-| #91 | G19 content-page history/restore/SEO | **draft**, head `dc9fea42` | waits for migration approval (§4) |
+| #91 | G19 content-page history/restore/SEO (after migration, owner-approved) | `365a0a1` | `AAA71VDtgNrrRneV7dybhy4VPK7X` success |
 
 Production read-only smoke after the merges:
 - `/`, `/cart`, `/guides`, `/sitemap.xml` and `/pages/privacy` all return 200.
@@ -52,14 +52,14 @@ Production read-only smoke after the merges:
 
 ## 4. Migrations and approvals
 
-**Production migrations applied** (all with owner approval, earlier passes): LH-025 ledger repair (`20261126022136`), G22 (`20261126140000`). **None applied in this pass.**
+**Production migrations applied** (all with owner approval): LH-025 ledger repair (`20261126022136`) and G22 (`20261126140000`) in earlier passes; **G19 (`20261126160000`) on 2026-11-27 at 10:52 UTC**, after the owner replied "Authorise G19" in chat. The record is in `26` §G19-10.
 
-**Pending:** `20261126160000` (G19 content-page revisions, D16). The preflight is complete (`26` §G19-7 to §G19-9, on the PR #91 branch):
+**Pending:** none. Before execution, G19's preflight was complete (`26` §G19-7 to §G19-9, on the PR #91 branch):
 - Old code 25/25 and new code 34/34 on the isolated stack.
 - Role HTTP matrix 126/126.
 - Merged code typecheck and unit tests pass.
 
-The exact production write command and release order are presented to the owner in chat. **They are not executed.**
+The release order below was executed on 2026-11-27, steps 1–7. Step 8, the owner's UI check, is still to do.
 
 **Release order after the owner authorises it:**
 1. `npx supabase migration list --linked` must show only `20261126160000` pending.
@@ -74,7 +74,6 @@ The exact production write command and release order are presented to the owner 
 No content edits between steps 3 and 5. Legal policy content is not published or rewritten as part of this.
 
 **Owner-only approvals still open:**
-- D16 (G19 migration).
 - D18 (G14 compare-at price display; proposal only).
 - D17 (Shopify-hosted media).
 - D19 (repository visibility and LH-025 evidence custody, §7).

@@ -9,6 +9,7 @@ Every PR was merged with `gh pr merge --merge` only after the GitHub `quality` c
 | [#108](https://github.com/mudasarimamofficial/laptops-hub/pull/108) | VIS-006: WhatsApp circle (rebased on #107) | `956899d` | `H5pCTPGu74nz5Vix165V17viSUqL` | success |
 | [#110](https://github.com/mudasarimamofficial/laptops-hub/pull/110) | VIS-002b hero bleed; VIS-007/008 audit specs | `e2fa482` | `4y1MXZcQJnj3sKVAdV7TGHE5P8oZ` | success |
 | [#111](https://github.com/mudasarimamofficial/laptops-hub/pull/111) | Filter accessibility (WCAG 1.4.3) | `4e4daac` | `DGEG9QrS2ZfR99eFKX4KqRLNGNC8` | success |
+| [#112](https://github.com/mudasarimamofficial/laptops-hub/pull/112) | HYD-001 checkout hydration; SEO-001 `/cart` noindex; this docs package | `f0286d6` | `EUF1h84N4mmiH18VVJL6cGzL4R3H` | success |
 
 ## Live production verification (read-only)
 
@@ -35,6 +36,19 @@ After #111: `/collections/all` has 61 filter inputs, 0 dimmed, 0 disabled (every
 - `/collections/all` and `/guides`: 200, canonical, one H1.
 - `/compare`: `noindex, follow` (intended).
 - `sitemap.xml`: 279 URLs. `robots.txt` unchanged (admin/API/order/checkout/cart/track disallowed).
+
+## After #112 (2026-11-27 evening, read-only)
+
+| Check | Result |
+|---|---|
+| `/cart` | title `Cart · Laptops HUB`, `noindex, follow`, canonical `https://www.laptopshub.pk/cart` (was `index, follow`, title "Laptops HUB", no canonical) |
+| `/checkout` with one cart line in the browser's own storage, 10 loads at 4× CPU throttle (no city typed, so no quote and no order) | React #418 on **0/10** loads |
+| `/`, `/collections/all`, PDP, `/checkout`, `/compare` | 200, one H1 each; robots unchanged (`/` and PDP `index, follow`; checkout `noindex, nofollow`; compare `noindex, follow`) |
+| `sitemap.xml` | 279 URLs (unchanged) |
+| `/admin` | 307 to `/admin/login` |
+| GitHub checks on #112 | `quality` pass (2m28s), Vercel preview pass |
+
+**Rollback:** revert merge commit `f0286d6` (no schema or data impact), or promote `DGEG9QrS2ZfR99eFKX4KqRLNGNC8` in Vercel.
 
 ## Not touched
 

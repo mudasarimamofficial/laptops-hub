@@ -193,8 +193,12 @@ button {
 .v5-mega-panel {
   display: flex;
   flex-direction: column;
-  /* Prefer available space below sticky header; keep panel from dominating short desktops. */
-  max-height: min(440px, calc(100dvh - var(--lh-header-offset, 88px)));
+  /* Prefer available space below sticky header; keep panel from dominating short desktops. The panel is sized by its
+     content, so the cap only matters when the content needs it. The cap leaves room for the full category column
+     (nine 40px rows) so the last group (Help) is never cut off (VIS-005, 2026-11-27; was 440px). */
+  --lh-mega-cap: 480px;
+  --lh-mega-avail: min(var(--lh-mega-cap), calc(100dvh - var(--lh-header-offset, 88px)));
+  max-height: var(--lh-mega-avail);
 }
 .v5-mega-body {
   flex: 1 1 auto;
@@ -218,7 +222,11 @@ button {
 .v5-mega-groups {
   position: sticky;
   top: 0;
-  max-height: 100%;
+  /* A sticky column taller than the scrolling body keeps its top pinned, so its last rows stay hidden (the Help group
+     was cut off). `max-height: 100%` never applied: the grid row has no definite height. This definite limit is the
+     body's visible height (panel − 2px accent − ~61px footer − 26px body padding, rounded up), so the column always
+     fits; if a merchant adds more groups than fit, the column scrolls on its own and every group stays reachable. */
+  max-height: calc(var(--lh-mega-avail) - 92px);
   overflow: auto;
   overscroll-behavior: contain;
 }
@@ -255,7 +263,8 @@ button {
 }
 @media (max-height: 700px) {
   .v5-mega-panel {
-    max-height: min(360px, calc(100dvh - var(--lh-header-offset, 88px)));
+    /* Nine 36px rows + gaps + footer + padding = ~424px. */
+    --lh-mega-cap: 432px;
   }
   .v5-mega-group-btn {
     min-height: 36px;
@@ -264,7 +273,7 @@ button {
 }
 @media (max-height: 580px) {
   .v5-mega-panel {
-    max-height: calc(100dvh - var(--lh-header-offset, 72px));
+    --lh-mega-cap: 100dvh;
   }
 }
 

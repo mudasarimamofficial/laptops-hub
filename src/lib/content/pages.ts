@@ -45,8 +45,8 @@ type Rows = { pages: Row[]; articles: Row[] };
 /** Publicly visible CMS rows, read with the anon key (RLS decides). A failed read counts as "nothing public". */
 async function readVisibleRows(): Promise<Rows> {
   const sb = createPublicClient();
-  const [p, a] = await Promise.all([
-    sb.from("content_pages").select("slug, title, body_html, status, legal_approved").eq("status", "published"),
+  const [p0, a] = await Promise.all([
+    sb.from("content_pages").select("slug, title, body_html, status, legal_approved, seo_title, seo_description").eq("status", "published"),
     sb
       .from("articles")
       .select(
@@ -54,6 +54,10 @@ async function readVisibleRows(): Promise<Rows> {
       )
       .eq("status", "published"),
   ]);
+  // Before the G19 database update the search columns do not exist: read without them rather than hide every page.
+  const p = p0.error
+    ? await sb.from("content_pages").select("slug, title, body_html, status, legal_approved").eq("status", "published")
+    : p0;
   if (p.error || a.error) throw new Error("content read failed");
   const articles = ((a.data as (Row & { status?: string; scheduled_for?: string | null })[] | null) || []).filter((row) =>
     isArticlePubliclyVisible({ status: row.status || "published", scheduled_for: row.scheduled_for }),
@@ -70,9 +74,23 @@ const rowsFor = (fresh: boolean): Promise<Rows> =>
 /** `fresh` = bypass every cache (content routes, checkout policy gate). */
 export async function getContentPage(slug: string, fresh = false): Promise<ResolvedContent | null> {
   const tpl = V5_CONTENT.pages[slug];
-  if (!tpl) return null;
   const rows = await rowsFor(fresh);
-  return resolve(slug, tpl, rows.pages.find((r) => r.slug === slug), LEGAL_CONTENT_SLUGS.has(slug));
+  const row = rows.pages.find((r) => r.slug === slug);
+  const seo = { title: (row?.seo_title || "").trim(), description: (row?.seo_description || "").trim() };
+  if (!tpl) {
+    // G19: a page made in Admin → Content (no V5 template). Public only when published with a body; never a policy.
+    if (!row || LEGAL_CONTENT_SLUGS.has(slug) || !isCmsPostPublic(row)) return null;
+    const html = sanitizeCmsHtml(row.body_html || "");
+    return { slug, title: row.title, kicker: "", intro: "", mode: "cms", v5Status: "ready", blocks: [], html, isLegal: false, preview: false, seo };
+  }
+  const r = resolve(slug, tpl, row, LEGAL_CONTENT_SLUGS.has(slug));
+  return r && r.mode === "cms" ? { ...r, seo } : r && r.mode === "template" && !r.preview ? { ...r, seo } : r;
+}
+
+/** G19: where an old page address now lives (Admin → Content address change), or null. */
+export async function getContentRedirect(slug: string): Promise<string | null> {
+  const { data } = await createPublicClient().from("content_slug_redirects").select("to_slug").eq("from_slug", slug).maybeSingle();
+  return (data?.to_slug as string | undefined) || null;
 }
 
 /** V5 guides index (built in `pageVals`, not part of lh-content). Public once any article is public. */
@@ -156,9 +174,13 @@ export async function contentVisibility(fresh = false): Promise<ContentVisibilit
   const rows = await rowsFor(fresh);
   const all = previewAllContent();
   return {
-    pages: Object.fromEntries(
-      PAGE_SLUGS.map((s) => [s, all || isContentPublic(V5_CONTENT.pages[s], rows.pages.find((r) => r.slug === s), LEGAL_CONTENT_SLUGS.has(s))]),
-    ) as Record<string, boolean>,
+    pages: Object.fromEntries([
+      ...PAGE_SLUGS.map((s) => [s, all || isContentPublic(V5_CONTENT.pages[s], rows.pages.find((r) => r.slug === s), LEGAL_CONTENT_SLUGS.has(s))]),
+      // G19: published pages made in admin (no template); never policies.
+      ...rows.pages
+        .filter((r) => !V5_CONTENT.pages[r.slug] && !LEGAL_CONTENT_SLUGS.has(r.slug) && isCmsPostPublic(r))
+        .map((r) => [r.slug, true]),
+    ]) as Record<string, boolean>,
     articles: Object.fromEntries([
       ...V5_CONTENT.articles.map((a) => [a.slug, all || isContentPublic(a, rows.articles.find((r) => r.slug === a.slug), false)]),
       ...rows.articles.filter((r) => !TEMPLATE_ARTICLES.has(r.slug) && isCmsPostPublic(r)).map((r) => [r.slug, true]),

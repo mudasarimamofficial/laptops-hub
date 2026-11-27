@@ -61,10 +61,19 @@ import {
   type NavigationConfig,
 } from "@/lib/content/navigation";
 
+function isDefaultSupportLink(n: { id?: string; label: string; href: string }) {
+  return (n.id === "h-support" || (!n.id && n.label === "Support")) && n.href === "/pages/faq";
+}
+
 /** Header/footer data: V5 menu counts, the mega-menu feature (first listed laptop), public content links. */
 async function loadChrome(vis: Visibility, navConfig: NavigationConfig): Promise<ChromeData> {
   const support = supportHref(vis);
-  const publicNav = sanitizePublicNavLinks(navConfig.headerNav, vis);
+  // The V5 "Support" link (still pointing at the FAQ) follows the first public help page, so it never disappears
+  // just because the FAQ is unpublished. A Support link the merchant re-pointed in Admin → Navigation is kept as saved.
+  const publicNav = sanitizePublicNavLinks(
+    navConfig.headerNav.map((n) => (isDefaultSupportLink(n) ? { ...n, href: support } : n)),
+    vis,
+  );
   try {
     const [P, campaign] = await Promise.all([getV5Catalog(), getActiveAutomaticDiscount()]);
     const p = P.find((x) => x.comp && x.cat !== "tablet" && x.avail);

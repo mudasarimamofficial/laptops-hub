@@ -38,6 +38,9 @@ assert.equal(prod.gates.find((g) => g.id === "shipping_zones")!.state, "pass");
 // Untracked inventory is a warning, not silently "pass".
 assert.equal(prod.gates.find((g) => g.id === "purchasable_catalog")!.state, "warn");
 assert.match(prod.gates.find((g) => g.id === "db_setting")!.detail, /Owner shipping\/policies pending/);
+// G41: the COD store switch has no Admin control, so no "fix" link may point to Settings; the detail says who decides.
+assert.equal(prod.gates.find((g) => g.id === "db_setting")!.fixHref, null);
+assert.match(prod.gates.find((g) => g.id === "db_setting")!.detail, /owner decision/);
 
 // Each single blocking failure closes ordering on its own.
 for (const [patch, id] of [

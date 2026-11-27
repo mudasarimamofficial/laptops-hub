@@ -87,7 +87,7 @@ export default async function AdminHomePage() {
         >
           <p className="font-semibold">Order email alerts are offline</p>
           <p className="mt-1 text-amber-900/90">
-            COD is live: monitor{" "}
+            {readiness.open ? "Cash-on-delivery ordering is open: monitor" : "When ordering is open, monitor"}{" "}
             <Link href="/admin/orders" className="font-semibold underline">
               Orders
             </Link>{" "}

@@ -32,7 +32,7 @@ export default async function AdminMediaLibraryPage() {
     <>
       <AdminPageHeader
         title="Media library"
-        description={`${cmsRows.length} CMS uploads shown · ${total ?? 0} product image references · ${pending ?? 0} product rights pending. Upload images for Blog and pages; product CDN references still need rights approval.`}
+        description={`${cmsRows.length} CMS uploads shown · ${total ?? 0} product image references · ${pending ?? 0} product rights pending. Upload images for Blog and pages. Rights status is a record for your team — it does not hide images from customers.`}
         breadcrumbs={[{ href: "/admin", label: "Overview" }, { label: "Media" }]}
       />
 
@@ -41,7 +41,7 @@ export default async function AdminMediaLibraryPage() {
       {empty ? (
         <EmptyState
           title="No media yet"
-          description="Upload a store image above, or add product images from a product page. Customers never see pending product rights images."
+          description="Upload a store image above, or add product images from a product page. The rights status is a record for your team: it does not hide an image from customers."
         />
       ) : null}
 

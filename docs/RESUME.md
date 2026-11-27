@@ -1,5 +1,26 @@
 # Resume here
 
+> **2026-11-27 evening: UI hardening close-out and full run (Claude Opus 5.5, new session; the previous session lost account access mid-run). Read first:** `docs/client-ownership-handover/ui-hardening-2026-11-27/` (00–12).
+> - **Live:** #107 (VIS-001–004 map/header/promo, phone map layout), #108 (VIS-006 WhatsApp circle), #109 (VIS-005 mega-menu Help), #110 (VIS-002 hero bleed; VIS-007/008 audit specs), #111 (filter options with no products disabled, WCAG 1.4.3). Production `dpl_DGEG9QrS2ZfR99eFKX4KqRLNGNC8` READY at `4e4daac`. Production ledger: 45/45, nothing pending.
+> - **Full isolated run on `4e4daac`:**
+>   - The previous session's run was interrupted (server died with the session) and is not a result.
+>   - A clean re-run gave 275 passed / 3 failed / 8 not run. Re-running those three files: 15/15. None of the failures came from the product: machine load, a test that depended on an old database (fixed), and slow Shopify CDN images. Details: `10`.
+> - **New:**
+>   - HYD-001: a checkout hydration mismatch could wipe a just-typed city. Fixed in the cart and compare stores, with spec `ui-store-hydration`.
+>   - SEO-001: `/cart` is now `noindex`.
+>   - Both are on branch `fix/hydration-store-snapshot-2026-11-27`; the PR and deploy are recorded in `11`.
+> - **Isolated stack note:** `supabase db reset --local` stops at `20261118160000` (no Storage locally). After it, run `supabase migration repair --local --status applied 20261118160000` and `supabase migration up --local`. Then revert that repair, and run `scripts/dev/isolated-cms-media-table.sql` and `seed-isolated.mjs` (44 local migrations).
+> - **Still open (owner):**
+>   - the 14-operation walkthrough (`32` §5);
+>   - D19, the repository is public;
+>   - G14 is a proposal only;
+>   - theme colour/typography (frozen V5);
+>   - D1/D2/D9 ownership;
+>   - D4 one verified real COD order;
+>   - D17 Shopify media.
+>
+>   Draft PR #62 (LCP lab) stays unmerged (`12` L10).
+
 > **2026-11-27 acceptance-matrix closure (Claude Opus 5.5) — read first:** `docs/client-ownership-handover/32_ACCEPTANCE_CLOSURE_2026-11-27.md`.
 > - **Live:** #99 (navigation G26/G49), #100 (import safety, import/SEO E2E), #101 (role UX G27/G28), #102 (checkout quote race fix), #103 (activity search), #104 (G41/G45 admin accuracy). #105 is the discount propagation E2E (test only).
 > - **G19 LIVE 2026-11-27:** the owner authorised it in chat; migration `20261126160000` was applied and PR #91 merged (`365a0a1`), with the Vercel deploy succeeding. All 13 baseline revisions equal the live text, and the public pages are unchanged. Record: `26` §G19-10. **Production ledger: no pending migrations.** Any future migration still needs owner approval.

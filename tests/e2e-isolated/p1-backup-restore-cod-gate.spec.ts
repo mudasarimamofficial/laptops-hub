@@ -19,7 +19,11 @@ const setting = async (key: string) => (await sb.from("store_settings").select("
 test("restore keeps the live COD gate; other settings come back from the backup", async ({ page }) => {
   await assertLocalOnly("backup restore journey");
   const gateBefore = await setting("cod_checkout");
-  const seoBefore = await setting("seo_defaults").catch(() => null);
+  // Restore upserts the settings the backup holds; it never deletes a setting created after the backup. On a fresh
+  // seed `seo_defaults` does not exist yet, so create it BEFORE the backup (and remove it again afterwards).
+  const seoExisted = (await sb.from("store_settings").select("key").eq("key", "seo_defaults").maybeSingle()).data != null;
+  if (!seoExisted) await sb.from("store_settings").insert({ key: "seo_defaults", value: {} });
+  const seoBefore = await setting("seo_defaults");
   const created: string[] = [];
   try {
     await page.goto("/admin/login");
@@ -35,7 +39,7 @@ test("restore keeps the live COD gate; other settings come back from the backup"
 
     // After the backup: flip the gate and change an ordinary setting.
     await sb.from("store_settings").update({ value: { ...gateBefore, enabled: !gateBefore.enabled } }).eq("key", "cod_checkout");
-    await sb.from("store_settings").upsert({ key: "seo_defaults", value: { ...(seoBefore || {}), title_suffix: `QA ${RUN}` } }, { onConflict: "key" });
+    await sb.from("store_settings").update({ value: { ...seoBefore, title_suffix: `QA ${RUN}` } }).eq("key", "seo_defaults");
 
     const rs = await page.request.post(`/api/admin/backups/${backupId}/restore`, { headers: { origin: ORIGIN } });
     const body = await rs.json();
@@ -44,10 +48,11 @@ test("restore keeps the live COD gate; other settings come back from the backup"
     expect(body.keptLive).toEqual(["cod_checkout"]);
 
     expect((await setting("cod_checkout")).enabled).toBe(!gateBefore.enabled); // live value kept
-    expect((await setting("seo_defaults")).title_suffix ?? null).toBe((seoBefore?.title_suffix as string | undefined) ?? null); // restored
+    expect((await setting("seo_defaults")).title_suffix ?? null).toBe((seoBefore.title_suffix as string | undefined) ?? null); // restored
   } finally {
     await sb.from("store_settings").update({ value: gateBefore }).eq("key", "cod_checkout");
-    if (seoBefore) await sb.from("store_settings").update({ value: seoBefore }).eq("key", "seo_defaults");
+    if (seoExisted) await sb.from("store_settings").update({ value: seoBefore }).eq("key", "seo_defaults");
+    else await sb.from("store_settings").delete().eq("key", "seo_defaults");
     if (created.length) await sb.from("merchant_snapshots").delete().in("id", created);
   }
 });

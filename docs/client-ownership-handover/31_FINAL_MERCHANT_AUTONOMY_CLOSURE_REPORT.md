@@ -3,6 +3,12 @@
 **Status: READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED. This is not a complete handover certificate.**
 Infrastructure ownership (D1, D2, D9) and one verified real order (D4) are still open.
 
+> **2026-11-27 evening addendum (UI hardening close-out):** see `ui-hardening-2026-11-27/` (00–12).
+> - #107–#111 are live (VIS-001 to VIS-008, plus the filter accessibility fix).
+> - Full isolated run on `4e4daac`: 275 passed / 3 failed / 8 not run. Re-running those files: 15/15. No product cause (`ui-hardening-2026-11-27/10`).
+> - New: HYD-001 (checkout hydration mismatch) and SEO-001 (`/cart` noindex), fixed in the PR listed in `ui-hardening-2026-11-27/11`.
+> - The owner walkthrough (§5), D19, D1/D2/D9, D4 and D17 are unchanged and still open.
+
 > **2026-11-27 addendum — acceptance-matrix closure:** see `32_ACCEPTANCE_CLOSURE_2026-11-27.md`.
 > - **Live:** #99 navigation G26/G49, #100 import safety + import/SEO E2E, #101 role UX G27/G28, #102 checkout quote race (the "flaky" check was a real bug), #103 activity search, #104 G41/G45 accuracy. #105 adds a discount propagation E2E (test only).
 > - **G19:** the owner approved it in chat; migration `20261126160000` was applied and PR #91 merged (`365a0a1`). Record: `26` §G19-10.

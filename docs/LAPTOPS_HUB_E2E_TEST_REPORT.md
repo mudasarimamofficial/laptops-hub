@@ -1,5 +1,17 @@
 # Laptops HUB — E2E Test Report
 
+## Full isolated run on main `4e4daac` (2026-11-27 evening) — current
+
+- **286 tests, 1 worker, Chromium**, on a clean stack (reset + 44 local migrations + seed + fresh `.next-local` build): **275 passed, 3 failed, 8 not run** (38.0 min).
+- Re-running the three failed files on the same build: **15/15**.
+- Causes: machine load, a test that depended on an older database (fixed), slow Shopify CDN images.
+- Fix branch (HYD-001 checkout hydration, SEO-001 `/cart` noindex):
+  - new `ui-store-hydration` (red on the old build), plus 7 adjacent specs: **31/31**;
+  - role HTTP matrix **126/126**;
+  - tsc, eslint and 63 unit files are clean.
+- Details: `docs/client-ownership-handover/ui-hardening-2026-11-27/10_TEST_RESULTS.md`.
+- The previous session's run (19:30 PKT) was interrupted when its account access ended, and is not counted.
+
 ## Engineering closeout run (2026-11-16, label `final-2026-11-16-d`) — current
 
 **Result:**

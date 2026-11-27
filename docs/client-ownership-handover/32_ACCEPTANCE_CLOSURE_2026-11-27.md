@@ -8,6 +8,12 @@ Everything below was proven on the **isolated** stack (local Supabase, local fak
 `scripts/dev/isolated-next.mjs`) unless a line says "production, read-only". No production data or schema was changed
 in this pass.
 
+> **2026-11-27 evening addendum (UI hardening close-out):** see `ui-hardening-2026-11-27/` (00–12).
+> - #107–#111 are live (VIS-001 to VIS-008, plus the filter accessibility fix).
+> - Full isolated run on `4e4daac`: 275 passed / 3 failed / 8 not run. Re-running those files: 15/15. No product cause (`ui-hardening-2026-11-27/10`).
+> - New: HYD-001 (checkout hydration mismatch) and SEO-001 (`/cart` noindex), fixed in the PR listed in `ui-hardening-2026-11-27/11`.
+> - The owner walkthrough (§5), D19, D1/D2/D9, D4 and D17 are unchanged and still open.
+
 ## 1. Three separate states
 
 | Area | State | What would change it |

@@ -2,18 +2,19 @@ import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { NavigationEditor } from "@/components/admin/navigation-editor";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { contentVisibility } from "@/lib/content/pages";
-import { getPublishedNavigation } from "@/lib/content/navigation";
+import { getNavigationHistory, getPublishedNavigation } from "@/lib/content/navigation";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
 
 export default async function AdminNavigationPage() {
-  await requireStaffPage(["owner", "admin", "editor"]);
+  const staff = await requireStaffPage(["owner", "admin", "editor"]);
 
   const supabase = createServiceClient();
   const visibility = await contentVisibility();
   const navConfig = await getPublishedNavigation(supabase);
+  const history = await getNavigationHistory(supabase);
 
   const { data: collections } = await supabase
     .from("collections")
@@ -35,22 +36,26 @@ export default async function AdminNavigationPage() {
     <>
       <AdminPageHeader
         title="Store navigation"
-        description="Add, edit, reorder, and remove header and footer navigation items. Unpublished policy links are automatically hidden from customer storefronts."
+        description="Add, rename, re-point, reorder and remove the links in the store header, mobile menu and footer. Links to pages that are not published stay hidden from customers automatically, so visitors never land on a missing page."
         breadcrumbs={[
           { href: "/admin", label: "Overview" },
           { label: "Navigation" },
         ]}
       />
 
-      <div className="mb-6 rounded-[var(--adm-radius-lg)] border border-[var(--adm-border)] bg-[var(--adm-surface)] p-4 text-xs text-[var(--adm-ink-2)] shadow-[var(--adm-shadow)]">
-        <p className="font-semibold text-[var(--adm-ink)]">Customer protection invariant</p>
-        <p className="mt-1">
-          Links to policy and content pages are governed by <code>isLinkPublic()</code>. If a policy or guide is not published, its link is automatically withheld from public navigation so visitors never encounter broken links or 404s.
-        </p>
-      </div>
-
       <NavigationEditor
         initialConfig={navConfig}
+        initialHistory={history.map((h) => ({
+          version: h.version,
+          savedAt: h.savedAt,
+          savedBy: h.savedBy,
+          action: h.action,
+          restoredFrom: h.restoredFrom ?? null,
+          headerLabels: h.headerNav.map((i) => i.label),
+          footerTitles: h.footerColumns.map((c) => c.title),
+          footerLinkCount: h.footerColumns.reduce((n, c) => n + c.links.length, 0),
+        }))}
+        canResetDefaults={staff.role === "owner" || staff.role === "admin"}
         visibility={visibility}
         availableCollections={collections || []}
         availablePages={pages}

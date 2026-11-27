@@ -9,6 +9,7 @@ import {
   type NavigationItem,
 } from "@/lib/content/navigation";
 import type { Visibility } from "@/lib/content/links";
+import { NAV_LIMITS, V5_HEADER_WIDTH, estimateHeaderWidth, destinationHint, destinationProblem, navigationProblems } from "@/lib/content/navigation-rules";
 
 console.log("Running navigation.test.ts...");
 
@@ -85,5 +86,42 @@ const sanitizedCols = sanitizePublicFooterColumns(testCols, mockVis);
 assert.equal(sanitizedCols.length, 1, "Column with only unpublished links must be omitted");
 assert.equal(sanitizedCols[0].title, "Company");
 assert.equal(sanitizedCols[0].links.length, 2);
+
+// 5. Disguised external and malformed addresses (G49)
+for (const bad of ["//evil.example/x", "/\\evil.example", "/collections/dell x", "https://user:pw@example.com", "ftp://example.com", "collections/dell", "/API/x", "/Admin"]) {
+  assert.equal(isSafeDestinationUrl(bad), false, bad);
+  assert.equal(typeof destinationProblem(bad), "string", bad);
+}
+assert.equal(destinationProblem("/collections/dell?sort=price#top"), null);
+assert.equal(destinationProblem("https://wa.me/923000000000"), null);
+
+// 6. Whole-menu validation: names, addresses, unique ids, limits; an empty menu is allowed
+assert.deepEqual(navigationProblems([], []), []);
+assert.deepEqual(navigationProblems(DEFAULT_HEADER_NAV, DEFAULT_FOOTER_COLUMNS), [], "V5 defaults are valid");
+const dup = navigationProblems([{ id: "a", label: "A", href: "/a" }, { id: "a", label: "B", href: "/b" }], []);
+assert.equal(dup.length, 1);
+assert.match(dup[0].message, /same id/);
+assert.equal(navigationProblems([{ id: "a", label: " ", href: "/a" }], []).length, 1);
+assert.equal(navigationProblems([{ id: "a", label: "x".repeat(NAV_LIMITS.label + 1), href: "/a" }], []).length, 1);
+assert.equal(navigationProblems([{ id: "a", label: "A", href: "javascript:alert(1)" }], []).length, 1);
+const many = Array.from({ length: NAV_LIMITS.headerItems + 1 }, (_, i) => ({ id: "h" + i, label: "L" + i, href: "/collections/x" + i }));
+assert.equal(navigationProblems(many, []).some((p) => /at most/.test(p.message)), true);
+assert.equal(navigationProblems([], [{ id: "c", title: "", links: [] }]).length, 1, "column heading required");
+
+// 7. Hints for collections/pages that do not exist or are not published (non-blocking)
+const cols = [{ slug: "dell" }];
+const pgs = [{ slug: "faq", is_published: true }, { slug: "warranty", is_published: false }];
+assert.equal(destinationHint("/collections/dell", cols, pgs), null);
+assert.equal(destinationHint("/collections/all", cols, pgs), null);
+assert.match(destinationHint("/collections/nope", cols, pgs) ?? "", /No collection/);
+assert.equal(destinationHint("/pages/faq", cols, pgs), null);
+assert.match(destinationHint("/pages/warranty", cols, pgs) ?? "", /not published/);
+assert.match(destinationHint("/pages/missing", cols, pgs) ?? "", /No page/);
+
+// 8. Header width warning: the V5 menu fits; the QA menu that overflowed 1280px in the browser is flagged.
+assert.equal(estimateHeaderWidth(DEFAULT_HEADER_NAV) <= V5_HEADER_WIDTH, true);
+const qa = [...DEFAULT_HEADER_NAV.slice(1, 5), { label: "QA Dell renamed" }, { label: "QA Workstations", isNew: true }, { label: "Support" }];
+assert.equal(estimateHeaderWidth(qa) > V5_HEADER_WIDTH, true);
+assert.equal(estimateHeaderWidth(DEFAULT_HEADER_NAV.filter((i) => i.id !== "h-guides")) < V5_HEADER_WIDTH, true);
 
 console.log("navigation.test.ts ok");

@@ -64,14 +64,20 @@ export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- clear quote when address incomplete
       setOptions([]);
       setServerQuote(null);
+      setQuoting(false); // a cancelled request for the previous address no longer clears this itself
       return;
     }
+    // Only the latest address may update the page: a slower answer for an earlier address (city typed, province
+    // changed…) is cancelled and ignored, so it can never replace the answer for what is on screen now.
+    let current = true;
+    const controller = new AbortController();
     const t = setTimeout(async () => {
       setQuoting(true);
       setError(null);
       try {
         const res = await fetch("/api/checkout/quote", {
           method: "POST",
+          signal: controller.signal,
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             address: { city, province },
@@ -80,6 +86,7 @@ export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
           }),
         });
         const json = await res.json();
+        if (!current) return;
         if (!res.ok || json.ok === false) {
           const opts: ShipOption[] = json.options || [];
           setOptions(opts);
@@ -102,12 +109,16 @@ export function CheckoutForm({ orderingOpen }: { orderingOpen: boolean }) {
         if (!zoneId && opts[0]?.id) setZoneId(opts[0].id);
         setServerQuote(json.quote);
       } catch {
-        setError("Could not calculate delivery");
+        if (current) setError("Could not calculate delivery");
       } finally {
-        setQuoting(false);
+        if (current) setQuoting(false);
       }
     }, 400);
-    return () => clearTimeout(t);
+    return () => {
+      current = false;
+      clearTimeout(t);
+      controller.abort();
+    };
   }, [city, province, zoneId, lines]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {

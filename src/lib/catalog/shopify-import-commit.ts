@@ -22,6 +22,8 @@ export type CommitProductResult = {
   productId?: string;
   variantCount?: number;
   mediaCount?: number;
+  /** Plain-language notes, e.g. a variant skipped for a missing price or a product kept as draft. */
+  warnings?: string[];
 };
 
 function parsePriceToPaisa(raw: string | undefined): number | null {
@@ -29,6 +31,12 @@ function parsePriceToPaisa(raw: string | undefined): number | null {
   const n = Number(String(raw).replace(/,/g, ""));
   if (!Number.isFinite(n) || n < 0) return null;
   return pkrMajorToPaisa(n);
+}
+
+/** Status from the CSV, or null when the file says nothing about it (an update then keeps the current status). */
+function statusFromCsv(raw: string | undefined, published: string | undefined): "draft" | "active" | "archived" | null {
+  if (!(raw || "").trim() && !(published || "").trim()) return null;
+  return mapStatus(raw, published);
 }
 
 function mapStatus(raw: string | undefined, published: string | undefined): "draft" | "active" | "archived" {
@@ -112,7 +120,9 @@ export async function commitStagedProducts(
 
       const first = product.variantRows[0] || product.rows[0];
       const title = product.title || existing?.title || product.handle;
-      const status = mapStatus(first?.values.status, first?.values.published);
+      const csvStatus = statusFromCsv(first?.values.status, first?.values.published);
+      const status = csvStatus ?? (existing?.status as "draft" | "active" | "archived" | undefined) ?? "draft";
+      const warnings: string[] = [];
       const tags = (first?.values.tags || "")
         .split(",")
         .map((t) => t.trim())
@@ -140,13 +150,42 @@ export async function commitStagedProducts(
       };
       if (opts.actorUserId) productPayload.updated_by = opts.actorUserId;
 
+      // Updating an existing product changes only what the CSV actually fills in: a blank or missing column keeps the
+      // current value (SEO text, description, tags, status…). Removing a value is done in the product editor.
+      const v = first?.values ?? {};
+      const updatePayload: Record<string, unknown> = {};
+      if (product.rows.some((r) => r.values.title)) updatePayload.title = title;
+      if (v.bodyHtml) updatePayload.description_safe = v.bodyHtml;
+      if (v.vendor) Object.assign(updatePayload, { merchant_vendor: v.vendor, manufacturer: v.vendor });
+      if (v.type || v.productCategory) updatePayload.product_type = v.type || v.productCategory;
+      if (v.type) updatePayload.category = v.type;
+      if (csvStatus) updatePayload.status = csvStatus;
+      if (v.tags) updatePayload.tags = tags;
+      if (v.seoTitle) updatePayload.seo_title = v.seoTitle;
+      if (v.seoDescription) updatePayload.seo_description = v.seoDescription;
+      if (optionNames.length) updatePayload.option_names = optionNames;
+      if (opts.actorUserId) updatePayload.updated_by = opts.actorUserId;
+
+      // Problems the preview can already show (the commit reports the same ones).
+      for (const r of product.rows) {
+        const url = r.values.imageSrc || r.values.variantImage;
+        if (url && !/^https:\/\//i.test(url)) warnings.push(`Line ${r.line}: image address must start with https:// — this image is skipped.`);
+      }
+      const pricedRows = (product.variantRows.length ? product.variantRows : [product.rows[0]].filter(Boolean)).filter(
+        (r) => parsePriceToPaisa(r.values.price) != null,
+      );
+
       if (opts.dryRun) {
+        if (pricedRows.length === 0) {
+          warnings.push(existing ? "No valid price in the file: prices stay as they are." : "No variant with a valid price: it would be saved as a draft.");
+        }
         results.push({
           handle: product.handle,
           action: existing ? "updated" : "created",
           message: "dry_run",
           variantCount: Math.max(1, product.variantRows.length),
           mediaCount: collectImages(product).length,
+          ...(warnings.length ? { warnings } : {}),
         });
         summary[existing ? "updated" : "created"] += 1;
         continue;
@@ -171,9 +210,9 @@ export async function commitStagedProducts(
           productId = created.id;
         }
       } else if (opts.strategy === "update_by_handle") {
-        const { error } = await supabase.from("products").update(productPayload).eq("id", existing.id);
+        const { error } = await supabase.from("products").update(updatePayload).eq("id", existing.id);
         if (error) {
-          const slim = { ...productPayload };
+          const slim = { ...updatePayload };
           delete slim.option_names;
           delete slim.updated_by;
           await supabase.from("products").update(slim).eq("id", existing.id);
@@ -186,7 +225,10 @@ export async function commitStagedProducts(
       let variantCount = 0;
       for (const row of variantRows) {
         const price = parsePriceToPaisa(row.values.price);
-        if (price == null) continue;
+        if (price == null) {
+          warnings.push(`Line ${row.line}: no valid price, so this variant was not saved.`);
+          continue;
+        }
         const optsMap = optionValuesFromRow(row);
         const inv = inventoryFromRow(row, fallbackInv);
         const compare = parsePriceToPaisa(row.values.compareAt);
@@ -229,9 +271,19 @@ export async function commitStagedProducts(
         }
 
         if (existingVariant) {
-          const { error } = await supabase.from("product_variants").update(variantPayload).eq("id", existingVariant.id);
+          // Existing variant: keep stock tracking, quantity, "can be bought" and other blank columns as they are.
+          const upd: Record<string, unknown> = { price_paisa: price };
+          if (titleParts.length) Object.assign(upd, { title: vTitle, option_values: optsMap });
+          if (row.values.sku) upd.sku = row.values.sku;
+          if (row.values.barcode) upd.barcode = row.values.barcode;
+          if (compare != null) upd.compare_at_paisa = compare;
+          if ((row.values.inventoryTracker || "").trim()) {
+            upd.inventory_mode = inv.mode;
+            upd.quantity_on_hand = inv.mode === "tracked" ? inv.qty : null;
+          }
+          const { error } = await supabase.from("product_variants").update(upd).eq("id", existingVariant.id);
           if (error) {
-            const slim = { ...variantPayload };
+            const slim = { ...upd };
             delete slim.barcode;
             delete slim.position;
             await supabase.from("product_variants").update(slim).eq("id", existingVariant.id);
@@ -243,10 +295,19 @@ export async function commitStagedProducts(
             delete slim.barcode;
             delete slim.position;
             const retry = await supabase.from("product_variants").insert(slim);
-            if (retry.error) continue;
+            if (retry.error) {
+              warnings.push(`Line ${row.line}: variant could not be saved (${retry.error.message}).`);
+              continue;
+            }
           }
         }
         variantCount += 1;
+      }
+
+      // A new product that ended up with no price-bearing variant is kept as a draft, never shown without a price.
+      if (!existing && variantCount === 0 && status === "active") {
+        await supabase.from("products").update({ status: "draft" }).eq("id", productId!);
+        warnings.push("No variant with a valid price, so the product was saved as a draft.");
       }
 
       // Media: append remote URLs that are not already present (default — do not wipe)
@@ -308,7 +369,7 @@ export async function commitStagedProducts(
       }
 
       const action = existing ? "updated" : "created";
-      results.push({ handle: product.handle, action, productId, variantCount, mediaCount });
+      results.push({ handle: product.handle, action, productId, variantCount, mediaCount, ...(warnings.length ? { warnings } : {}) });
       summary[action] += 1;
     } catch (e) {
       results.push({

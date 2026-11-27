@@ -264,7 +264,8 @@ export function stageShopifyRows(
     const line = idx + 2; // header is line 1
     const values: Partial<Record<CanonicalField, string>> = {};
     for (const [field, header] of Object.entries(mapped) as [CanonicalField, string][]) {
-      const v = raw[header];
+      // Cells our own export guarded against spreadsheet formulas come back without the guard.
+      const v = raw[header] === undefined ? undefined : unguardCsvCell(raw[header]);
       if (v !== undefined && v !== "") values[field] = v;
     }
 
@@ -344,4 +345,57 @@ export function toCsvLine(fields: string[]): string {
       return safe;
     })
     .join(",");
+}
+
+/**
+ * RFC 4180 CSV parser shared by the import preview (browser) and the server dry-run/commit, so both read a file the
+ * same way: quoted cells may contain commas, quotes ("") and line breaks; a leading BOM and blank lines are ignored.
+ */
+export function parseCsvText(text: string): { headers: string[]; rows: Record<string, string>[] } {
+  const rows: string[][] = [];
+  let cell = "";
+  let row: string[] = [];
+  let inQuotes = false;
+  const input = text.replace(/^﻿/, "");
+  for (let i = 0; i < input.length; i++) {
+    const c = input[i];
+    const next = input[i + 1];
+    if (inQuotes) {
+      if (c === '"' && next === '"') {
+        cell += '"';
+        i++;
+      } else if (c === '"') inQuotes = false;
+      else cell += c;
+    } else if (c === '"') inQuotes = true;
+    else if (c === ",") {
+      row.push(cell);
+      cell = "";
+    } else if (c === "\n") {
+      row.push(cell);
+      rows.push(row);
+      row = [];
+      cell = "";
+    } else if (c !== "\r") cell += c;
+  }
+  if (cell.length || row.length) {
+    row.push(cell);
+    rows.push(row);
+  }
+  const headers = (rows[0] || []).map((h) => h.trim());
+  const dataRows = rows.slice(1).filter((r) => r.some((c) => c.trim() !== ""));
+  return {
+    headers,
+    rows: dataRows.map((r) => {
+      const obj: Record<string, string> = {};
+      headers.forEach((h, i) => {
+        obj[h] = r[i] ?? "";
+      });
+      return obj;
+    }),
+  };
+}
+
+/** Undo the export's spreadsheet-formula guard (a leading ' before = + - @) so a round trip keeps the original text. */
+export function unguardCsvCell(value: string): string {
+  return /^'[=+\-@\t\r]/.test(value) ? value.slice(1) : value;
 }

@@ -194,9 +194,32 @@ ALTER TABLE public.content_pages DROP CONSTRAINT IF EXISTS content_pages_seo_len
   DROP COLUMN IF EXISTS created_at, DROP COLUMN IF EXISTS published_at;
 ```
 
+**Before dropping anything, keep the history:** export the revisions (and redirects) to client-controlled storage, for example
+`npx supabase db query --linked -o json "select * from content_page_revisions order by page_id, version" > content_page_revisions-<date>.json`
+(not into git: it holds page text and staff ids). Only then drop.
+
 then `npx supabase migration repair --linked --status reverted 20261126160000`. After the code is merged, revert the
 PR first (the old code works with or without the migration), then roll back if still needed. Once merchants have
 saved pages with history, prefer keeping the tables: the revisions are the only record of earlier wording.
+
+### G19-4a. Release window rule
+
+Between step 3 (migration) and step 5 (merge + deploy) the old admin code still saves pages by direct UPDATE: such a save
+would change the page without a revision or version bump, so the baseline would no longer describe the live text.
+**Do not edit content pages in that window** (it lasts only as long as CI + deploy, about 10 minutes). If an edit
+happens anyway, record it: the next save after the merge creates a revision of the then-current text.
+
+### G19-7. Preflight re-check (2026-11-27, read-only)
+
+| Item | Result |
+|---|---|
+| 1. Fingerprints and statuses | 13 pages; every md5, length, status and legal approval **identical** to G19-2 (5 policies published + approved; about/contact/faq published; 5 pending empty) |
+| 2. Ledger | 44 applied, aligned, no remote-only (G22 `20261126140000` applied 2026-11-26) |
+| 3. Only pending | `db push --linked --dry-run` from this branch: would push **only** `20261126160000_content_page_revisions.sql` |
+| 4. Legal text untouched | policy md5s unchanged; the migration never UPDATEs `content_pages` rows (columns with defaults only) and the baseline copies text as-is |
+| 5. Backward compatibility | every public read of `content_pages` names its columns (anon has column-level SELECT only, no table SELECT), so the new staff-only columns cannot break public pages; `select("*")` is used only with the service client (backups). `main` code re-run on the migrated isolated database: see G19-8 |
+| 6. RPC review | `save_content_page` / `create_content_page`: SECURITY DEFINER, `search_path=public`, EXECUTE revoked from public/anon/authenticated and granted to service_role only, plus an `auth.role()` service-role check; actor must be an active owner/admin/manager/editor; row lock + expected version; legal slugs cannot be renamed or taken; published policy needs legal approval; editors can never publish a policy or change approval. The G17 backup restore (merged in #93) sends exactly the payload keys this function reads (`action: "restore"`) and skips policy pages. |
+| 9. Scope | one file; no other migration; data change limited to inserting 13 baseline revision rows (new table) and new-column defaults |
 
 ### G19-6. Decision needed
 

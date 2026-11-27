@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
 
 export default async function AdminOnlineStorePage() {
-  await requireStaffPage(["owner", "admin", "editor"]);
+  const staff = await requireStaffPage(["owner", "admin", "editor"]);
   return (
     <>
       <AdminPageHeader
@@ -26,7 +26,7 @@ export default async function AdminOnlineStorePage() {
           </div>
         }
       />
-      <HomepageSectionEditor />
+      <HomepageSectionEditor canPublish={staff.role === "owner" || staff.role === "admin"} />
     </>
   );
 }

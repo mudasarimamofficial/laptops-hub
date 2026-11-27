@@ -45,7 +45,7 @@ export const ADMIN_NAV: AdminNavSection[] = [
         children: [
           { href: "/admin/products", label: "All products" },
           { href: "/admin/products/new", label: "Add product" },
-          { href: "/admin/products/import", label: "Import" },
+          { href: "/admin/products/import", label: "Import", roles: ["owner", "admin", "manager"] },
           { href: "/admin/products/export", label: "Export" },
           { href: "/admin/products/bulk", label: "Bulk editor" },
         ],
@@ -95,11 +95,12 @@ export const ADMIN_NAV: AdminNavSection[] = [
       {
         href: "/admin/content",
         label: "Content",
-        roles: ["owner", "admin", "editor"],
+        // Managers approve legal pages there (Content → Pages); blog and reels stay owner/admin/editor.
+        roles: ["owner", "admin", "manager", "editor"],
         children: [
           { href: "/admin/content", label: "Pages" },
-          { href: "/admin/blog", label: "Blog" },
-          { href: "/admin/reels", label: "Generation reels" },
+          { href: "/admin/blog", label: "Blog", roles: ["owner", "admin", "editor"] },
+          { href: "/admin/reels", label: "Generation reels", roles: ["owner", "admin", "editor"] },
         ],
       },
       {

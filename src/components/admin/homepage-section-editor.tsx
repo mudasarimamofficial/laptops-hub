@@ -60,7 +60,8 @@ type PublishedVersion = {
   created_at?: string;
 };
 
-export function HomepageSectionEditor() {
+/** canPublish: owner/admin. The server refuses publish/restore for everyone else; editors prepare drafts. */
+export function HomepageSectionEditor({ canPublish = true }: { canPublish?: boolean }) {
   const hydrated = useHydrated();
   const router = useRouter();
   const [sections, setSections] = useState<SectionInstance[]>([]);
@@ -755,8 +756,9 @@ export function HomepageSectionEditor() {
                     <button
                       type="button"
                       data-testid={`theme-rollback-${v.id}`}
-                      className="mt-1 font-semibold text-[var(--adm-action)]"
-                      disabled={busy}
+                      className="mt-1 font-semibold text-[var(--adm-action)] disabled:opacity-50"
+                      disabled={busy || !canPublish}
+                      title={canPublish ? undefined : "Only an owner or admin can restore a published version."}
                       onClick={() => rollbackTo(v.id)}
                     >
                       Restore this version
@@ -1083,12 +1085,18 @@ export function HomepageSectionEditor() {
         <button
           type="button"
           data-testid="theme-publish"
-          disabled={!hydrated || !loaded || busy || migrationRequired || sections.length < 1}
+          disabled={!hydrated || !loaded || busy || migrationRequired || sections.length < 1 || !canPublish}
+          aria-describedby={canPublish ? undefined : "theme-publish-role-note"}
           onClick={publishDraft}
           className="mt-2 w-full rounded-lg border border-[var(--adm-border)] px-3 py-2 text-sm font-semibold disabled:opacity-50"
         >
           Publish to live site
         </button>
+        {canPublish ? null : (
+          <p id="theme-publish-role-note" data-testid="theme-publish-role-note" className="mt-2 text-xs text-[var(--adm-ink-2)]">
+            Only an owner or admin can publish or restore versions. Save your draft and ask them to review the preview and publish it.
+          </p>
+        )}
         {notice ? (
           <p data-testid="theme-notice" role="status" className="mt-2 text-xs text-[var(--adm-success)]">
             {notice}

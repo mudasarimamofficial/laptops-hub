@@ -35,13 +35,20 @@ export function CollectionView({ title, view, copy = DEFAULT_THEME_GLOBALS }: { 
   useDialog(fOpen, asideRef, closeFilters);
   const go = (q: string) => start(() => router.replace(pathname + (q === "?" ? "" : q), { scroll: false }));
 
-  const opt = (o: FacetOpt, type: "checkbox" | "radio") => (
-    <label key={o.label} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", fontSize: 14, cursor: "pointer", opacity: o.op }}>
-      <input type={type} name={type === "radio" ? "lh-price" : undefined} checked={o.checked} onChange={() => go(o.href)} style={box} />
-      <span style={{ flex: 1 }}>{o.label}</span>
-      <span style={countStyle}>{o.count}</span>
-    </label>
-  );
+  // An option with no matching products (and not ticked) is shown dimmed. It is also disabled: picking it could only
+  // lead to an empty list, keyboard users skip it, and as an inactive control its dimmed text is exempt from the
+  // contrast rule (WCAG 1.4.3), which flagged it while it stayed clickable. A ticked option is never disabled, so it
+  // can always be unticked.
+  const opt = (o: FacetOpt, type: "checkbox" | "radio") => {
+    const unavailable = o.op < 1;
+    return (
+      <label key={o.label} style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 0", fontSize: 14, cursor: unavailable ? "default" : "pointer", opacity: o.op }}>
+        <input type={type} name={type === "radio" ? "lh-price" : undefined} checked={o.checked} disabled={unavailable} onChange={() => go(o.href)} style={box} />
+        <span style={{ flex: 1 }}>{o.label}</span>
+        <span style={countStyle}>{o.count}</span>
+      </label>
+    );
+  };
 
   return (
     <>

@@ -27,7 +27,8 @@ written is listed as **TODO** rather than covered by an older document that was 
 | 26 | G22 / G19 production migration plans | `26_G19_G22_PRODUCTION_MIGRATION_PLAN.md` (G19 section on the PR #91 branch) | written — **not applied** (D15, D16) |
 | 27 | G14 compare-at price proposal + mock | `27_G14_COMPARE_AT_PRICE_PROPOSAL.md`, `27_G14_COMPARE_AT_MOCK.html` | proposal — not built (D18) |
 | 28 | Public Git history and PR evidence review | `28_GIT_HISTORY_EXPOSURE_REVIEW.md` | written 2026-11-26 (D19) |
-| 29 | Admin acceptance matrix (12 checks per screen) + fresh baseline | `29_ADMIN_ACCEPTANCE_MATRIX.md` | written 2026-11-26 |
+| 29 | Admin acceptance matrix (12 checks per screen) + fresh baseline | `29_ADMIN_ACCEPTANCE_MATRIX.md` | written 2026-11-26, updated 2026-11-27 |
 | 30 | Operations runbook and dependency list | `30_OPERATIONS_RUNBOOK_AND_DEPENDENCIES.md` | written 2026-11-26 |
 | 31 | **Final report — merchant autonomy, admin and theme editor closure** | `31_FINAL_MERCHANT_AUTONOMY_CLOSURE_REPORT.md` | **read first** (2026-11-26) |
+| 32 | Acceptance closure: evidence record, owner walkthrough (14 operations), theme-control assessment, D19 steps, G19 release order | `32_ACCEPTANCE_CLOSURE_2026-11-27.md` | written 2026-11-27 |
 | SEO | Search, AEO and Search Console | `seo-search/` (start at `00`; dated checks in `17`) | engineering implemented; Google indexing pending |

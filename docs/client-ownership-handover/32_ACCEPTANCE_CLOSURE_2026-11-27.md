@@ -25,8 +25,8 @@ in this pass.
 | #101 | Role UX G27/G28 | `177983d` | `5afcZXijcSH11srLQx1u6oHApSzB` success |
 | #102 | Checkout quote race (root cause of the "flaky" quote check) | `a0d6d31` | `5GkLTMi84sDyNLRNe9LCXbydga4H` success |
 | #103 | Activity log search and filters | `e10889f` | `2q8pWKZm62KTNFRDLENe657twkqU` success |
-| #104 | G41/G45 admin accuracy (COD text, Help, media wording) | `7f8defb` | `BpwGdL71c38sYn1eBaZo1d64mvUo` (pending at time of writing) |
-| #105 | Test only: discount propagation E2E | open | — |
+| #104 | G41/G45 admin accuracy (COD text, Help, media wording) | `7f8defb` | `BpwGdL71c38sYn1eBaZo1d64mvUo` success |
+| #105 | Test only: discount propagation E2E | `ed327db` | test-only (no app change) |
 | #91 | G19 content-page history/restore/SEO | **draft**, head `dc9fea42` | waits for migration approval (§4) |
 
 Production read-only smoke after the merges:

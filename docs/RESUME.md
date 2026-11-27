@@ -8,7 +8,7 @@
 > - **New:**
 >   - HYD-001: a checkout hydration mismatch could wipe a just-typed city. Fixed in the cart and compare stores, with spec `ui-store-hydration`.
 >   - SEO-001: `/cart` is now `noindex`.
->   - Both are on branch `fix/hydration-store-snapshot-2026-11-27`; the PR and deploy are recorded in `11`.
+>   - Both are **live**: #112 merged (`f0286d6`), production deploy `dpl_EUF1h84N4mmiH18VVJL6cGzL4R3H` READY, verified read-only (`11`).
 > - **Isolated stack note:** `supabase db reset --local` stops at `20261118160000` (no Storage locally). After it, run `supabase migration repair --local --status applied 20261118160000` and `supabase migration up --local`. Then revert that repair, and run `scripts/dev/isolated-cms-media-table.sql` and `seed-isolated.mjs` (44 local migrations).
 > - **Still open (owner):**
 >   - the 14-operation walkthrough (`32` §5);

@@ -3,6 +3,14 @@
 **Status: READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED. This is not a complete handover certificate.**
 Infrastructure ownership (D1, D2, D9) and one verified real order (D4) are still open.
 
+> **2026-11-27 addendum — acceptance-matrix closure:** see `32_ACCEPTANCE_CLOSURE_2026-11-27.md`.
+> - **Live:** #99 navigation G26/G49, #100 import safety + import/SEO E2E, #101 role UX G27/G28, #102 checkout quote race (the "flaky" check was a real bug), #103 activity search, #104 G41/G45 accuracy. #105 adds a discount propagation E2E (test only).
+> - **G19:** the owner approved it in chat; migration `20261126160000` was applied and PR #91 merged (`365a0a1`). Record: `26` §G19-10.
+> - **Separate states:**
+>   - engineering: the priority list is done or documented;
+>   - merchant acceptance: **not done** (the owner walkthrough in `32` §5);
+>   - third-party readiness: **not certified** (public repo D19, ownership D1/D2/D9, COD D4).
+
 ## 1. Latest commit and deploy
 
 - `main` = `aa6ff87` (PR #96) at the time of writing; this report itself lands in a docs-only PR after it.

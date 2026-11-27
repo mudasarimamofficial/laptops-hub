@@ -1,5 +1,15 @@
 # Resume here
 
+> **2026-11-27 acceptance-matrix closure (Claude Opus 5.5) — read first:** `docs/client-ownership-handover/32_ACCEPTANCE_CLOSURE_2026-11-27.md`.
+> - **Live:** #99 (navigation G26/G49), #100 (import safety, import/SEO E2E), #101 (role UX G27/G28), #102 (checkout quote race fix), #103 (activity search), #104 (G41/G45 admin accuracy). #105 is the discount propagation E2E (test only).
+> - **G19 LIVE 2026-11-27:** the owner authorised it in chat; migration `20261126160000` was applied and PR #91 merged (`365a0a1`), with the Vercel deploy succeeding. All 13 baseline revisions equal the live text, and the public pages are unchanged. Record: `26` §G19-10. **Production ledger: no pending migrations.** Any future migration still needs owner approval.
+> - **Still open:**
+>   - the owner walkthrough of 14 operations (`32` §5);
+>   - theme controls not built (`32` §6: no migration needed; colour and typography conflict with the frozen V5 design);
+>   - D19 repository visibility steps (`32` §7; the repo is still PUBLIC);
+>   - G14 proposal only;
+>   - no full isolated run since these merges.
+
 > **2026-11-26 merchant-autonomy closure (Claude Opus 5.5) — read first:** `docs/client-ownership-handover/31_FINAL_MERCHANT_AUTONOMY_CLOSURE_REPORT.md`.
 > Live this pass: G12 (#88), G13 (#89), G22 code (#90), G24 (#92), G17 v3 + G18 (#93), theme Cart & compare (#94), retry-message fix (#95), G47 cross-site admin writes (#96).
 > **G22 migration `20261126140000` APPLIED 2026-11-26 with owner approval** (record: `26` §G22-8; 44/44 aligned). **Still needs approval:** `20261126160000` + merge of draft PR #91 (G19, D16, migration first).

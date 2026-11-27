@@ -1,7 +1,7 @@
 {
   "supabase": "local",
   "base": "http://127.0.0.1:3001",
-  "at": "2026-11-17T05:03:42.449Z",
+  "at": "2026-11-27T15:35:14.638Z",
   "results": [
     {
       "name": "anon PATCH /api/admin/content/about",
@@ -316,17 +316,17 @@
     {
       "name": "editor GET /admin/orders → redirect",
       "ok": true,
-      "detail": "307 /admin/forbidden"
+      "detail": "307 /admin/forbidden?reason=role"
     },
     {
       "name": "editor GET /admin/inquiries → redirect",
       "ok": true,
-      "detail": "307 /admin/forbidden"
+      "detail": "307 /admin/forbidden?reason=role"
     },
     {
       "name": "editor GET /admin/settings → redirect",
       "ok": true,
-      "detail": "307 /admin/forbidden"
+      "detail": "307 /admin/forbidden?reason=role"
     },
     {
       "name": "fulfillment PATCH /api/admin/content/about → denied",
@@ -371,12 +371,12 @@
     {
       "name": "fulfillment GET /admin/content → redirect",
       "ok": true,
-      "detail": "307 /admin/forbidden"
+      "detail": "307 /admin/forbidden?reason=role"
     },
     {
       "name": "fulfillment GET /admin/products → redirect",
       "ok": true,
-      "detail": "307 /admin/forbidden"
+      "detail": "307 /admin/forbidden?reason=role"
     },
     {
       "name": "fulfillment GET /admin/orders → 200",
@@ -391,7 +391,7 @@
     {
       "name": "fulfillment GET /admin/settings → redirect",
       "ok": true,
-      "detail": "307 /admin/forbidden"
+      "detail": "307 /admin/forbidden?reason=role"
     },
     {
       "name": "manager(inactive) PATCH /api/admin/content/about → denied",
@@ -541,7 +541,7 @@
     {
       "name": "owner can approve and publish a policy page",
       "ok": true,
-      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"e87d1ea7-9cc7-40cc-821b-627e02b69ead\"}"
+      "detail": "status=200 {\"status\":\"published\",\"legal_approved\":true,\"legal_approved_by\":\"2cdf2d3d-98a8-453f-9368-143f2430441d\"}"
     },
     {
       "name": "published policy renders CMS body",
@@ -616,12 +616,12 @@
     {
       "name": "collection recorded once via route",
       "ok": true,
-      "detail": "200 {\"ok\":true,\"idempotentReplay\":false,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"796492ca-4746-4a82-adab-6bbf09a59d91\"} collected=100000"
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":false,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"69f65af8-428f-4b74-81ea-0650be772e8e\"} collected=100000"
     },
     {
       "name": "retry with same key replays",
       "ok": true,
-      "detail": "200 {\"ok\":true,\"idempotentReplay\":true,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"796492ca-4746-4a82-adab-6bbf09a59d91\"}"
+      "detail": "200 {\"ok\":true,\"idempotentReplay\":true,\"amountCollectedPaisa\":100000,\"paymentStatus\":\"partially_collected\",\"collectionId\":\"69f65af8-428f-4b74-81ea-0650be772e8e\"}"
     },
     {
       "name": "same key, different amount → 409 conflict, no constraint leak",

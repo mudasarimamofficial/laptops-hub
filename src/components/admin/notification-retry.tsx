@@ -3,7 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export function NotificationRetry({ orderNumber }: { orderNumber: string }) {
+/**
+ * "Retry sending" for an order's notifications. The page keeps it mounted even when nothing is pending, so the result
+ * of a successful retry ("Accepted 1 · failed 0") is still shown after the page refreshes and the button disappears.
+ */
+export function NotificationRetry({
+  orderNumber,
+  pending = true,
+}: {
+  orderNumber: string;
+  pending?: boolean;
+}) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -33,12 +43,24 @@ export function NotificationRetry({ orderNumber }: { orderNumber: string }) {
     }
   }
 
+  if (!pending && !msg) return null;
   return (
     <div className="mt-3 flex flex-wrap items-center gap-3">
-      <button type="button" onClick={retry} disabled={busy} className="lh-btn lh-btn-ghost text-sm">
-        {busy ? "Sending…" : "Retry sending"}
-      </button>
-      {msg ? <span role="status" className="text-sm text-[var(--lh-ink-2)]">{msg}</span> : null}
+      {pending ? (
+        <button
+          type="button"
+          onClick={retry}
+          disabled={busy}
+          className="lh-btn lh-btn-ghost text-sm"
+        >
+          {busy ? "Sending…" : "Retry sending"}
+        </button>
+      ) : null}
+      {msg ? (
+        <span role="status" className="text-sm text-[var(--lh-ink-2)]">
+          {msg}
+        </span>
+      ) : null}
     </div>
   );
 }

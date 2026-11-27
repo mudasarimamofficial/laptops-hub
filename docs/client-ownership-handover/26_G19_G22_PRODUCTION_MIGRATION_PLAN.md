@@ -94,6 +94,20 @@ followed by `npx supabase migration repair --linked --status reverted 2026112614
 
 `G22-DB`: approve applying `20261126140000` to production as in G22-5.
 
+**Approved by the owner on 2026-11-26 ("Yes, apply G22") and executed. See G22-8.**
+
+### G22-8. Execution record (2026-11-26 08:20 UTC)
+
+| Step | Result |
+|---|---|
+| 1. `migration list --linked` | exactly one pending: `20261126140000`; no remote-only rows |
+| 2. Pre-checks (read-only) | `record_cod_collection` md5 `6c6ca2e59c0db85749b296725e7d9cc5` (unchanged); `cod_collection_adjustments` absent; `cod_collections` 0 rows, 0 triggers; `service_role` TRUNCATE = true; 1 order `LH-261118-77C0F6` (placed, unpaid_cod, total 18,141,000 paisa = subtotal 18,100,000 + shipping 36,000 + COD fee 5,000, collected 0); `db push --dry-run` listed only this file |
+| 3. `db push --linked` | applied. The CLI (v2.108.0) printed an error from its own post-push helper (`pg-delta`: a missing local CA certificate file) after the migration ran; the ledger and objects below confirm the migration itself completed. |
+| 4. Post-checks (read-only) | ledger row `20261126140000` present (44/44 aligned); table present with RLS on; 4 indexes (pkey + collection_id, order_id, idempotency unique); triggers `cod_collections_append_only` and `cod_collection_adjustments_append_only`; `adjust_cod_collection` EXECUTE for anon/authenticated = false; anon SELECT on the new table = false; `service_role` TRUNCATE on `cod_collections` = false; `service_role` UPDATE on the new table = false (INSERT = true); 0 adjustment rows, 0 collection rows; the order row is **identical** to the pre-check. `record_cod_collection` and `adjust_cod_collection` bodies are identical to the locally rehearsed versions (compared ignoring blank lines; the raw md5 differs only by output whitespace). PostgREST auto-reload event triggers (`pgrst_ddl_watch`, `pgrst_drop_watch`) are enabled, so the API sees the new table. |
+| 5. Smoke (read-only) | `/`, `/cart`, `/collections/dell`, a product page and `/sitemap.xml` 200; homepage still shows the 5% campaign; anonymous `POST /api/admin/cod-collections/adjust` → 401. **No collection, reversal or correction was recorded.** The owner should open the order page once while signed in and confirm the "Cash history" section shows the correction controls (engineering does not sign in with the owner's account). |
+
+Rollback: G22-6 (still safe: the adjustment ledger is empty).
+
 ---
 
 ## G19 — content pages: history, restore, SEO, create, address change

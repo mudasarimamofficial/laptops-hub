@@ -1,4 +1,5 @@
 import { sanitizeCmsHtml } from "@/lib/security/sanitize-html";
+import { cleanTags } from "@/lib/content/blog";
 import type { V5Block, V5Page } from "@/lib/content/types";
 
 /** Pure publication rules for content pages (see src/lib/content/pages.ts). */
@@ -32,6 +33,10 @@ export type ArticleSeo = {
   author: string;
   publishedAt: string | null;
   modifiedAt: string | null;
+  /** G18: Admin › Blog category, tags and starter template ("" / [] when not set). */
+  category?: string;
+  tags?: string[];
+  template?: string;
 };
 
 export type ContentRow = {
@@ -48,6 +53,9 @@ export type ContentRow = {
   og_image_url?: string | null;
   cover_image_url?: string | null;
   author_name?: string | null;
+  category?: string | null;
+  tags?: string[] | null;
+  template_key?: string | null;
 };
 
 const httpsUrl = (u: string | null | undefined) => {
@@ -71,6 +79,9 @@ export function articleSeoFromRow(row: ContentRow | undefined): ArticleSeo | und
     author: plain(row.author_name, 80),
     publishedAt: row.published_at || null,
     modifiedAt: row.updated_at || null,
+    category: plain(row.category, 80),
+    tags: cleanTags(row.tags),
+    template: plain(row.template_key, 40),
   };
 }
 

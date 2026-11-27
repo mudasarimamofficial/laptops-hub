@@ -87,3 +87,11 @@ docs/evidence/migrations/schema_upgrade.sql
 *.dump
 *.sql.gz
 .next-perf-*
+
+# Signed-in browser state, owner/session files and private evidence (never commit; added 2026-11-26, P12 containment)
+owner.json
+**/.auth/
+*storage-state*.json
+LaptopsHub-private/
+*.pem
+*.p12

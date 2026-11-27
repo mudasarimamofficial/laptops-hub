@@ -8,9 +8,11 @@ import { useCart } from "@/lib/commerce/cart-store";
 import { openCartDrawer } from "@/lib/commerce/cart-ui";
 import { canPurchase } from "@/lib/catalog/availability";
 import { V5_COMPARE_ROWS, type V5CompareCol } from "@/lib/catalog/v5-model";
+import { useThemeGlobals } from "@/components/storefront/theme-globals-provider";
 
 /** Port of the V5 compare page (`isCompare`): sticky label column, highlighted differing rows, "Only differences". */
 export default function ComparePage() {
+  const g = useThemeGlobals();
   const handles = useCompare((s) => s.handles);
   const toggle = useCompare((s) => s.toggle);
   const clear = useCompare((s) => s.clear);
@@ -47,8 +49,8 @@ export default function ComparePage() {
     <section data-screen-label="Compare" style={{ maxWidth: 1360, margin: "0 auto", padding: "36px clamp(16px,3vw,32px) 80px" }}>
       <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 28 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: "1 1 auto", minWidth: "min(100%,320px)" }}>
-          <h1 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(34px,4vw,56px)", lineHeight: 1.08, letterSpacing: "-.04em", fontWeight: 700, textWrap: "balance" }}>Compare laptops</h1>
-          <span style={{ fontSize: 15, color: "var(--lh-ink-2)" }}>Up to 4 at a time. Highlighted rows differ.</span>
+          <h1 style={{ margin: 0, fontFamily: "var(--font-display)", fontSize: "clamp(34px,4vw,56px)", lineHeight: 1.08, letterSpacing: "-.04em", fontWeight: 700, textWrap: "balance" }}>{g.compareTitle}</h1>
+          <span style={{ fontSize: 15, color: "var(--lh-ink-2)" }}>{g.compareSub}</span>
         </div>
         {has ? (
           <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
@@ -64,10 +66,10 @@ export default function ComparePage() {
       </div>
       {!handles.length ? (
         <div style={{ padding: "72px 24px", textAlign: "center", background: "#FFFFFF", border: "1px solid var(--lh-border)", borderRadius: 24, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-          <span style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700 }}>Nothing to compare yet</span>
-          <span style={{ fontSize: 15, color: "var(--lh-ink-2)" }}>Tap Compare on any laptop card or product page.</span>
-          <Link href="/collections/all" style={{ height: 48, padding: "0 24px", borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontWeight: 700, display: "flex", alignItems: "center", marginTop: 6, whiteSpace: "nowrap" }}>
-            Browse laptops
+          <span style={{ fontFamily: "var(--font-display)", fontSize: 22, fontWeight: 700 }}>{g.compareEmptyTitle}</span>
+          <span style={{ fontSize: 15, color: "var(--lh-ink-2)" }}>{g.compareEmptyText}</span>
+          <Link href={g.compareEmptyHref} style={{ height: 48, padding: "0 24px", borderRadius: 999, background: "var(--lh-grad-action)", color: "#FFFFFF", fontWeight: 700, display: "flex", alignItems: "center", marginTop: 6, whiteSpace: "nowrap" }}>
+            {g.compareEmptyButton}
           </Link>
         </div>
       ) : null}

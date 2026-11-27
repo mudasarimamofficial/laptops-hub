@@ -1,11 +1,13 @@
 import { createHash } from "crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { loadSnapshotExtras, restoreSnapshotExtras, type ExtrasPayload } from "./snapshot-extras";
 
 /**
  * Merchant CMS application snapshots — NOT a full PostgreSQL dump.
  *
  * Protected / restorable:
- *   store_settings, articles, reels, store_testimonials, shipping_zones
+ *   store_settings, articles, reels, store_testimonials, shipping_zones (atomic RPC)
+ *   v3 (G17): content_pages (non-legal), reel_products, homepage theme publication (see snapshot-extras.ts)
  *
  * Explicitly excluded (order integrity / auth / live catalog):
  *   products, product_variants, collections, orders, customers, staff, secrets
@@ -16,18 +18,23 @@ export const SNAPSHOT_SCOPE = [
   "reels",
   "store_testimonials",
   "shipping_zones",
+  "content_pages",
+  "reel_products",
+  "theme",
 ] as const;
 
 export const SNAPSHOT_SCOPE_LABEL =
-  "Store settings, blog posts, reels, customer reviews, and shipping zones. Does not include products, orders, customers, or staff accounts.";
+  "Store settings, blog posts, reels and their product links, customer reviews, shipping zones, CMS pages and the published homepage theme. Does not include products, orders, customers, staff accounts or media files.";
 
 const KEEP_VALID = 4;
 
 /**
  * G17: settings a CMS restore must never change. `cod_checkout` is the customer-ordering go-live gate (LH-017): an old
  * snapshot must not switch live COD ordering on or off. It keeps its current value; change it deliberately instead.
+ * G24: `notifications` (staff recipients, customer-email mode) is kept live too, so a restore can never start emailing
+ * customers again or send alerts to a former staff member's address.
  */
-export const RESTORE_PROTECTED_SETTING_KEYS = ["cod_checkout"] as const;
+export const RESTORE_PROTECTED_SETTING_KEYS = ["cod_checkout", "notifications"] as const;
 
 /** The payload actually sent to the restore RPC: protected settings removed, everything else unchanged. */
 export function restorablePayload<T extends { store_settings: unknown[] }>(payload: T): { payload: T; keptLive: string[] } {
@@ -44,7 +51,8 @@ export function restorablePayload<T extends { store_settings: unknown[] }>(paylo
   return { payload: { ...payload, store_settings }, keptLive };
 }
 const COALESCE_MS = 10 * 60 * 1000;
-const SCHEMA_VERSION = 2;
+/** 3 = G17: + content_pages, reel_products, theme. Version 2 backups stay restorable (core sections only). */
+const SCHEMA_VERSION = 3;
 
 export type MerchantCmsPayload = {
   schemaVersion: number;
@@ -54,9 +62,9 @@ export type MerchantCmsPayload = {
   reels: unknown[];
   store_testimonials: unknown[];
   shipping_zones: unknown[];
-};
+} & ExtrasPayload;
 
-async function loadTable(supabase: SupabaseClient, table: string, columns = "*") {
+async function loadTable(supabase: SupabaseClient, table: string, columns = "*"): Promise<unknown[]> {
   const { data, error } = await supabase.from(table).select(columns).limit(20_000);
   if (error) throw new Error(`${table}: ${error.message}`);
   return data || [];
@@ -70,6 +78,7 @@ export async function buildMerchantSnapshotPayload(supabase: SupabaseClient): Pr
     loadTable(supabase, "store_testimonials"),
     loadTable(supabase, "shipping_zones"),
   ]);
+  const extras = await loadSnapshotExtras((table, columns) => loadTable(supabase, table, columns));
 
   return {
     schemaVersion: SCHEMA_VERSION,
@@ -79,6 +88,7 @@ export async function buildMerchantSnapshotPayload(supabase: SupabaseClient): Pr
     reels,
     store_testimonials,
     shipping_zones,
+    ...extras,
   };
 }
 
@@ -115,6 +125,17 @@ export function validateSnapshotPayload(payload: unknown): {
     store_testimonials: testimonials?.length ?? -1,
     shipping_zones: zones?.length ?? -1,
   };
+  const version = typeof p.schemaVersion === "number" ? p.schemaVersion : 0;
+  if (version >= 3) {
+    const theme = p.theme as { publications?: unknown; versions?: unknown } | undefined;
+    checks.content_pages = Array.isArray(p.content_pages) ? p.content_pages.length : -1;
+    checks.reel_products = Array.isArray(p.reel_products) ? p.reel_products.length : -1;
+    checks.theme_versions = Array.isArray(theme?.versions) ? theme.versions.length : -1;
+    checks.theme_publications = Array.isArray(theme?.publications) ? theme.publications.length : -1;
+    if (checks.content_pages < 0 || checks.reel_products < 0 || checks.theme_versions < 0 || checks.theme_publications < 0) {
+      return { ok: false, checks, reason: "missing_v3_sections" };
+    }
+  }
 
   if (!settings || !articles || !reels || !testimonials || !zones) {
     return { ok: false, checks, reason: "missing_tables" };
@@ -279,13 +300,16 @@ export async function restoreMerchantSnapshot(
     throw new Error(`Restore failed (transaction rolled back): ${rpcError.message}`);
   }
 
+  // v3 sections (a v2 backup has none; they are then left as they are).
+  const extras = await restoreSnapshotExtras(supabase, payload as MerchantCmsPayload, staffUserId, `Restored from backup ${snapshotId.slice(0, 8)}`);
+
   await supabase.from("audit_logs").insert({
     actor_user_id: staffUserId,
     action: "merchant_snapshot.restore",
     entity_type: "merchant_snapshots",
     entity_id: snapshotId,
-    after: { restored: true, checks: validation.checks, rpc: rpcResult, checkpointId: checkpoint.id, keptLive },
+    after: { restored: true, checks: validation.checks, rpc: rpcResult, checkpointId: checkpoint.id, keptLive, extras },
   });
 
-  return { ok: true as const, snapshotId, checkpointId: checkpoint.id as string, rpc: rpcResult, keptLive };
+  return { ok: true as const, snapshotId, checkpointId: checkpoint.id as string, rpc: rpcResult, keptLive, extras };
 }

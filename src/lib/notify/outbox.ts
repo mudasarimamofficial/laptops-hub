@@ -1,7 +1,10 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import { siteUrl } from "@/lib/site-url";
 import { emailConfigured, safeError, sendEmail, type SendResult } from "./send-email";
-import { businessOrderAlert, customerOrderConfirmation, type NotifyOrder } from "./templates";
+import { businessInquiryAlert, businessOrderAlert, customerOrderConfirmation, type NotifyInquiry, type NotifyOrder } from "./templates";
+import { fillSubject, fingerprint, type NotificationSettings } from "./settings";
+import { loadNotificationSettings } from "./settings-server";
+import { formatPkr } from "@/lib/money";
 
 /**
  * Delivers `notification_outbox` rows (one per new order, written by create_cod_order; never for replays).
@@ -16,6 +19,11 @@ import { businessOrderAlert, customerOrderConfirmation, type NotifyOrder } from 
  * - Temporary failures back off (BACKOFF_MIN) and stop after MAX_ATTEMPTS. A permanent provider error (e.g. 409
  *   invalid_idempotent_request, 4xx validation) stops automatic retries at once. Staff can retry from the order page.
  * - Without provider settings nothing is claimed and nothing is reported as sent.
+ * - G24: staff recipients, customer-email mode (off / test / on), custom subjects and intro come from
+ *   Settings › Notifications (store_settings.notifications) with the old environment fallback. With the fallback and
+ *   built-in wording, messages and idempotency keys are unchanged; with merchant settings the key carries a
+ *   fingerprint of the message so an edited message is not refused as a "different payload" by the provider.
+ * - Templates: order_placed_cod (order alert + customer confirmation) and contact_inquiry (staff alert only).
  */
 export const MAX_ATTEMPTS = 5;
 export const LEASE_SECONDS = 300;
@@ -38,6 +46,7 @@ export type OutboxRow = {
 /** Test seams only (isolated tests inject provider calls and simulated crashes); production passes nothing. */
 export type OutboxDeps = {
   send?: typeof sendEmail;
+  settings?: NotificationSettings;
   afterAccepted?: (row: OutboxRow, recipient: Recipient) => void | Promise<void>;
 };
 
@@ -99,25 +108,45 @@ const backoff = (attempts: number) =>
   new Date(Date.now() + BACKOFF_MIN[Math.min(attempts, BACKOFF_MIN.length) - 1] * 60_000).toISOString();
 
 /** Delivers one claimed row. Returns the final state, or "lost" when the lease was taken over. */
-async function deliverRow(row: OutboxRow, deps: OutboxDeps): Promise<"accepted" | "failed" | "lost"> {
+async function loadInquiry(id: string): Promise<NotifyInquiry | null> {
+  const { data } = await createServiceClient()
+    .from("contact_inquiries")
+    .select("name, phone, email, subject, message, created_at")
+    .eq("id", id)
+    .maybeSingle();
+  if (!data) return null;
+  return { name: data.name, phone: data.phone, email: data.email, subject: data.subject || "", message: data.message, createdAt: data.created_at };
+}
+
+/** Delivers one claimed row. Returns the final state, or "lost" when the lease was taken over. */
+async function deliverRow(row: OutboxRow & { payload?: unknown }, deps: OutboxDeps, settings: NotificationSettings): Promise<"accepted" | "failed" | "lost"> {
   const send = deps.send ?? sendEmail;
   const fail = async (error: string) =>
     (await leased(row, { status: "failed", claim_token: null, last_error: safeError(error), next_attempt_at: backoff(row.attempts) }))
       ? ("failed" as const)
       : ("lost" as const);
 
-  if (row.template !== "order_placed_cod") return fail("unknown_template");
-  if (!row.order_id) return fail("order_not_found");
-  const order = await loadOrder(row.order_id);
-  if (!order) return fail("order_not_found");
-  const to = process.env.STORE_NOTIFY_EMAIL;
-  if (!to) return fail("STORE_NOTIFY_EMAIL not set");
+  if (row.template !== "order_placed_cod" && row.template !== "contact_inquiry") return fail("unknown_template");
+  const staff = settings.recipients;
+  if (!staff.length) return fail("no staff recipient set (Settings › Notifications or STORE_NOTIFY_EMAIL)");
+  // Unchanged keys for the environment fallback with built-in wording (in-flight retries stay de-duplicated).
+  const legacy = settings.source === "env" && !settings.orderSubject && !settings.customerSubject && !settings.customerIntro;
+  const keyFor = (recipient: string, to: string | string[], msg: { subject: string; text: string }) =>
+    legacy && recipient !== "customer-test"
+      ? `outbox-${row.id}-${recipient}`
+      : `outbox-${row.id}-${recipient}-${fingerprint(JSON.stringify([to, msg.subject, msg.text]))}`;
+  const to: string | string[] = staff.length === 1 ? staff[0] : staff;
   const base = siteUrl();
 
   let lastError: string | null = null;
   let permanent = false;
-  const attempt = async (recipient: Recipient, address: string, msg: { subject: string; text: string }): Promise<"ok" | "failed" | "lost"> => {
-    const r: SendResult = await send({ to: address, ...msg, idempotencyKey: `outbox-${row.id}-${recipient}` });
+  const attempt = async (
+    recipient: Recipient,
+    address: string | string[],
+    msg: { subject: string; text: string },
+    opts: { keyName?: string; acceptedStatus?: "accepted" | "skipped" } = {},
+  ): Promise<"ok" | "failed" | "lost"> => {
+    const r: SendResult = await send({ to: address, ...msg, idempotencyKey: keyFor(opts.keyName ?? recipient, address, msg) });
     if (!r.ok) {
       lastError = safeError(`${recipient}: ${r.error}`);
       if (!r.retryable) permanent = true;
@@ -128,7 +157,7 @@ async function deliverRow(row: OutboxRow, deps: OutboxDeps): Promise<"accepted" 
     // idempotency key inside the provider's retention window, so it is not delivered twice.
     await deps.afterAccepted?.(row, recipient);
     const ok = await leased(row, {
-      [`${recipient}_status`]: "accepted",
+      [`${recipient}_status`]: opts.acceptedStatus ?? "accepted",
       [`${recipient}_message_id`]: r.id,
       [`${recipient}_accepted_at`]: new Date().toISOString(),
     });
@@ -136,22 +165,60 @@ async function deliverRow(row: OutboxRow, deps: OutboxDeps): Promise<"accepted" 
   };
 
   let failure: string | null = null;
-  if (row.business_status !== "accepted") {
-    const r = await attempt("business", to, businessOrderAlert(order, `${base}/admin/orders/${encodeURIComponent(order.orderNumber)}`));
-    if (r === "lost") return "lost";
-    if (r === "failed") failure = "business";
-  }
-
-  const customerWanted = process.env.NOTIFY_CUSTOMER_EMAIL === "1" && !!order.email;
   let customerDone = row.customer_status === "accepted" || row.customer_status === "skipped";
-  if (!customerDone && !customerWanted) {
-    if (!(await leased(row, { customer_status: "skipped" }))) return "lost";
-    customerDone = true;
-  } else if (!customerDone && order.email) {
-    const r = await attempt("customer", order.email, customerOrderConfirmation(order, `${base}/order/success/${order.accessToken}`));
-    if (r === "lost") return "lost";
-    if (r === "ok") customerDone = true;
-    else failure = failure ? "business+customer" : "customer";
+
+  if (row.template === "contact_inquiry") {
+    const p = (row.payload && typeof row.payload === "object" ? row.payload : {}) as { inquiry_id?: unknown };
+    const inquiry = typeof p.inquiry_id === "string" ? await loadInquiry(p.inquiry_id) : null;
+    if (!inquiry) return fail("inquiry_not_found");
+    if (row.business_status !== "accepted") {
+      const r = await attempt("business", to, businessInquiryAlert(inquiry, `${base}/admin/inquiries`));
+      if (r === "lost") return "lost";
+      if (r === "failed") failure = "business";
+    }
+    // Inquiry alerts are staff-only; the person who wrote in is never emailed.
+    if (!customerDone) {
+      if (!(await leased(row, { customer_status: "skipped" }))) return "lost";
+      customerDone = true;
+    }
+  } else {
+    if (!row.order_id) return fail("order_not_found");
+    const order = await loadOrder(row.order_id);
+    if (!order) return fail("order_not_found");
+    const vars = { order: order.orderNumber, total: formatPkr(order.totalDuePaisa) };
+
+    if (row.business_status !== "accepted") {
+      const r = await attempt(
+        "business",
+        to,
+        businessOrderAlert(order, `${base}/admin/orders/${encodeURIComponent(order.orderNumber)}`, { subject: fillSubject(settings.orderSubject, vars) }),
+      );
+      if (r === "lost") return "lost";
+      if (r === "failed") failure = "business";
+    }
+
+    const customerMsg = () =>
+      customerOrderConfirmation(order, `${base}/order/success/${order.accessToken}`, {
+        subject: fillSubject(settings.customerSubject, vars),
+        intro: settings.customerIntro,
+      });
+    const mode = settings.customerMode;
+    if (!customerDone && (mode === "off" || (mode === "on" && !order.email))) {
+      if (!(await leased(row, { customer_status: "skipped" }))) return "lost";
+      customerDone = true;
+    } else if (!customerDone && mode === "test") {
+      // Test mode: the customer copy goes to the staff recipients only; the customer stays "skipped" (not emailed).
+      const m = customerMsg();
+      const r = await attempt("customer", to, { subject: `[Test — customer copy] ${m.subject}`, text: m.text }, { keyName: "customer-test", acceptedStatus: "skipped" });
+      if (r === "lost") return "lost";
+      if (r === "ok") customerDone = true;
+      else failure = failure ? "business+customer" : "customer";
+    } else if (!customerDone && order.email) {
+      const r = await attempt("customer", order.email, customerMsg());
+      if (r === "lost") return "lost";
+      if (r === "ok") customerDone = true;
+      else failure = failure ? "business+customer" : "customer";
+    }
   }
 
   if (failure || !customerDone) {
@@ -176,7 +243,8 @@ export async function processOutbox(
   opts: { orderId?: string; limit?: number; manual?: boolean } = {},
   deps: OutboxDeps = {},
 ): Promise<OutboxRunResult> {
-  const result: OutboxRunResult = { configured: emailConfigured() && !!process.env.STORE_NOTIFY_EMAIL, processed: 0, accepted: 0, failed: 0, lost: 0 };
+  const settings = deps.settings ?? (await loadNotificationSettings());
+  const result: OutboxRunResult = { configured: emailConfigured() && settings.recipients.length > 0, processed: 0, accepted: 0, failed: 0, lost: 0 };
   if (!result.configured) return result;
   const { data: rows, error } = await createServiceClient().rpc("claim_notifications", {
     p_limit: opts.limit ?? 10,
@@ -192,7 +260,7 @@ export async function processOutbox(
     result.processed++;
     let outcome: "accepted" | "failed" | "lost";
     try {
-      outcome = await deliverRow(row, deps);
+      outcome = await deliverRow(row, deps, settings);
     } catch {
       // Database or unexpected error mid-row: leave the lease to expire; recovery reclaims it by lease age.
       outcome = "lost";

@@ -1,5 +1,11 @@
 # Resume here
 
+> **2026-11-26 merchant-autonomy closure (Claude Opus 5.5) — read first:** `docs/client-ownership-handover/31_FINAL_MERCHANT_AUTONOMY_CLOSURE_REPORT.md`.
+> Live this pass: G12 (#88), G13 (#89), G22 code (#90), G24 (#92), G17 v3 + G18 (#93), theme Cart & compare (#94), retry-message fix (#95), G47 cross-site admin writes (#96).
+> **G22 migration `20261126140000` APPLIED 2026-11-26 with owner approval** (record: `26` §G22-8; 44/44 aligned). **Still needs approval:** `20261126160000` + merge of draft PR #91 (G19, D16, migration first).
+> G14 compare-at: proposal only (`27`, D18). G13-M1 Shopify media: D17. Git-history review and the LH-025 evidence custody task: `28` (D19).
+> Fresh full isolated baseline: 219 passed / 1 failed (flaky quote message) / 6 skipped; details in `29`. Never `db push --linked` without approval.
+
 > **2026-11-26 LH-025 FIXED (Claude Opus 5.5) — read first:** the owner approved doc 24 §7. PR #86 merged
 > (`2229004`) and the sequence was executed: 2 ledger repairs plus a push of the comment-only migration
 > `20261126022136`. Production ledger: 43/43 aligned, `db push --linked --dry-run` reports up to date, and the only

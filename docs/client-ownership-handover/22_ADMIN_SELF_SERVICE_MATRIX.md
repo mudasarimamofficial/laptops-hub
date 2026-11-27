@@ -43,23 +43,27 @@ merged to `main` and deployed to production by Vercel; every fix was first prove
 | G05 Collection management | **FIXED, live** | PR #83 (LH-034): title, description, visibility and search text for merchant collections; built-in collections say what applies and take search text only. There is still no delete (hide instead). |
 | G06 Draft activation · G07 Sell switch | **FIXED, live** | PR #77 (LH-029) |
 | G08 Discount cache · G09 dated re-save · G10 fixed-amount units | **FIXED, live** | PR #77 (LH-027) |
-| G18 Blog SEO fields | **PARTLY FIXED, live** | PR #80: each guide's search title, search description, share image and dates now drive its metadata and Article JSON-LD. Category, tags and template are still saved but not read. |
+| G18 Blog SEO fields | **FIXED, live** | PR #80 (search title, description, share image, dates) and PR #93 (2026-11-26): category, tags and template now show on the guide (chips), drive Article/NewsArticle `articleSection` and `keywords`, and filter `/guides?tag=` / `?category=` (filtered views noindex, canonical `/guides`). |
 | G20 Site-wide SEO | **FIXED, live** | PR #80: homepage search appearance control and branded Organization / WebSite markup (see `seo-search/`). |
 | G21 Order variant and saving | **FIXED, live** | PR #79 (LH-031) |
 | G11 Brand/category free text | **FIXED, live (PR #84)** | Category is a select of the six storefront categories (an unrecognised stored value is kept and labelled); brand suggestions; saves fix the case of known names. Sub-type is still a code map (needs a data-model change). |
-| G12 Collection rule vs pins | OPEN | Size M. |
-| G13 Product media alt / primary / rights | OPEN | Size M. |
-| G14 Compare-at price | OPEN — **needs design approval** | Showing a struck-through price changes the frozen V5 look. |
+| G12 Collection rule vs pins | **FIXED, live** | PR #88 (2026-11-26): explicit manual / automated mode, merchant pin order, visible membership errors. |
+| G13 Product media alt / primary / rights | **FIXED, live** (media migration: owner decision G13-M1) | PR #89 (2026-11-26): alt text edit (used publicly), set-primary, rights status, upload to a product. Moving the 964 Shopify-hosted images is a separate owner decision (`25`). |
+| G14 Compare-at price | OPEN — **proposal ready, needs owner approval (G14-D)** | `27_G14_COMPARE_AT_PRICE_PROPOSAL.md` + mock. Not built, not deployed. 0 of 235 production variants have a compare-at value. |
 | G15 Store details form unused | **FIXED, live (PR #84)** | Store details shows the Contact & Social identity read-only; Contact & Social is the single source. |
 | G16 Inventory defaults unused | **FIXED (store-wide), live (PR #84)** | Inventory → Low uses the saved threshold (0 keeps the built-in 2, which production stores); Add product follows "tracked by default". Per-variant `low_stock_threshold` is still not read. |
-| G17 Backup restore overwrites `cod_checkout` | **PARTLY FIXED, live (PR #84)** | A restore now keeps the live COD go-live switch, and restores work at all again (LH-036). Still open: content pages, theme versions and `reel_products` are not in the snapshot (**needs a migration**). |
-| G19 Content page history / create / SEO | OPEN — **needs a migration** | Owner approval before production. |
-| G22 COD collection corrections | OPEN — **needs a migration** | Owner approval before production. |
+| G17 Backup restore overwrites `cod_checkout` | **FIXED, live** | PR #84 (COD switch kept; restores work again) and PR #93 (2026-11-26): backup format v3 adds content pages (legal pages keep live text), reel product links and the published homepage theme; newer reel columns restored; notification settings kept live. |
+| G19 Content page history / create / SEO | **PREPARED — code in draft PR #91; production migration `20261126160000` NOT applied** (owner decision G19-DB) | Plan: `26_G19_G22_PRODUCTION_MIGRATION_PLAN.md`. Proven on the isolated stack. |
+| G22 COD collection corrections | **FIXED, live** | PR #90 code + migration `20261126140000` applied 2026-11-26 with owner approval (`26` §G22-8): collections refused on cancelled/returned orders, own note, reversal and correction with reason, append-only ledger. |
 | G23 Password change for editor / fulfillment | **FIXED, live (PR #84)** | Admin → *Your account* (every role), linked from the sidebar. |
-| G24 Notifications env-only | OPEN | Size M. |
+| G24 Notifications env-only | **FIXED, live** | PR #92 (2026-11-26): Settings › Notifications (up to 5 staff recipients, customer copy off / test / on — "on" is owner-only, subject and intro wording, inquiry alerts), test-send button, recent delivery list. Falls back to the env address when nothing is saved. |
 | G25 GET-time DB writes outside the write guard | **FIXED, live (PR #84)** | The one-time preset install returns without writing when the Preview→Production guard refuses. Production already has it installed. |
 
-**Counts now:** P0: 5 of 5 fixed. P1: 12 fixed, 2 partly fixed (G17, G18), 6 open (G12, G13, G14, G19, G22, G24). P2: 24 open.
+| G42 Dead code | **PARTLY FIXED, live** | PR #92: the notifications test route now has a button (Settings › Notifications). `src/lib/business.ts` (unused duplicate) is still in the tree. |
+| G48 / LH-012 Storefront microcopy | **PARTLY FIXED, live** | PR #94 (2026-11-26): theme editor › *Cart & compare* (16 texts for the cart page, cart panel and compare page; draft → publish → rollback). Search, checkout, order pages, reviews, map, inquiry form and content-page labels are still code text. |
+| G47 Cross-site origin checks | **FIXED, live (PR #96)** | One middleware check refuses cross-site POST/PUT/PATCH/DELETE on every `/api/admin/*` route (403 `forbidden_origin`); before, 31 of 42 write APIs relied on SameSite cookies only. |
+
+**Counts now (2026-11-26):** P0: 5 of 5 fixed. P1: 18 fixed (G22 migration applied 2026-11-26); G14 proposal awaiting approval; G19 waiting on its owner-approved production migration. P2: 21 open, 1 fixed (G47), 2 partly fixed (G42, G48).
 
 ## 1. Route-by-route matrix
 

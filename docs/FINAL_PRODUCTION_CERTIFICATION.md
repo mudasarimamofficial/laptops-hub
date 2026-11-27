@@ -13,7 +13,7 @@ Labels: **PASS** · **FAIL** · **BLOCKED** · **NOT TESTED** · **NOT APPLICABL
 | Gate | Verdict | Evidence |
 |---|---|---|
 | Live COD order create | **PASS** | `LH-261118-77C0F6` · Rs 181,410 · `placed` / `unpaid_cod` |
-| Order purpose | **QA test** | customer_note=`testing`; purchaser=`mudasarimamofficial@gmail.com`; `order_events.ops_note` recorded — **do not dispatch** |
+| Order purpose | **QA test** | customer_note=`testing`; purchaser=`[engineering staff mailbox — redacted 2026-11-26]`; `order_events.ops_note` recorded — **do not dispatch** |
 | Merchant outbox provider accept | **PASS** | Resend id `01a1eded-…` · business=`accepted` · customer=`skipped` |
 | Merchant alert in permanent owner inbox | **Provider PASS** | Post-cutover smoke Resend `01a1ef1a-…` accepted to `STORE_NOTIFY_EMAIL`; human inbox open still recommended |
 | Owner Auth email + UUID | **PASS** | `infolaptopshub@gmail.com` · UUID `cc603db4-…` · owner active |
@@ -78,7 +78,7 @@ Isolated COD matrix (local Supabase, not production writes): **23/23 PASS**. Con
 
 | Gate | Verdict |
 |---|---|
-| Authorized owner-controlled QA recipient in records | **PASS** — purchaser `mudasarimamofficial@gmail.com` (staff admin) + note `testing` |
+| Authorized owner-controlled QA recipient in records | **PASS** — purchaser `[engineering staff mailbox — redacted 2026-11-26]` (staff admin) + note `testing` |
 | Labeled do-not-dispatch live order | **PASS** — `order_events` `ops_note` on `LH-261118-77C0F6`; status left `placed` |
 | Cancel via supported admin workflow | **NOT TESTED** — deferred; do not auto-cancel |
 | Production customer data used as fixtures | **PASS** (not done) |

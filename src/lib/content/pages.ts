@@ -11,7 +11,7 @@ import {
   type ContentRow as Row,
   type ResolvedContent,
 } from "@/lib/content/resolve";
-import { isArticlePubliclyVisible, readMinutes } from "@/lib/content/blog";
+import { cleanTags, isArticlePubliclyVisible, matchesGuideFilter, postKicker, readMinutes, hasGuideFilter, type GuideFilter } from "@/lib/content/blog";
 import { sanitizeCmsHtml } from "@/lib/security/sanitize-html";
 
 export { previewAllContent, type ResolvedContent };
@@ -50,7 +50,7 @@ async function readVisibleRows(): Promise<Rows> {
     sb
       .from("articles")
       .select(
-        "slug, title, excerpt, body_html, status, published_at, updated_at, scheduled_for, seo_title, seo_description, og_image_url, cover_image_url, author_name",
+        "slug, title, excerpt, body_html, status, published_at, updated_at, scheduled_for, seo_title, seo_description, og_image_url, cover_image_url, author_name, category, tags, template_key",
       )
       .eq("status", "published"),
   ]);
@@ -128,7 +128,7 @@ export async function getArticle(slug: string, fresh = false): Promise<ResolvedC
   return {
     slug,
     title: row.title,
-    kicker: "Guide",
+    kicker: postKicker(row),
     intro: (row.excerpt || "").trim(),
     read: `${readMinutes(html)} min`,
     mode: "cms",
@@ -141,20 +141,30 @@ export async function getArticle(slug: string, fresh = false): Promise<ResolvedC
   };
 }
 
-export type PostCard = { slug: string; title: string; kicker: string; read: string; intro: string };
+export type PostCard = { slug: string; title: string; kicker: string; read: string; intro: string; category: string; tags: string[] };
 
 /** Public guides for cards and side navigation: new posts (newest first), then the published V5 guides. */
-export async function publicPostCards(fresh = false): Promise<PostCard[]> {
+export async function publicPostCards(fresh = false, filter?: GuideFilter | null): Promise<PostCard[]> {
   const rows = await rowsFor(fresh);
   const all = previewAllContent();
   const posts = rows.articles
     .filter((r) => !TEMPLATE_ARTICLES.has(r.slug) && isCmsPostPublic(r))
     .sort((a, b) => String(b.published_at || "").localeCompare(String(a.published_at || "")))
-    .map((r) => ({ slug: r.slug, title: r.title, kicker: "Guide", read: `${readMinutes(r.body_html || "")} min`, intro: (r.excerpt || "").trim() }));
+    .map((r) => ({
+      slug: r.slug,
+      title: r.title,
+      kicker: postKicker(r),
+      read: `${readMinutes(r.body_html || "")} min`,
+      intro: (r.excerpt || "").trim(),
+      category: (r.category || "").trim(),
+      tags: cleanTags(r.tags),
+    }))
+    .filter((p) => matchesGuideFilter(p, filter));
   const templates = V5_CONTENT.articles
     .filter((a) => all || isContentPublic(a, rows.articles.find((r) => r.slug === a.slug), false))
-    .map((a) => ({ slug: a.slug, title: a.title, kicker: a.kicker, read: a.read || "", intro: a.intro }));
-  return [...posts, ...templates];
+    .map((a) => ({ slug: a.slug, title: a.title, kicker: a.kicker, read: a.read || "", intro: a.intro, category: "", tags: [] as string[] }));
+  // V5 template guides carry no category or tags, so a filtered list shows CMS posts only.
+  return hasGuideFilter(filter) ? posts : [...posts, ...templates];
 }
 
 export type ContentVisibility = { pages: Record<string, boolean>; articles: Record<string, boolean> };

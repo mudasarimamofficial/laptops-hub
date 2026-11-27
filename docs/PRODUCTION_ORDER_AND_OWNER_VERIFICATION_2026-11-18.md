@@ -6,15 +6,15 @@ Production SHA baseline at inspection start: `c311b65`.
 
 | Field | Value |
 |---|---|
-| UUID | `2b989f3d-5cb5-4068-9e83-899387d92118` |
+| UUID | `2b989f3d…` (full id redacted) |
 | Status | `placed` |
 | Payment | `cod` / `unpaid_cod` |
 | Total due | **Rs 181,410.00** (subtotal 181,000 + shipping 360 + COD fee 50) |
-| Customer name | Mudasar Imam |
-| Customer email | `mudasarimamofficial@gmail.com` |
-| Phone | `+923191106310` |
+| Customer name | [engineering tester — redacted] |
+| Customer email | `[engineering staff mailbox — redacted 2026-11-26]` |
+| Phone | `[redacted]` |
 | Customer note | **`testing`** |
-| Address | Lahore, Punjab, PK · postcode 54840 · landmark RHQ |
+| Address | Lahore, Punjab, PK (street, postcode and landmark redacted) |
 | Created | 2026-11-18 09:12:30 UTC |
 | Confirmation | `cod-v2-terms-returns-privacy` accepted at create |
 
@@ -29,7 +29,7 @@ Production SHA baseline at inspection start: `c311b65`.
 
 **QA / engineering test order — not a live customer purchase.**
 
-Evidence: explicit customer note `testing`, purchaser identity matches the engineering admin mailbox (`mudasarimamofficial@gmail.com`), and timing aligns with checkout enablement verification the same day.
+Evidence: explicit customer note `testing`, purchaser identity matches the engineering admin mailbox (`[engineering staff mailbox — redacted 2026-11-26]`), and timing aligns with checkout enablement verification the same day.
 
 **Operational next steps (do not auto-cancel):**
 
@@ -43,7 +43,7 @@ Evidence: explicit customer note `testing`, purchaser identity matches the engin
 
 | Recipient | Status | Provider message id | Notes |
 |---|---|---|---|
-| Merchant (business) | `accepted` | `01a1eded-dc0c-7298-be19-cbb5836a2d60` | Accepted by Resend at 09:12:31 UTC — **before** Production `STORE_NOTIFY_EMAIL` was cut over to `infolaptopshub@gmail.com`. Inbox delivery to the new permanent mailbox is **not** proven by this row. |
+| Merchant (business) | `accepted` | `01a1eded…` (full id redacted) | Accepted by Resend at 09:12:31 UTC — **before** Production `STORE_NOTIFY_EMAIL` was cut over to `infolaptopshub@gmail.com`. Inbox delivery to the new permanent mailbox is **not** proven by this row. |
 | Customer | `skipped` | — | Expected while `NOTIFY_CUSTOMER_EMAIL` is unset. |
 
 Outbox row status: `accepted` · attempts `1` · no `last_error`.
@@ -52,10 +52,10 @@ Outbox row status: `accepted` · attempts `1` · no `last_error`.
 
 | Field | Value |
 |---|---|
-| UUID | `cc603db4-d291-4dc1-a401-b04ffbeff86c` |
+| UUID | `cc603db4…` (full id redacted) |
 | Email | `infolaptopshub@gmail.com` |
 | Role | `owner` · `is_active=true` |
-| Staff companion | `mudasarimamofficial@gmail.com` · role `admin` · active |
+| Staff companion | `[engineering staff mailbox — redacted 2026-11-26]` · role `admin` · active |
 
 ## 3. Reels
 
@@ -67,7 +67,7 @@ Six `preset_key` drafts remain unpublished (`rights_status=pending`). All six MP
 |---|---|
 | Production COD order create | **PASS** (DB evidence) |
 | Merchant outbox provider accept | **PASS** (Resend id recorded) |
-| Merchant alert in `infolaptopshub@gmail.com` inbox | **Provider PASS / inbox PENDING human open** — post-cutover smoke `POST /api/admin/notifications/test` → Resend `01a1ef1a-a5c8-7740-b285-bb0c090f51b0` accepted. Open the permanent owner mailbox to confirm delivery. |
+| Merchant alert in `infolaptopshub@gmail.com` inbox | **Provider PASS / inbox PENDING human open** — post-cutover smoke `POST /api/admin/notifications/test` → Resend `01a1ef1a…` (full id redacted) accepted. Open the permanent owner mailbox to confirm delivery. |
 | Fresh owner browser login | **PASS** — magiclink confirm → `/admin` shows `infolaptopshub@gmail.com` · role `owner`; session persisted on reload |
 | Password recovery landing | **PASS** — recovery confirm → `/admin/reset-password` for `infolaptopshub@gmail.com` (password not changed in this pass) |
 | Customer email | **N/A / skipped by design** |

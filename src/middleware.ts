@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 import { prelaunchDecision } from "@/lib/prelaunch";
 import { siteMode } from "@/lib/site-url";
+import { isCrossSiteAdminWrite } from "@/lib/security/admin-origin";
 
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
@@ -23,6 +24,21 @@ export async function middleware(request: NextRequest) {
       url.search = "";
       return NextResponse.rewrite(url, { headers: { "Cache-Control": "no-store" } });
     }
+  }
+
+  if (
+    isCrossSiteAdminWrite({
+      method: request.method,
+      pathname,
+      origin: request.headers.get("origin"),
+      url: request.url,
+      host: request.headers.get("x-forwarded-host") || request.headers.get("host"),
+    })
+  ) {
+    return NextResponse.json(
+      { error: "forbidden_origin", message: "This change must be made from the Laptops HUB admin itself." },
+      { status: 403, headers: { "Cache-Control": "no-store" } },
+    );
   }
 
   // The image optimiser only needs the gate above; skip the session refresh for it.

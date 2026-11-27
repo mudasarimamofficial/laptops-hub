@@ -73,3 +73,39 @@ Monitoring procedure (owner or a named staff member):
 
 Alternative if GitHub is not wanted: Vercel Pro (cron as often as every minute; paid) — change the schedule in
 `vercel.json` only, no code change.
+
+## G24 — Settings › Notifications (merchant controls, no migration)
+
+Code: `src/lib/notify/settings.ts` (+ `settings-server.ts`), `/api/admin/notifications/settings` (GET/PUT),
+`/api/admin/notifications/test` (POST), `src/components/admin/notification-settings-form.tsx`, Settings page section
+`#notifications` · Tests: `tests/unit/notification-settings.test.ts`, `tests/isolated/notification-settings-g24.test.ts`
+(7 scenarios, fake provider), `tests/e2e-isolated/p1-notifications-g24.spec.ts` (6).
+
+- Stored in `store_settings` key `notifications` (staff-only; not in `settings_public_select`). Without that row the
+  previous behaviour is unchanged: `STORE_NOTIFY_EMAIL` gets alerts, `NOTIFY_CUSTOMER_EMAIL=1` emails customers.
+- **Staff recipients**: up to 5. An empty saved list keeps using `STORE_NOTIFY_EMAIL` (shown masked), so alerts are
+  never silenced by accident. One message goes to all recipients.
+- **Customer order emails**: `off` · `test` (the customer copy goes to the staff recipients, subject prefixed
+  "[Test — customer copy]"; the customer row stays `skipped`, the order page shows "test copy sent to staff") · `on`.
+  Only the **owner** can switch to `on` (API 403 `owner_required` for admins).
+- **Wording**: staff alert subject, customer subject (`{order}`, `{total}`), customer introduction (plain text). Empty
+  = built-in wording, which is byte-identical to the pre-G24 text. Order lines, totals and links are always added.
+- **Inquiry alerts** (default off): a stored website inquiry queues an outbox row `template = contact_inquiry`
+  (`order_id` null, payload `{inquiry_id}`), delivered and retried like order alerts; the person who wrote in is never
+  emailed. Queueing never blocks or fails the inquiry.
+- **Test send**: owner/admin, 5 per hour per staff member, to the saved staff recipients only — the request cannot name
+  an address. Audit `notifications.test_send`. (Replaces the earlier UI-less owner smoke route at the same path, G42.)
+- **Provider protected**: `RESEND_API_KEY` / `STORE_FROM_EMAIL` stay in the hosting environment; the admin shows only
+  "connected / not connected" and the sender address.
+- **Idempotency**: with the environment fallback and built-in wording, keys stay `outbox-<id>-<recipient>`. With merchant
+  settings the key gets a fingerprint of recipients + message, so a message edited between a failure and its retry is
+  sent (once) instead of being refused by the provider as "same key, different payload".
+- **Permissions**: owner/admin only (UI hidden and API 403 for manager, editor, fulfillment). Saves audit
+  `notifications.settings.update` with counts/flags only — no addresses.
+- **Backups**: a CMS restore keeps the live `notifications` value (like `cod_checkout`), so a restore can never turn
+  customer emails back on or send alerts to a former staff address.
+- **Recent notifications** (Settings): last 15 outbox rows with staff/customer status, attempts, next attempt, error and
+  "Needs attention — automatic retries stopped".
+
+Production: nothing changes until the owner saves the section. No email blast, customer email or provider change
+was made; all testing used `scripts/test-fixtures/fake-resend.mjs` on 127.0.0.1.

@@ -203,7 +203,7 @@ export default async function AdminSettingsPage() {
       <div id="shipping" className="mt-8 scroll-mt-24">
         <AdminCard
           title="Shipping & COD fees"
-          description="Saving delivery or COD fees does not open customer ordering. Production COD stays off until the owner approves policies, fees and the COD enablement flags."
+          description="Saving delivery or COD fees does not open or close customer ordering. Overview → COD checkout readiness shows whether ordering is open; turning it on or off is an owner decision."
         >
           <div className="mb-4 rounded-[var(--adm-radius)] border border-[var(--adm-warning)] bg-[var(--adm-warning-bg)] px-3 py-2 text-sm text-[var(--adm-warning)]">
             Fee changes affect future quotes. Existing placed orders keep the amounts already charged.

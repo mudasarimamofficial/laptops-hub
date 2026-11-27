@@ -80,8 +80,8 @@ export function evaluateCheckoutReadiness(input: ReadinessInput): Readiness {
     detail:
       input.dbSetting?.enabled === true
         ? "Enabled in store settings."
-        : `Disabled in store settings${input.dbSetting?.reason ? ` — ${input.dbSetting.reason}` : ""}.`,
-    fixHref: "/admin/settings",
+        : `Disabled in store settings${input.dbSetting?.reason ? ` — ${input.dbSetting.reason}` : ""}. Turning COD on is an owner decision made outside Admin.`,
+    fixHref: null,
     owner: "owner-approval",
   });
 

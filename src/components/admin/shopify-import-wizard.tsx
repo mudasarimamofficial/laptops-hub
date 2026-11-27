@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useHydrated } from "@/lib/ui/use-hydrated";
 import {
   detectShopifyCsvProfile,
+  parseCsvText,
   stageShopifyRows,
   summarizeStaging,
   type CanonicalField,
@@ -23,54 +24,20 @@ type ServerReport = {
   dryRun: boolean;
   jobId?: string | null;
   summary?: Record<string, number>;
-  results?: { handle: string; action: string; message?: string }[];
+  results?: { handle: string; action: string; message?: string; warnings?: string[] }[];
+  rowErrors?: { line: number; message: string }[];
   error?: string;
   message?: string;
 };
 
-function parseCsvClient(text: string): { headers: string[]; rows: Record<string, string>[] } {
-  const rows: string[][] = [];
-  let cell = "";
-  let row: string[] = [];
-  let inQuotes = false;
-  const input = text.replace(/^\uFEFF/, "");
-  for (let i = 0; i < input.length; i++) {
-    const c = input[i];
-    const next = input[i + 1];
-    if (inQuotes) {
-      if (c === '"' && next === '"') {
-        cell += '"';
-        i++;
-      } else if (c === '"') inQuotes = false;
-      else cell += c;
-    } else if (c === '"') inQuotes = true;
-    else if (c === ",") {
-      row.push(cell);
-      cell = "";
-    } else if (c === "\n") {
-      row.push(cell);
-      rows.push(row);
-      row = [];
-      cell = "";
-    } else if (c !== "\r") cell += c;
-  }
-  if (cell.length || row.length) {
-    row.push(cell);
-    rows.push(row);
-  }
-  const headers = (rows[0] || []).map((h) => h.trim());
-  const dataRows = rows.slice(1).filter((r) => r.some((c) => c.trim() !== ""));
-  return {
-    headers,
-    rows: dataRows.map((r) => {
-      const obj: Record<string, string> = {};
-      headers.forEach((h, i) => {
-        obj[h] = r[i] ?? "";
-      });
-      return obj;
-    }),
-  };
-}
+const ACTION_WORDS: Record<string, string> = {
+  created: "new product",
+  updated: "updates the existing product",
+  skipped: "already exists — left unchanged",
+  conflict: "already exists — left unchanged",
+  unchanged: "no change",
+  failed: "failed",
+};
 
 export function ShopifyImportWizard() {
   const hydrated = useHydrated();
@@ -90,6 +57,7 @@ export function ShopifyImportWizard() {
     setErr(null);
     setPreview(null);
     setServerReport(null);
+    setValidatedFingerprint(null);
     setCsvText(null);
     if (!file) return;
     if (!file.name.toLowerCase().endsWith(".csv")) {
@@ -103,7 +71,7 @@ export function ShopifyImportWizard() {
     setFileName(file.name);
     const text = await file.text();
     setCsvText(text);
-    const { headers, rows } = parseCsvClient(text);
+    const { headers, rows } = parseCsvText(text);
     const detected = detectShopifyCsvProfile(headers);
     if (detected.profile === "unknown") {
       setErr("Could not detect Shopify modern or legacy product CSV headers. Check the first row.");
@@ -151,6 +119,8 @@ export function ShopifyImportWizard() {
       if (dryRun && data.fingerprint) {
         setValidatedFingerprint(data.fingerprint);
       }
+      // After a commit, committing the same file again needs a new dry-run.
+      if (!dryRun) setValidatedFingerprint(null);
       setHistoryKey((k) => k + 1);
       if (expectedFingerprint && data.fingerprint && expectedFingerprint !== data.fingerprint) {
         setErr(
@@ -249,10 +219,14 @@ export function ShopifyImportWizard() {
             <select
               className="mt-1 w-full max-w-md rounded-lg border border-[var(--adm-border)] px-3 py-2"
               value={strategy}
-              onChange={(e) => setStrategy(e.target.value as typeof strategy)}
+              onChange={(e) => {
+                setStrategy(e.target.value as typeof strategy);
+                setValidatedFingerprint(null);
+                setServerReport(null);
+              }}
             >
               <option value="add_only">Add only (never update existing handles)</option>
-              <option value="update_by_handle">Update matching by handle</option>
+              <option value="update_by_handle">Update matching products (blank cells keep current values)</option>
               <option value="skip_conflicts">Skip conflicts</option>
             </select>
           </label>
@@ -298,16 +272,38 @@ export function ShopifyImportWizard() {
                 {serverReport.jobId ? ` · job ${serverReport.jobId.slice(0, 8)}…` : ""}
               </p>
               {serverReport.summary ? (
-                <pre className="mt-2 overflow-x-auto font-[family-name:var(--font-mono)] text-xs">
-                  {JSON.stringify(serverReport.summary, null, 2)}
-                </pre>
+                <p className="mt-2" data-testid="import-summary">
+                  {serverReport.dryRun ? "Would add" : "Added"} {serverReport.summary.created ?? 0} · {serverReport.dryRun ? "would update" : "updated"}{" "}
+                  {serverReport.summary.updated ?? 0} · skipped {(serverReport.summary.skipped ?? 0) + (serverReport.summary.conflict ?? 0)} · failed{" "}
+                  {serverReport.summary.failed ?? 0}
+                  {serverReport.dryRun ? " — nothing has been saved yet." : "."}
+                </p>
+              ) : null}
+              {serverReport.rowErrors?.length ? (
+                <div className="mt-2 text-xs" data-testid="import-row-errors">
+                  <p className="font-semibold text-[var(--adm-danger)]">Rows not imported ({serverReport.rowErrors.length})</p>
+                  <ul className="mt-1 list-disc pl-5">
+                    {serverReport.rowErrors.slice(0, 20).map((e) => (
+                      <li key={`${e.line}-${e.message}`}>
+                        Line {e.line}: {e.message}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ) : null}
               {serverReport.results?.length ? (
-                <ul className="mt-2 max-h-48 overflow-y-auto font-[family-name:var(--font-mono)] text-xs">
-                  {serverReport.results.slice(0, 40).map((r) => (
-                    <li key={`${r.handle}-${r.action}`}>
-                      {r.handle}: {r.action}
-                      {r.message ? ` (${r.message})` : ""}
+                <ul className="mt-2 max-h-64 overflow-y-auto text-xs" data-testid="import-results">
+                  {serverReport.results.slice(0, 60).map((r) => (
+                    <li key={`${r.handle}-${r.action}`} className="py-0.5">
+                      <span className="font-[family-name:var(--font-mono)]">{r.handle}</span>: {ACTION_WORDS[r.action] ?? r.action}
+                      {r.message && r.message !== "dry_run" ? ` (${r.message})` : ""}
+                      {r.warnings?.length ? (
+                        <ul className="list-disc pl-5 text-[var(--adm-warning)]">
+                          {r.warnings.map((w) => (
+                            <li key={w}>{w}</li>
+                          ))}
+                        </ul>
+                      ) : null}
                     </li>
                   ))}
                 </ul>

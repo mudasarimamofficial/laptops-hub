@@ -4,6 +4,7 @@ import { createAuthorizedStaffClient, staffErrorResponse } from "@/lib/auth/staf
 import { commitStagedProducts, type ImportStrategy } from "@/lib/catalog/shopify-import-commit";
 import {
   detectShopifyCsvProfile,
+  parseCsvText,
   stageShopifyRows,
   summarizeStaging,
   type CanonicalField,
@@ -19,49 +20,6 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const MAX_BYTES = 25 * 1024 * 1024;
-
-function parseCsv(text: string): { headers: string[]; rows: Record<string, string>[] } {
-  const rows: string[][] = [];
-  let cell = "";
-  let row: string[] = [];
-  let inQuotes = false;
-  const input = text.replace(/^\uFEFF/, "");
-  for (let i = 0; i < input.length; i++) {
-    const c = input[i];
-    const next = input[i + 1];
-    if (inQuotes) {
-      if (c === '"' && next === '"') {
-        cell += '"';
-        i++;
-      } else if (c === '"') inQuotes = false;
-      else cell += c;
-    } else if (c === ",") {
-      row.push(cell);
-      cell = "";
-    } else if (c === "\n") {
-      row.push(cell);
-      rows.push(row);
-      row = [];
-      cell = "";
-    } else if (c !== "\r") cell += c;
-  }
-  if (cell.length || row.length) {
-    row.push(cell);
-    rows.push(row);
-  }
-  const headers = (rows[0] || []).map((h) => h.trim());
-  const dataRows = rows.slice(1).filter((r) => r.some((c) => c.trim() !== ""));
-  return {
-    headers,
-    rows: dataRows.map((r) => {
-      const obj: Record<string, string> = {};
-      headers.forEach((h, i) => {
-        obj[h] = r[i] ?? "";
-      });
-      return obj;
-    }),
-  };
-}
 
 const bodySchema = z.object({
   csvText: z.string().min(10).max(MAX_BYTES),
@@ -140,7 +98,7 @@ async function handlePOST(request: Request) {
       );
     }
 
-    const { headers, rows } = parseCsv(parsed.data.csvText);
+    const { headers, rows } = parseCsvText(parsed.data.csvText);
     const detected = detectShopifyCsvProfile(headers);
     if (detected.profile === "unknown") {
       return NextResponse.json(
@@ -159,7 +117,13 @@ async function handlePOST(request: Request) {
 
     // 4. In Production commit, require dry-run fingerprint verification
     if (!dryRun && writePolicy.isProductionSupabase) {
-      if (parsed.data.previewFingerprint && parsed.data.previewFingerprint !== fingerprint) {
+      if (!parsed.data.previewFingerprint) {
+        return NextResponse.json(
+          { error: "preview_required", message: "Run a dry-run preview of this exact file before committing it to the live catalog." },
+          { status: 400 },
+        );
+      }
+      if (parsed.data.previewFingerprint !== fingerprint) {
         return NextResponse.json(
           {
             error: "fingerprint_mismatch",

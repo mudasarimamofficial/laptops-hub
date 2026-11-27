@@ -28,7 +28,9 @@ export function StoreMap({ cfg }: { cfg: MapSettings }) {
       return;
     }
     const nearIo = new IntersectionObserver(([e]) => (e.isIntersecting || e.boundingClientRect.top < 0) && setNear(true), {
-      rootMargin: "0px 0px 600px 0px",
+      // Symmetric margin: a fast jump (End key, scrollbar drag) can carry the sentinel from below the viewport to above
+      // it in one frame on phones, where the stacked map is taller than the bottom margin; it must still load.
+      rootMargin: "600px 0px 600px 0px",
     });
     const revealIo = new IntersectionObserver(([e]) => setRevealed(e.isIntersecting || e.boundingClientRect.top < 0), {
       rootMargin: "0px 0px -30% 0px",
@@ -50,7 +52,9 @@ export function StoreMap({ cfg }: { cfg: MapSettings }) {
   // Keyboard users: the browser only scrolls a focused element "into view" geometrically, but while the reveal is
   // partway the footer still covers the map, so focus would be hidden under it. The map is the last thing on the
   // page, so moving focus into it scrolls to the end, where it is fully uncovered (WCAG 2.4.11 Focus Not Obscured).
-  const uncoverOnFocus = () => {
+  // Only while the map is actually pinned: as an ordinary section (phones, short screens) focus must not jump.
+  const uncoverOnFocus = (e: React.FocusEvent<HTMLElement>) => {
+    if (getComputedStyle(e.currentTarget).position !== "sticky") return;
     const end = document.documentElement.scrollHeight - window.innerHeight;
     if (window.scrollY < end - 1) window.scrollTo({ top: end, behavior: "instant" });
   };

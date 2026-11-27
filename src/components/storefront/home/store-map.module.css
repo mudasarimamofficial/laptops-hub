@@ -1,22 +1,35 @@
 /*
- * "Visit our store" map, revealed from under the footer on the homepage.
+ * "Visit our store" map after the footer on the homepage.
  *
- * How the reveal works (CSS only, native scrolling, no scroll listeners): the section comes after the footer in the
- * DOM and is `position: sticky; bottom: 0` underneath (z-index) the page and footer, which are lifted above it with an
- * opaque background. While the visitor scrolls, it waits pinned to the bottom of the viewport behind them; as the
- * footer scrolls up, it uncovers the map. At the end of the page nothing covers it and the map is fully interactive.
- * Without the reveal (setting off, or reduced motion) it is an ordinary section after the footer.
+ * Reveal (wide AND tall screens only): the section is `position: sticky; bottom: 0` underneath (z-index) the page,
+ * footer and promotion bar, which are lifted above it with an opaque background. While the visitor scrolls it waits
+ * pinned to the bottom of the viewport behind them; as the footer scrolls up, it uncovers the map. CSS only, native
+ * scrolling, no scroll listeners.
+ *
+ * Why only there (VIS-001/002/003, 2026-11-27): a pinned section is painted from the first frame. Wherever it is
+ * taller than the space below the header, its top sits BEHIND the translucent, blurred header, and above the
+ * (non-positioned) promotion bar. On phones that showed Google's "Open in Maps" inside the promo bar and greyed the
+ * header. At ≥761px wide and ≥700px tall the map is at most 78svh, so ≥22svh (≥154px) stays clear above it — more than
+ * the promotion bar plus header. Everywhere else (phones, landscape phones, short or zoomed windows, reduced motion)
+ * it is an ordinary section after the footer, and on narrow or short screens the card sits below the map.
  */
-:global(body:has([data-map-reveal="on"])) :global(#main),
-:global(body:has([data-map-reveal="on"])) > footer {
-  position: relative;
-  z-index: 1;
-}
-:global(body:has([data-map-reveal="on"])) :global(#main) {
-  background: var(--lh-canvas);
-}
-:global(body:has([data-map-reveal="on"])) > footer {
-  box-shadow: 0 28px 48px -28px rgba(10, 23, 48, 0.55);
+@media (min-width: 761px) and (min-height: 700px) and (prefers-reduced-motion: no-preference) {
+  :global(body:has([data-map-reveal="on"])) :global(#main),
+  :global(body:has([data-map-reveal="on"])) > footer,
+  :global(body:has([data-map-reveal="on"])) > :global(.lh-promo-bar) {
+    position: relative;
+    z-index: 1;
+  }
+  :global(body:has([data-map-reveal="on"])) :global(#main) {
+    background: var(--lh-canvas);
+  }
+  :global(body:has([data-map-reveal="on"])) > footer {
+    box-shadow: 0 28px 48px -28px rgba(10, 23, 48, 0.55);
+  }
+  .section[data-map-reveal="on"] {
+    position: sticky;
+    bottom: 0;
+  }
 }
 
 .section {
@@ -27,15 +40,6 @@
   overflow: hidden;
   background: var(--lh-deep, #0a1730);
   isolation: isolate;
-}
-.section[data-map-reveal="on"] {
-  position: sticky;
-  bottom: 0;
-}
-@media (prefers-reduced-motion: reduce) {
-  .section[data-map-reveal="on"] {
-    position: relative;
-  }
 }
 
 .frame,
@@ -71,6 +75,7 @@
   background: linear-gradient(180deg, rgba(10, 23, 48, 0.45), transparent);
 }
 
+/* The card is opaque (no backdrop-filter): one compositing layer fewer over a cross-origin iframe. */
 .panel {
   position: absolute;
   z-index: 2;
@@ -79,10 +84,9 @@
   width: min(420px, calc(100% - 32px));
   padding: clamp(18px, 2.2vw, 28px);
   border-radius: var(--lh-radius-frame, 20px);
-  background: rgba(255, 255, 255, 0.96);
+  background: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: 0 24px 60px -24px rgba(10, 23, 48, 0.55);
-  backdrop-filter: blur(10px);
   opacity: var(--panel-opacity, 1);
   transform: translate3d(0, var(--panel-shift, 0px), 0);
   transition:
@@ -177,28 +181,50 @@
   color: var(--lh-ink-2);
 }
 
-/* Phones: the panel sits below the map area instead of over it, so map gestures and the pin stay clear. */
-@media (max-width: 640px) {
+@media (min-width: 641px) and (min-height: 501px) {
+  .frameWrap {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+/*
+ * Phones and short landscape screens (VIS-004): map first, then a compact card below it in normal flow — never over
+ * the map, its pin or Google's controls. The bottom padding keeps the card's content clear of the floating WhatsApp
+ * button at the end of the page.
+ */
+@media (max-width: 640px), (max-height: 500px) {
   .section {
     height: auto;
     display: flex;
     flex-direction: column;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   }
   .frameWrap {
     position: relative;
-    height: clamp(300px, 52svh, 440px);
+    height: clamp(280px, 46svh, 380px);
+  }
+  .frame iframe {
+    transform: none;
+    transition: none;
   }
   .panel {
     position: relative;
     left: auto;
     bottom: auto;
     width: auto;
-    margin: -28px 16px 16px;
+    margin: 16px 16px 0;
+    padding: 18px;
+    border-radius: 16px;
+    box-shadow: 0 12px 28px -18px rgba(10, 23, 48, 0.6);
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
-}
-@media (min-width: 641px) {
-  .frameWrap {
-    position: absolute;
-    inset: 0;
+  .title {
+    font-size: 24px;
+  }
+  .text {
+    font-size: 14px;
   }
 }

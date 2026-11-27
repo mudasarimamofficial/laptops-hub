@@ -182,6 +182,7 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
     <>
       <header
         ref={headerRef}
+        className="lh-site-header"
         onMouseLeave={() => {
           if (finePointer) closeMega();
         }}
@@ -189,7 +190,7 @@ export function SiteHeader({ chrome }: { chrome: ChromeData }) {
           position: "sticky",
           top: 0,
           zIndex: 40,
-          background: "rgba(247,250,255,.84)",
+          background: "var(--lh-header-bg, rgba(247,250,255,.84))",
           backdropFilter: "blur(18px) saturate(160%)",
           WebkitBackdropFilter: "blur(18px) saturate(160%)",
           borderBottom: "1px solid var(--lh-border)",

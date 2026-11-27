@@ -64,6 +64,17 @@ button {
   font-family: var(--font-display);
 }
 
+/* ── Header and promotion bar (VIS-001/003, 2026-11-27) ───────
+   Phones: a nearly opaque header so nothing behind it can show through; wider screens keep the blurred glass. */
+@media (max-width: 759.98px) {
+  .lh-site-header {
+    --lh-header-bg: rgba(247, 250, 255, 0.97);
+  }
+}
+.lh-promo-cta {
+  white-space: nowrap;
+}
+
 /* ── Visibility by breakpoint ─────────────────────────────── */
 .v5-m-only {
   display: none !important;

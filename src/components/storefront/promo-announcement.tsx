@@ -30,7 +30,7 @@ export function PromoAnnouncement({
     >
       <Link href={href} style={{ color: "inherit", textDecoration: "none" }}>
         {text.trim()}
-        <span aria-hidden="true" style={{ marginLeft: 8, opacity: 0.85 }}>
+        <span aria-hidden="true" className="lh-promo-cta" style={{ marginLeft: 8, opacity: 0.85 }}>
           → {ctaLabel}
         </span>
       </Link>

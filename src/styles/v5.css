@@ -75,6 +75,35 @@ button {
   white-space: nowrap;
 }
 
+/* ── Floating WhatsApp button (VIS-006, 2026-11-27) ──────────
+   Wide screens: the pill with its label (unchanged). Phones: the label is hidden, so the button is a true 56px circle
+   with the icon centred — the desktop pill padding used to stay and made it a 68×52 oval. */
+.lh-wa-float {
+  min-height: 52px;
+  width: 52px;
+  padding: 0;
+  gap: 10px;
+}
+.lh-wa-float[data-labelled="true"] {
+  width: auto;
+  padding: 0 16px 0 12px;
+}
+.lh-wa-float:focus-visible {
+  outline: 3px solid var(--lh-action);
+  outline-offset: 3px;
+}
+@media (max-width: 759.98px) {
+  .lh-wa-float,
+  .lh-wa-float[data-labelled="true"] {
+    width: 56px;
+    height: 56px;
+    min-height: 56px;
+    padding: 0;
+    gap: 0;
+    border-radius: 50%;
+  }
+}
+
 /* ── Visibility by breakpoint ─────────────────────────────── */
 .v5-m-only {
   display: none !important;

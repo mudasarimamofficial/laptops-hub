@@ -1,0 +1,242 @@
+{
+  "at": "2026-11-23T18:44:13.948Z",
+  "summary": {
+    "real-hero-no-chrome": {
+      "pass": 3,
+      "n": 3,
+      "sample": {
+        "t": 2036,
+        "s": 64262,
+        "tag": "IMG",
+        "u": "1/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      }
+    },
+    "hero-in-chrome": {
+      "pass": 3,
+      "n": 3,
+      "sample": {
+        "t": 5648,
+        "s": 78980,
+        "tag": "DIV",
+        "u": ""
+      }
+    },
+    "hero-only-HomePageView": {
+      "pass": 0,
+      "n": 3,
+      "sample": null
+    },
+    "chrome-A": {
+      "pass": 3,
+      "n": 3,
+      "sample": {
+        "t": 1876,
+        "s": 53760,
+        "tag": "H1",
+        "u": ""
+      }
+    },
+    "prod-home": {
+      "pass": 0,
+      "n": 3,
+      "sample": null
+    }
+  },
+  "results": [
+    {
+      "id": "real-hero-no-chrome",
+      "run": 1,
+      "http": 200,
+      "fcp": 1736,
+      "lcpCount": 3,
+      "lcp": {
+        "t": 2036,
+        "s": 64262,
+        "tag": "IMG",
+        "u": "1/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      },
+      "header": false,
+      "hero": true
+    },
+    {
+      "id": "real-hero-no-chrome",
+      "run": 2,
+      "http": 200,
+      "fcp": 1932,
+      "lcpCount": 2,
+      "lcp": {
+        "t": 2016,
+        "s": 64262,
+        "tag": "IMG",
+        "u": "1/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      },
+      "header": false,
+      "hero": true
+    },
+    {
+      "id": "real-hero-no-chrome",
+      "run": 3,
+      "http": 200,
+      "fcp": 2560,
+      "lcpCount": 2,
+      "lcp": {
+        "t": 2760,
+        "s": 64262,
+        "tag": "IMG",
+        "u": "1/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      },
+      "header": false,
+      "hero": true
+    },
+    {
+      "id": "hero-in-chrome",
+      "run": 1,
+      "http": 200,
+      "fcp": 5648,
+      "lcpCount": 1,
+      "lcp": {
+        "t": 5648,
+        "s": 78980,
+        "tag": "DIV",
+        "u": ""
+      },
+      "header": true,
+      "hero": true
+    },
+    {
+      "id": "hero-in-chrome",
+      "run": 2,
+      "http": 200,
+      "fcp": 23980,
+      "lcpCount": 1,
+      "lcp": {
+        "t": 23980,
+        "s": 78980,
+        "tag": "DIV",
+        "u": ""
+      },
+      "header": true,
+      "hero": true
+    },
+    {
+      "id": "hero-in-chrome",
+      "run": 3,
+      "http": 200,
+      "fcp": 2044,
+      "lcpCount": 1,
+      "lcp": {
+        "t": 2040,
+        "s": 65404,
+        "tag": "DIV",
+        "u": ""
+      },
+      "header": true,
+      "hero": true
+    },
+    {
+      "id": "hero-only-HomePageView",
+      "run": 1,
+      "http": 200,
+      "fcp": 2496,
+      "lcpCount": 0,
+      "lcp": null,
+      "header": true,
+      "hero": true
+    },
+    {
+      "id": "hero-only-HomePageView",
+      "run": 2,
+      "http": 200,
+      "fcp": 1772,
+      "lcpCount": 0,
+      "lcp": null,
+      "header": true,
+      "hero": true
+    },
+    {
+      "id": "hero-only-HomePageView",
+      "run": 3,
+      "http": 200,
+      "fcp": 6688,
+      "lcpCount": 0,
+      "lcp": null,
+      "header": true,
+      "hero": true
+    },
+    {
+      "id": "chrome-A",
+      "run": 1,
+      "http": 200,
+      "fcp": 1876,
+      "lcpCount": 1,
+      "lcp": {
+        "t": 1876,
+        "s": 53760,
+        "tag": "H1",
+        "u": ""
+      },
+      "header": true,
+      "hero": false
+    },
+    {
+      "id": "chrome-A",
+      "run": 2,
+      "http": 200,
+      "fcp": 1580,
+      "lcpCount": 1,
+      "lcp": {
+        "t": 1580,
+        "s": 53760,
+        "tag": "H1",
+        "u": ""
+      },
+      "header": true,
+      "hero": false
+    },
+    {
+      "id": "chrome-A",
+      "run": 3,
+      "http": 200,
+      "fcp": 1616,
+      "lcpCount": 1,
+      "lcp": {
+        "t": 1616,
+        "s": 53760,
+        "tag": "H1",
+        "u": ""
+      },
+      "header": true,
+      "hero": false
+    },
+    {
+      "id": "prod-home",
+      "run": 1,
+      "http": 200,
+      "fcp": 2668,
+      "lcpCount": 0,
+      "lcp": null,
+      "header": true,
+      "hero": true
+    },
+    {
+      "id": "prod-home",
+      "run": 2,
+      "http": 200,
+      "fcp": 3276,
+      "lcpCount": 0,
+      "lcp": null,
+      "header": true,
+      "hero": true
+    },
+    {
+      "id": "prod-home",
+      "run": 3,
+      "http": 200,
+      "fcp": 2756,
+      "lcpCount": 0,
+      "lcp": null,
+      "header": true,
+      "hero": true
+    }
+  ]
+}

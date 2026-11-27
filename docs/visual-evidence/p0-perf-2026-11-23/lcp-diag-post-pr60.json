@@ -1,0 +1,574 @@
+{
+  "at": "2026-11-23T18:00:17.962Z",
+  "note": "CURRENT production baseline after PR #60/#61. Historical lcp-diag.json @ 16:40Z is pre-fix.",
+  "expectedCommit": "6fe4f3dd86c91149563e0c1d150e5555c9c20409",
+  "expectedDeployment": "dpl_jhGSuJihQU3S19Vj7q9hWaosXd44",
+  "device": "Pixel 7 (Playwright)",
+  "channel": "chrome",
+  "chromeUserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+  "harness": "cold context per run, wait 5s, visibilitychange finalize",
+  "results": [
+    {
+      "label": "home",
+      "run": 1,
+      "url": "https://www.laptopshub.pk/",
+      "elapsedMs": 12785,
+      "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\baseline-home-r1.png",
+      "vis": "visible",
+      "hidden": false,
+      "title": "Laptops HUB",
+      "diag": {
+        "lcp": [],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 5628
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 5628
+          }
+        ],
+        "cls": 0,
+        "longTasks": 6,
+        "longTaskMs": 704
+      },
+      "bufferedLcp": [],
+      "nav": {
+        "ttfb": 371,
+        "dcl": 4115,
+        "load": 4131
+      },
+      "h1": {
+        "text": "The future ofsmarter laptopshopping.",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block"
+      },
+      "mainImg": {
+        "complete": true,
+        "op": "1",
+        "transform": "none",
+        "filter": "none",
+        "blend": "normal",
+        "src": "iles/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      },
+      "stage": [
+        {
+          "currentSrc": "stage-960.webp",
+          "w": 340,
+          "cssW": 335
+        }
+      ]
+    },
+    {
+      "label": "home",
+      "run": 2,
+      "url": "https://www.laptopshub.pk/",
+      "elapsedMs": 8609,
+      "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\baseline-home-r2.png",
+      "vis": "visible",
+      "hidden": false,
+      "title": "Laptops HUB",
+      "diag": {
+        "lcp": [],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 3200
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 3200
+          }
+        ],
+        "cls": 0,
+        "longTasks": 6,
+        "longTaskMs": 1211
+      },
+      "bufferedLcp": [],
+      "nav": {
+        "ttfb": 199,
+        "dcl": 675,
+        "load": 1735
+      },
+      "h1": {
+        "text": "The future ofsmarter laptopshopping.",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block"
+      },
+      "mainImg": {
+        "complete": true,
+        "op": "1",
+        "transform": "none",
+        "filter": "none",
+        "blend": "normal",
+        "src": "iles/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      },
+      "stage": [
+        {
+          "currentSrc": "stage-960.webp",
+          "w": 340,
+          "cssW": 335
+        }
+      ]
+    },
+    {
+      "label": "home",
+      "run": 3,
+      "url": "https://www.laptopshub.pk/",
+      "elapsedMs": 8882,
+      "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\baseline-home-r3.png",
+      "vis": "visible",
+      "hidden": false,
+      "title": "Laptops HUB",
+      "diag": {
+        "lcp": [],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 3428
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 3428
+          }
+        ],
+        "cls": 0,
+        "longTasks": 6,
+        "longTaskMs": 1276
+      },
+      "bufferedLcp": [],
+      "nav": {
+        "ttfb": 193,
+        "dcl": 468,
+        "load": 1791
+      },
+      "h1": {
+        "text": "The future ofsmarter laptopshopping.",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block"
+      },
+      "mainImg": {
+        "complete": true,
+        "op": "1",
+        "transform": "none",
+        "filter": "none",
+        "blend": "normal",
+        "src": "iles/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      },
+      "stage": [
+        {
+          "currentSrc": "stage-960.webp",
+          "w": 340,
+          "cssW": 335
+        }
+      ]
+    },
+    {
+      "label": "pdp",
+      "run": 1,
+      "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "elapsedMs": 7288,
+      "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\baseline-pdp-r1.png",
+      "vis": "visible",
+      "hidden": false,
+      "title": "Dell 5400 · Core i5, 8th Gen, 8GB RAM, 256GB Storage · Laptops HUB",
+      "diag": {
+        "lcp": [
+          {
+            "t": 2268,
+            "s": 81075,
+            "u": "1/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280",
+            "tag": "IMG",
+            "cls": ""
+          }
+        ],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 2268
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 2268
+          }
+        ],
+        "cls": 0,
+        "longTasks": 5,
+        "longTaskMs": 631
+      },
+      "bufferedLcp": [],
+      "nav": {
+        "ttfb": 204,
+        "dcl": 769,
+        "load": 1321
+      },
+      "h1": {
+        "text": "Dell 5400",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block"
+      },
+      "mainImg": {
+        "complete": true,
+        "op": "1",
+        "transform": "none",
+        "filter": "none",
+        "blend": "normal",
+        "src": "3/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280"
+      },
+      "stage": []
+    },
+    {
+      "label": "pdp",
+      "run": 2,
+      "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "elapsedMs": 8914,
+      "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\baseline-pdp-r2.png",
+      "vis": "visible",
+      "hidden": false,
+      "title": "Dell 5400 · Core i5, 8th Gen, 8GB RAM, 256GB Storage · Laptops HUB",
+      "diag": {
+        "lcp": [
+          {
+            "t": 2308,
+            "s": 81075,
+            "u": "1/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280",
+            "tag": "IMG",
+            "cls": ""
+          }
+        ],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 2308
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 2308
+          }
+        ],
+        "cls": 0,
+        "longTasks": 4,
+        "longTaskMs": 412
+      },
+      "bufferedLcp": [],
+      "nav": {
+        "ttfb": 257,
+        "dcl": 877,
+        "load": 1611
+      },
+      "h1": {
+        "text": "Dell 5400",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block"
+      },
+      "mainImg": {
+        "complete": true,
+        "op": "1",
+        "transform": "none",
+        "filter": "none",
+        "blend": "normal",
+        "src": "3/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280"
+      },
+      "stage": []
+    },
+    {
+      "label": "pdp",
+      "run": 3,
+      "url": "https://www.laptopshub.pk/products/dell-5400-core-i5-8th-gen-8gb-ram-256gb-storage",
+      "elapsedMs": 7788,
+      "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\baseline-pdp-r3.png",
+      "vis": "visible",
+      "hidden": false,
+      "title": "Dell 5400 · Core i5, 8th Gen, 8GB RAM, 256GB Storage · Laptops HUB",
+      "diag": {
+        "lcp": [
+          {
+            "t": 2484,
+            "s": 81075,
+            "u": "1/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280",
+            "tag": "IMG",
+            "cls": ""
+          }
+        ],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 2484
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 2484
+          }
+        ],
+        "cls": 0,
+        "longTasks": 4,
+        "longTaskMs": 405
+      },
+      "bufferedLcp": [],
+      "nav": {
+        "ttfb": 406,
+        "dcl": 1063,
+        "load": 1779
+      },
+      "h1": {
+        "text": "Dell 5400",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block"
+      },
+      "mainImg": {
+        "complete": true,
+        "op": "1",
+        "transform": "none",
+        "filter": "none",
+        "blend": "normal",
+        "src": "3/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=1280"
+      },
+      "stage": []
+    },
+    {
+      "label": "coll",
+      "run": 1,
+      "url": "https://www.laptopshub.pk/collections/laptops",
+      "elapsedMs": 7280,
+      "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\baseline-coll-r1.png",
+      "vis": "visible",
+      "hidden": false,
+      "title": "All laptops · Laptops HUB",
+      "diag": {
+        "lcp": [
+          {
+            "t": 2024,
+            "s": 13160,
+            "u": "",
+            "tag": "DIV",
+            "cls": "lh-promo-bar"
+          },
+          {
+            "t": 2072,
+            "s": 79686,
+            "u": "81/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800",
+            "tag": "IMG",
+            "cls": ""
+          }
+        ],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 2024
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 2024
+          }
+        ],
+        "cls": 0,
+        "longTasks": 4,
+        "longTaskMs": 654
+      },
+      "bufferedLcp": [],
+      "nav": {
+        "ttfb": 190,
+        "dcl": 711,
+        "load": 1362
+      },
+      "h1": {
+        "text": "All laptops",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block"
+      },
+      "mainImg": null,
+      "stage": []
+    },
+    {
+      "label": "coll",
+      "run": 2,
+      "url": "https://www.laptopshub.pk/collections/laptops",
+      "elapsedMs": 6734,
+      "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\baseline-coll-r2.png",
+      "vis": "visible",
+      "hidden": false,
+      "title": "All laptops · Laptops HUB",
+      "diag": {
+        "lcp": [
+          {
+            "t": 2140,
+            "s": 13160,
+            "u": "",
+            "tag": "DIV",
+            "cls": "lh-promo-bar"
+          },
+          {
+            "t": 2156,
+            "s": 79686,
+            "u": "81/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800",
+            "tag": "IMG",
+            "cls": ""
+          }
+        ],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 2140
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 2140
+          }
+        ],
+        "cls": 0,
+        "longTasks": 5,
+        "longTaskMs": 806
+      },
+      "bufferedLcp": [],
+      "nav": {
+        "ttfb": 217,
+        "dcl": 783,
+        "load": 1501
+      },
+      "h1": {
+        "text": "All laptops",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block"
+      },
+      "mainImg": null,
+      "stage": []
+    },
+    {
+      "label": "coll",
+      "run": 3,
+      "url": "https://www.laptopshub.pk/collections/laptops",
+      "elapsedMs": 7179,
+      "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\baseline-coll-r3.png",
+      "vis": "visible",
+      "hidden": false,
+      "title": "All laptops · Laptops HUB",
+      "diag": {
+        "lcp": [
+          {
+            "t": 2100,
+            "s": 13160,
+            "u": "",
+            "tag": "DIV",
+            "cls": "lh-promo-bar"
+          },
+          {
+            "t": 2132,
+            "s": 79686,
+            "u": "81/4720/5393/files/01-main_75861162-94ba-4fe0-b055-5747c932a9e1.jpg?v=1792270142&width=800",
+            "tag": "IMG",
+            "cls": ""
+          }
+        ],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 2100
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 2100
+          }
+        ],
+        "cls": 0,
+        "longTasks": 5,
+        "longTaskMs": 668
+      },
+      "bufferedLcp": [],
+      "nav": {
+        "ttfb": 208,
+        "dcl": 716,
+        "load": 1475
+      },
+      "h1": {
+        "text": "All laptops",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block"
+      },
+      "mainImg": null,
+      "stage": []
+    },
+    {
+      "label": "home-rm",
+      "run": 1,
+      "url": "https://www.laptopshub.pk/",
+      "elapsedMs": 8837,
+      "userAgent": "Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+      "screenshot": "docs\\visual-evidence\\p0-perf-2026-11-23\\baseline-home-rm-r1.png",
+      "vis": "visible",
+      "hidden": false,
+      "title": "Laptops HUB",
+      "diag": {
+        "lcp": [],
+        "paints": [
+          {
+            "n": "first-paint",
+            "t": 3796
+          },
+          {
+            "n": "first-contentful-paint",
+            "t": 3796
+          }
+        ],
+        "cls": 0,
+        "longTasks": 7,
+        "longTaskMs": 1766
+      },
+      "bufferedLcp": [],
+      "nav": {
+        "ttfb": 245,
+        "dcl": 605,
+        "load": 2251
+      },
+      "h1": {
+        "text": "The future ofsmarter laptopshopping.",
+        "op": "1",
+        "transform": "none",
+        "vis": "visible",
+        "display": "block"
+      },
+      "mainImg": {
+        "complete": true,
+        "op": "1",
+        "transform": "none",
+        "filter": "none",
+        "blend": "normal",
+        "src": "iles/1/0981/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+      },
+      "stage": [
+        {
+          "currentSrc": "stage-960.webp",
+          "w": 340,
+          "cssW": 335
+        }
+      ]
+    }
+  ]
+}

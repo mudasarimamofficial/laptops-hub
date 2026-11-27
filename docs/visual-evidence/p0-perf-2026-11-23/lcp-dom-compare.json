@@ -1,0 +1,509 @@
+{
+  "at": "2026-11-23T18:39:52.187Z",
+  "rows": [
+    {
+      "label": "real-hero",
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-real-hero",
+      "title": "LCP lab real hero",
+      "lcp": [
+        {
+          "t": 1952,
+          "s": 30268,
+          "tag": "P",
+          "u": ""
+        },
+        {
+          "t": 1968,
+          "s": 64262,
+          "tag": "IMG",
+          "u": "3/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780"
+        }
+      ],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 1952
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 1952
+        }
+      ],
+      "heroPresent": true,
+      "heroCs": {
+        "overflow": "hidden",
+        "isolation": "isolate",
+        "hp": "0.0000",
+        "minH": "0px"
+      },
+      "h1": {
+        "w": 396,
+        "h": 128,
+        "t": 125,
+        "op": "1",
+        "tr": "none",
+        "vis": "visible",
+        "disp": "block",
+        "filt": "none",
+        "blend": "normal",
+        "z": "auto"
+      },
+      "h1text": "The future ofsmarter laptopshopping.",
+      "img": {
+        "w": 253,
+        "h": 253,
+        "t": 670,
+        "op": "1",
+        "tr": "none",
+        "vis": "visible",
+        "disp": "block",
+        "filt": "none",
+        "blend": "normal",
+        "z": "auto",
+        "src": "1/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780",
+        "complete": true,
+        "nat": 288
+      },
+      "overlays": [
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 396,
+          "h": 977,
+          "t": 60,
+          "op": "1",
+          "tr": "none",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "-5"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 453,
+          "h": 1581,
+          "t": -242,
+          "op": "1",
+          "tr": "matrix(0.990268, 0.139173, -0.139173, 0.990268, 0, 0)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "-4"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 476,
+          "h": 1057,
+          "t": 20,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, 0, 0)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "-5"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 238,
+          "h": 977,
+          "t": 60,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, 451.428, 0)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "4"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 396,
+          "h": 491,
+          "t": 92,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, 0, 0)",
+          "vis": "visible",
+          "disp": "flex",
+          "filt": "none",
+          "blend": "normal",
+          "z": "3"
+        },
+        {
+          "tag": "A",
+          "cls": "v5-hov-cta",
+          "w": 173,
+          "h": 56,
+          "t": 389,
+          "op": "1",
+          "tr": "none",
+          "vis": "visible",
+          "disp": "flex",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "",
+          "w": 16,
+          "h": 18,
+          "t": 408,
+          "op": "1",
+          "tr": "none",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "",
+          "w": 14,
+          "h": 16,
+          "t": 549,
+          "op": "1",
+          "tr": "none",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "cls": "v5-hero-comp",
+          "w": 396,
+          "h": 396,
+          "t": 591,
+          "op": "1",
+          "tr": "none",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "1"
+        },
+        {
+          "tag": "DIV",
+          "cls": "v5-hero-ghost",
+          "w": 311,
+          "h": 125,
+          "t": 599,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, -155.547, 0)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 372,
+          "h": 372,
+          "t": 579,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, -186.117, -186.117)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 372,
+          "h": 372,
+          "t": 579,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, 0, 0)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        }
+      ],
+      "header": false,
+      "promo": false,
+      "bodyChildren": 11
+    },
+    {
+      "label": "hero-only-chrome",
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-home?only=v5_cinematic_hero",
+      "title": "LCP lab homepage sections · Laptops HUB",
+      "lcp": [],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 2660
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 2660
+        }
+      ],
+      "heroPresent": true,
+      "heroCs": {
+        "overflow": "hidden",
+        "isolation": "isolate",
+        "hp": "0.0000",
+        "minH": "0px"
+      },
+      "h1": {
+        "w": 372,
+        "h": 128,
+        "t": 170,
+        "op": "1",
+        "tr": "none",
+        "vis": "visible",
+        "disp": "block",
+        "filt": "none",
+        "blend": "normal",
+        "z": "auto"
+      },
+      "h1text": "The future ofsmarter laptopshopping.",
+      "img": {
+        "w": 238,
+        "h": 238,
+        "t": 700,
+        "op": "1",
+        "tr": "none",
+        "vis": "visible",
+        "disp": "block",
+        "filt": "none",
+        "blend": "normal",
+        "z": "auto",
+        "src": "1/4720/5393/files/laptop-hub-hero-dell-lap.webp?v=1792934111&width=780",
+        "complete": true,
+        "nat": 288
+      },
+      "overlays": [
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 412,
+          "h": 924,
+          "t": 106,
+          "op": "1",
+          "tr": "none",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "-5"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 450,
+          "h": 1498,
+          "t": -181,
+          "op": "1",
+          "tr": "matrix(0.990268, 0.139173, -0.139173, 0.990268, 0, 0)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "-4"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 492,
+          "h": 1004,
+          "t": 66,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, 0, 0)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "-5"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 247,
+          "h": 924,
+          "t": 106,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, 469.656, 0)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "4"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 372,
+          "h": 480,
+          "t": 138,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, 0, 0)",
+          "vis": "visible",
+          "disp": "flex",
+          "filt": "none",
+          "blend": "normal",
+          "z": "3"
+        },
+        {
+          "tag": "A",
+          "cls": "v5-hov-cta",
+          "w": 181,
+          "h": 56,
+          "t": 434,
+          "op": "1",
+          "tr": "none",
+          "vis": "visible",
+          "disp": "flex",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "",
+          "w": 14,
+          "h": 21,
+          "t": 451,
+          "op": "1",
+          "tr": "none",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        },
+        {
+          "tag": "SPAN",
+          "cls": "",
+          "w": 12,
+          "h": 19,
+          "t": 587,
+          "op": "1",
+          "tr": "none",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "cls": "v5-hero-comp",
+          "w": 372,
+          "h": 372,
+          "t": 626,
+          "op": "1",
+          "tr": "none",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "1"
+        },
+        {
+          "tag": "DIV",
+          "cls": "v5-hero-ghost",
+          "w": 326,
+          "h": 125,
+          "t": 633,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, -163.219, 0)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 350,
+          "h": 350,
+          "t": 615,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, -174.836, -174.836)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "cls": "",
+          "w": 350,
+          "h": 350,
+          "t": 615,
+          "op": "1",
+          "tr": "matrix(1, 0, 0, 1, 0, 0)",
+          "vis": "visible",
+          "disp": "block",
+          "filt": "none",
+          "blend": "normal",
+          "z": "auto"
+        }
+      ],
+      "header": true,
+      "promo": false,
+      "bodyChildren": 12
+    },
+    {
+      "label": "chrome-A",
+      "url": "http://127.0.0.1:3000/diag/lcp-lab-chrome?mode=A",
+      "title": "LCP lab (storefront chrome) · Laptops HUB",
+      "lcp": [
+        {
+          "t": 2136,
+          "s": 53760,
+          "tag": "H1",
+          "u": ""
+        }
+      ],
+      "paints": [
+        {
+          "n": "first-paint",
+          "t": 2136
+        },
+        {
+          "n": "first-contentful-paint",
+          "t": 2136
+        }
+      ],
+      "heroPresent": false,
+      "heroCs": null,
+      "h1": {
+        "w": 364,
+        "h": 144,
+        "t": 165,
+        "op": "1",
+        "tr": "none",
+        "vis": "visible",
+        "disp": "block",
+        "filt": "none",
+        "blend": "normal",
+        "z": "auto"
+      },
+      "h1text": "The future of smarter laptop shopping.",
+      "img": null,
+      "overlays": [],
+      "header": true,
+      "promo": false,
+      "bodyChildren": 12
+    }
+  ]
+}

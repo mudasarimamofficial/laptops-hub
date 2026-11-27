@@ -2,6 +2,8 @@ import Link from "next/link";
 import { requireStaffPage } from "@/lib/auth/staff";
 import { createServiceClient } from "@/lib/supabase/server";
 import { ContentEditForm } from "@/components/admin/content-edit-form";
+import { ContentCreateForm } from "@/components/admin/content-create-form";
+import { V5_CONTENT } from "@/lib/content/v5-content";
 import { LEGAL_CONTENT_SLUGS } from "@/lib/security/sanitize-html";
 import { AdminPageHeader } from "@/components/admin/ui/page-header";
 import { EmptyState } from "@/components/admin/ui/empty-state";
@@ -12,10 +14,16 @@ export const metadata = { robots: { index: false, follow: false } };
 export default async function AdminContentPage() {
   const staff = await requireStaffPage(["owner", "admin", "manager", "editor"]);
   const supabase = createServiceClient();
-  const { data: pages } = await supabase
+  // G19 columns exist once migration 20261126160000 is applied; until then the page still lists and edits nothing new.
+  type Row = { id: string; slug: string; title: string; status: string; body_html: string | null; legal_approved: boolean | null; version?: number | null; seo_title?: string | null; seo_description?: string | null };
+  const withHistory = await supabase
     .from("content_pages")
-    .select("slug, title, status, body_html, legal_approved, updated_at")
+    .select("id, slug, title, status, body_html, legal_approved, updated_at, version, seo_title, seo_description")
     .order("slug");
+  const pages: Row[] | null = withHistory.error
+    ? ((await supabase.from("content_pages").select("id, slug, title, status, body_html, legal_approved, updated_at").order("slug")).data as Row[] | null)
+    : (withHistory.data as Row[] | null);
+  const historyOn = !withHistory.error;
 
   const canApproveLegal = ["owner", "admin", "manager"].includes(staff.role);
   const rows = pages || [];
@@ -52,6 +60,12 @@ export default async function AdminContentPage() {
         </Link>
       </nav>
 
+      {historyOn ? (
+        <div className="mb-8">
+          <ContentCreateForm />
+        </div>
+      ) : null}
+
       <h2 className="mb-4 font-semibold text-[var(--adm-ink)]">Pages</h2>
       <div className="space-y-8">
         {rows.length === 0 ? (
@@ -59,7 +73,7 @@ export default async function AdminContentPage() {
         ) : (
           rows.map((p) => (
             <ContentEditForm
-              key={p.slug}
+              key={p.id || p.slug}
               slug={p.slug}
               title={p.title}
               status={p.status as "pending" | "draft" | "published"}
@@ -67,6 +81,10 @@ export default async function AdminContentPage() {
               legalApproved={!!p.legal_approved}
               isLegalPage={LEGAL_CONTENT_SLUGS.has(p.slug)}
               canApproveLegal={canApproveLegal}
+              version={historyOn ? (p.version ?? 1) : null}
+              seoTitle={p.seo_title || ""}
+              seoDescription={p.seo_description || ""}
+              canRename={historyOn && !V5_CONTENT.pages[p.slug] && !LEGAL_CONTENT_SLUGS.has(p.slug)}
             />
           ))
         )}

@@ -54,6 +54,12 @@ async function user(role, active = true) {
 }
 
 async function call(u, method, p, body) {
+  // G19: content saves carry the version the editor loaded (stale saves are refused); use the current one.
+  const page = method === "PATCH" && /^\/api\/admin\/content\/[a-z0-9-]+$/.exec(p);
+  if (page && body && typeof body === "object" && body.expectedVersion === undefined) {
+    const v = (await admin.from("content_pages").select("version").eq("slug", p.split("/").pop()).maybeSingle()).data?.version;
+    if (v) body = { ...body, expectedVersion: v };
+  }
   const res = await fetch(base + p, {
     method,
     redirect: "manual",

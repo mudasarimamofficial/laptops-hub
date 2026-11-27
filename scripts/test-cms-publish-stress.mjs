@@ -49,12 +49,15 @@ if (se) throw se;
 const cookie = sessionCookie(s.session);
 const saved = (await admin.from("content_pages").select("title, status, body_html, legal_approved, legal_approved_by").eq("slug", SLUG).single()).data;
 
-const patch = (body) =>
-  fetch(`${base}/api/admin/content/${SLUG}`, {
+// G19: each save carries the page's current version (stale saves are refused).
+const patch = async (body) => {
+  const expectedVersion = (await admin.from("content_pages").select("version").eq("slug", SLUG).single()).data?.version;
+  return fetch(`${base}/api/admin/content/${SLUG}`, {
     method: "PATCH",
     headers: { cookie, "content-type": "application/json", origin: base },
-    body: JSON.stringify({ title: "Shipping & delivery", ...body }),
+    body: JSON.stringify({ title: "Shipping & delivery", expectedVersion, ...body }),
   });
+};
 const view = async () => {
   const [page, footer, sitemap] = await Promise.all([
     fetch(`${base}/pages/${SLUG}`).then(async (r) => ({ status: r.status, html: await r.text() })),

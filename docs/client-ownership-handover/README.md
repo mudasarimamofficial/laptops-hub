@@ -1,5 +1,7 @@
 # Client ownership handover — index
 
+**Start here: `33_CURRENT_STATUS_2026-11-28.md`** (current status, three verdicts, open decisions).
+
 Started 2026-11-24 by an independent audit. Files are added as each topic is verified; a topic that is not yet
 written is listed as **TODO** rather than covered by an older document that was not re-checked.
 
@@ -12,23 +14,28 @@ written is listed as **TODO** rather than covered by an older document that was 
 | 05 | Theme editor spec and acceptance | `05_THEME_EDITOR_SPEC_AND_ACCEPTANCE.md` | written |
 | 06 | Security | `02_DEFECT_REGISTER_AND_GAPS.md` (LH-006/007/013/015/016) | partial |
 | 07 | Database and data integrity | `00_EXECUTIVE_STATUS.md` counts | partial |
-| 08 | Performance and accessibility | — | TODO (NO_LCP not re-measured) |
+| 08 | Performance and accessibility | `35_PERFORMANCE_DIAGNOSIS_2026-11-28.md`, `ui-hardening-2026-11-27/09` | written 2026-11-28 |
 | 09 | Free tier / cost risk | `09_FREE_TIER_COST_RISK.md` | written |
 | 10 | Backup and restore | existing `docs/LAPTOPS_HUB_BACKUP_RESTORE_RUNBOOK.md` | restore drill NOT run this pass |
 | 11–13 | GitHub / Supabase / Vercel + domain transfer | `11_OWNERSHIP_TRANSFER_PLAN.md` | written (not executed) |
 | 14 | Environment and integration inventory | `11_OWNERSHIP_TRANSFER_PLAN.md` (env names), `09` | partial |
 | 15 | Merchant admin manual | `15_MERCHANT_GUIDE_HOMEPAGE_EDITING.md` + existing `docs/LAPTOPS_HUB_ADMIN_MERCHANT_HANDBOOK.md` | homepage section new |
 | 16–20 | Operations guide, acceptance checklist, production evidence, open decisions, signed checklist | `18_FINAL_PRODUCTION_EVIDENCE.md`; decisions in `00` | partial |
-| 21 | Migration ledger reconciliation (LH-025) | `21_MIGRATION_LEDGER_RECONCILIATION.md` | written — **awaiting owner approval, not executed** |
+| 21 | Migration ledger reconciliation (LH-025) | `21_MIGRATION_LEDGER_RECONCILIATION.md` | written; **executed 2026-11-26 with owner approval** (see `24` §10) |
 | 22 | Admin self-service matrix (G01–G49) | `22_ADMIN_SELF_SERVICE_MATRIX.md` | written; §0 tracks fixes (updated 2026-11-25) |
 | 23 | Owner decisions, risks and owner tasks | `23_OWNER_DECISIONS_AND_RISK_REGISTER.md` | written 2026-11-25 |
 | 24 | LH-025 Option A: proven repair plan (export, restore, rehearsal, exact sequence) | `24_LH025_OPTION_A_EXECUTION_PLAN.md` | **executed 2026-11-26 with owner approval** (§10) |
 | 25 | G13 Shopify-hosted media inventory and migration plan | `25_G13_SHOPIFY_MEDIA_INVENTORY_AND_MIGRATION_PLAN.md` | written — decision G13-M1 (D17) |
-| 26 | G22 / G19 production migration plans | `26_G19_G22_PRODUCTION_MIGRATION_PLAN.md` (G19 section on the PR #91 branch) | written — **not applied** (D15, D16) |
+| 26 | G22 / G19 production migration plans | `26_G19_G22_PRODUCTION_MIGRATION_PLAN.md` (G19 section on the PR #91 branch) | G22 **applied 2026-11-26**, G19 **applied 2026-11-27**, both owner-approved (`26` §G22-8, §G19-10) |
 | 27 | G14 compare-at price proposal + mock | `27_G14_COMPARE_AT_PRICE_PROPOSAL.md`, `27_G14_COMPARE_AT_MOCK.html` | proposal — not built (D18) |
 | 28 | Public Git history and PR evidence review | `28_GIT_HISTORY_EXPOSURE_REVIEW.md` | written 2026-11-26 (D19) |
 | 29 | Admin acceptance matrix (12 checks per screen) + fresh baseline | `29_ADMIN_ACCEPTANCE_MATRIX.md` | written 2026-11-26, updated 2026-11-27 |
 | 30 | Operations runbook and dependency list | `30_OPERATIONS_RUNBOOK_AND_DEPENDENCIES.md` | written 2026-11-26 |
-| 31 | **Final report — merchant autonomy, admin and theme editor closure** | `31_FINAL_MERCHANT_AUTONOMY_CLOSURE_REPORT.md` | **read first** (2026-11-26) |
+| 31 | Final report — merchant autonomy, admin and theme editor closure | `31_FINAL_MERCHANT_AUTONOMY_CLOSURE_REPORT.md` | dated record 2026-11-26 (superseded by `33`) |
 | 32 | Acceptance closure: evidence record, owner walkthrough (14 operations), theme-control assessment, D19 steps, G19 release order | `32_ACCEPTANCE_CLOSURE_2026-11-27.md` | written 2026-11-27 |
+| 33 | **Current status and three verdicts (engineering / merchant / operational)** | `33_CURRENT_STATUS_2026-11-28.md` | **read first** (2026-11-28) |
+| 34 | Operational decision packages A–G (hosting, backups, ownership, media, email, monitoring, repo privacy) | `34_OPERATIONAL_DECISION_PACKAGES_2026-11-28.md` | for owner decision |
+| 35 | Mobile performance diagnosis, PERF-001 | `35_PERFORMANCE_DIAGNOSIS_2026-11-28.md` | written 2026-11-28 |
+| 36 | Owner guide: the 14-step walkthrough | `36_MERCHANT_WALKTHROUGH_GUIDE.md` | for the owner |
+| 37 | Supervised checklist: first genuine COD order | `37_SUPERVISED_FIRST_COD_ORDER_CHECKLIST.md` | for the owner (D4) |
 | SEO | Search, AEO and Search Console | `seo-search/` (start at `00`; dated checks in `17`) | engineering implemented; Google indexing pending |

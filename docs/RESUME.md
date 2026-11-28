@@ -1,5 +1,37 @@
 # Resume here
 
+> **2026-11-28: post-release performance, operational readiness and handover (Claude Opus 5.5). Read first:** `docs/client-ownership-handover/33_CURRENT_STATUS_2026-11-28.md`. It has three verdicts:
+> - engineering: PASS with limits;
+> - merchant acceptance: not done;
+> - operational ownership: not ready.
+>
+> **Live:**
+> - #114 PERF-001: the first collection/search photo loads eagerly at high priority (`42995ad`, deploy `EU9hyN4N28LQUErGzopfsiVjCnhn`, verified read-only).
+> - #115: the search results heading is editable in Online Store → Collection pages.
+>
+> **Performance** (`35`): 3-run lab medians, mobile.
+> - Home: perf 64, LCP 4.49 s. The LCP element is the decorative "HUB" text.
+> - Collection: perf 66, LCP 4.35 s.
+> - PDP: perf 61, LCP 4.63 s.
+> - PERF-001 removed the collection discovery delay (load delay 22–34 ms), but LCP did not move. Hydration and main-thread work is the next target.
+>
+> **New owner documents:**
+> - `34`: decision packages A–G (hosting, backups, accounts, media, email, monitoring, repository privacy), with costs and rollback.
+> - `36`: plain-language 14-step walkthrough.
+> - `37`: supervised first COD order checklist.
+>
+> Contradictory older summaries (`00`, `23`, `31`, `32`, README) now carry banners. D11/D15/D16 are marked closed.
+>
+> **Full isolated run** (fresh DB reset, main + #115): 291 passed / 1 failed / 0 not run (292, 48.6 min). The one failure, `ui-map-header-compositing`, was a homepage `load` event waiting on external CDN/map resources; the rerun passed 33/33 (`--repeat-each=3`). Not an uninterrupted 292/292 pass.
+>
+> **Still open (owner):**
+> - `36` walkthrough and `37` first real order;
+> - `34` A–G;
+> - G14;
+> - theme colour/typography.
+>
+> Draft PR #62 is not merged.
+
 > **2026-11-27 evening: UI hardening close-out and full run (Claude Opus 5.5, new session; the previous session lost account access mid-run). Read first:** `docs/client-ownership-handover/ui-hardening-2026-11-27/` (00–12).
 > - **Live:** #107 (VIS-001–004 map/header/promo, phone map layout), #108 (VIS-006 WhatsApp circle), #109 (VIS-005 mega-menu Help), #110 (VIS-002 hero bleed; VIS-007/008 audit specs), #111 (filter options with no products disabled, WCAG 1.4.3). Production `dpl_DGEG9QrS2ZfR99eFKX4KqRLNGNC8` READY at `4e4daac`. Production ledger: 45/45, nothing pending.
 > - **Full isolated run on `4e4daac`:**

@@ -1,5 +1,9 @@
 # 31 — Final report: merchant autonomy, admin and theme editor closure (2026-11-26)
 
+> **Current status is in `33_CURRENT_STATUS_2026-11-28.md`.** This file is kept as a dated record; where it disagrees with `33`, `33` is correct.
+
+> **Superseded statements below (kept as history):** the §1 table row "#91 draft", the §2 row "G19 prepared", "P1 has 18 of 20 fixed", "content pages: G19 pending", "Pending, on PR #91 branch" and "Ready, except D16". **G19 is live since 2026-11-27** (migration applied with owner approval, PR #91 merged). Production has 45 migrations, none pending.
+
 **Status: READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED. This is not a complete handover certificate.**
 Infrastructure ownership (D1, D2, D9) and one verified real order (D4) are still open.
 

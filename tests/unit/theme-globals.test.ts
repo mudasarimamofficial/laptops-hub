@@ -110,6 +110,7 @@ assert.equal(DEFAULT_THEME_GLOBALS.pdpRelatedHeading, "More from {brand}");
 assert.equal(DEFAULT_THEME_GLOBALS.pdpPolicyCta, "READ POLICY");
 assert.equal(DEFAULT_THEME_GLOBALS.colNoResultsHeading, "No products match these filters");
 assert.equal(DEFAULT_THEME_GLOBALS.colLoadMore, "Load more");
+assert.equal(DEFAULT_THEME_GLOBALS.colSearchTitle, "Results for"); // search heading default = V5 text
 assert.equal(DEFAULT_THEME_GLOBALS.nfTitle, "This page doesn’t exist");
 assert.equal(DEFAULT_THEME_GLOBALS.nfProductTitle, "This product isn’t in the catalog");
 assert.equal(DEFAULT_THEME_GLOBALS.nfButtonHref, "/collections/all");

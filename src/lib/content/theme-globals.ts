@@ -54,6 +54,7 @@ export const GLOBAL_COPY: GlobalCopyField[] = [
   { group: "collection", key: "colClearFilters", label: "No matches: clear button", kind: "text", default: "Clear filters", max: 30 },
   { group: "collection", key: "colAllLaptops", label: "No matches: catalog button", kind: "text", default: "All laptops", max: 30 },
   { group: "collection", key: "colLoadMore", label: "Load more button", kind: "text", default: "Load more", max: 30 },
+  { group: "collection", key: "colSearchTitle", label: "Search results: heading", kind: "text", default: "Results for", max: 40, help: "The words the shopper searched for are added after it, in quotes." },
   { group: "collection", key: "colCbEmptyHeading", label: "No Chromebooks: heading", kind: "text", default: "No Chromebooks listed right now.", max: 80 },
   { group: "collection", key: "colCbEmptyText", label: "No Chromebooks: message", kind: "textarea", default: "There are no Chromebooks in the catalog at the moment. Tell us the model, budget or specifications you need and our team can tell you what is available.", max: 300 },
   { group: "collection", key: "colCbAsk", label: "No Chromebooks: ask button", kind: "text", default: "Ask about Chromebooks", max: 40 },

@@ -43,6 +43,6 @@ export async function CollectionPage({
     extra: isSearch ? { q } : {},
     keepOrder: custom?.mode === "manual",
   });
-  const title = isSearch ? `Results for “${q}”` : custom ? custom.title : col!.t;
+  const title = isSearch ? `${copy.colSearchTitle} “${q}”` : custom ? custom.title : col!.t;
   return <CollectionView title={title} view={view} copy={copy} />;
 }

@@ -28,6 +28,8 @@ const NOMATCH = `QA no matches ${RUN}`;
 const NF = `QA missing ${RUN}`;
 const NFP = `QA product gone ${RUN}`;
 const NFBTN = `QA browse ${RUN}`;
+const SEARCHED = "dell";
+const SEARCH_TITLE = `QA results ${RUN}`;
 
 type Baseline = { draft: unknown[] | null; globals: Record<string, unknown>; publication: string | null };
 
@@ -59,7 +61,7 @@ async function restoreBaseline(b: Baseline) {
   }
 }
 
-type Pages = { pdp: string; noMatch: string; nf: string; nfStatus: number; nfp: string };
+type Pages = { pdp: string; noMatch: string; nf: string; nfStatus: number; nfp: string; search: string };
 
 async function readPages(browser: Browser, shots?: string): Promise<Pages> {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
@@ -75,8 +77,10 @@ async function readPages(browser: Browser, shots?: string): Promise<Pages> {
   if (shots) await page.screenshot({ path: `${OUT}/${shots}-404.png` });
   await page.goto(`/products/qa-missing-product-${RUN}`);
   const nfp = await page.locator("main").innerText();
+  await page.goto(`/search?q=${SEARCHED}`);
+  const search = await page.locator("h1").first().innerText();
   await ctx.close();
-  return { pdp, noMatch, nf, nfStatus: r?.status() ?? 0, nfp };
+  return { pdp, noMatch, nf, nfStatus: r?.status() ?? 0, nfp, search };
 }
 
 async function expectPages(browser: Browser, check: (p: Pages) => boolean, label: string) {
@@ -119,6 +123,7 @@ test.describe.serial("Theme templates: product / collection / 404 copy draft →
     expect(before.nfStatus).toBe(404);
     expect(before.nf).toContain("This page doesn’t exist");
     expect(before.nfp).toContain("This product isn’t in the catalog");
+    expect(before.search).toBe(`Results for “${SEARCHED}”`);
     brand = (before.pdp.match(/More from ([^\n]+)/) || [])[1]?.trim() ?? "";
     expect(brand.length).toBeGreaterThan(0);
   });
@@ -149,6 +154,8 @@ test.describe.serial("Theme templates: product / collection / 404 copy draft →
 
     await page.getByTestId("theme-panel-collection").click();
     await page.getByTestId("theme-global-colNoResultsHeading").fill(NOMATCH);
+    await expect(page.getByTestId("theme-global-colSearchTitle")).toHaveAttribute("placeholder", "Results for");
+    await page.getByTestId("theme-global-colSearchTitle").fill(SEARCH_TITLE);
 
     await page.getByTestId("theme-panel-notFound").click();
     await page.getByTestId("theme-global-nfTitle").fill(NF);
@@ -165,6 +172,7 @@ test.describe.serial("Theme templates: product / collection / 404 copy draft →
     expect(mid.pdp).not.toContain(SPEC);
     expect(mid.noMatch).not.toContain(NOMATCH);
     expect(mid.nf).not.toContain(NF);
+    expect(mid.search).toBe(`Results for “${SEARCHED}”`); // draft stays private
 
     await page.getByTestId("theme-publish").click();
     await expect(page.getByText(/Published\. Customers see this homepage/i)).toBeVisible({ timeout: 30_000 });
@@ -177,7 +185,8 @@ test.describe.serial("Theme templates: product / collection / 404 copy draft →
         p.noMatch.includes(NOMATCH) &&
         p.nf.includes(NF) &&
         p.nf.includes(NFBTN) &&
-        p.nfp.includes(NFP),
+        p.nfp.includes(NFP) &&
+        p.search === `${SEARCH_TITLE} “${SEARCHED}”`,
       "published",
     );
     // Product facts untouched: the about/description and the price block still render.
@@ -190,7 +199,7 @@ test.describe.serial("Theme templates: product / collection / 404 copy draft →
     expect(r.status).toBe(200);
     await expectPages(
       browser,
-      (p) => p.pdp.includes("Specifications") && !p.pdp.includes(SPEC) && p.noMatch.includes("No products match these filters") && p.nf.includes("This page doesn’t exist"),
+      (p) => p.pdp.includes("Specifications") && !p.pdp.includes(SPEC) && p.noMatch.includes("No products match these filters") && p.nf.includes("This page doesn’t exist") && p.search === `Results for “${SEARCHED}”`,
       "restored",
     );
   });

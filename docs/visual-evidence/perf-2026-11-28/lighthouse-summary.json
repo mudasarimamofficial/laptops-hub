@@ -1,0 +1,218 @@
+{
+ "at": "2026-11-28",
+ "target": "local next start 127.0.0.1:3001 (isolated build), local Supabase fixture",
+ "tool": "Lighthouse 13.x mobile, simulated throttling",
+ "note": "Lab runs on a developer machine that Lighthouse flags as slower than its calibration CPU; not field data.",
+ "runs": [
+  {
+   "build": "main b986807",
+   "run": "collection-m-r1",
+   "perf": 61,
+   "lcp": 4400,
+   "fcp": 1684,
+   "tbt": 761,
+   "cls": 0,
+   "observedFcp": 3248,
+   "observedLcp": 3315,
+   "lcpElement": "div.v5-card-grid > article.v5-card > a > img",
+   "lcpSubparts": {
+    "timeToFirstByte": 95,
+    "resourceLoadDelay": 1267,
+    "resourceLoadDuration": 1697,
+    "elementRenderDelay": 257
+   }
+  },
+  {
+   "build": "main b986807",
+   "run": "collection-m-r2",
+   "perf": 66,
+   "lcp": 4312,
+   "fcp": 1588,
+   "tbt": 669,
+   "cls": 0,
+   "observedFcp": 2283,
+   "observedLcp": 2300,
+   "lcpElement": "div.v5-card-grid > article.v5-card > a > img",
+   "lcpSubparts": {
+    "timeToFirstByte": 60,
+    "resourceLoadDelay": 286,
+    "resourceLoadDuration": 815,
+    "elementRenderDelay": 1138
+   }
+  },
+  {
+   "build": "main b986807",
+   "run": "collection-m-r3",
+   "perf": 70,
+   "lcp": 4348,
+   "fcp": 1564,
+   "tbt": 518,
+   "cls": 0,
+   "observedFcp": 1901,
+   "observedLcp": 2434,
+   "lcpElement": "div.v5-card-grid > article.v5-card > a > img",
+   "lcpSubparts": {
+    "timeToFirstByte": 68,
+    "resourceLoadDelay": 1192,
+    "resourceLoadDuration": 1148,
+    "elementRenderDelay": 27
+   }
+  },
+  {
+   "build": "main b986807",
+   "run": "home-m-r1",
+   "perf": 48,
+   "lcp": 5080,
+   "fcp": 2069,
+   "tbt": 1599,
+   "cls": 0,
+   "observedFcp": 2843,
+   "observedLcp": 2843,
+   "lcpElement": "section#top > div.v5-hero-grid > div.v5-hero-comp > div.v5-hero-ghost",
+   "lcpSubparts": {
+    "timeToFirstByte": 32,
+    "elementRenderDelay": 2811
+   }
+  },
+  {
+   "build": "main b986807",
+   "run": "home-m-r2",
+   "perf": 70,
+   "lcp": 4486,
+   "fcp": 1465,
+   "tbt": 466,
+   "cls": 0,
+   "observedFcp": 1805,
+   "observedLcp": 1805,
+   "lcpElement": "section#top > div.v5-hero-grid > div.v5-hero-comp > div.v5-hero-ghost",
+   "lcpSubparts": {
+    "timeToFirstByte": 22,
+    "elementRenderDelay": 1783
+   }
+  },
+  {
+   "build": "main b986807",
+   "run": "home-m-r3",
+   "perf": 64,
+   "lcp": 4417,
+   "fcp": 1490,
+   "tbt": 699,
+   "cls": 0,
+   "observedFcp": 2621,
+   "observedLcp": 2621,
+   "lcpElement": "section#top > div.v5-hero-grid > div.v5-hero-comp > div.v5-hero-ghost",
+   "lcpSubparts": {
+    "timeToFirstByte": 18,
+    "elementRenderDelay": 2603
+   }
+  },
+  {
+   "build": "main b986807",
+   "run": "pdp-m-r1",
+   "perf": 61,
+   "lcp": 4456,
+   "fcp": 1170,
+   "tbt": 1084,
+   "cls": 0,
+   "observedFcp": 1260,
+   "observedLcp": 1310,
+   "lcpElement": "div > div > span > img",
+   "lcpSubparts": {
+    "timeToFirstByte": 75,
+    "resourceLoadDelay": 27,
+    "resourceLoadDuration": 1132,
+    "elementRenderDelay": 76
+   }
+  },
+  {
+   "build": "main b986807",
+   "run": "pdp-m-r2",
+   "perf": 61,
+   "lcp": 4628,
+   "fcp": 1146,
+   "tbt": 1015,
+   "cls": 0,
+   "observedFcp": 1274,
+   "observedLcp": 1307,
+   "lcpElement": "div > div > span > img",
+   "lcpSubparts": {
+    "timeToFirstByte": 48,
+    "resourceLoadDelay": 23,
+    "resourceLoadDuration": 845,
+    "elementRenderDelay": 391
+   }
+  },
+  {
+   "build": "main b986807",
+   "run": "pdp-m-r3",
+   "perf": 70,
+   "lcp": 4653,
+   "fcp": 1572,
+   "tbt": 474,
+   "cls": 0,
+   "observedFcp": 1943,
+   "observedLcp": 1976,
+   "lcpElement": "div > div > span > img",
+   "lcpSubparts": {
+    "timeToFirstByte": 70,
+    "resourceLoadDelay": 20,
+    "resourceLoadDuration": 759,
+    "elementRenderDelay": 1126
+   }
+  },
+  {
+   "build": "fix branch",
+   "run": "collection-m-r1",
+   "perf": 74,
+   "lcp": 4522,
+   "fcp": 1580,
+   "tbt": 353,
+   "cls": 0,
+   "observedFcp": 2096,
+   "observedLcp": 2096,
+   "lcpElement": "div.v5-card-grid > article.v5-card > a > img",
+   "lcpSubparts": {
+    "timeToFirstByte": 52,
+    "resourceLoadDelay": 22,
+    "resourceLoadDuration": 853,
+    "elementRenderDelay": 1169
+   }
+  },
+  {
+   "build": "fix branch",
+   "run": "collection-m-r2",
+   "perf": 57,
+   "lcp": 4690,
+   "fcp": 1757,
+   "tbt": 849,
+   "cls": 0,
+   "observedFcp": 3929,
+   "observedLcp": 3929,
+   "lcpElement": "div.v5-card-grid > article.v5-card > a > img",
+   "lcpSubparts": {
+    "timeToFirstByte": 84,
+    "resourceLoadDelay": 34,
+    "resourceLoadDuration": 651,
+    "elementRenderDelay": 3161
+   }
+  },
+  {
+   "build": "fix branch",
+   "run": "collection-m-r3",
+   "perf": 76,
+   "lcp": 4464,
+   "fcp": 1505,
+   "tbt": 320,
+   "cls": 0,
+   "observedFcp": 2007,
+   "observedLcp": 2007,
+   "lcpElement": "div.v5-card-grid > article.v5-card > a > img",
+   "lcpSubparts": {
+    "timeToFirstByte": 106,
+    "resourceLoadDelay": 27,
+    "resourceLoadDuration": 879,
+    "elementRenderDelay": 995
+   }
+  }
+ ]
+}

@@ -190,8 +190,9 @@ export function CollectionView({ title, view, copy = DEFAULT_THEME_GLOBALS }: { 
               </div>
             ) : null}
             <div className="v5-card-grid">
-              {view.cards.map((c) => (
-                <V5ProductCard key={c.h} item={c} />
+              {view.cards.map((c, i) => (
+                // The first card is the LCP element on phones (one column): load its photo first (perf 2026-11-28).
+                <V5ProductCard key={c.h} item={c} priority={i === 0} />
               ))}
             </div>
             {view.hasMore ? (

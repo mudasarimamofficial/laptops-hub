@@ -15,8 +15,12 @@ import { usePricedUnit } from "@/components/storefront/discount-provider";
 import { PriceDisplay } from "@/components/storefront/price-display";
 import { fmtPkr } from "@/lib/catalog/v5-model";
 
-/** Port of `ProductCard v5.dc.html`. Category badge only (no stock wording by design). */
-export function V5ProductCard({ item }: { item: V5Card }) {
+/**
+ * Port of `ProductCard v5.dc.html`. Category badge only (no stock wording by design).
+ * `priority`: the card is the page's likely LCP element (first card of a collection grid). Its photo loads eagerly at
+ * high priority so the browser's preload scanner finds it in the HTML; every other card stays lazy.
+ */
+export function V5ProductCard({ item, priority = false }: { item: V5Card; priority?: boolean }) {
   const [hover, setHover] = useState(false);
   const [inquiring, setInquiring] = useState(false);
   const toggle = useCompare((s) => s.toggle);
@@ -55,7 +59,8 @@ export function V5ProductCard({ item }: { item: V5Card }) {
             alt={item.alt}
             width={480}
             height={384}
-            loading="lazy"
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : undefined}
             decoding="async"
             onError={() => setFailed((f) => (f.includes(img) ? f : [...f, img]))}
             // A server-rendered image can fail before hydration attaches onError: check once React has the element.

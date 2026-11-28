@@ -27,3 +27,8 @@ These are not engineering defects and were not acted on:
 - **Owner walkthrough of 14 operations** (`32` §5) and **G19 UI check** (`26` §G19-10 step 8).
 - **Theme controls for colour/typography:** conflict with the frozen V5 design (`32` §6).
 - Any new production migration, DNS change, paid plan, ownership transfer, secret rotation or customer notification needs the owner's explicit approval.
+
+**2026-11-28 update:**
+- **L1:** re-measured with 3 runs per page (`35`). The collection discovery delay is fixed (PERF-001, #114), but LCP did not move: hydration and main-thread work is the remaining cause.
+- **L10:** recommendation added in `35` §5.
+- **L12:** a fresh full run is recorded in `33` §2.

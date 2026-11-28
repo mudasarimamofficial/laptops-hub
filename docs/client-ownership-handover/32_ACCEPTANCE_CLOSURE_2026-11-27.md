@@ -3,6 +3,7 @@
 **Status: READY FOR OWNER APPROVAL — NOT YET LIVE-COMMERCE CERTIFIED.** This is not a handover certificate. The
 merchant's own usability check (check 12 in `29`), one verified real order (D4), infrastructure ownership (D1, D2, D9)
 and the G19 production migration (D16) are still open.
+*(Updated 2026-11-28: D16/G19 was applied later the same day, see §3; current status in `33`.)*
 
 Everything below was proven on the **isolated** stack (local Supabase, local fake mail, a production build served by
 `scripts/dev/isolated-next.mjs`) unless a line says "production, read-only". No production data or schema was changed
